@@ -35,6 +35,21 @@
 
 namespace OpenZWave
 {
+	namespace Internal {
+		namespace CC {
+			class ApplicationStatus;
+			class Basic;
+			class ManufacturerSpecific;
+			class NodeNaming;
+			class SceneActivation;
+			class WakeUp;
+		}
+		namespace VC {
+			class Value;
+			class ValueStore;
+		}
+		class ManufacturerSpecificDB;
+	}
 	/** \brief Provides a container for data sent via the notification callback
 	 *    handler installed by a call to Manager::AddWatcher.
 	 *
@@ -47,16 +62,15 @@ namespace OpenZWave
 		friend class Driver;
 		friend class Node;
 		friend class Group;
-		friend class Value;
-		friend class ValueStore;
-		friend class Basic;
-		friend class ManufacturerSpecific;
-		friend class NodeNaming;
-		friend class NoOperation;
-		friend class SceneActivation;
-		friend class WakeUp;
-		friend class ApplicationStatus;
-		friend class ManufacturerSpecificDB;
+		friend class Internal::VC::Value;
+		friend class Internal::VC::ValueStore;
+		friend class Internal::CC::Basic;
+		friend class Internal::CC::ManufacturerSpecific;
+		friend class Internal::CC::NodeNaming;
+		friend class Internal::CC::SceneActivation;
+		friend class Internal::CC::WakeUp;
+		friend class Internal::CC::ApplicationStatus;
+		friend class Internal::ManufacturerSpecificDB;
 		/* allow us to Stream a Notification */
 		//friend std::ostream &operator<<(std::ostream &os, const Notification &dt);
 

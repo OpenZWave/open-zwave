@@ -39,13 +39,15 @@
 
 namespace OpenZWave
 {
+namespace Internal
+{
 	/**
 	 * Convert a string to all upper-case.
 	 * \param _str the string to be converted.
 	 * \return the upper-case string.
 	 * \see ToLower, Trim
 	 */
-	string ToUpper( string const& _str );
+	std::string ToUpper( string const& _str );
 	
 	/**
 	 * Convert a string to all lower-case.
@@ -53,7 +55,7 @@ namespace OpenZWave
 	 * \return the lower-case string.
 	 * \see ToUpper, Trim
 	 */
-	string ToLower( string const& _str );
+	std::string ToLower( string const& _str );
 
 	/**
 	 * Split a String into a Vector, separated by separators
@@ -110,7 +112,7 @@ namespace OpenZWave
 
 	struct LockGuard
 	{
-			LockGuard(Mutex* mutex) : _ref(mutex)
+			LockGuard(Internal::Platform::Mutex* mutex) : _ref(mutex)
 			{
 				//std::cout << "Locking" << std::endl;
 				_ref->Lock();
@@ -137,7 +139,7 @@ namespace OpenZWave
 			LockGuard& operator = ( LockGuard const& );
 
 
-			Mutex* _ref;
+			Internal::Platform::Mutex* _ref;
 	};
 
 	string ozwdirname(string);
@@ -145,6 +147,7 @@ namespace OpenZWave
 	string intToString( int x );
 
 	const char* rssi_to_string(uint8 _data);
+} // namespace Internal
 } // namespace OpenZWave
 
 /* keep this outside of the namespace */

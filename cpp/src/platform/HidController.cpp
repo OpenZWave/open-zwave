@@ -44,7 +44,7 @@
 #define INPUT_REPORT_LENGTH 0x5
 #define OUTPUT_REPORT_LENGTH 0x0
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::Platform;
 
 //-----------------------------------------------------------------------------
 //	<HidController::HidController>

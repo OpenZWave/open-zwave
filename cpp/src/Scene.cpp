@@ -35,7 +35,7 @@
 
 #include "tinyxml.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal;
 
 uint32 const c_sceneVersion = 1;
 
@@ -125,7 +125,7 @@ void Scene::WriteXML
 			snprintf( str, sizeof(str), "%d", (*vt)->m_id.GetNodeId() );
 			valueElement->SetAttribute( "nodeId", str );
 
-			valueElement->SetAttribute( "genre", Value::GetGenreNameFromEnum((*vt)->m_id.GetGenre()) );
+			valueElement->SetAttribute( "genre", Internal::VC::Value::GetGenreNameFromEnum((*vt)->m_id.GetGenre()) );
 
 			snprintf( str, sizeof(str), "%d", (*vt)->m_id.GetCommandClassId() );
 			valueElement->SetAttribute( "commandClassId", str );
@@ -136,7 +136,7 @@ void Scene::WriteXML
 			snprintf( str, sizeof(str), "%d", (*vt)->m_id.GetIndex() );
 			valueElement->SetAttribute( "index", str );
 
-			valueElement->SetAttribute( "type", Value::GetTypeNameFromEnum((*vt)->m_id.GetType()) );
+			valueElement->SetAttribute( "type", Internal::VC::Value::Value::GetTypeNameFromEnum((*vt)->m_id.GetType()) );
 
 			TiXmlText* textElement = new TiXmlText( (*vt)->m_value.c_str() );
 			valueElement->LinkEndChild( textElement );
@@ -235,7 +235,7 @@ bool Scene::ReadScenes
 				{
 					nodeId = intVal;
 				}
-				ValueID::ValueGenre genre = Value::GetGenreEnumFromName( valueElement->Attribute( "genre" ) );
+				ValueID::ValueGenre genre = Internal::VC::Value::Value::GetGenreEnumFromName( valueElement->Attribute( "genre" ) );
 				uint8 commandClassId = 0;
 				if (TIXML_SUCCESS == valueElement->QueryIntAttribute( "commandClassId", &intVal ) )
 				{
@@ -251,7 +251,7 @@ bool Scene::ReadScenes
 				{
 					index = intVal;
 				}
-				ValueID::ValueType type = Value::GetTypeEnumFromName( valueElement->Attribute( "type" ) );
+				ValueID::ValueType type = Internal::VC::Value::Value::GetTypeEnumFromName( valueElement->Attribute( "type" ) );
 				char const* data = valueElement->GetText();
 
 				scene->m_values.push_back( new SceneStorage( ValueID(homeId, nodeId, genre, commandClassId, instance, index, type), data ) );

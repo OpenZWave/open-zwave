@@ -35,6 +35,11 @@
 
 namespace OpenZWave
 {
+namespace Internal
+{
+namespace Platform
+{
+
 	class Thread;
 	class Event;
 
@@ -66,7 +71,8 @@ namespace OpenZWave
 
 		static int32			s_threadTerminateTimeout;
 	};
-
+} // namespace Platform
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif //_ThreadImpl_H

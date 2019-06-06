@@ -35,7 +35,7 @@
 
 #include "value_classes/ValueDecimal.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::CC;
 
 enum EnergyProductionCmd
 {
@@ -135,7 +135,7 @@ bool EnergyProduction::HandleMsg
 		}
 
 		Log::Write( LogLevel_Info, GetNodeId(), "Received an Energy production report: %s = %s", c_energyParameterNames[_data[1]], value.c_str() );
-		if( ValueDecimal* decimalValue = static_cast<ValueDecimal*>( GetValue( _instance, _data[1] ) ) )
+		if( Internal::VC::ValueDecimal* decimalValue = static_cast<Internal::VC::ValueDecimal*>( GetValue( _instance, _data[1] ) ) )
 		{
 			decimalValue->OnValueRefreshed( value );
 			if( decimalValue->GetPrecision() != precision )

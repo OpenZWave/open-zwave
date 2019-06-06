@@ -33,7 +33,7 @@
 #include "Manager.h"
 #include <ctime>
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::VC;
 
 
 //-----------------------------------------------------------------------------
@@ -75,7 +75,7 @@ ValueByte::ValueByte
 	m_max = 255;
 }
 
-string const ValueByte::GetAsString
+std::string const ValueByte::GetAsString
 (
 ) const
 {

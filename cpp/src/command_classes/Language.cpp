@@ -35,7 +35,7 @@
 
 #include "value_classes/ValueString.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::CC;
 
 enum LanguageCmd
 {
@@ -124,12 +124,12 @@ bool Language::HandleMsg
 		Log::Write( LogLevel_Info, GetNodeId(), "Received Language report: Language=%s, Country=%s", language, country );
 		ClearStaticRequest( StaticRequest_Values );
 
-		if( ValueString* languageValue = static_cast<ValueString*>( GetValue( _instance, ValueID_Index_Language::Language ) ) )
+		if( Internal::VC::ValueString* languageValue = static_cast<Internal::VC::ValueString*>( GetValue( _instance, ValueID_Index_Language::Language ) ) )
 		{
 			languageValue->OnValueRefreshed( language );
 			languageValue->Release();
 		}
-		if( ValueString* countryValue = static_cast<ValueString*>( GetValue( _instance, ValueID_Index_Language::Country ) ) )
+		if( Internal::VC::ValueString* countryValue = static_cast<Internal::VC::ValueString*>( GetValue( _instance, ValueID_Index_Language::Country ) ) )
 		{
 			countryValue->OnValueRefreshed( country );
 			countryValue->Release();

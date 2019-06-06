@@ -34,6 +34,10 @@
 
 namespace OpenZWave
 {
+namespace Internal
+{
+namespace CC
+{
 
 
 	enum SecurityCmd
@@ -94,7 +98,8 @@ namespace OpenZWave
 
 
 	};
-
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

@@ -38,7 +38,7 @@
 #include "value_classes/ValueButton.h"
 #include "value_classes/ValueString.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::CC;
 
 enum TimeParametersCmd
 {
@@ -131,14 +131,14 @@ bool TimeParameters::HandleMsg
 		uint8 second = (_data[7] & 0x3F);
 
 		Log::Write( LogLevel_Info, GetNodeId(), "Received TimeParameters report: %02d/%02d/%04d %02d:%02d:%02d", (int)day, (int)month, (int)year, (int)hour, (int)minute, (int)second);
-		if( ValueString* value = static_cast<ValueString*>( GetValue( _instance, ValueID_Index_TimeParameters::Date ) ) )
+		if( Internal::VC::ValueString* value = static_cast<Internal::VC::ValueString*>( GetValue( _instance, ValueID_Index_TimeParameters::Date ) ) )
 		{
 			char msg[512];
 			snprintf(msg, sizeof(msg), "%02d/%02d/%04d", (int)day, (int)month, (int)year);
 			value->OnValueRefreshed( msg );
 			value->Release();
 		}
-		if( ValueString* value = static_cast<ValueString*>( GetValue( _instance, ValueID_Index_TimeParameters::Time ) ) )
+		if( Internal::VC::ValueString* value = static_cast<Internal::VC::ValueString*>( GetValue( _instance, ValueID_Index_TimeParameters::Time ) ) )
 		{
 			char msg[512];
 			snprintf(msg, sizeof(msg), "%02d:%02d:%02d", (int)hour, (int)minute, (int)second);
@@ -158,7 +158,7 @@ bool TimeParameters::HandleMsg
 //-----------------------------------------------------------------------------
 bool TimeParameters::SetValue
 (
-	Value const& _value
+	Internal::VC::Value const& _value
 )
 {
 	bool ret = false;

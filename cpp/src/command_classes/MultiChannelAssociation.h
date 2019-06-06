@@ -34,12 +34,17 @@
 
 namespace OpenZWave
 {
+namespace Internal
+{
+namespace CC
+{
+
 	/** \brief Implements COMMAND_CLASS_MULTI_CHANNEL_ASSOCIATION (0x8E), a Z-Wave device command class.
 	 * \ingroup CommandClass
 	 */
 	class MultiChannelAssociation: public CommandClass
 	{
-		friend class Group;
+		friend class OpenZWave::Group;
 		
 	public:
 		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new MultiChannelAssociation( _homeId, _nodeId ); }
@@ -71,7 +76,8 @@ namespace OpenZWave
 		vector<InstanceAssociation>	m_pendingMembers;	// Used to build a list of group members from multiple reports
 			
 	};
-
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

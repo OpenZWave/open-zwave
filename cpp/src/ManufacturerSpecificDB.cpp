@@ -37,11 +37,11 @@
 #include "Notification.h"
 #include "Utils.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal;
 
 ManufacturerSpecificDB *ManufacturerSpecificDB::s_instance = NULL;
-map<uint16,string> ManufacturerSpecificDB::s_manufacturerMap;
-map<int64,ProductDescriptor*> ManufacturerSpecificDB::s_productMap;
+std::map<uint16,std::string> ManufacturerSpecificDB::s_manufacturerMap;
+std::map<int64,ProductDescriptor*> ManufacturerSpecificDB::s_productMap;
 bool ManufacturerSpecificDB::s_bXmlLoaded = false;
 
 ManufacturerSpecificDB *ManufacturerSpecificDB::Create
@@ -69,7 +69,7 @@ void ManufacturerSpecificDB::Destroy
 ManufacturerSpecificDB::ManufacturerSpecificDB
 (
 ):
-m_MfsMutex(new Mutex()),
+m_MfsMutex(new Internal::Platform::Mutex()),
 m_revision(0),
 m_latestRevision(0),
 m_initializing(true)
@@ -323,7 +323,7 @@ void ManufacturerSpecificDB::checkConfigFiles
 			/* check if we are downloading already */
 			std::list<string>::iterator iter = std::find (m_downloading.begin(), m_downloading.end(), path);
 			/* check if the file exists */
-			if (iter == m_downloading.end() && !FileOps::Create()->FileExists(path)) {
+			if (iter == m_downloading.end() && !Internal::Platform::FileOps::Create()->FileExists(path)) {
 				Log::Write( LogLevel_Warning, "Config File for %s does not exist - %s", c->GetProductName().c_str(), path.c_str());
 				/* try to download it */
 				if (driver->startConfigDownload(c->GetManufacturerId(), c->GetProductType(), c->GetProductId(), path)) {

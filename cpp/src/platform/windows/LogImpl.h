@@ -35,12 +35,17 @@
 
 namespace OpenZWave
 {
+namespace Internal
+{
+namespace Platform
+{
+
 	/** \brief Windows-specific implementation of the Log class.
 	 */
 	class LogImpl : public i_LogImpl
 	{
 	private:
-		friend class Log;
+		friend class OpenZWave::Log;
 
 		LogImpl( string const& _filename, bool const _bAppendLog, bool const _bConsoleOutput, LogLevel const _saveLevel, LogLevel const _queueLevel, LogLevel const _dumpTrigger );
 		~LogImpl();
@@ -66,7 +71,8 @@ namespace OpenZWave
 		LogLevel m_queueLevel;
 		LogLevel m_dumpTrigger;
 	};
-
+} // namespace Platform
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif //_LogImpl_H

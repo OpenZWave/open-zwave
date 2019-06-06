@@ -39,7 +39,7 @@
 #include <ctime>
 #include "Options.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::VC;
 
 static char const* c_genreName[] =
 {
@@ -357,7 +357,7 @@ bool Value::Set
 		node = driver->GetNodeUnsafe( m_id.GetNodeId() );
 		if( node != NULL )
 		{
-			if( CommandClass* cc = node->GetCommandClass( m_id.GetCommandClassId() ) )
+			if( Internal::CC::CommandClass* cc = node->GetCommandClass( m_id.GetCommandClassId() ) )
 			{
 				Log::Write(LogLevel_Info, m_id.GetNodeId(), "Value::Set - %s - %s - %d - %d - %s", cc->GetCommandClassName().c_str(), this->GetLabel().c_str(), m_id.GetIndex(), m_id.GetInstance(), this->GetAsString().c_str());
 				// flag value as set and queue a "Set Value" message for transmission to the device
@@ -459,7 +459,7 @@ void Value::OnValueChanged
 		node = driver->GetNodeUnsafe( m_id.GetNodeId() );
 		if( node != NULL )
 		{
-			if( CommandClass* cc = node->GetCommandClass( m_id.GetCommandClassId() ) )
+			if( Internal::CC::CommandClass* cc = node->GetCommandClass( m_id.GetCommandClassId() ) )
 			{
 				cc->CheckForRefreshValues(this);
 			}
@@ -472,7 +472,7 @@ void Value::OnValueChanged
 // <Value::GetGenreEnumFromName>
 // Static helper to get a genre enum from a string
 //-----------------------------------------------------------------------------
-ValueID::ValueGenre Value::GetGenreEnumFromName
+OpenZWave::ValueID::ValueGenre Value::GetGenreEnumFromName
 (
 	char const* _name
 )
@@ -509,7 +509,7 @@ char const* Value::GetGenreNameFromEnum
 // <Value::GetTypeEnumFromName>
 // Static helper to get a type enum from a string
 //-----------------------------------------------------------------------------
-ValueID::ValueType Value::GetTypeEnumFromName
+OpenZWave::ValueID::ValueType Value::GetTypeEnumFromName
 (
 	char const* _name
 )
@@ -752,7 +752,7 @@ int Value::VerifyRefreshedValue
 }
 
 
-string const Value::GetHelp
+std::string const Value::GetHelp
 (
 ) const
 {
@@ -767,7 +767,7 @@ void Value::SetHelp
 	Localization::Get()->SetValueHelp(m_id.GetNodeId(), m_id.GetCommandClassId(), m_id.GetIndex(), -1, _help, lang);
 }
 
-string const Value::GetLabel
+std::string const Value::GetLabel
 (
 ) const
 {

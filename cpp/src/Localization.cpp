@@ -37,13 +37,13 @@
 #include "command_classes/SoundSwitch.h"
 #include "command_classes/Meter.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal;
 
 Localization *Localization::m_instance = NULL;
-map<uint64,ValueLocalizationEntry*> Localization::m_valueLocalizationMap;
-map<uint8,LabelLocalizationEntry*> Localization::m_commandClassLocalizationMap;
-map<string, LabelLocalizationEntry*> Localization::m_globalLabelLocalizationMap;
-string Localization::m_selectedLang = "";
+std::map<uint64,ValueLocalizationEntry*> Localization::m_valueLocalizationMap;
+std::map<uint8,LabelLocalizationEntry*> Localization::m_commandClassLocalizationMap;
+std::map<std::string, LabelLocalizationEntry*> Localization::m_globalLabelLocalizationMap;
+std::string Localization::m_selectedLang = "";
 uint32 Localization::m_revision = 0;
 
 LabelLocalizationEntry::LabelLocalizationEntry
@@ -77,7 +77,7 @@ uint64 LabelLocalizationEntry::GetIdx
 	return key;
 
 }
-string LabelLocalizationEntry::GetLabel
+std::string LabelLocalizationEntry::GetLabel
 (
 		string lang
 )
@@ -123,7 +123,7 @@ uint64 ValueLocalizationEntry::GetIdx
 	uint64 key = ((uint64)m_commandClass << 48) | ((uint64)m_index << 32) | ((uint64)m_pos);
 	return key;
 }
-string ValueLocalizationEntry::GetHelp
+std::string ValueLocalizationEntry::GetHelp
 (
 		string lang
 )
@@ -159,7 +159,7 @@ void ValueLocalizationEntry::AddHelp
 		m_HelpText[lang] = HelpText;
 
 }
-string ValueLocalizationEntry::GetLabel
+std::string ValueLocalizationEntry::GetLabel
 (
 		string lang
 )
@@ -207,7 +207,7 @@ void ValueLocalizationEntry::AddItemLabel
 	}
 
 }
-string ValueLocalizationEntry::GetItemLabel
+std::string ValueLocalizationEntry::GetItemLabel
 (
 		string lang,
 		int32 itemindex
@@ -250,7 +250,7 @@ void ValueLocalizationEntry::AddItemHelp
 	}
 
 }
-string ValueLocalizationEntry::GetItemHelp
+std::string ValueLocalizationEntry::GetItemHelp
 (
 		string lang,
 		int32 itemindex
@@ -579,15 +579,15 @@ uint64 Localization::GetValueKey
 		return ((uint64) _node << 56 | (uint64)_commandClass << 48) | ((uint64)_index << 32) | ((uint64)_pos);
 	}
 	/* configuration CC needs its own Storage per Node. */
-	if (_commandClass == Configuration::StaticGetCommandClassId()) {
+	if (_commandClass == Internal::CC::Configuration::StaticGetCommandClassId()) {
 		return ((uint64) _node << 56 | (uint64)_commandClass << 48) | ((uint64)_index << 32) | ((uint64)_pos);
 	}
 	/* ThermoStatSetpoint index's above 100 are unique per node */
-	if ((_commandClass == ThermostatSetpoint::StaticGetCommandClassId()) &&
+	if ((_commandClass == Internal::CC::ThermostatSetpoint::StaticGetCommandClassId()) &&
 			(_index >= 100)) {
 		return ((uint64) _node << 56 | (uint64)_commandClass << 48) | ((uint64)_index << 32) | ((uint64)_pos);
 	}
-	if (_commandClass == Meter::StaticGetCommandClassId()) {
+	if (_commandClass == Internal::CC::Meter::StaticGetCommandClassId()) {
 		return ((uint64) _node << 56 | (uint64)_commandClass << 48) | ((uint64)_index << 32) | ((uint64)_pos);
 	}
 	return ((uint64)_commandClass << 48) | ((uint64)_index << 32) | ((uint64)_pos);
@@ -595,7 +595,7 @@ uint64 Localization::GetValueKey
 
 void Localization::SetupCommandClass
 (
-		CommandClass *cc
+		Internal::CC::CommandClass *cc
 )
 {
 	uint8 ccID = cc->GetCommandClassId();
@@ -662,7 +662,7 @@ bool Localization::SetValueLabel
 	return true;
 }
 
-string const Localization::GetValueHelp
+std::string const Localization::GetValueHelp
 (
 		uint8 node,
 		uint8 ccID,
@@ -678,7 +678,7 @@ string const Localization::GetValueHelp
 	return m_valueLocalizationMap[key]->GetHelp(m_selectedLang);
 }
 
-string const Localization::GetValueLabel
+std::string const Localization::GetValueLabel
 (
 		uint8 node,
 		uint8 ccID,
@@ -695,7 +695,7 @@ string const Localization::GetValueLabel
 }
 
 
-string const Localization::GetValueItemLabel
+std::string const Localization::GetValueItemLabel
 (
 		uint8 node,
 		uint8 ccID,
@@ -705,7 +705,7 @@ string const Localization::GetValueItemLabel
 ) const
 {
 	bool unique = false;
-	if ((ccID == SoundSwitch::StaticGetCommandClassId()) && (indexId == 1 || indexId == 3)) {
+	if ((ccID == Internal::CC::SoundSwitch::StaticGetCommandClassId()) && (indexId == 1 || indexId == 3)) {
 		unique = true;
 	}
 	uint64 key = GetValueKey(node, ccID, indexId, pos, unique);
@@ -728,7 +728,7 @@ bool Localization::SetValueItemLabel
 )
 {
 	bool unique = false;
-	if ((ccID == SoundSwitch::StaticGetCommandClassId()) && (indexId == 1 || indexId == 3)) {
+	if ((ccID == Internal::CC::SoundSwitch::StaticGetCommandClassId()) && (indexId == 1 || indexId == 3)) {
 		unique = true;
 	}
 
@@ -742,7 +742,7 @@ bool Localization::SetValueItemLabel
 	return true;
 }
 
-string const Localization::GetValueItemHelp
+std::string const Localization::GetValueItemHelp
 (
 		uint8 node,
 		uint8 ccID,
@@ -752,7 +752,7 @@ string const Localization::GetValueItemHelp
 ) const
 {
 	bool unique = false;
-	if ((ccID == SoundSwitch::StaticGetCommandClassId()) && (indexId == 1 || indexId == 3)) {
+	if ((ccID == Internal::CC::SoundSwitch::StaticGetCommandClassId()) && (indexId == 1 || indexId == 3)) {
 		unique = true;
 	}
 
@@ -776,7 +776,7 @@ bool Localization::SetValueItemHelp
 )
 {
 	bool unique = false;
-	if ((ccID == SoundSwitch::StaticGetCommandClassId()) && (indexId == 1 || indexId == 3)) {
+	if ((ccID == Internal::CC::SoundSwitch::StaticGetCommandClassId()) && (indexId == 1 || indexId == 3)) {
 		unique = true;
 	}
 
@@ -790,7 +790,7 @@ bool Localization::SetValueItemHelp
 	return true;
 }
 
-string const Localization::GetGlobalLabel
+std::string const Localization::GetGlobalLabel
 (
 		string index
 )

@@ -37,7 +37,7 @@
 #endif
 
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::Platform;
 
 //-----------------------------------------------------------------------------
 //	<Mutex::Mutex>

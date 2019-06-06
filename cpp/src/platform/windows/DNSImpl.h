@@ -33,6 +33,10 @@
 
 namespace OpenZWave
 {
+namespace Internal
+{
+namespace Platform
+{
 	class DNSImpl {
 		public:
 			DNSImpl();
@@ -42,5 +46,7 @@ namespace OpenZWave
 		private:
 
 	};
-}
+} // namespace Platform
+} // namespace Internal
+} // namespace OpenZWave
 #endif

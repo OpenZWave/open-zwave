@@ -36,7 +36,13 @@
 
 namespace OpenZWave
 {
-	class Mutex;
+	namespace Internal
+	{
+		namespace Platform
+		{
+		class Mutex;
+		}
+	}
 	extern char const *LogLevelString[];
 
 	/** \brief Various LogLevels available to the Application
@@ -197,7 +203,7 @@ namespace OpenZWave
 		static i_LogImpl*	m_pImpl;		/**< Pointer to an object that encapsulates the platform-specific logging implementation. */
 		static Log*	s_instance;
 		static bool	s_customLogger;
-		Mutex*		m_logMutex;
+		Internal::Platform::Mutex*		m_logMutex;
 	};
 } // namespace OpenZWave
 

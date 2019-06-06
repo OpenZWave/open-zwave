@@ -32,6 +32,10 @@
 
 namespace OpenZWave
 {
+	namespace Internal
+	{
+		namespace Platform
+		{
 	class EventImpl;
 
 	/** \brief Platform-independent definition of event objects.
@@ -85,7 +89,8 @@ namespace OpenZWave
 
 		EventImpl*	m_pImpl;	// Pointer to an object that encapsulates the platform-specific implementation of a event.
 	};
-
+		} // namespace Platform
+	} // namespace Internal
 } // namespace OpenZWave
 
 #endif //_Event_H

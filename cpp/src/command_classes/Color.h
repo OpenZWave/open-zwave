@@ -32,7 +32,10 @@
 
 namespace OpenZWave
 {
-	class ValueByte;
+namespace Internal
+{
+namespace CC
+{
 
 	/** \brief Implements COMMAND_CLASS_COLOR (0x33), a Z-Wave device command class.
 	 * \ingroup CommandClass
@@ -53,7 +56,7 @@ namespace OpenZWave
 		virtual uint8 const GetCommandClassId() const  override { return StaticGetCommandClassId(); }
 		virtual string const GetCommandClassName() const override { return StaticGetCommandClassName(); }
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 ) override;
-		virtual bool SetValue( Value const& _value ) override;
+		virtual bool SetValue( Internal::VC::Value const& _value ) override;
 		virtual uint8 GetMaxVersion() override { return 2; }
 		virtual void SetValueBasic( uint8 const _instance, uint8 const _value ) override;
 
@@ -66,7 +69,8 @@ namespace OpenZWave
 		uint8 m_coloridxcount;
 		uint8 m_colorvalues[9];
 	};
-
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

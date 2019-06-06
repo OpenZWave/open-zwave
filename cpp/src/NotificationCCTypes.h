@@ -37,6 +37,9 @@
 
 namespace OpenZWave
 {
+namespace Internal
+{
+
 
 class NotificationCCTypes
 {
@@ -96,6 +99,6 @@ private:
     static std::map<uint32, NotificationCCTypes::NotificationTypes *> Notifications;
     static uint32 m_revision;
 };
-
-};
-#endif // VALUEHELP_H
+} // namespace Internal
+} // namespace OpenZWave
+#endif // NOTIFICATIONCCTYPES_H

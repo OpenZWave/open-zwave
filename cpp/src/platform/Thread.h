@@ -34,6 +34,10 @@
 
 namespace OpenZWave
 {
+	namespace Internal
+	{
+		namespace Platform
+		{
 	class ThreadImpl;
 	class Event;
 
@@ -95,7 +99,8 @@ namespace OpenZWave
 		ThreadImpl*	m_pImpl;	// Pointer to an object that encapsulates the platform-specific implementation of a thread.
 		Event*		m_exitEvent;
 	};
-
+		} // namespace Platform
+	} // namespace Internal
 } // namespace OpenZWave
 
 #endif //_Thread_H

@@ -37,6 +37,11 @@
 
 namespace OpenZWave
 {
+namespace Internal
+{
+namespace Platform
+{
+
 	class HidController : public Controller
 	{
 	public:
@@ -118,7 +123,8 @@ namespace OpenZWave
 		string m_hidControllerName;
 		bool m_bOpen;
 	};
-
+} // namespace Platform
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif //_HidControllerImpl_H

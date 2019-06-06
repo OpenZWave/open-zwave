@@ -37,7 +37,7 @@
 
 #include "tinyxml.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::CC;
 
 enum VersionCmd
 {
@@ -140,17 +140,17 @@ bool Version::HandleMsg
 			Log::Write( LogLevel_Info, GetNodeId(), "Received Version report from node %d: Library=%s, Protocol=%s, Application=%s", GetNodeId(), library, protocol, application );
 			ClearStaticRequest( StaticRequest_Values );
 
-			if( ValueString* libraryValue = static_cast<ValueString*>( GetValue( _instance, ValueID_Index_Version::Library ) ) )
+			if( Internal::VC::ValueString* libraryValue = static_cast<Internal::VC::ValueString*>( GetValue( _instance, ValueID_Index_Version::Library ) ) )
 			{
 				libraryValue->OnValueRefreshed( library );
 				libraryValue->Release();
 			}
-			if( ValueString* protocolValue = static_cast<ValueString*>( GetValue( _instance, ValueID_Index_Version::Protocol ) ) )
+			if( Internal::VC::ValueString* protocolValue = static_cast<Internal::VC::ValueString*>( GetValue( _instance, ValueID_Index_Version::Protocol ) ) )
 			{
 				protocolValue->OnValueRefreshed( protocol );
 				protocolValue->Release();
 			}
-			if( ValueString* applicationValue = static_cast<ValueString*>( GetValue( _instance, ValueID_Index_Version::Application ) ) )
+			if( Internal::VC::ValueString* applicationValue = static_cast<Internal::VC::ValueString*>( GetValue( _instance, ValueID_Index_Version::Application ) ) )
 			{
 				applicationValue->OnValueRefreshed( application );
 				applicationValue->Release();

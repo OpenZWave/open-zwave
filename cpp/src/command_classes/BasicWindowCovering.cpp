@@ -34,7 +34,7 @@
 #include "platform/Log.h"
 #include "value_classes/ValueButton.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::CC;
 
 enum BasicWindowCoveringCmd
 {
@@ -48,12 +48,12 @@ enum BasicWindowCoveringCmd
 //-----------------------------------------------------------------------------
 bool BasicWindowCovering::SetValue
 (
-	Value const& _value
+	Internal::VC::Value const& _value
 )
 {
 	if( ValueID::ValueType_Button == _value.GetID().GetType() )
 	{
-		ValueButton const* button = static_cast<ValueButton const*>(&_value);
+		Internal::VC::ValueButton const* button = static_cast<Internal::VC::ValueButton const*>(&_value);
 
 		uint8 action = 0x40;
 		if( button->GetID().GetIndex()  == ValueID_Index_BasicWindowCovering::Close)	// Open is index zero, so non-zero is close.

@@ -178,7 +178,13 @@ namespace OpenZWave
 {
 	// Include the STL namespace
 	using namespace std;
+	namespace Internal {
+		namespace CC {
+
+		}
+	}
 }
+
 
 // Modifications for Microsoft compilers
 #ifdef _MSC_VER

@@ -32,7 +32,7 @@
 #include "Driver.h"
 #include "platform/Log.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::CC;
 
 enum ProprietaryCmd
 {

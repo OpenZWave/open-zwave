@@ -30,7 +30,7 @@
 #include "platform/Thread.h"
 #include "ThreadImpl.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::Platform;
 
 
 //-----------------------------------------------------------------------------

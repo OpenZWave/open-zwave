@@ -35,7 +35,7 @@
 
 #include "value_classes/ValueByte.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::CC;
 
 enum SwitchToggleMultilevelCmd
 {
@@ -110,7 +110,7 @@ bool SwitchToggleMultilevel::HandleMsg
 	{
 		Log::Write( LogLevel_Info, GetNodeId(), "Received SwitchToggleMultiLevel report: level=%d", _data[1] );
 
-		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_SwitchToggleMultilevel::Level ) ) )
+		if( Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>( GetValue( _instance, ValueID_Index_SwitchToggleMultilevel::Level ) ) )
 		{
 			value->OnValueRefreshed( _data[1] );
 			value->Release();
@@ -127,7 +127,7 @@ bool SwitchToggleMultilevel::HandleMsg
 //-----------------------------------------------------------------------------
 bool SwitchToggleMultilevel::SetValue
 (
-	Value const& _value
+	Internal::VC::Value const& _value
 )
 {
 	Log::Write( LogLevel_Info, GetNodeId(), "SwitchToggleMultilevel::Set - Toggling the state" );

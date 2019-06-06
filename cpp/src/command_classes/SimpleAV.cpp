@@ -1,3 +1,29 @@
+//-----------------------------------------------------------------------------
+//
+//	SimpleAVCommandItem.h
+//
+//	Implementation of the Z-Wave COMMAND_CLASS_SIMPLE_AV_CONTROL
+//
+//	Copyright (c) 2018
+//
+//	SOFTWARE NOTICE AND LICENSE
+//
+//	This file is part of OpenZWave.
+//
+//	OpenZWave is free software: you can redistribute it and/or modify
+//	it under the terms of the GNU Lesser General Public License as published
+//	by the Free Software Foundation, either version 3 of the License,
+//	or (at your option) any later version.
+//
+//	OpenZWave is distributed in the hope that it will be useful,
+//	but WITHOUT ANY WARRANTY; without even the implied warranty of
+//	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//	GNU Lesser General Public License for more details.
+//
+//	You should have received a copy of the GNU Lesser General Public License
+//	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
+//
+//-----------------------------------------------------------------------------
 #include "command_classes/CommandClasses.h"
 #include "command_classes/MultiInstance.h"
 #include "command_classes/SimpleAV.h"
@@ -12,7 +38,7 @@
 #include "value_classes/ValueShort.h"
 #include "value_classes/ValueList.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::CC;
 
 uint8 m_sequence;
 
@@ -41,18 +67,18 @@ bool SimpleAV::HandleMsg
 //-----------------------------------------------------------------------------
 bool SimpleAV::SetValue
 (
-	Value const& _value
+	Internal::VC::Value const& _value
 )
 {
 	uint16 shortval;
 	if (ValueID::ValueType_Short == _value.GetID().GetType())
 	{
-		ValueShort const* value = static_cast<ValueShort const*>(&_value);
+		Internal::VC::ValueShort const* value = static_cast<Internal::VC::ValueShort const*>(&_value);
 		shortval = value->GetValue();
 	}
 	else if (ValueID::ValueType_List == _value.GetID().GetType())
 	{
-		ValueList const* value = static_cast<ValueList const*>(&_value);
+		Internal::VC::ValueList const* value = static_cast<Internal::VC::ValueList const*>(&_value);
 		shortval = value->GetItem()->m_value;
 	}
 	else return false;
@@ -91,7 +117,7 @@ void SimpleAV::CreateVars
 	if (Node* node = GetNodeUnsafe())
 	{
 		// Create list value
-		vector<ValueList::Item> items;
+		vector<Internal::VC::ValueList::Item> items;
 		vector<SimpleAVCommandItem> commands = SimpleAVCommandItem::GetCommands();
 		vector<SimpleAVCommandItem>::iterator iterator;
 		string helpList = "Possible values: \n";
@@ -101,7 +127,7 @@ void SimpleAV::CreateVars
 			SimpleAVCommandItem command = *iterator;
 			if (command.GetVersion() <= GetVersion())
 			{
-				ValueList::Item item;
+				Internal::VC::ValueList::Item item;
 				item.m_value = command.GetCode();
 				item.m_label = command.GetName();
 				items.push_back(item);

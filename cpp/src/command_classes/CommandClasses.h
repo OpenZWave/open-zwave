@@ -35,6 +35,10 @@
 
 namespace OpenZWave
 {
+namespace Internal
+{
+namespace CC
+{
 	class CommandClass;
 
 	/** \brief Manages a map of command classes supported by a specific Z-Wave node.
@@ -79,7 +83,8 @@ namespace OpenZWave
 		// for unwanted command classes.
 		uint32					m_supportedCommandClasses[8];
 	};
-
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 

@@ -39,7 +39,7 @@
 #include "platform/unix/WaitImpl.h"	// Platform-specific implementation of a Wait object
 #endif
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::Platform;
 
 void WaitMultipleCallback( void* _context );
 

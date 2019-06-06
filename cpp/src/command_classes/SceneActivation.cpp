@@ -35,7 +35,7 @@
 #include "platform/Log.h"
 #include "value_classes/ValueInt.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::CC;
 
 enum SceneActivationCmd
 {
@@ -93,12 +93,12 @@ bool SceneActivation::HandleIncomingMsg
 		GetDriver()->QueueNotification( notification );
 
 		Log::Write( LogLevel_Info, GetNodeId(), "Received SceneActivation report: %d (duration: %d)", _data[1], duration);
-		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, ValueID_Index_SceneActivation::SceneID ) ) )
+		if( Internal::VC::ValueInt* value = static_cast<Internal::VC::ValueInt*>( GetValue( _instance, ValueID_Index_SceneActivation::SceneID ) ) )
 		{
 			value->OnValueRefreshed( _data[1] );
 			value->Release();
 		}
-		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, ValueID_Index_SceneActivation::Duration ) ) )
+		if( Internal::VC::ValueInt* value = static_cast<Internal::VC::ValueInt*>( GetValue( _instance, ValueID_Index_SceneActivation::Duration ) ) )
 		{
 			value->OnValueRefreshed( duration );
 			value->Release();
@@ -136,13 +136,17 @@ bool SceneActivation::HandleMsg
 // <SceneActivation::ClearScene>
 // Return the Scene ValueID's to defaults, after the duration has expired
 //-----------------------------------------------------------------------------
-void SceneActivation::ClearScene(uint32 _instance) {
-	if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, ValueID_Index_SceneActivation::SceneID ) ) )
+void SceneActivation::ClearScene
+(
+		uint32 _instance
+)
+{
+	if( Internal::VC::ValueInt* value = static_cast<Internal::VC::ValueInt*>( GetValue( _instance, ValueID_Index_SceneActivation::SceneID ) ) )
 	{
 		value->OnValueRefreshed( 0 );
 		value->Release();
 	}
-	if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, ValueID_Index_SceneActivation::Duration ) ) )
+	if( Internal::VC::ValueInt* value = static_cast<Internal::VC::ValueInt*>( GetValue( _instance, ValueID_Index_SceneActivation::Duration ) ) )
 	{
 		value->OnValueRefreshed( 0 );
 		value->Release();

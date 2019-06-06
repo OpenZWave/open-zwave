@@ -32,7 +32,7 @@
 #include "Manager.h"
 #include <ctime>
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::VC;
 
 
 //-----------------------------------------------------------------------------

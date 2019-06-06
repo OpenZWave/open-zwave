@@ -35,7 +35,10 @@
 
 namespace OpenZWave
 {
-	class ValueList;
+namespace Internal
+{
+namespace CC
+{
 
 	/** \brief Implements COMMAND_CLASS_THERMOSTAT_MODE (0x40), a Z-Wave device command class.
 	 * \ingroup CommandClass
@@ -57,7 +60,7 @@ namespace OpenZWave
 		virtual uint8 const GetCommandClassId() const override { return StaticGetCommandClassId(); }
 		virtual string const GetCommandClassName() const override { return StaticGetCommandClassName(); }
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 ) override;
-		virtual bool SetValue( Value const& _value ) override;
+		virtual bool SetValue( Internal::VC::Value const& _value ) override;
 		virtual uint8 GetMaxVersion() override { return 3; }
 
 	protected:
@@ -66,9 +69,10 @@ namespace OpenZWave
 	private:
 		ThermostatMode( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){ SetStaticRequest( StaticRequest_Values ); }
 
-		vector<ValueList::Item>		m_supportedModes;
+		vector<Internal::VC::ValueList::Item>		m_supportedModes;
 	};
-
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

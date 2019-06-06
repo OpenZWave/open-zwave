@@ -27,6 +27,7 @@
 
 #include <math.h>
 #include <locale.h>
+#include "Defs.h"
 #include "tinyxml.h"
 #include "command_classes/CommandClass.h"
 #include "command_classes/Basic.h"
@@ -38,9 +39,10 @@
 #include "Localization.h"
 #include "Manager.h"
 #include "platform/Log.h"
+#include "value_classes/Value.h"
 #include "value_classes/ValueStore.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::CC;
 
 static uint8 const	c_sizeMask		= 0x07;
 static uint8 const	c_scaleMask		= 0x18;
@@ -115,7 +117,7 @@ CommandClass::~CommandClass
 // <CommandClass::GetDriver>
 // Get a pointer to our driver
 //-----------------------------------------------------------------------------
-Driver* CommandClass::GetDriver
+OpenZWave::Driver* CommandClass::GetDriver
 (
 )const
 {
@@ -126,7 +128,7 @@ Driver* CommandClass::GetDriver
 // <CommandClass::GetNode>
 // Get a pointer to our node without locking the mutex
 //-----------------------------------------------------------------------------
-Node* CommandClass::GetNodeUnsafe
+OpenZWave::Node* CommandClass::GetNodeUnsafe
 (
 )const
 {
@@ -137,13 +139,13 @@ Node* CommandClass::GetNodeUnsafe
 // <CommandClass::GetValue>
 // Get a pointer to a value by its instance and index
 //-----------------------------------------------------------------------------
-Value* CommandClass::GetValue
+OpenZWave::Internal::VC::Value* CommandClass::GetValue
 (
 		uint8 const _instance,
 		uint16 const _index
 )
 {
-	Value* value = NULL;
+	Internal::VC::Value* value = NULL;
 	if( Node* node = GetNodeUnsafe() )
 	{
 		value = node->GetValue( GetCommandClassId(), _instance, _index );
@@ -216,14 +218,14 @@ void CommandClass::SetInstanceLabel
 		char *label
 )
 {
-	m_instanceLabel[_instance] = string(label);
+	m_instanceLabel[_instance] = std::string(label);
 }
 //-----------------------------------------------------------------------------
 // <CommandClass::GetInstanceLabel>
 // Get the Label for a Instance of this CommandClass
 //-----------------------------------------------------------------------------
 
-string CommandClass::GetInstanceLabel
+std::string CommandClass::GetInstanceLabel
 (
 		uint8 const _instance
 )
@@ -232,7 +234,7 @@ string CommandClass::GetInstanceLabel
 	{
 		return Localization::Get()->GetGlobalLabel(m_instanceLabel[_instance]);
 	}
-	return string();
+	return std::string();
 }
 
 //-----------------------------------------------------------------------------
@@ -333,7 +335,7 @@ void CommandClass::ReadValueRefreshXML
 	RefreshValue *rcc = new RefreshValue();
 	rcc->cc = GetCommandClassId();
 	genre = _ccElement->Attribute( "Genre" );
-	rcc->genre = Value::GetGenreEnumFromName(genre);
+	rcc->genre = Internal::VC::Value::GetGenreEnumFromName(genre);
 	int temp;
 	_ccElement->QueryIntAttribute( "Instance", &temp);
 	rcc->instance = (uint8)temp;
@@ -399,7 +401,7 @@ void CommandClass::ReadValueRefreshXML
 //-----------------------------------------------------------------------------
 
 bool CommandClass::CheckForRefreshValues (
-		Value const* _value
+		Internal::VC::Value const* _value
 )
 {
 	if (m_RefreshClassValues.empty())
@@ -478,10 +480,10 @@ void CommandClass::WriteXML
 	}
 
 	// Write out the values for this command class
-	ValueStore* store = GetNodeUnsafe()->GetValueStore();
-	for( ValueStore::Iterator it = store->Begin(); it != store->End(); ++it )
+	Internal::VC::ValueStore* store = GetNodeUnsafe()->GetValueStore();
+	for( Internal::VC::ValueStore::Iterator it = store->Begin(); it != store->End(); ++it )
 	{
-		Value* value = it->second;
+		Internal::VC::Value* value = it->second;
 		if( value->GetID().GetCommandClassId() == GetCommandClassId() )
 		{
 			TiXmlElement* valueElement = new TiXmlElement( "Value" );
@@ -495,7 +497,7 @@ void CommandClass::WriteXML
 		RefreshValue *rcc = m_RefreshClassValues.at(i);
 		TiXmlElement* RefreshElement = new TiXmlElement("TriggerRefreshValue");
 		_ccElement->LinkEndChild( RefreshElement );
-		RefreshElement->SetAttribute("Genre", Value::GetGenreNameFromEnum((ValueID::ValueGenre)rcc->genre));
+		RefreshElement->SetAttribute("Genre", Internal::VC::Value::GetGenreNameFromEnum((ValueID::ValueGenre)rcc->genre));
 		RefreshElement->SetAttribute("Instance", rcc->instance);
 		RefreshElement->SetAttribute("Index", rcc->index);
 		for (uint32 j = 0; j < rcc->RefreshClasses.size(); j++)
@@ -515,7 +517,7 @@ void CommandClass::WriteXML
 // <CommandClass::ExtractValue>
 // Read a value from a variable length sequence of bytes
 //-----------------------------------------------------------------------------
-string CommandClass::ExtractValue
+std::string CommandClass::ExtractValue
 (
 		uint8 const* _data,
 		uint8* _scale,
@@ -545,7 +547,7 @@ string CommandClass::ExtractValue
 	}
 
 	// Deal with sign extension.  All values are signed
-	string res;
+	std::string res;
 	if( _data[_valueOffset] & 0x80 )
 	{
 		res = "-";
@@ -618,7 +620,7 @@ string CommandClass::ExtractValue
 void CommandClass::AppendValue
 (
 		Msg* _msg,
-		string const& _value,
+		std::string const& _value,
 		uint8 const _scale
 )const
 {
@@ -641,7 +643,7 @@ void CommandClass::AppendValue
 //-----------------------------------------------------------------------------
 uint8 const CommandClass::GetAppendValueSize
 (
-		string const& _value
+		std::string const& _value
 )const
 {
 	uint8 size;
@@ -656,7 +658,7 @@ uint8 const CommandClass::GetAppendValueSize
 //-----------------------------------------------------------------------------
 int32 CommandClass::ValueToInteger
 (
-		string const& _value,
+		std::string const& _value,
 		uint8* o_precision,
 		uint8* o_size
 )const
@@ -666,10 +668,10 @@ int32 CommandClass::ValueToInteger
 
 	// Find the decimal point
 	size_t pos = _value.find_first_of( "." );
-	if( pos == string::npos )
+	if( pos == std::string::npos )
 		pos = _value.find_first_of( "," );
 
-	if( pos == string::npos )
+	if( pos == std::string::npos )
 	{
 		// No decimal point
 		precision = 0;
@@ -682,7 +684,7 @@ int32 CommandClass::ValueToInteger
 		// Remove the decimal point and convert to an integer
 		precision = (uint8) ((_value.size()-pos)-1);
 
-		string str = _value.substr( 0, pos ) + _value.substr( pos+1 );
+		std::string str = _value.substr( 0, pos ) + _value.substr( pos+1 );
 		val = atol( str.c_str() );
 	}
 
@@ -817,7 +819,7 @@ bool CommandClass::RequestStateForAllInstances
 // <CommandClass::RequestStateForAllInstances>
 // Request current state from the device
 //-----------------------------------------------------------------------------
-string const CommandClass::GetCommandClassLabel
+std::string const CommandClass::GetCommandClassLabel
 (
 )
 {
@@ -830,7 +832,7 @@ string const CommandClass::GetCommandClassLabel
 //-----------------------------------------------------------------------------
 void CommandClass::SetCommandClassLabel
 (
-        string label
+        std::string label
 )
 {
     m_commandClassLabel = label;

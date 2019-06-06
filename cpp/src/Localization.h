@@ -37,8 +37,11 @@
 
 namespace OpenZWave
 {
+namespace Internal
+{
 
-class LabelLocalizationEntry : public Ref
+
+class LabelLocalizationEntry : public Internal::Platform::Ref
 {
 public:
     LabelLocalizationEntry (uint16 _index, uint32 _pos = -1);
@@ -56,7 +59,7 @@ private:
 };
 
 
-class ValueLocalizationEntry : public Ref
+class ValueLocalizationEntry : public Internal::Platform::Ref
 {
 public:
     ValueLocalizationEntry ( uint8 _commandClass, uint16 _index, uint32 _pos = -1 );
@@ -111,7 +114,7 @@ private:
     static uint64 GetValueKey (uint8 _node, uint8 _commandClass, uint16 _index, uint32 _pos, bool unique = false);
 public:
     static Localization* Get();
-    void SetupCommandClass(CommandClass *cc);
+    void SetupCommandClass(Internal::CC::CommandClass *cc);
     string GetSelectedLang() { return Localization::m_selectedLang;};
     bool SetValueHelp(uint8 node, uint8 ccID, uint16 indexID, uint32 pos, string help, string lang="");
     string const GetValueHelp(uint8 node, uint8 ccID, uint16 indexId, uint32 pos);
@@ -139,6 +142,6 @@ private:
 
 
 };
-
-};
+} // namespace Internal
+} // namespace OpenZWave
 #endif // VALUEHELP_H

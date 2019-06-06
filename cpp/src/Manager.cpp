@@ -146,7 +146,7 @@ ozwversion Manager::getVersion() {
 Manager::Manager
 (
 ):
-m_notificationMutex( new Mutex() )
+m_notificationMutex( new Internal::Platform::Mutex() )
 {
 	// Ensure the singleton instance is set
 	s_instance = this;
@@ -189,14 +189,14 @@ m_notificationMutex( new Mutex() )
 	Log::Create( logFilename, bAppend, bConsoleOutput, (LogLevel) nSaveLogLevel, (LogLevel) nQueueLogLevel, (LogLevel) nDumpTrigger );
 	Log::SetLoggingState( logging );
 
-	CommandClasses::RegisterCommandClasses();
-	Scene::ReadScenes();
+	Internal::CC::CommandClasses::RegisterCommandClasses();
+	Internal::Scene::ReadScenes();
 	// petergebruers replace getVersionAsString() with getVersionLongAsString() because
 	// the latter prints more information, based on the status of the repository
 	// when "make" was run. A Makefile gets this info from git describe --long --tags --dirty
 	Log::Write(LogLevel_Always, "OpenZwave Version %s Starting Up", getVersionLongAsString().c_str());
-	Log::Write(LogLevel_Always, "Using Language Localization %s", Localization::Get()->GetSelectedLang().c_str());
-	NotificationCCTypes::Create();
+	Log::Write(LogLevel_Always, "Using Language Localization %s", Internal::Localization::Get()->GetSelectedLang().c_str());
+	Internal::NotificationCCTypes::Create();
 
 }
 
@@ -304,7 +304,7 @@ void Manager::WriteConfig
 	{
 		Log::Write( LogLevel_Info, "mgr,     Manager::WriteConfig failed - _homeId %d not found", _homeId );
 	}
-	Scene::WriteXML( "zwscene.xml" );
+	Internal::Scene::WriteXML( "zwscene.xml" );
 }
 
 //-----------------------------------------------------------------------------
@@ -809,8 +809,8 @@ uint8 Manager::GetPollIntensity
 	uint8 intensity = 0;
 	if( Driver* driver = GetDriver( _valueId.GetHomeId() ) )
 	{
-		LockGuard LG(driver->m_nodeMutex);
-		if( Value* value = driver->GetValue( _valueId ) )
+		Internal::LockGuard LG(driver->m_nodeMutex);
+		if( Internal::VC::Value* value = driver->GetValue( _valueId ) )
 		{
 			intensity = value->GetPollIntensity();
 			value->Release();
@@ -840,7 +840,7 @@ bool Manager::RefreshNodeInfo
 	{
 		// Cause the node's data to be obtained from the Z-Wave network
 		// in the same way as if it had just been added.
-		LockGuard LG(driver->m_nodeMutex);
+		Internal::LockGuard LG(driver->m_nodeMutex);
 		driver->ReloadNode(_nodeId);
 		return true;
 	}
@@ -860,7 +860,7 @@ bool Manager::RequestNodeState
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		LockGuard LG(driver->m_nodeMutex);
+		Internal::LockGuard LG(driver->m_nodeMutex);
 		// Retreive the Node's session and dynamic data
 		Node* node = driver->GetNode( _nodeId );
 		if( node )
@@ -884,7 +884,7 @@ bool Manager::RequestNodeDynamic
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		LockGuard LG(driver->m_nodeMutex);
+		Internal::LockGuard LG(driver->m_nodeMutex);
 		// Retreive the Node's dynamic data
 		Node* node = driver->GetNode( _nodeId );
 		if( node )
@@ -1526,7 +1526,7 @@ bool Manager::IsNodeInfoReceived
 		Node *node;
 
 		// Need to lock and unlock nodes to check this information
-		LockGuard LG(driver->m_nodeMutex);
+		Internal::LockGuard LG(driver->m_nodeMutex);
 
 		if( (node = driver->GetNode( _nodeId ) ) != NULL)
 		{
@@ -1557,11 +1557,11 @@ bool Manager::GetNodeClassInformation
 		Node *node;
 
 		// Need to lock and unlock nodes to check this information
-		LockGuard LG(driver->m_nodeMutex);
+		Internal::LockGuard LG(driver->m_nodeMutex);
 
 		if( ( node = driver->GetNode( _nodeId ) ) != NULL )
 		{
-			CommandClass *cc;
+			Internal::CC::CommandClass *cc;
 			if( node->NodeInfoReceived() && ( ( cc = node->GetCommandClass( _commandClassId ) ) != NULL ) )
 			{
 				if( _className )
@@ -1600,11 +1600,11 @@ bool Manager::IsNodeAwake
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
 		// Need to lock and unlock nodes to check this information
-		LockGuard LG(driver->m_nodeMutex);
+		Internal::LockGuard LG(driver->m_nodeMutex);
 
 		if( Node* node = driver->GetNode( _nodeId ) )
 		{
-			if( WakeUp* wcc = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
+			if( Internal::CC::WakeUp* wcc = static_cast<Internal::CC::WakeUp*>( node->GetCommandClass( Internal::CC::WakeUp::StaticGetCommandClassId() ) ) )
 			{
 				result = wcc->IsAwake();
 			}
@@ -1626,7 +1626,7 @@ bool Manager::IsNodeFailed
 	bool result = false;
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		LockGuard LG(driver->m_nodeMutex);
+		Internal::LockGuard LG(driver->m_nodeMutex);
 		if( Node* node = driver->GetNode( _nodeId ) )
 		{
 			result = !node->IsNodeAlive();
@@ -1648,7 +1648,7 @@ string Manager::GetNodeQueryStage
 	string result = "Unknown";
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		LockGuard LG(driver->m_nodeMutex);
+		Internal::LockGuard LG(driver->m_nodeMutex);
 		if( Node* node = driver->GetNode( _nodeId ) )
 		{
 			result = node->GetQueryStageName( node->GetCurrentQueryStage() );
@@ -1704,7 +1704,7 @@ string Manager::GetInstanceLabel
 	string label;
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		LockGuard LG(driver->m_nodeMutex);
+		Internal::LockGuard LG(driver->m_nodeMutex);
 		if( Node* node = driver->GetNode( _node ) )
 		{
 			label = node->GetInstanceLabel(_cc, _instance);
@@ -1736,13 +1736,13 @@ string Manager::GetValueLabel
 	string label;
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
-		LockGuard LG(driver->m_nodeMutex);
+		Internal::LockGuard LG(driver->m_nodeMutex);
 		if (_pos != -1) {
 			if (_id.GetType() != ValueID::ValueType_BitSet) {
 				OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "ValueID passed to GetValueLabel is not a BitSet but a position was requested");
 				return label;
 			}
-			ValueBitSet *value = static_cast<ValueBitSet *>(driver->GetValue( _id ));
+			Internal::VC::ValueBitSet *value = static_cast<Internal::VC::ValueBitSet *>(driver->GetValue( _id ));
 			label = value->GetBitLabel(_pos);
 			value->Release();
 			return label;
@@ -1757,7 +1757,7 @@ string Manager::GetValueLabel
 					label = GetInstanceLabel(_id).append(" ");
 				}
 			}
-			if ( Value* value = driver->GetValue( _id ) )
+			if ( Internal::VC::Value* value = driver->GetValue( _id ) )
 			{
 
 				label.append(value->GetLabel());
@@ -1783,18 +1783,18 @@ void Manager::SetValueLabel
 {
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
-		LockGuard LG(driver->m_nodeMutex);
+		Internal::LockGuard LG(driver->m_nodeMutex);
 		if (_pos != -1) {
 			if (_id.GetType() != ValueID::ValueType_BitSet) {
 				OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "ValueID passed to SetValueLabel is not a BitSet but a position was requested");
 				return;
 			}
-			ValueBitSet *value = static_cast<ValueBitSet *>(driver->GetValue( _id ));
+			Internal::VC::ValueBitSet *value = static_cast<Internal::VC::ValueBitSet *>(driver->GetValue( _id ));
 			value->SetBitLabel(_pos, _value);
 			value->Release();
 			return;
 		} else {
-			if( Value* value = driver->GetValue( _id ) )
+			if( Internal::VC::Value* value = driver->GetValue( _id ) )
 			{
 				value->SetLabel( _value );
 				value->Release();
@@ -1817,8 +1817,8 @@ string Manager::GetValueUnits
 	string units;
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
-		LockGuard LG(driver->m_nodeMutex);
-		if( Value* value = driver->GetValue( _id ) )
+		Internal::LockGuard LG(driver->m_nodeMutex);
+		if( Internal::VC::Value* value = driver->GetValue( _id ) )
 		{
 			units = value->GetUnits();
 			value->Release();
@@ -1842,8 +1842,8 @@ void Manager::SetValueUnits
 {
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
-		LockGuard LG(driver->m_nodeMutex);
-		if( Value* value = driver->GetValue( _id ) )
+		Internal::LockGuard LG(driver->m_nodeMutex);
+		if( Internal::VC::Value* value = driver->GetValue( _id ) )
 		{
 			value->SetUnits( _value );
 			value->Release();
@@ -1866,18 +1866,18 @@ string Manager::GetValueHelp
 	string help;
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
-		LockGuard LG(driver->m_nodeMutex);
+		Internal::LockGuard LG(driver->m_nodeMutex);
 		if (_pos != -1) {
 			if (_id.GetType() != ValueID::ValueType_BitSet) {
 				OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "ValueID passed to GetValueHelp is not a BitSet but a position was requested");
 				return help;
 			}
-			ValueBitSet *value = static_cast<ValueBitSet *>(driver->GetValue( _id ));
+			Internal::VC::ValueBitSet *value = static_cast<Internal::VC::ValueBitSet *>(driver->GetValue( _id ));
 			help = value->GetBitHelp(_pos);
 			value->Release();
 			return help;
 		} else {
-			if( Value* value = driver->GetValue( _id ) )
+			if( Internal::VC::Value* value = driver->GetValue( _id ) )
 			{
 				help = value->GetHelp();
 				value->Release();
@@ -1902,18 +1902,18 @@ void Manager::SetValueHelp
 {
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
-		LockGuard LG(driver->m_nodeMutex);
+		Internal::LockGuard LG(driver->m_nodeMutex);
 		if (_pos != -1) {
 			if (_id.GetType() != ValueID::ValueType_BitSet) {
 				OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "ValueID passed to SetValueHelp is not a BitSet but a position was requested");
 				return;
 			}
-			ValueBitSet *value = static_cast<ValueBitSet *>(driver->GetValue( _id ));
+			Internal::VC::ValueBitSet *value = static_cast<Internal::VC::ValueBitSet *>(driver->GetValue( _id ));
 			value->SetBitHelp(_pos, _value);
 			value->Release();
 			return;
 		} else {
-			if( Value* value = driver->GetValue( _id ) )
+			if( Internal::VC::Value* value = driver->GetValue( _id ) )
 			{
 				value->SetHelp( _value );
 				value->Release();
@@ -1936,8 +1936,8 @@ int32 Manager::GetValueMin
 	int32 limit = 0;
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
-		LockGuard LG(driver->m_nodeMutex);
-		if( Value* value = driver->GetValue( _id ) )
+		Internal::LockGuard LG(driver->m_nodeMutex);
+		if( Internal::VC::Value* value = driver->GetValue( _id ) )
 		{
 			limit = value->GetMin();
 			value->Release();
@@ -1961,8 +1961,8 @@ int32 Manager::GetValueMax
 	int32 limit = 0;
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
-		LockGuard LG(driver->m_nodeMutex);
-		if( Value* value = driver->GetValue( _id ) )
+		Internal::LockGuard LG(driver->m_nodeMutex);
+		if( Internal::VC::Value* value = driver->GetValue( _id ) )
 		{
 			limit = value->GetMax();
 			value->Release();
@@ -1986,8 +1986,8 @@ bool Manager::IsValueReadOnly
 	bool res = false;
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
-		LockGuard LG(driver->m_nodeMutex);
-		if( Value* value = driver->GetValue( _id ) )
+		Internal::LockGuard LG(driver->m_nodeMutex);
+		if( Internal::VC::Value* value = driver->GetValue( _id ) )
 		{
 			res = value->IsReadOnly();
 			value->Release();
@@ -2011,8 +2011,8 @@ bool Manager::IsValueWriteOnly
 	bool res = false;
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
-		LockGuard LG(driver->m_nodeMutex);
-		if( Value* value = driver->GetValue( _id ) )
+		Internal::LockGuard LG(driver->m_nodeMutex);
+		if( Internal::VC::Value* value = driver->GetValue( _id ) )
 		{
 			res = value->IsWriteOnly();
 			value->Release();
@@ -2036,8 +2036,8 @@ bool Manager::IsValueSet
 	bool res = false;
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
-		LockGuard LG(driver->m_nodeMutex);
-		if( Value* value = driver->GetValue( _id ) )
+		Internal::LockGuard LG(driver->m_nodeMutex);
+		if( Internal::VC::Value* value = driver->GetValue( _id ) )
 		{
 			res = value->IsSet();
 			value->Release();
@@ -2061,8 +2061,8 @@ bool Manager::IsValuePolled
 	bool res = false;
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
-		LockGuard LG(driver->m_nodeMutex);
-		if( Value* value = driver->GetValue( _id ) )
+		Internal::LockGuard LG(driver->m_nodeMutex);
+		if( Internal::VC::Value* value = driver->GetValue( _id ) )
 		{
 			res = value->IsPolled();
 			value->Release();
@@ -2092,8 +2092,8 @@ bool Manager::GetValueAsBitSet
 		{
 			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 			{
-				LockGuard LG(driver->m_nodeMutex);
-				if( ValueBitSet* value = static_cast<ValueBitSet*>( driver->GetValue( _id ) ) )
+				Internal::LockGuard LG(driver->m_nodeMutex);
+				if( Internal::VC::ValueBitSet* value = static_cast<Internal::VC::ValueBitSet*>( driver->GetValue( _id ) ) )
 				{
 					*o_value = value->GetBit(_pos);
 					value->Release();
@@ -2127,8 +2127,8 @@ bool Manager::GetValueAsBool
 		{
 			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 			{
-				LockGuard LG(driver->m_nodeMutex);
-				if( ValueBool* value = static_cast<ValueBool*>( driver->GetValue( _id ) ) )
+				Internal::LockGuard LG(driver->m_nodeMutex);
+				if( Internal::VC::ValueBool* value = static_cast<Internal::VC::ValueBool*>( driver->GetValue( _id ) ) )
 				{
 					*o_value = value->GetValue();
 					value->Release();
@@ -2142,8 +2142,8 @@ bool Manager::GetValueAsBool
 		{
 			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 			{
-				LockGuard LG(driver->m_nodeMutex);
-				if( ValueButton* value = static_cast<ValueButton*>( driver->GetValue( _id ) ) )
+				Internal::LockGuard LG(driver->m_nodeMutex);
+				if( Internal::VC::ValueButton* value = static_cast<Internal::VC::ValueButton*>( driver->GetValue( _id ) ) )
 				{
 					*o_value = value->IsPressed();
 					value->Release();
@@ -2178,8 +2178,8 @@ bool Manager::GetValueAsByte
 		{
 			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 			{
-				LockGuard LG(driver->m_nodeMutex);
-				if( ValueByte* value = static_cast<ValueByte*>( driver->GetValue( _id ) ) )
+				Internal::LockGuard LG(driver->m_nodeMutex);
+				if( Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>( driver->GetValue( _id ) ) )
 				{
 					*o_value = value->GetValue();
 					value->Release();
@@ -2214,8 +2214,8 @@ bool Manager::GetValueAsFloat
 		{
 			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 			{
-				LockGuard LG(driver->m_nodeMutex);
-				if( ValueDecimal* value = static_cast<ValueDecimal*>( driver->GetValue( _id ) ) )
+				Internal::LockGuard LG(driver->m_nodeMutex);
+				if( Internal::VC::ValueDecimal* value = static_cast<Internal::VC::ValueDecimal*>( driver->GetValue( _id ) ) )
 				{
 					string str = value->GetValue();
 					*o_value = (float)atof( str.c_str() );
@@ -2249,11 +2249,11 @@ bool Manager::GetValueAsInt
 	{
 		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 		{
-			LockGuard LG(driver->m_nodeMutex);
+			Internal::LockGuard LG(driver->m_nodeMutex);
 
 			if( ValueID::ValueType_Int == _id.GetType() )
 			{
-				if( ValueInt* value = static_cast<ValueInt*>( driver->GetValue( _id ) ) )
+				if( Internal::VC::ValueInt* value = static_cast<Internal::VC::ValueInt*>( driver->GetValue( _id ) ) )
 				{
 					*o_value = value->GetValue();
 					value->Release();
@@ -2266,7 +2266,7 @@ bool Manager::GetValueAsInt
 			}
 			else if (ValueID::ValueType_BitSet == _id.GetType() )
 			{
-				if (ValueBitSet* value = static_cast<ValueBitSet*>( driver->GetValue( _id ) ) )
+				if (Internal::VC::ValueBitSet* value = static_cast<Internal::VC::ValueBitSet*>( driver->GetValue( _id ) ) )
 				{
 					*o_value = value->GetValue();
 					value->Release();
@@ -2306,8 +2306,8 @@ bool Manager::GetValueAsRaw
 		{
 			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 			{
-				LockGuard LG(driver->m_nodeMutex);
-				if( ValueRaw* value = static_cast<ValueRaw*>( driver->GetValue( _id ) ) )
+				Internal::LockGuard LG(driver->m_nodeMutex);
+				if( Internal::VC::ValueRaw* value = static_cast<Internal::VC::ValueRaw*>( driver->GetValue( _id ) ) )
 				{
 					*o_length = value->GetLength();
 					*o_value = new uint8[*o_length];
@@ -2344,8 +2344,8 @@ bool Manager::GetValueAsShort
 		{
 			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 			{
-				LockGuard LG(driver->m_nodeMutex);
-				if( ValueShort* value = static_cast<ValueShort*>( driver->GetValue( _id ) ) )
+				Internal::LockGuard LG(driver->m_nodeMutex);
+				if( Internal::VC::ValueShort* value = static_cast<Internal::VC::ValueShort*>( driver->GetValue( _id ) ) )
 				{
 					*o_value = value->GetValue();
 					value->Release();
@@ -2379,13 +2379,13 @@ bool Manager::GetValueAsString
 	{
 		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 		{
-			LockGuard LG(driver->m_nodeMutex);
+			Internal::LockGuard LG(driver->m_nodeMutex);
 
 			switch( _id.GetType() )
 			{
 				case ValueID::ValueType_BitSet:
 				{
-					if( ValueBitSet* value = static_cast<ValueBitSet*>( driver->GetValue( _id ) ) )
+					if( Internal::VC::ValueBitSet* value = static_cast<Internal::VC::ValueBitSet*>( driver->GetValue( _id ) ) )
 					{
 						*o_value = value->GetAsString();
 						value->Release();
@@ -2397,7 +2397,7 @@ bool Manager::GetValueAsString
 				}
 				case ValueID::ValueType_Bool:
 				{
-					if( ValueBool* value = static_cast<ValueBool*>( driver->GetValue( _id ) ) )
+					if( Internal::VC::ValueBool* value = static_cast<Internal::VC::ValueBool*>( driver->GetValue( _id ) ) )
 					{
 						*o_value = value->GetValue() ? "True" : "False";
 						value->Release();
@@ -2409,7 +2409,7 @@ bool Manager::GetValueAsString
 				}
 				case ValueID::ValueType_Byte:
 				{
-					if( ValueByte* value = static_cast<ValueByte*>( driver->GetValue( _id ) ) )
+					if( Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>( driver->GetValue( _id ) ) )
 					{
 						snprintf( str, sizeof(str), "%u", value->GetValue() );
 						*o_value = str;
@@ -2422,7 +2422,7 @@ bool Manager::GetValueAsString
 				}
 				case ValueID::ValueType_Decimal:
 				{
-					if( ValueDecimal* value = static_cast<ValueDecimal*>( driver->GetValue( _id ) ) )
+					if( Internal::VC::ValueDecimal* value = static_cast<Internal::VC::ValueDecimal*>( driver->GetValue( _id ) ) )
 					{
 						*o_value = value->GetValue();
 						value->Release();
@@ -2434,7 +2434,7 @@ bool Manager::GetValueAsString
 				}
 				case ValueID::ValueType_Int:
 				{
-					if( ValueInt* value = static_cast<ValueInt*>( driver->GetValue( _id ) ) )
+					if( Internal::VC::ValueInt* value = static_cast<Internal::VC::ValueInt*>( driver->GetValue( _id ) ) )
 					{
 						snprintf( str, sizeof(str), "%d", value->GetValue() );
 						*o_value = str;
@@ -2447,9 +2447,9 @@ bool Manager::GetValueAsString
 				}
 				case ValueID::ValueType_List:
 				{
-					if( ValueList* value = static_cast<ValueList*>( driver->GetValue( _id ) ) )
+					if( Internal::VC::ValueList* value = static_cast<Internal::VC::ValueList*>( driver->GetValue( _id ) ) )
 					{
-						ValueList::Item const *item = value->GetItem();
+						Internal::VC::ValueList::Item const *item = value->GetItem();
 						if (item == NULL) {
 							o_value = NULL;
 							res = false;
@@ -2466,7 +2466,7 @@ bool Manager::GetValueAsString
 				}
 				case ValueID::ValueType_Raw:
 				{
-					if( ValueRaw* value = static_cast<ValueRaw*>( driver->GetValue( _id ) ) )
+					if( Internal::VC::ValueRaw* value = static_cast<Internal::VC::ValueRaw*>( driver->GetValue( _id ) ) )
 					{
 						*o_value = value->GetAsString();
 						value->Release();
@@ -2478,7 +2478,7 @@ bool Manager::GetValueAsString
 				}
 				case ValueID::ValueType_Short:
 				{
-					if( ValueShort* value = static_cast<ValueShort*>( driver->GetValue( _id ) ) )
+					if( Internal::VC::ValueShort* value = static_cast<Internal::VC::ValueShort*>( driver->GetValue( _id ) ) )
 					{
 						snprintf( str, sizeof(str), "%d", value->GetValue() );
 						*o_value = str;
@@ -2491,7 +2491,7 @@ bool Manager::GetValueAsString
 				}
 				case ValueID::ValueType_String:
 				{
-					if( ValueString* value = static_cast<ValueString*>( driver->GetValue( _id ) ) )
+					if( Internal::VC::ValueString* value = static_cast<Internal::VC::ValueString*>( driver->GetValue( _id ) ) )
 					{
 						*o_value = value->GetValue();
 						value->Release();
@@ -2503,7 +2503,7 @@ bool Manager::GetValueAsString
 				}
 				case ValueID::ValueType_Button:
 				{
-					if( ValueButton* value = static_cast<ValueButton*>( driver->GetValue( _id ) ) )
+					if( Internal::VC::ValueButton* value = static_cast<Internal::VC::ValueButton*>( driver->GetValue( _id ) ) )
 					{
 						*o_value = value->IsPressed() ? "True" : "False";
 						value->Release();
@@ -2515,7 +2515,7 @@ bool Manager::GetValueAsString
 				}
 				case ValueID::ValueType_Schedule:
 				{
-					if( ValueSchedule* value = static_cast<ValueSchedule*>( driver->GetValue( _id ) ) )
+					if( Internal::VC::ValueSchedule* value = static_cast<Internal::VC::ValueSchedule*>( driver->GetValue( _id ) ) )
 					{
 						*o_value = value->GetAsString();
 						value->Release();
@@ -2551,10 +2551,10 @@ bool Manager::GetValueListSelection
 		{
 			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 			{
-				LockGuard LG(driver->m_nodeMutex);
-				if( ValueList* value = static_cast<ValueList*>( driver->GetValue( _id ) ) )
+				Internal::LockGuard LG(driver->m_nodeMutex);
+				if( Internal::VC::ValueList* value = static_cast<Internal::VC::ValueList*>( driver->GetValue( _id ) ) )
 				{
-					ValueList::Item const *item = value->GetItem();
+					Internal::VC::ValueList::Item const *item = value->GetItem();
 					if( item != NULL && item->m_label.length() > 0)
 					{
 						*o_value = item->m_label;
@@ -2594,10 +2594,10 @@ bool Manager::GetValueListSelection
 		{
 			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 			{
-				LockGuard LG(driver->m_nodeMutex);
-				if( ValueList* value = static_cast<ValueList*>( driver->GetValue( _id ) ) )
+				Internal::LockGuard LG(driver->m_nodeMutex);
+				if( Internal::VC::ValueList* value = static_cast<Internal::VC::ValueList*>( driver->GetValue( _id ) ) )
 				{
-					ValueList::Item const *item = value->GetItem();
+					Internal::VC::ValueList::Item const *item = value->GetItem();
 					if (item == NULL) {
 						res = false;
 					} else {
@@ -2636,8 +2636,8 @@ bool Manager::GetValueListItems
 		{
 			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 			{
-				LockGuard LG(driver->m_nodeMutex);
-				if( ValueList* value = static_cast<ValueList*>( driver->GetValue( _id ) ) )
+				Internal::LockGuard LG(driver->m_nodeMutex);
+				if( Internal::VC::ValueList* value = static_cast<Internal::VC::ValueList*>( driver->GetValue( _id ) ) )
 				{
 					o_value->clear();
 					res = value->GetItemLabels( o_value );
@@ -2672,8 +2672,8 @@ bool Manager::GetValueListValues
 		{
 			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 			{
-				LockGuard LG(driver->m_nodeMutex);
-				if( ValueList* value = static_cast<ValueList*>( driver->GetValue( _id ) ) )
+				Internal::LockGuard LG(driver->m_nodeMutex);
+				if( Internal::VC::ValueList* value = static_cast<Internal::VC::ValueList*>( driver->GetValue( _id ) ) )
 				{
 					o_value->clear();
 					res = value->GetItemValues( o_value );
@@ -2709,8 +2709,8 @@ bool Manager::GetValueFloatPrecision
 		{
 			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 			{
-				LockGuard LG(driver->m_nodeMutex);
-				if( ValueDecimal* value = static_cast<ValueDecimal*>( driver->GetValue( _id ) ) )
+				Internal::LockGuard LG(driver->m_nodeMutex);
+				if( Internal::VC::ValueDecimal* value = static_cast<Internal::VC::ValueDecimal*>( driver->GetValue( _id ) ) )
 				{
 					*o_value = value->GetPrecision();
 					value->Release();
@@ -2746,8 +2746,8 @@ bool Manager::SetValue
 		{
 			if( _id.GetNodeId() != driver->GetControllerNodeId() )
 			{
-				LockGuard LG(driver->m_nodeMutex);
-				if( ValueBitSet* value = static_cast<ValueBitSet*>( driver->GetValue( _id ) ) )
+				Internal::LockGuard LG(driver->m_nodeMutex);
+				if( Internal::VC::ValueBitSet* value = static_cast<Internal::VC::ValueBitSet*>( driver->GetValue( _id ) ) )
 				{
 					if (_value)
 						res = value->SetBit(_pos);
@@ -2784,8 +2784,8 @@ bool Manager::SetValue
 		{
 			if( _id.GetNodeId() != driver->GetControllerNodeId() )
 			{
-				LockGuard LG(driver->m_nodeMutex);
-				if( ValueBool* value = static_cast<ValueBool*>( driver->GetValue( _id ) ) )
+				Internal::LockGuard LG(driver->m_nodeMutex);
+				if( Internal::VC::ValueBool* value = static_cast<Internal::VC::ValueBool*>( driver->GetValue( _id ) ) )
 				{
 					res = value->Set( _value );
 					value->Release();
@@ -2819,8 +2819,8 @@ bool Manager::SetValue
 		{
 			if( _id.GetNodeId() != driver->GetControllerNodeId() )
 			{
-				LockGuard LG(driver->m_nodeMutex);
-				if( ValueByte* value = static_cast<ValueByte*>( driver->GetValue( _id ) ) )
+				Internal::LockGuard LG(driver->m_nodeMutex);
+				if( Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>( driver->GetValue( _id ) ) )
 				{
 					res = value->Set( _value );
 					value->Release();
@@ -2835,8 +2835,8 @@ bool Manager::SetValue
 		{
 			if( _id.GetNodeId() != driver->GetControllerNodeId() )
 			{
-				LockGuard LG(driver->m_nodeMutex);
-				if( ValueBitSet* value = static_cast<ValueBitSet*>( driver->GetValue( _id ) ) )
+				Internal::LockGuard LG(driver->m_nodeMutex);
+				if( Internal::VC::ValueBitSet* value = static_cast<Internal::VC::ValueBitSet*>( driver->GetValue( _id ) ) )
 				{
 					if (value->GetSize() == 1) {
 						res = value->Set(_value);
@@ -2874,8 +2874,8 @@ bool Manager::SetValue
 		{
 			if( _id.GetNodeId() != driver->GetControllerNodeId() )
 			{
-				LockGuard LG(driver->m_nodeMutex);
-				if( ValueDecimal* value = static_cast<ValueDecimal*>( driver->GetValue( _id ) ) )
+				Internal::LockGuard LG(driver->m_nodeMutex);
+				if( Internal::VC::ValueDecimal* value = static_cast<Internal::VC::ValueDecimal*>( driver->GetValue( _id ) ) )
 				{
 					char str[256];
 					snprintf( str, sizeof(str), "%f", _value );
@@ -2929,8 +2929,8 @@ bool Manager::SetValue
 		{
 			if( _id.GetNodeId() != driver->GetControllerNodeId() )
 			{
-				LockGuard LG(driver->m_nodeMutex);
-				if( ValueInt* value = static_cast<ValueInt*>( driver->GetValue( _id ) ) )
+				Internal::LockGuard LG(driver->m_nodeMutex);
+				if( Internal::VC::ValueInt* value = static_cast<Internal::VC::ValueInt*>( driver->GetValue( _id ) ) )
 				{
 					res = value->Set( _value );
 					value->Release();
@@ -2945,8 +2945,8 @@ bool Manager::SetValue
 		{
 			if( _id.GetNodeId() != driver->GetControllerNodeId() )
 			{
-				LockGuard LG(driver->m_nodeMutex);
-				if( ValueBitSet* value = static_cast<ValueBitSet*>( driver->GetValue( _id ) ) )
+				Internal::LockGuard LG(driver->m_nodeMutex);
+				if( Internal::VC::ValueBitSet* value = static_cast<Internal::VC::ValueBitSet*>( driver->GetValue( _id ) ) )
 				{
 					if (value->GetSize() == 4) {
 						res = value->Set(_value);
@@ -2985,8 +2985,8 @@ bool Manager::SetValue
 		{
 			if( _id.GetNodeId() != driver->GetControllerNodeId() )
 			{
-				LockGuard LG(driver->m_nodeMutex);
-				if( ValueRaw* value = static_cast<ValueRaw*>( driver->GetValue( _id ) ) )
+				Internal::LockGuard LG(driver->m_nodeMutex);
+				if( Internal::VC::ValueRaw* value = static_cast<Internal::VC::ValueRaw*>( driver->GetValue( _id ) ) )
 				{
 					res = value->Set( _value, _length );
 					value->Release();
@@ -3020,8 +3020,8 @@ bool Manager::SetValue
 		{
 			if( _id.GetNodeId() != driver->GetControllerNodeId() )
 			{
-				LockGuard LG(driver->m_nodeMutex);
-				if( ValueShort* value = static_cast<ValueShort*>( driver->GetValue( _id ) ) )
+				Internal::LockGuard LG(driver->m_nodeMutex);
+				if( Internal::VC::ValueShort* value = static_cast<Internal::VC::ValueShort*>( driver->GetValue( _id ) ) )
 				{
 					res = value->Set( _value );
 					value->Release();
@@ -3036,8 +3036,8 @@ bool Manager::SetValue
 		{
 			if( _id.GetNodeId() != driver->GetControllerNodeId() )
 			{
-				LockGuard LG(driver->m_nodeMutex);
-				if( ValueBitSet* value = static_cast<ValueBitSet*>( driver->GetValue( _id ) ) )
+				Internal::LockGuard LG(driver->m_nodeMutex);
+				if( Internal::VC::ValueBitSet* value = static_cast<Internal::VC::ValueBitSet*>( driver->GetValue( _id ) ) )
 				{
 					if (value->GetSize() == 2) {
 						res = value->Set(_value);
@@ -3075,8 +3075,8 @@ bool Manager::SetValueListSelection
 		{
 			if( _id.GetNodeId() != driver->GetControllerNodeId() )
 			{
-				LockGuard LG(driver->m_nodeMutex);
-				if( ValueList* value = static_cast<ValueList*>( driver->GetValue( _id ) ) )
+				Internal::LockGuard LG(driver->m_nodeMutex);
+				if( Internal::VC::ValueList* value = static_cast<Internal::VC::ValueList*>( driver->GetValue( _id ) ) )
 				{
 					res = value->SetByLabel( _selectedItem );
 					value->Release();
@@ -3109,13 +3109,13 @@ bool Manager::SetValue
 	{
 		if( _id.GetNodeId() != driver->GetControllerNodeId() )
 		{
-			LockGuard LG(driver->m_nodeMutex);
+			Internal::LockGuard LG(driver->m_nodeMutex);
 
 			switch( _id.GetType() )
 			{
 				case ValueID::ValueType_BitSet:
 				{
-					if( ValueBitSet* value = static_cast<ValueBitSet*>( driver->GetValue( _id ) ) )
+					if( Internal::VC::ValueBitSet* value = static_cast<Internal::VC::ValueBitSet*>( driver->GetValue( _id ) ) )
 					{
 
 						res = value->SetFromString(_value);
@@ -3127,7 +3127,7 @@ bool Manager::SetValue
 				}
 				case ValueID::ValueType_Bool:
 				{
-					if( ValueBool* value = static_cast<ValueBool*>( driver->GetValue( _id ) ) )
+					if( Internal::VC::ValueBool* value = static_cast<Internal::VC::ValueBool*>( driver->GetValue( _id ) ) )
 					{
 						if( !strcasecmp( "true", _value.c_str() ) )
 						{
@@ -3145,7 +3145,7 @@ bool Manager::SetValue
 				}
 				case ValueID::ValueType_Byte:
 				{
-					if( ValueByte* value = static_cast<ValueByte*>( driver->GetValue( _id ) ) )
+					if( Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>( driver->GetValue( _id ) ) )
 					{
 						uint32 val = (uint32)atoi( _value.c_str() );
 						if( val < 256 )
@@ -3160,7 +3160,7 @@ bool Manager::SetValue
 				}
 				case ValueID::ValueType_Decimal:
 				{
-					if( ValueDecimal* value = static_cast<ValueDecimal*>( driver->GetValue( _id ) ) )
+					if( Internal::VC::ValueDecimal* value = static_cast<Internal::VC::ValueDecimal*>( driver->GetValue( _id ) ) )
 					{
 						res = value->Set( _value );
 						value->Release();
@@ -3171,7 +3171,7 @@ bool Manager::SetValue
 				}
 				case ValueID::ValueType_Int:
 				{
-					if( ValueInt* value = static_cast<ValueInt*>( driver->GetValue( _id ) ) )
+					if( Internal::VC::ValueInt* value = static_cast<Internal::VC::ValueInt*>( driver->GetValue( _id ) ) )
 					{
 						int32 val = atoi( _value.c_str() );
 						res = value->Set( val );
@@ -3183,7 +3183,7 @@ bool Manager::SetValue
 				}
 				case ValueID::ValueType_List:
 				{
-					if( ValueList* value = static_cast<ValueList*>( driver->GetValue( _id ) ) )
+					if( Internal::VC::ValueList* value = static_cast<Internal::VC::ValueList*>( driver->GetValue( _id ) ) )
 					{
 						res = value->SetByLabel( _value );
 						value->Release();
@@ -3194,7 +3194,7 @@ bool Manager::SetValue
 				}
 				case ValueID::ValueType_Short:
 				{
-					if( ValueShort* value = static_cast<ValueShort*>( driver->GetValue( _id ) ) )
+					if( Internal::VC::ValueShort* value = static_cast<Internal::VC::ValueShort*>( driver->GetValue( _id ) ) )
 					{
 						int32 val = (uint32)atoi( _value.c_str() );
 						if( ( val < 32768 ) && ( val >= -32768 ) )
@@ -3209,7 +3209,7 @@ bool Manager::SetValue
 				}
 				case ValueID::ValueType_String:
 				{
-					if( ValueString* value = static_cast<ValueString*>( driver->GetValue( _id ) ) )
+					if( Internal::VC::ValueString* value = static_cast<Internal::VC::ValueString*>( driver->GetValue( _id ) ) )
 					{
 						res = value->Set( _value );
 						value->Release();
@@ -3220,7 +3220,7 @@ bool Manager::SetValue
 				}
 				case ValueID::ValueType_Raw:
 				{
-					if( ValueRaw* value = static_cast<ValueRaw*>( driver->GetValue( _id ) ) )
+					if( Internal::VC::ValueRaw* value = static_cast<Internal::VC::ValueRaw*>( driver->GetValue( _id ) ) )
 					{
 						res = value->SetFromString( _value );
 						value->Release();
@@ -3257,11 +3257,11 @@ bool Manager::RefreshValue
 		Node *node;
 
 		// Need to lock and unlock nodes to check this information
-		LockGuard LG(driver->m_nodeMutex);
+		Internal::LockGuard LG(driver->m_nodeMutex);
 
 		if( (node = driver->GetNode( _id.GetNodeId() ) ) != NULL)
 		{
-			CommandClass* cc = node->GetCommandClass( _id.GetCommandClassId() );
+			Internal::CC::CommandClass* cc = node->GetCommandClass( _id.GetCommandClassId() );
 			if (cc) {
 				uint16_t index = _id.GetIndex();
 				uint8 instance = _id.GetInstance();
@@ -3289,8 +3289,8 @@ void Manager::SetChangeVerified
 {
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
-		LockGuard LG(driver->m_nodeMutex);
-		if( Value* value = driver->GetValue( _id ) )
+		Internal::LockGuard LG(driver->m_nodeMutex);
+		if( Internal::VC::Value* value = driver->GetValue( _id ) )
 		{
 			value->SetChangeVerified( _verify );
 			value->Release();
@@ -3312,8 +3312,8 @@ bool Manager::GetChangeVerified
 	bool res = false;
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
-		LockGuard LG(driver->m_nodeMutex);
-		if( Value* value = driver->GetValue( _id ) )
+		Internal::LockGuard LG(driver->m_nodeMutex);
+		if( Internal::VC::Value* value = driver->GetValue( _id ) )
 		{
 			res = value->GetChangeVerified();
 			value->Release();
@@ -3340,8 +3340,8 @@ bool Manager::PressButton
 	{
 		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 		{
-			LockGuard LG(driver->m_nodeMutex);
-			if( ValueButton* value = static_cast<ValueButton*>( driver->GetValue( _id ) ) )
+			Internal::LockGuard LG(driver->m_nodeMutex);
+			if( Internal::VC::ValueButton* value = static_cast<Internal::VC::ValueButton*>( driver->GetValue( _id ) ) )
 			{
 				res = value->PressButton();
 				value->Release();
@@ -3371,8 +3371,8 @@ bool Manager::ReleaseButton
 	{
 		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 		{
-			LockGuard LG(driver->m_nodeMutex);
-			if( ValueButton* value = static_cast<ValueButton*>( driver->GetValue( _id ) ) )
+			Internal::LockGuard LG(driver->m_nodeMutex);
+			if( Internal::VC::ValueButton* value = static_cast<Internal::VC::ValueButton*>( driver->GetValue( _id ) ) )
 			{
 				res = value->ReleaseButton();
 				value->Release();
@@ -3403,8 +3403,8 @@ bool Manager::SetBitMask
 	{
 		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 		{
-			LockGuard LG(driver->m_nodeMutex);
-			if( ValueBitSet* value = static_cast<ValueBitSet*>( driver->GetValue( _id ) ) )
+			Internal::LockGuard LG(driver->m_nodeMutex);
+			if( Internal::VC::ValueBitSet* value = static_cast<Internal::VC::ValueBitSet*>( driver->GetValue( _id ) ) )
 			{
 				res = value->SetBitMask(_mask);
 				value->Release();
@@ -3438,8 +3438,8 @@ bool Manager::GetBitMask
 		{
 			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 			{
-				LockGuard LG(driver->m_nodeMutex);
-				if( ValueBitSet* value = static_cast<ValueBitSet*>( driver->GetValue( _id ) ) )
+				Internal::LockGuard LG(driver->m_nodeMutex);
+				if(Internal::VC::ValueBitSet* value = static_cast<Internal::VC::ValueBitSet*>( driver->GetValue( _id ) ) )
 				{
 					*o_mask = value->GetBitMask();
 					value->Release();
@@ -3474,8 +3474,8 @@ bool Manager::GetBitSetSize
 		{
 			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 			{
-				LockGuard LG(driver->m_nodeMutex);
-				if( ValueBitSet* value = static_cast<ValueBitSet*>( driver->GetValue( _id ) ) )
+				Internal::LockGuard LG(driver->m_nodeMutex);
+				if( Internal::VC::ValueBitSet* value = static_cast<Internal::VC::ValueBitSet*>( driver->GetValue( _id ) ) )
 				{
 					*o_size = value->GetSize();
 					value->Release();
@@ -3515,8 +3515,8 @@ uint8 Manager::GetNumSwitchPoints
 	{
 		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 		{
-			LockGuard LG(driver->m_nodeMutex);
-			if( ValueSchedule* value = static_cast<ValueSchedule*>( driver->GetValue( _id ) ) )
+			Internal::LockGuard LG(driver->m_nodeMutex);
+			if( Internal::VC::ValueSchedule* value = static_cast<Internal::VC::ValueSchedule*>( driver->GetValue( _id ) ) )
 			{
 				numSwitchPoints = value->GetNumSwitchPoints();
 				value->Release();
@@ -3549,8 +3549,8 @@ bool Manager::SetSwitchPoint
 	{
 		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 		{
-			LockGuard LG(driver->m_nodeMutex);
-			if( ValueSchedule* value = static_cast<ValueSchedule*>( driver->GetValue( _id ) ) )
+			Internal::LockGuard LG(driver->m_nodeMutex);
+			if( Internal::VC::ValueSchedule* value = static_cast<Internal::VC::ValueSchedule*>( driver->GetValue( _id ) ) )
 			{
 				res = value->SetSwitchPoint( _hours, _minutes, _setback );
 				value->Release();
@@ -3582,8 +3582,8 @@ bool Manager::RemoveSwitchPoint
 	{
 		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 		{
-			LockGuard LG(driver->m_nodeMutex);
-			if( ValueSchedule* value = static_cast<ValueSchedule*>( driver->GetValue( _id ) ) )
+			Internal::LockGuard LG(driver->m_nodeMutex);
+			if( Internal::VC::ValueSchedule* value = static_cast<Internal::VC::ValueSchedule*>( driver->GetValue( _id ) ) )
 			{
 				uint8 idx;
 				res = value->FindSwitchPoint( _hours, _minutes, &idx );
@@ -3617,8 +3617,8 @@ void Manager::ClearSwitchPoints
 	{
 		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 		{
-			LockGuard LG(driver->m_nodeMutex);
-			if( ValueSchedule* value = static_cast<ValueSchedule*>( driver->GetValue( _id ) ) )
+			Internal::LockGuard LG(driver->m_nodeMutex);
+			if( Internal::VC::ValueSchedule* value = static_cast<Internal::VC::ValueSchedule*>( driver->GetValue( _id ) ) )
 			{
 				value->ClearSwitchPoints();
 				value->Release();
@@ -3650,8 +3650,8 @@ bool Manager::GetSwitchPoint
 	{
 		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 		{
-			LockGuard LG(driver->m_nodeMutex);
-			if( ValueSchedule* value = static_cast<ValueSchedule*>( driver->GetValue( _id ) ) )
+			Internal::LockGuard LG(driver->m_nodeMutex);
+			if( Internal::VC::ValueSchedule* value = static_cast<Internal::VC::ValueSchedule*>( driver->GetValue( _id ) ) )
 			{
 				res = value->GetSwitchPoint( _idx, o_hours, o_minutes, o_setback );
 				value->Release();
@@ -3754,7 +3754,7 @@ void Manager::RequestAllConfigParams
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		LockGuard LG(driver->m_nodeMutex);
+		Internal::LockGuard LG(driver->m_nodeMutex);
 		Node* node = driver->GetNode( _nodeId );
 		if( node )
 		{
@@ -4022,15 +4022,15 @@ void Manager::ResetController
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		Event *event = new Event();
+		Internal::Platform::Event *event = new Internal::Platform::Event();
 		driver->ResetController( event );
-		Wait::Single( event );
+		Internal::Platform::Wait::Single( event );
 		event->Release();
 		string path = driver->GetControllerPath();
 		Driver::ControllerInterface intf = driver->GetControllerInterfaceType();
 		RemoveDriver( path );
 		AddDriver( path, intf );
-		Wait::Multiple( NULL, 0, 500 );
+		Internal::Platform::Wait::Multiple( NULL, 0, 500 );
 	}
 OPENZWAVE_DEPRECATED_WARNINGS_OFF;
 	RemoveAllScenes( _homeId );
@@ -4138,7 +4138,7 @@ void Manager::HealNetworkNode
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		LockGuard LG(driver->m_nodeMutex);
+		Internal::LockGuard LG(driver->m_nodeMutex);
 		Node* node = driver->GetNode( _nodeId );
 		if( node )
 		{
@@ -4163,7 +4163,7 @@ void Manager::HealNetwork
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		LockGuard LG(driver->m_nodeMutex);
+		Internal::LockGuard LG(driver->m_nodeMutex);
 		for( uint8 i=0; i<255; i++ )
 		{
 			if( driver->m_nodes[i] != NULL )
@@ -4187,7 +4187,7 @@ bool Manager::AddNode
 )
 {
 	if (Driver *driver = GetDriver( _homeId ) ) {
-		LockGuard LG(driver->m_nodeMutex);
+		Internal::LockGuard LG(driver->m_nodeMutex);
 		/* we use the Args option to communicate if Security CC should be initialized */
 		return driver->BeginControllerCommand(
 				Driver::ControllerCommand_AddDevice,
@@ -4206,7 +4206,7 @@ bool Manager::RemoveNode
 )
 {
 	if (Driver *driver = GetDriver( _homeId ) ) {
-		LockGuard LG(driver->m_nodeMutex);
+		Internal::LockGuard LG(driver->m_nodeMutex);
 		return driver->BeginControllerCommand(
 				Driver::ControllerCommand_RemoveDevice,
 				NULL, NULL, true, 0, 0);
@@ -4225,7 +4225,7 @@ bool Manager::RemoveFailedNode
 )
 {
 	if (Driver *driver = GetDriver( _homeId ) ) {
-		LockGuard LG(driver->m_nodeMutex);
+		Internal::LockGuard LG(driver->m_nodeMutex);
 		return driver->BeginControllerCommand(
 				Driver::ControllerCommand_RemoveFailedNode,
 				NULL, NULL, true, _nodeId, 0);
@@ -4244,7 +4244,7 @@ bool Manager::HasNodeFailed
 )
 {
 	if (Driver *driver = GetDriver( _homeId ) ) {
-		LockGuard LG(driver->m_nodeMutex);
+		Internal::LockGuard LG(driver->m_nodeMutex);
 		return driver->BeginControllerCommand(
 				Driver::ControllerCommand_HasNodeFailed,
 				NULL, NULL, true, _nodeId, 0);
@@ -4263,7 +4263,7 @@ bool Manager::AssignReturnRoute
 )
 {
 	if (Driver *driver = GetDriver( _homeId ) ) {
-		LockGuard LG(driver->m_nodeMutex);
+		Internal::LockGuard LG(driver->m_nodeMutex);
 		return driver->BeginControllerCommand(
 				Driver::ControllerCommand_AssignReturnRoute,
 				NULL, NULL, true, _nodeId, 0);
@@ -4282,7 +4282,7 @@ bool Manager::RequestNodeNeighborUpdate
 )
 {
 	if (Driver *driver = GetDriver( _homeId ) ) {
-		LockGuard LG(driver->m_nodeMutex);
+		Internal::LockGuard LG(driver->m_nodeMutex);
 		return driver->BeginControllerCommand(
 				Driver::ControllerCommand_RequestNodeNeighborUpdate,
 				NULL, NULL, true, _nodeId, 0);
@@ -4302,7 +4302,7 @@ bool Manager::DeleteAllReturnRoutes
 )
 {
 	if (Driver *driver = GetDriver( _homeId ) ) {
-		LockGuard LG(driver->m_nodeMutex);
+		Internal::LockGuard LG(driver->m_nodeMutex);
 		return driver->BeginControllerCommand(
 				Driver::ControllerCommand_DeleteAllReturnRoutes,
 				NULL, NULL, true, _nodeId, 0);
@@ -4321,7 +4321,7 @@ bool Manager::SendNodeInformation
 )
 {
 	if (Driver *driver = GetDriver( _homeId ) ) {
-		LockGuard LG(driver->m_nodeMutex);
+		Internal::LockGuard LG(driver->m_nodeMutex);
 		return driver->BeginControllerCommand(
 				Driver::ControllerCommand_SendNodeInformation,
 				NULL, NULL, true, _nodeId, 0);
@@ -4339,7 +4339,7 @@ bool Manager::CreateNewPrimary
 )
 {
 	if (Driver *driver = GetDriver( _homeId ) ) {
-		LockGuard LG(driver->m_nodeMutex);
+		Internal::LockGuard LG(driver->m_nodeMutex);
 		return driver->BeginControllerCommand(
 				Driver::ControllerCommand_CreateNewPrimary,
 				NULL, NULL, true, 0, 0);
@@ -4357,7 +4357,7 @@ bool Manager::ReceiveConfiguration
 )
 {
 	if (Driver *driver = GetDriver( _homeId ) ) {
-		LockGuard LG(driver->m_nodeMutex);
+		Internal::LockGuard LG(driver->m_nodeMutex);
 		return driver->BeginControllerCommand(
 				Driver::ControllerCommand_ReceiveConfiguration,
 				NULL, NULL, true, 0, 0);
@@ -4376,7 +4376,7 @@ bool Manager::ReplaceFailedNode
 )
 {
 	if (Driver *driver = GetDriver( _homeId ) ) {
-		LockGuard LG(driver->m_nodeMutex);
+		Internal::LockGuard LG(driver->m_nodeMutex);
 		return driver->BeginControllerCommand(
 				Driver::ControllerCommand_ReplaceFailedNode,
 				NULL, NULL, true, _nodeId, 0);
@@ -4394,7 +4394,7 @@ bool Manager::TransferPrimaryRole
 )
 {
 	if (Driver *driver = GetDriver( _homeId ) ) {
-		LockGuard LG(driver->m_nodeMutex);
+		Internal::LockGuard LG(driver->m_nodeMutex);
 		return driver->BeginControllerCommand(
 				Driver::ControllerCommand_TransferPrimaryRole,
 				NULL, NULL, true, 0, 0);
@@ -4413,7 +4413,7 @@ bool Manager::RequestNetworkUpdate
 )
 {
 	if (Driver *driver = GetDriver( _homeId ) ) {
-		LockGuard LG(driver->m_nodeMutex);
+		Internal::LockGuard LG(driver->m_nodeMutex);
 		return driver->BeginControllerCommand(
 				Driver::ControllerCommand_RequestNetworkUpdate,
 				NULL, NULL, true, _nodeId, 0);
@@ -4432,7 +4432,7 @@ bool Manager::ReplicationSend
 )
 {
 	if (Driver *driver = GetDriver( _homeId ) ) {
-		LockGuard LG(driver->m_nodeMutex);
+		Internal::LockGuard LG(driver->m_nodeMutex);
 		return driver->BeginControllerCommand(
 				Driver::ControllerCommand_ReplicationSend,
 				NULL, NULL, true, _nodeId, 0);
@@ -4452,7 +4452,7 @@ bool Manager::CreateButton
 )
 {
 	if (Driver *driver = GetDriver( _homeId ) ) {
-		LockGuard LG(driver->m_nodeMutex);
+		Internal::LockGuard LG(driver->m_nodeMutex);
 		return driver->BeginControllerCommand(
 				Driver::ControllerCommand_CreateButton,
 				NULL, NULL, true, _nodeId, _buttonid);
@@ -4472,7 +4472,7 @@ bool Manager::DeleteButton
 )
 {
 	if (Driver *driver = GetDriver( _homeId ) ) {
-		LockGuard LG(driver->m_nodeMutex);
+		Internal::LockGuard LG(driver->m_nodeMutex);
 		return driver->BeginControllerCommand(
 				Driver::ControllerCommand_DeleteButton,
 				NULL, NULL, true, _nodeId, _buttonid);
@@ -4483,6 +4483,7 @@ bool Manager::DeleteButton
 //-----------------------------------------------------------------------------
 // <Manager::SendRawData>
 // Send a custom message to a node.
+// XXX TODO - Move the implementation to the Driver Class
 //-----------------------------------------------------------------------------
 void Manager::SendRawData
 (
@@ -4497,11 +4498,11 @@ void Manager::SendRawData
 {
 	if ( Driver *driver = GetDriver( _homeId ) )
 	{
-		LockGuard LG(driver->m_nodeMutex);
+		Internal::LockGuard LG(driver->m_nodeMutex);
 		Node* node = driver->GetNode( _nodeId );
 		if ( node )
 		{
-			Msg* msg = new Msg( _logText, _nodeId, _msgType, FUNC_ID_ZW_SEND_DATA, true );
+			Internal::Msg* msg = new Internal::Msg( _logText, _nodeId, _msgType, FUNC_ID_ZW_SEND_DATA, true );
 			for( uint8 i = 0; i < _length; i++ )
 			{
 				msg->Append( _content[i] );
@@ -4525,7 +4526,7 @@ uint8 Manager::GetNumScenes
 (
 )
 {
-	return Scene::s_sceneCnt;
+	return Internal::Scene::s_sceneCnt;
 }
 
 //-----------------------------------------------------------------------------
@@ -4538,7 +4539,7 @@ uint8 Manager::GetAllScenes
 )
 {
 	*_sceneIds = NULL;
-	return Scene::GetAllScenes( _sceneIds );
+	return Internal::Scene::GetAllScenes( _sceneIds );
 }
 
 //-----------------------------------------------------------------------------
@@ -4560,7 +4561,7 @@ void Manager::RemoveAllScenes
 		}
 		else
 		{
-			Scene *scene = Scene::Get( i );
+			Internal::Scene *scene = Internal::Scene::Get( i );
 			if( scene != NULL )
 			{
 				scene->RemoveValues( _homeId );
@@ -4579,12 +4580,12 @@ uint8 Manager::CreateScene
 {
 	for( int i = 1; i < 256; i++ )
 	{
-		Scene* scene = Scene::Get( i );
+		Internal::Scene* scene = Internal::Scene::Get( i );
 		if( scene != NULL )
 		{
 			continue;
 		}
-		new Scene( i );
+		new Internal::Scene( i );
 		return i;
 	}
 	return 0;
@@ -4599,7 +4600,7 @@ bool Manager::RemoveScene
 		uint8 const _sceneId
 )
 {
-	Scene *scene = Scene::Get( _sceneId );
+	Internal::Scene *scene = Internal::Scene::Get( _sceneId );
 	if( scene != NULL )
 	{
 		delete scene;
@@ -4619,7 +4620,7 @@ bool Manager::AddSceneValue
 		bool const _value
 )
 {
-	Scene *scene = Scene::Get( _sceneId );
+	Internal::Scene *scene = Internal::Scene::Get( _sceneId );
 	if( scene != NULL )
 	{
 		return scene->AddValue( _valueId, _value ? "True" : "False");
@@ -4638,7 +4639,7 @@ bool Manager::AddSceneValue
 		uint8 const _value
 )
 {
-	Scene *scene = Scene::Get( _sceneId );
+	Internal::Scene *scene = Internal::Scene::Get( _sceneId );
 	if( scene != NULL )
 	{
 		char str[16];
@@ -4659,7 +4660,7 @@ bool Manager::AddSceneValue
 		float const _value
 )
 {
-	Scene *scene = Scene::Get( _sceneId );
+	Internal::Scene *scene = Internal::Scene::Get( _sceneId );
 	if( scene != NULL )
 	{
 		char str[16];
@@ -4680,7 +4681,7 @@ bool Manager::AddSceneValue
 		int32 const _value
 )
 {
-	Scene *scene = Scene::Get( _sceneId );
+	Internal::Scene *scene = Internal::Scene::Get( _sceneId );
 	if( scene != NULL )
 	{
 		char str[16];
@@ -4701,7 +4702,7 @@ bool Manager::AddSceneValue
 		int16 const _value
 )
 {
-	Scene *scene = Scene::Get( _sceneId );
+	Internal::Scene *scene = Internal::Scene::Get( _sceneId );
 	if( scene != NULL )
 	{
 		char str[16];
@@ -4722,7 +4723,7 @@ bool Manager::AddSceneValue
 		string const& _value
 )
 {
-	Scene *scene = Scene::Get( _sceneId );
+	Internal::Scene *scene = Internal::Scene::Get( _sceneId );
 	if( scene != NULL )
 	{
 		return scene->AddValue( _valueId, _value );
@@ -4741,7 +4742,7 @@ bool Manager::AddSceneValueListSelection
 		string const& _value
 )
 {
-	Scene *scene = Scene::Get( _sceneId );
+	Internal::Scene *scene = Internal::Scene::Get( _sceneId );
 	if( scene != NULL )
 	{
 		return scene->AddValue( _valueId, _value );
@@ -4760,7 +4761,7 @@ bool Manager::AddSceneValueListSelection
 		int32 const _value
 )
 {
-	Scene *scene = Scene::Get( _sceneId );
+	Internal::Scene *scene = Internal::Scene::Get( _sceneId );
 	if( scene != NULL )
 	{
 		char str[16];
@@ -4780,7 +4781,7 @@ bool Manager::RemoveSceneValue
 		ValueID const& _valueId
 )
 {
-	Scene *scene = Scene::Get( _sceneId );
+	Internal::Scene *scene = Internal::Scene::Get( _sceneId );
 	if( scene != NULL )
 	{
 		return scene->RemoveValue( _valueId );
@@ -4799,7 +4800,7 @@ int Manager::SceneGetValues
 )
 {
 	o_value->clear();
-	Scene *scene = Scene::Get( _sceneId );
+	Internal::Scene *scene = Internal::Scene::Get( _sceneId );
 	if( scene != NULL )
 	{
 		return scene->GetValues( o_value );
@@ -4818,7 +4819,7 @@ bool Manager::SceneGetValueAsBool
 		bool* o_value
 )
 {
-	Scene *scene = Scene::Get( _sceneId );
+	Internal::Scene *scene = Internal::Scene::Get( _sceneId );
 	if( scene != NULL )
 	{
 		string str;
@@ -4842,7 +4843,7 @@ bool Manager::SceneGetValueAsByte
 		uint8* o_value
 )
 {
-	Scene *scene = Scene::Get( _sceneId );
+	Internal::Scene *scene = Internal::Scene::Get( _sceneId );
 	if( scene != NULL )
 	{
 		string str;
@@ -4866,7 +4867,7 @@ bool Manager::SceneGetValueAsFloat
 		float* o_value
 )
 {
-	Scene *scene = Scene::Get( _sceneId );
+	Internal::Scene *scene = Internal::Scene::Get( _sceneId );
 	if( scene != NULL )
 	{
 		string str;
@@ -4890,7 +4891,7 @@ bool Manager::SceneGetValueAsInt
 		int32* o_value
 )
 {
-	Scene *scene = Scene::Get( _sceneId );
+	Internal::Scene *scene = Internal::Scene::Get( _sceneId );
 	if( scene != NULL )
 	{
 		string str;
@@ -4914,7 +4915,7 @@ bool Manager::SceneGetValueAsShort
 		int16* o_value
 )
 {
-	Scene *scene = Scene::Get( _sceneId );
+	Internal::Scene *scene = Internal::Scene::Get( _sceneId );
 	if( scene != NULL )
 	{
 		string str;
@@ -4938,7 +4939,7 @@ bool Manager::SceneGetValueAsString
 		string* o_value
 )
 {
-	Scene *scene = Scene::Get( _sceneId );
+	Internal::Scene *scene = Internal::Scene::Get( _sceneId );
 	if( scene != NULL )
 	{
 		if( scene->GetValue( _valueId, o_value ) )
@@ -4960,7 +4961,7 @@ bool Manager::SceneGetValueListSelection
 		string* o_value
 )
 {
-	Scene *scene = Scene::Get( _sceneId );
+	Internal::Scene *scene = Internal::Scene::Get( _sceneId );
 	if( scene != NULL )
 	{
 		if( scene->GetValue( _valueId, o_value ) )
@@ -4982,7 +4983,7 @@ bool Manager::SceneGetValueListSelection
 		int32* o_value
 )
 {
-	Scene *scene = Scene::Get( _sceneId );
+	Internal::Scene *scene = Internal::Scene::Get( _sceneId );
 	if( scene != NULL )
 	{
 		string str;
@@ -5006,7 +5007,7 @@ bool Manager::SetSceneValue
 		bool const _value
 )
 {
-	Scene *scene = Scene::Get( _sceneId );
+	Internal::Scene *scene = Internal::Scene::Get( _sceneId );
 	if( scene != NULL )
 	{
 		return scene->SetValue( _valueId, _value ? "True" : "False" );
@@ -5025,7 +5026,7 @@ bool Manager::SetSceneValue
 		uint8 const _value
 )
 {
-	Scene *scene = Scene::Get( _sceneId );
+	Internal::Scene *scene = Internal::Scene::Get( _sceneId );
 	if( scene != NULL )
 	{
 		char str[16];
@@ -5046,7 +5047,7 @@ bool Manager::SetSceneValue
 		float const _value
 )
 {
-	Scene *scene = Scene::Get( _sceneId );
+	Internal::Scene *scene = Internal::Scene::Get( _sceneId );
 	if( scene != NULL )
 	{
 		char str[16];
@@ -5067,7 +5068,7 @@ bool Manager::SetSceneValue
 		int32 const _value
 )
 {
-	Scene *scene = Scene::Get( _sceneId );
+	Internal::Scene *scene = Internal::Scene::Get( _sceneId );
 	if( scene != NULL )
 	{
 		char str[16];
@@ -5088,7 +5089,7 @@ bool Manager::SetSceneValue
 		int16 const _value
 )
 {
-	Scene *scene = Scene::Get( _sceneId );
+	Internal::Scene *scene = Internal::Scene::Get( _sceneId );
 	if( scene != NULL )
 	{
 		char str[16];
@@ -5109,7 +5110,7 @@ bool Manager::SetSceneValue
 		string const& _value
 )
 {
-	Scene *scene = Scene::Get( _sceneId );
+	Internal::Scene *scene = Internal::Scene::Get( _sceneId );
 	if( scene != NULL )
 	{
 		return scene->SetValue( _valueId, _value );
@@ -5128,7 +5129,7 @@ bool Manager::SetSceneValueListSelection
 		string const& _value
 )
 {
-	Scene *scene = Scene::Get( _sceneId );
+	Internal::Scene *scene = Internal::Scene::Get( _sceneId );
 	if( scene != NULL )
 	{
 		return scene->SetValue( _valueId, _value );
@@ -5147,7 +5148,7 @@ bool Manager::SetSceneValueListSelection
 		int32 const _value
 )
 {
-	Scene *scene = Scene::Get( _sceneId );
+	Internal::Scene *scene = Internal::Scene::Get( _sceneId );
 	if( scene != NULL )
 	{
 		char str[16];
@@ -5166,7 +5167,7 @@ string Manager::GetSceneLabel
 		uint8 const _sceneId
 )
 {
-	Scene *scene = Scene::Get( _sceneId );
+	Internal::Scene *scene = Internal::Scene::Get( _sceneId );
 	if( scene != NULL )
 	{
 		return scene->GetLabel();
@@ -5184,7 +5185,7 @@ void Manager::SetSceneLabel
 		string const& _value
 )
 {
-	Scene *scene = Scene::Get( _sceneId );
+	Internal::Scene *scene = Internal::Scene::Get( _sceneId );
 	if( scene != NULL )
 	{
 		scene->SetLabel( _value );
@@ -5200,7 +5201,7 @@ bool Manager::SceneExists
 		uint8 const _sceneId
 )
 {
-	return Scene::Get( _sceneId ) != NULL;
+	return Internal::Scene::Get( _sceneId ) != NULL;
 }
 
 //-----------------------------------------------------------------------------
@@ -5212,7 +5213,7 @@ bool Manager::ActivateScene
 		uint8 const _sceneId
 )
 {
-	Scene *scene = Scene::Get( _sceneId );
+	Internal::Scene *scene = Internal::Scene::Get( _sceneId );
 	if( scene != NULL )
 	{
 		return scene->Activate();
@@ -5358,7 +5359,7 @@ bool Manager::checkLatestConfigFileRevision
 {
 	if (Driver *driver = GetDriver( _homeId ) )
 	{
-		LockGuard LG(driver->m_nodeMutex);
+		Internal::LockGuard LG(driver->m_nodeMutex);
 		Node* node = driver->GetNode( _nodeId );
 		if( node )
 		{
@@ -5396,7 +5397,7 @@ bool Manager::downloadLatestConfigFileRevision
 {
 	if (Driver *driver = GetDriver( _homeId ) )
 	{
-		LockGuard LG(driver->m_nodeMutex);
+		Internal::LockGuard LG(driver->m_nodeMutex);
 		Node* node = driver->GetNode( _nodeId );
 		if( node )
 		{

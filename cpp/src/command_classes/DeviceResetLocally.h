@@ -32,6 +32,11 @@
 
 namespace OpenZWave
 {
+namespace Internal
+{
+namespace CC
+{
+
 	/** \brief Implements COMMAND_CLASS_DEVICE_RESET_LOCALLY (0x5a), a Z-Wave device command class.
 	 * \ingroup CommandClass
 	 */
@@ -53,7 +58,8 @@ namespace OpenZWave
 		DeviceResetLocally( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ), m_deviceReset(false) {};
 		bool m_deviceReset;
 	};
-
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

@@ -37,8 +37,10 @@ class TiXmlElement;
 
 namespace OpenZWave
 {
-	class Msg;
-	class Node;
+namespace Internal
+{
+namespace VC
+{
 
 	/** \brief List of values sent to/received from a node.
 	 * \ingroup ValueID
@@ -85,7 +87,8 @@ namespace OpenZWave
 		int32			m_valueIdxCheck;			// the previous index in the m_items vector (used for double-checking spurious value reads)
 		uint8			m_size;
 	};
-
+} // namespace VC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

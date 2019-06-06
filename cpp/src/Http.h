@@ -35,7 +35,11 @@
 
 namespace OpenZWave
 {
+	class Driver;
 
+
+namespace Internal
+{
 	/* This is a abstract class you can implement if you wish to override the built in HTTP Client
 	 * Code in OZW with your own code.
 	 *
@@ -65,8 +69,6 @@ namespace OpenZWave
 
 	};
 
-	class Driver;
-
 	class i_HttpClient {
 		public:
 			i_HttpClient(Driver *);
@@ -92,20 +94,20 @@ namespace OpenZWave
 			bool StartDownload(HttpDownload *transfer);
 		private:
 
-			static void HttpThreadProc(Event* _exitEvent,  void* _context);
+			static void HttpThreadProc(Internal::Platform::Event* _exitEvent,  void* _context);
 			//Driver* 	m_driver;
-			Event* 		m_exitEvent;
+			Internal::Platform::Event* 		m_exitEvent;
 
-			Thread*		m_httpThread;
+			Internal::Platform::Thread*		m_httpThread;
 			bool		m_httpThreadRunning;
-			Mutex*			  m_httpMutex;
+			Internal::Platform::Mutex*			  m_httpMutex;
 			list<HttpDownload *> m_httpDownlist;
-			Event*			  m_httpDownloadEvent;
+			Internal::Platform::Event*			  m_httpDownloadEvent;
 
 	};
 
 
-
+} // namespace Internal
 } /* namespace OpenZWave */
 
 

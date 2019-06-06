@@ -35,7 +35,7 @@
 
 #include "value_classes/ValueBool.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::CC;
 
 enum SwitchToggleBinaryCmd
 {
@@ -107,7 +107,7 @@ bool SwitchToggleBinary::HandleMsg
 	{
 		Log::Write( LogLevel_Info, GetNodeId(), "Received SwitchToggleBinary report: %s", _data[1] ? "On" : "Off" );
 
-		if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, ValueID_Index_SwitchToggleBinary::ToggleSwitch ) ) )
+		if( Internal::VC::ValueBool* value = static_cast<Internal::VC::ValueBool*>( GetValue( _instance, ValueID_Index_SwitchToggleBinary::ToggleSwitch ) ) )
 		{
 			value->OnValueRefreshed( _data[1] != 0 );
 			value->Release();
@@ -124,7 +124,7 @@ bool SwitchToggleBinary::HandleMsg
 //-----------------------------------------------------------------------------
 bool SwitchToggleBinary::SetValue
 (
-	Value const& _value
+	Internal::VC::Value const& _value
 )
 {
 	Log::Write( LogLevel_Info, GetNodeId(), "SwitchToggleBinary::Set - Toggling the state" );

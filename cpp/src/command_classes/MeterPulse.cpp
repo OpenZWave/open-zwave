@@ -35,7 +35,7 @@
 
 #include "value_classes/ValueInt.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::CC;
 
 enum MeterPulseCmd
 {
@@ -112,7 +112,7 @@ bool MeterPulse::HandleMsg
 		}
 
 		Log::Write( LogLevel_Info, GetNodeId(), "Received a meter pulse count: Count=%d", count );
-		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, ValueID_Index_MeterPulse::Count ) ) )
+		if( Internal::VC::ValueInt* value = static_cast<Internal::VC::ValueInt*>( GetValue( _instance, ValueID_Index_MeterPulse::Count ) ) )
 		{
 			value->OnValueRefreshed( count );
 			value->Release();

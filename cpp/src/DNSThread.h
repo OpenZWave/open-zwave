@@ -41,11 +41,13 @@
 
 namespace OpenZWave
 {
-	class Event;
-	class Mutex;
-	class Controller;
-	class Thread;
-
+	namespace Internal
+	{
+		namespace Platform {
+			class Event;
+			class Mutex;
+			class Thread;
+		}
 
 	enum LookupType {
 		DNS_Lookup_ConfigRevision = 1
@@ -55,7 +57,7 @@ namespace OpenZWave
 			uint8 NodeID;
 			string lookup;
 			string result;
-			DNSError status;
+			Internal::Platform::DNSError status;
 			LookupType type;
 
 	};
@@ -66,7 +68,7 @@ namespace OpenZWave
 	 */
 	class OPENZWAVE_EXPORT DNSThread
 	{
-			friend class Driver;
+			friend class OpenZWave::Driver;
 		private:
 			DNSThread(Driver *);
 			virtual ~DNSThread();
@@ -74,11 +76,11 @@ namespace OpenZWave
 			/**
 			 *  Entry point for DNSThread
 			 */
-			static void DNSThreadEntryPoint( Event* _exitEvent, void* _context );
+			static void DNSThreadEntryPoint( Internal::Platform::Event* _exitEvent, void* _context );
 			/**
 			 *  DNSThreadProc for DNSThread.  This is where all the "action" takes place.
 			 */
-			void DNSThreadProc( Event* _exitEvent );
+			void DNSThreadProc( Internal::Platform::Event* _exitEvent );
 
 			/* submit a Request to the DNS List */
 			bool sendRequest(DNSLookup *);
@@ -87,14 +89,15 @@ namespace OpenZWave
 			void processResult();
 
 			Driver*			  m_driver;
-			Mutex*			  m_dnsMutex;
+			Internal::Platform::Mutex*			  m_dnsMutex;
 			list<DNSLookup *> m_dnslist;
 			list<DNSLookup *> m_dnslistinprogress;
-			Event*			  m_dnsRequestEvent;
-			DNS				  m_dnsresolver;
+			Internal::Platform::Event*			  m_dnsRequestEvent;
+			Internal::Platform::DNS				  m_dnsresolver;
 
 
 	}; /* class DNSThread */
+	} // namespace Internal
 } /* namespace OpenZWave */
 
 

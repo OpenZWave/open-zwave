@@ -36,7 +36,7 @@
 #include "value_classes/ValueByte.h"
 #include "value_classes/ValueList.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::CC;
 
 enum ClockCmd
 {
@@ -131,17 +131,17 @@ bool Clock::HandleMsg
 		Log::Write( LogLevel_Info, GetNodeId(), "Received Clock report: %s %.2d:%.2d", c_dayNames[day], hour, minute );
 
 
-		if( ValueList* dayValue = static_cast<ValueList*>( GetValue( _instance, ValueID_Index_Clock::Day ) ) )
+		if( Internal::VC::ValueList* dayValue = static_cast<Internal::VC::ValueList*>( GetValue( _instance, ValueID_Index_Clock::Day ) ) )
 		{
 			dayValue->OnValueRefreshed( day );
 			dayValue->Release();
 		}
-		if( ValueByte* hourValue = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_Clock::Hour ) ) )
+		if( Internal::VC::ValueByte* hourValue = static_cast<Internal::VC::ValueByte*>( GetValue( _instance, ValueID_Index_Clock::Hour ) ) )
 		{
 			hourValue->OnValueRefreshed( hour );
 			hourValue->Release();
 		}
-		if( ValueByte* minuteValue = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_Clock::Minute ) ) )
+		if( Internal::VC::ValueByte* minuteValue = static_cast<Internal::VC::ValueByte*>( GetValue( _instance, ValueID_Index_Clock::Minute ) ) )
 		{
 			minuteValue->OnValueRefreshed( minute );
 			minuteValue->Release();
@@ -158,16 +158,16 @@ bool Clock::HandleMsg
 //-----------------------------------------------------------------------------
 bool Clock::SetValue
 (
-	Value const& _value
+		Internal::VC::Value const& _value
 )
 {
 	bool ret = false;
 
 	uint8 instance = _value.GetID().GetInstance();
 
-	ValueList* dayValue = static_cast<ValueList*>( GetValue( instance, ValueID_Index_Clock::Day ) );
-	ValueByte* hourValue = static_cast<ValueByte*>( GetValue( instance, ValueID_Index_Clock::Hour ) );
-	ValueByte* minuteValue = static_cast<ValueByte*>( GetValue( instance, ValueID_Index_Clock::Minute ) );
+	Internal::VC::ValueList* dayValue = static_cast<Internal::VC::ValueList*>( GetValue( instance, ValueID_Index_Clock::Day ) );
+	Internal::VC::ValueByte* hourValue = static_cast<Internal::VC::ValueByte*>( GetValue( instance, ValueID_Index_Clock::Hour ) );
+	Internal::VC::ValueByte* minuteValue = static_cast<Internal::VC::ValueByte*>( GetValue( instance, ValueID_Index_Clock::Minute ) );
 
 	if( dayValue && hourValue && minuteValue )
 	{
@@ -176,19 +176,19 @@ bool Clock::SetValue
 		} else {
 			uint8 day = dayValue->GetItem()->m_value;
 			if (_value.GetID() == dayValue->GetID()) {
-				ValueList const * dayvaluetmp = static_cast<ValueList const*>(&_value);
+				Internal::VC::ValueList const * dayvaluetmp = static_cast<Internal::VC::ValueList const*>(&_value);
 				day = dayvaluetmp->GetItem()->m_value;
 				dayValue->OnValueRefreshed(day);
 			}
 			uint8 hour = hourValue->GetValue();
 			if (_value.GetID() == hourValue->GetID()) {
-				ValueByte const * hourvaluetmp = static_cast<ValueByte const*>(&_value);
+				Internal::VC::ValueByte const * hourvaluetmp = static_cast<Internal::VC::ValueByte const*>(&_value);
 				hour = hourvaluetmp->GetValue();
 				hourValue->OnValueRefreshed(hour);
 			}
 			uint8 minute = minuteValue->GetValue();
 			if (_value.GetID() == minuteValue->GetID()) {
-				ValueByte const * minuteValuetmp = static_cast<ValueByte const*>(&_value);
+				Internal::VC::ValueByte const * minuteValuetmp = static_cast<Internal::VC::ValueByte const*>(&_value);
 				minute = minuteValuetmp->GetValue();
 				minuteValue->OnValueRefreshed(minute);
 			}
@@ -234,10 +234,10 @@ void Clock::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-		vector<ValueList::Item> items;
+		vector<Internal::VC::ValueList::Item> items;
 		for( int i=1; i<=7; ++i )
 		{
-			ValueList::Item item;
+			Internal::VC::ValueList::Item item;
 			item.m_label = c_dayNames[i];
 			item.m_value = i;
 			items.push_back( item );

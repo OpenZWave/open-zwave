@@ -30,7 +30,7 @@
 
 #include "platform/Log.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::Platform;
 
 DWORD WINAPI SerialReadThreadEntryPoint( void* _context );
 

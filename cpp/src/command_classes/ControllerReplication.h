@@ -32,6 +32,11 @@
 
 namespace OpenZWave
 {
+namespace Internal
+{
+namespace CC
+{
+
 	/** \brief Implements COMMAND_CLASS_CONTROLLER_REPLICATION (0x21), a Z-Wave device command class.
 	 * \ingroup CommandClass
 	 */
@@ -48,7 +53,7 @@ namespace OpenZWave
 		virtual uint8 const GetCommandClassId() const override { return StaticGetCommandClassId(); }
 		virtual string const GetCommandClassName() const override{ return StaticGetCommandClassName(); }
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 ) override;
-		virtual bool SetValue( Value const& _value ) override;
+		virtual bool SetValue( Internal::VC::Value const& _value ) override;
 
 		void SendNextData();
 
@@ -68,7 +73,8 @@ namespace OpenZWave
 		int	m_groupIdx;
 		string	m_groupName;
 	};
-
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

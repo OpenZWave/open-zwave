@@ -36,18 +36,16 @@ class TiXmlElement;
 
 namespace OpenZWave
 {
-	class Msg;
-	class Node;
+namespace Internal
+{
+namespace VC
+{
 
 	/** \brief Decimal value sent to/received from a node.
 	 * \ingroup ValueID
 	 */
 	class ValueDecimal: public Value
 	{
-		friend class EnergyProduction;
-		friend class Meter;
-		friend class SensorMultilevel;
-		friend class ThermostatSetpoint;
 
 	public:
 		ValueDecimal( uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint16 const _index, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, string const& _value, uint8 const _pollIntensity );
@@ -65,16 +63,17 @@ namespace OpenZWave
 
 		string GetValue()const{ return m_value; }
 		uint8 GetPrecision()const{ return m_precision; }
+		void SetPrecision( uint8 _precision ){ m_precision = _precision; }
 
 	private:
-		void SetPrecision( uint8 _precision ){ m_precision = _precision; }
 
 		string	m_value;				// the current value
 		string	m_valueCheck;			// the previous value (used for double-checking spurious value reads)
 		string	m_newValue;				// a new value to be set on the appropriate device
 	        uint8	m_precision;
 	};
-
+} // namespace VC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

@@ -36,9 +36,10 @@ class TiXmlElement;
 
 namespace OpenZWave
 {
-	class Msg;
-	class Node;
-	class CommandClass;
+namespace Internal
+{
+namespace VC
+{
 
 	/** \brief Button value
 	 * \ingroup ValueID
@@ -64,7 +65,8 @@ namespace OpenZWave
 	private:
 		bool	m_pressed;
 	};
-
+} // namespace VC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

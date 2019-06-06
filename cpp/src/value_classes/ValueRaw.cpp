@@ -32,7 +32,7 @@
 #include "Manager.h"
 #include <ctime>
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::VC;
 
 
 //-----------------------------------------------------------------------------
@@ -95,7 +95,7 @@ ValueRaw::~ValueRaw
 	if ( m_valueCheck != NULL ) delete[] m_valueCheck;
 }
 
-string const ValueRaw::GetAsString
+std::string const ValueRaw::GetAsString
 (
 ) const
 {

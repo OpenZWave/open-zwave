@@ -324,11 +324,11 @@ Log::Log
 	LogLevel const _queueLevel,
 	LogLevel const _dumpTrigger
 ):
-	m_logMutex( new Mutex() )
+	m_logMutex( new Internal::Platform::Mutex() )
 {
 		if (NULL == m_pImpl) {
 			s_customLogger = false;
-			m_pImpl = new LogImpl( _filename, _bAppend, _bConsoleOutput, _saveLevel, _queueLevel, _dumpTrigger );
+			m_pImpl = new Internal::Platform::LogImpl( _filename, _bAppend, _bConsoleOutput, _saveLevel, _queueLevel, _dumpTrigger );
 		}
 }
 

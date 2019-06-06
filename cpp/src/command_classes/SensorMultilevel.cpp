@@ -36,7 +36,7 @@
 
 #include "value_classes/ValueDecimal.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::CC;
 
 enum SensorMultilevelCmd
 {
@@ -241,7 +241,7 @@ bool SensorMultilevel::RequestValue
 	{
 		for( uint8 i = 1; i < MaxSensorTypes; i++ )
 		{
-			Value* value = GetValue( _instance, i );
+			Internal::VC::Value* value = GetValue( _instance, i );
 			if( value != NULL )
 			{
 				value->Release();
@@ -293,7 +293,7 @@ bool SensorMultilevel::HandleMsg
 							continue;
 						}
 						msg += c_sensorTypeNames[index];
-						ValueDecimal* value = static_cast<ValueDecimal*>( GetValue( _instance, index ) );
+						Internal::VC::ValueDecimal* value = static_cast<Internal::VC::ValueDecimal*>( GetValue( _instance, index ) );
 						if( value == NULL)
 						{
 							node->CreateValueDecimal(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, index, c_sensorTypeNames[index], "", true, false, "0.0", 0  );
@@ -460,11 +460,11 @@ bool SensorMultilevel::HandleMsg
 
 			}
 
-			ValueDecimal* value = static_cast<ValueDecimal*>( GetValue( _instance, sensorType ) );
+			Internal::VC::ValueDecimal* value = static_cast<Internal::VC::ValueDecimal*>( GetValue( _instance, sensorType ) );
 			if( value == NULL)
 			{
 				node->CreateValueDecimal(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, sensorType, c_sensorTypeNames[sensorType], units, true, false, "0.0", 0  );
-				value = static_cast<ValueDecimal*>( GetValue( _instance, sensorType ) );
+				value = static_cast<Internal::VC::ValueDecimal*>( GetValue( _instance, sensorType ) );
 			}
 			else
 			{

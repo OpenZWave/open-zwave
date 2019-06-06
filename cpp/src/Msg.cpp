@@ -36,7 +36,7 @@
 #include "command_classes/Security.h"
 #include "aes/aescpp.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal;
 
 /* Callback for normal messages start at 10. Special Messages using a Callback prior to 10 */
 uint8 Msg::s_nextCallbackId = 10;
@@ -94,14 +94,14 @@ Msg::Msg
 //-----------------------------------------------------------------------------
 void Msg::SetInstance
 (
-	CommandClass* _cc,
+	Internal::CC::CommandClass* _cc,
 	uint8 const _instance
 )
 {
 	// Determine whether we should encapsulate the message in MultiInstance or MultiCommand
 	if( Node* node = _cc->GetNodeUnsafe() )
 	{
-		MultiInstance* micc = static_cast<MultiInstance*>( node->GetCommandClass( MultiInstance::StaticGetCommandClassId() ) );
+		Internal::CC::MultiInstance* micc = static_cast<Internal::CC::MultiInstance*>( node->GetCommandClass( Internal::CC::MultiInstance::StaticGetCommandClassId() ) );
 		m_instance = _instance;
 		if( micc )
 		{
@@ -112,14 +112,14 @@ void Msg::SetInstance
 				{
 					// Set the flag bit to indicate MultiChannel rather than MultiInstance
 					m_flags |= m_MultiChannel;
-					m_expectedCommandClassId = MultiInstance::StaticGetCommandClassId();
+					m_expectedCommandClassId = Internal::CC::MultiInstance::StaticGetCommandClassId();
 				}
 			}
 			else if( m_instance > 1 )
 			{
 				// Set the flag bit to indicate MultiInstance rather than MultiChannel
 				m_flags |= m_MultiInstance;
-				m_expectedCommandClassId = MultiInstance::StaticGetCommandClassId();
+				m_expectedCommandClassId = Internal::CC::MultiInstance::StaticGetCommandClassId();
 			}
 		}
 	}
@@ -234,7 +234,7 @@ void Msg::UpdateCallbackId()
 // <Msg::GetAsString>
 // Create a string containing the raw data
 //-----------------------------------------------------------------------------
-string Msg::GetAsString()
+std::string Msg::GetAsString()
 {
 	string str = m_logText;
 
@@ -285,8 +285,8 @@ void Msg::MultiEncap
 		}
 
 		m_buffer[5] += 4;
-		m_buffer[6] = MultiInstance::StaticGetCommandClassId();
-		m_buffer[7] = MultiInstance::MultiChannelCmd_Encap;
+		m_buffer[6] = Internal::CC::MultiInstance::StaticGetCommandClassId();
+		m_buffer[7] = Internal::CC::MultiInstance::MultiChannelCmd_Encap;
 		m_buffer[8] = 1;
 		m_buffer[9] = m_endPoint;
 		m_length += 4;
@@ -303,8 +303,8 @@ void Msg::MultiEncap
 		}
 
 		m_buffer[5] += 3;
-		m_buffer[6] = MultiInstance::StaticGetCommandClassId();
-		m_buffer[7] = MultiInstance::MultiInstanceCmd_Encap;
+		m_buffer[6] = Internal::CC::MultiInstance::StaticGetCommandClassId();
+		m_buffer[7] = Internal::CC::MultiInstance::MultiInstanceCmd_Encap;
 		m_buffer[8] = m_instance;
 		m_length += 3;
 
@@ -317,7 +317,7 @@ void Msg::MultiEncap
 // <Node::GetDriver>
 // Get a pointer to our driver
 //-----------------------------------------------------------------------------
-Driver* Msg::GetDriver
+OpenZWave::Driver* Msg::GetDriver
 (
 )const
 {

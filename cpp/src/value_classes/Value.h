@@ -40,14 +40,18 @@ class TiXmlElement;
 
 namespace OpenZWave
 {
-	class Node;
+	class Driver;
+namespace Internal
+{
+namespace VC
+{
 
 	/** \brief Base class for values associated with a node.
 	 * \ingroup ValueID
 	 */
-	class Value: public Ref
+	class Value: public Internal::Platform::Ref
 	{
-		friend class Driver;
+		friend class OpenZWave::Driver;
 		friend class ValueStore;
 
 	public:
@@ -87,9 +91,9 @@ namespace OpenZWave
 		bool Set();							// For the user to change a value in a device
 
 		// Helpers
-		static ValueID::ValueGenre GetGenreEnumFromName( char const* _name );
+		static OpenZWave::ValueID::ValueGenre GetGenreEnumFromName( char const* _name );
 		static char const* GetGenreNameFromEnum( ValueID::ValueGenre _genre );
-		static ValueID::ValueType GetTypeEnumFromName( char const* _name );
+		static OpenZWave::ValueID::ValueType GetTypeEnumFromName( char const* _name );
 		static char const* GetTypeNameFromEnum( ValueID::ValueType _type );
 
 	protected:
@@ -121,7 +125,8 @@ namespace OpenZWave
 		bool		m_checkChange;
 		uint8		m_pollIntensity;
 	};
-
+} // namespace VC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

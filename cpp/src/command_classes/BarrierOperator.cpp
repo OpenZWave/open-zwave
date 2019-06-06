@@ -36,7 +36,7 @@
 #include "value_classes/ValueByte.h"
 #include "value_classes/ValueBool.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::CC;
 
 enum BarrierOperatorCmd
 {
@@ -234,7 +234,7 @@ bool BarrierOperator::HandleMsg
 			}
 		}
 
-		if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, ValueID_Index_BarrierOperator::Label ) ) )
+		if( Internal::VC::ValueList* value = static_cast<Internal::VC::ValueList*>( GetValue( _instance, ValueID_Index_BarrierOperator::Label ) ) )
 		{
 			value->OnValueRefreshed( state_index );
 			value->Release();
@@ -285,7 +285,7 @@ bool BarrierOperator::HandleMsg
 				break;
 			}
 		}
-		if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, ValueID_Index_BarrierOperator::SupportedSignals ) ) )
+		if( Internal::VC::ValueList* value = static_cast<Internal::VC::ValueList*>( GetValue( _instance, ValueID_Index_BarrierOperator::SupportedSignals ) ) )
 		{
 			value->OnValueRefreshed( state_index );
 			value->Release();
@@ -301,7 +301,7 @@ bool BarrierOperator::HandleMsg
 		if (_data[1] & 0x01)
 		{
 			Log::Write(LogLevel_Info, GetNodeId(), "Received BarrierOperator Signal Report for Audible");
-			if (ValueBool* value = static_cast<ValueBool*>(GetValue(_instance, ValueID_Index_BarrierOperator::Audible)))
+			if (Internal::VC::ValueBool* value = static_cast<Internal::VC::ValueBool*>(GetValue(_instance, ValueID_Index_BarrierOperator::Audible)))
 			{
 				value->OnValueRefreshed(_data[2] == 0xFF ? true : false);
 				value->Release();
@@ -310,7 +310,7 @@ bool BarrierOperator::HandleMsg
 		if (_data[1] & 0x02)
 		{
 			Log::Write(LogLevel_Info, GetNodeId(), "Received BarrierOperator Signal Report for Visual");
-			if (ValueBool* value = static_cast<ValueBool*>(GetValue(_instance, ValueID_Index_BarrierOperator::Visual)))
+			if (Internal::VC::ValueBool* value = static_cast<Internal::VC::ValueBool*>(GetValue(_instance, ValueID_Index_BarrierOperator::Visual)))
 			{
 				value->OnValueRefreshed(_data[2] == 0xFF ? true : false	);
 				value->Release();
@@ -329,16 +329,16 @@ bool BarrierOperator::HandleMsg
 
 bool BarrierOperator::SetValue
 (
-	Value const& _value
-	)
+	Internal::VC::Value const& _value
+)
 {
 	uint8 idx = (uint8_t)(_value.GetID().GetIndex() & 0xFF);
 	if (ValueID::ValueType_List == _value.GetID().GetType())
 	{
 		if (idx == ValueID_Index_BarrierOperator::Label)
 		{
-			ValueList const* value = static_cast<ValueList const*>(&_value);
-			const ValueList::Item  *item = value->GetItem();
+			Internal::VC::ValueList const* value = static_cast<Internal::VC::ValueList const*>(&_value);
+			const Internal::VC::ValueList::Item  *item = value->GetItem();
 			uint8 position = BarrierOperatorState_Closed;
 			if (item->m_value > 0)
 				position = BarrierOperatorState_Open;
@@ -359,7 +359,7 @@ bool BarrierOperator::SetValue
 	{
 		if (idx == ValueID_Index_BarrierOperator::Audible)
 		{
-			ValueBool const* value = static_cast<ValueBool const*>(&_value);
+			Internal::VC::ValueBool const* value = static_cast<Internal::VC::ValueBool const*>(&_value);
 			Log::Write(LogLevel_Info, GetNodeId(), "BarrierOperatorSignal::Set - Requesting Audible to be %s", value->GetValue() ? "ON" : "OFF");
 			Msg* msg = new Msg("BarrierOperatorSignalCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
 			msg->SetInstance(this, _value.GetID().GetInstance());
@@ -375,7 +375,7 @@ bool BarrierOperator::SetValue
 		}
 		else if (idx == ValueID_Index_BarrierOperator::Visual)
 		{
-			ValueBool const* value = static_cast<ValueBool const*>(&_value);
+			Internal::VC::ValueBool const* value = static_cast<Internal::VC::ValueBool const*>(&_value);
 			Log::Write(LogLevel_Info, GetNodeId(), "BarrierOperatorSignal::Set - Requesting Visual to be %s", value->GetValue() ? "ON" : "OFF");
 			Msg* msg = new Msg("BarrierOperatorSignalCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
 			msg->SetInstance(this, _value.GetID().GetInstance());
@@ -405,11 +405,11 @@ void BarrierOperator::CreateVars
 	if (Node* node = GetNodeUnsafe())
 	{
 		{
-			vector<ValueList::Item> items;
+			std::vector<Internal::VC::ValueList::Item> items;
 			unsigned int size = (sizeof(c_BarrierOperator_States)/sizeof(c_BarrierOperator_States[0]));
 			for( unsigned int i=0; i < size; i++)
 			{
-				ValueList::Item item;
+				Internal::VC::ValueList::Item item;
 				item.m_label = c_BarrierOperator_States[i];
 				item.m_value = i;
 				items.push_back( item );
@@ -417,11 +417,11 @@ void BarrierOperator::CreateVars
 			node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_BarrierOperator::Label, "Barrier State", "", false, false, size, items, 0, 0 );
 		}
 		{
-			vector<ValueList::Item> items;
+			std::vector<Internal::VC::ValueList::Item> items;
 			unsigned int size = (sizeof(c_BarrierOperator_Signals)/sizeof(c_BarrierOperator_Signals[0]));
 			for( unsigned int i=0; i < size; i++)
 			{
-				ValueList::Item item;
+				Internal::VC::ValueList::Item item;
 				item.m_label = c_BarrierOperator_Signals[i];
 				item.m_value = i;
 				items.push_back( item );

@@ -32,6 +32,11 @@
 
 namespace OpenZWave
 {
+namespace Internal
+{
+namespace CC
+{
+
 	/** \brief Implements COMMAND_CLASS_ZWAVEPLUS_INFO (0x5E), a Z-Wave device command class.
 	 * \ingroup CommandClass
 	 */
@@ -56,7 +61,8 @@ namespace OpenZWave
 	private:
 		ZWavePlusInfo( uint32 const _homeId, uint8 const _nodeId );
 	};
-
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

@@ -34,6 +34,10 @@
 
 namespace OpenZWave
 {
+namespace Internal
+{
+namespace Platform
+{
 	/**
 	 * Provides reference counting for objects.
 	 * Any class wishing to include reference counting should be derived from Ref.
@@ -85,7 +89,8 @@ namespace OpenZWave
 		int32	m_refs;
 
 	}; // class Ref
-
+} // namespace Platform
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif // _Ref_H

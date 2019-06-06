@@ -33,7 +33,10 @@
 
 namespace OpenZWave
 {
-	class ValueByte;
+namespace Internal
+{
+namespace CC
+{
 
 	/** \brief Implements COMMAND_CLASS_CENTRAL_SCENE (0x5B), a Z-Wave device command class.
 	 *  \ingroup CommandClass
@@ -59,7 +62,7 @@ namespace OpenZWave
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 ) override;
 		bool RequestState( uint32 const _requestFlags, uint8 const _instance, Driver::MsgQueue const _queue ) override;
 		bool RequestValue( uint32 const _requestFlags, uint16 const _what, uint8 const _instance, Driver::MsgQueue const _queue ) override;
-		bool SetValue( Value const& _value) override;
+		bool SetValue( Internal::VC::Value const& _value) override;
 protected:
 		/** \brief Create Default Vars for this CC */
 		void CreateVars( uint8 const _instance ) override;
@@ -79,7 +82,8 @@ protected:
 		uint8 m_sequence;
 		std::map<uint32, uint32> m_TimersSet;
 	};
-
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

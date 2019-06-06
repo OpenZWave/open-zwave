@@ -166,7 +166,7 @@ m_Product ( NULL ),
 m_fileConfigRevision ( 0 ),
 m_loadedConfigRevision ( 0 ),
 m_latestConfigRevision ( 0 ),
-m_values( new ValueStore() ),
+m_values( new Internal::VC::ValueStore() ),
 m_sentCnt( 0 ),
 m_sentFailed( 0 ),
 m_retries( 0 ),
@@ -201,10 +201,10 @@ m_lastnonce ( 0 )
 	memset( m_rssi_4, 0, sizeof(m_rssi_4) );
 	memset( m_rssi_5, 0, sizeof(m_rssi_5) );
 	/* Add NoOp Class */
-	AddCommandClass( NoOperation::StaticGetCommandClassId() );
+	AddCommandClass( Internal::CC::NoOperation::StaticGetCommandClassId() );
 
 	/* Add ManufacturerSpecific Class */
-	AddCommandClass( ManufacturerSpecific::StaticGetCommandClassId() );
+	AddCommandClass( Internal::CC::ManufacturerSpecific::StaticGetCommandClassId() );
 }
 
 //-----------------------------------------------------------------------------
@@ -219,7 +219,7 @@ Node::~Node
 	GetDriver()->RemoveQueues( m_nodeId );
 
 	// Remove the values from the poll list
-	for( ValueStore::Iterator it = m_values->Begin(); it != m_values->End(); ++it )
+	for( Internal::VC::ValueStore::Iterator it = m_values->Begin(); it != m_values->End(); ++it )
 	{
 		ValueID const& valueId = it->second->GetID();
 		if( GetDriver()->isPolled( valueId ) )
@@ -228,7 +228,7 @@ Node::~Node
 		}
 	}
 
-	Scene::RemoveValues( m_homeId, m_nodeId );
+	Internal::Scene::RemoveValues( m_homeId, m_nodeId );
 
 	// Delete the values
 	delete m_values;
@@ -236,7 +236,7 @@ Node::~Node
 	// Delete the command classes
 	while( !m_commandClassMap.empty() )
 	{
-		map<uint8,CommandClass*>::iterator it = m_commandClassMap.begin();
+		map<uint8,Internal::CC::CommandClass*>::iterator it = m_commandClassMap.begin();
 		delete it->second;
 		m_commandClassMap.erase( it );
 	}
@@ -298,7 +298,7 @@ void Node::AdvanceQueries
 				if( !ProtocolInfoReceived() )
 				{
 					Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_ProtocolInfo" );
-					Msg* msg = new Msg( "Get Node Protocol Info", m_nodeId, REQUEST, FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO, false );
+					Internal::Msg* msg = new Internal::Msg( "Get Node Protocol Info", m_nodeId, REQUEST, FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO, false );
 					msg->Append( m_nodeId );
 					GetDriver()->SendMsg( msg, Driver::MsgQueue_Query );
 					m_queryPending = true;
@@ -320,7 +320,7 @@ void Node::AdvanceQueries
 				// and alive. Based on the response or lack of response
 				// will determine next step.
 				//
-				NoOperation* noop = static_cast<NoOperation*>( GetCommandClass( NoOperation::StaticGetCommandClassId() ) );
+				Internal::CC::NoOperation* noop = static_cast<Internal::CC::NoOperation*>( GetCommandClass( Internal::CC::NoOperation::StaticGetCommandClassId() ) );
 				/* don't Probe the Controller */
 				if( GetDriver()->GetControllerNodeId() != m_nodeId )
 				{
@@ -341,7 +341,7 @@ void Node::AdvanceQueries
 				// we have told the device to send it's wake-up notifications to the PC controller.
 				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_WakeUp" );
 
-				WakeUp* wakeUp = static_cast<WakeUp*>( GetCommandClass( WakeUp::StaticGetCommandClassId() ) );
+				Internal::CC::WakeUp* wakeUp = static_cast<Internal::CC::WakeUp*>( GetCommandClass( Internal::CC::WakeUp::StaticGetCommandClassId() ) );
 
 				// if this device is a "sleeping device" and not a controller and not a
 				// FLiRS device. FLiRS will wake up when you send them something and they
@@ -372,7 +372,7 @@ void Node::AdvanceQueries
 				if( GetDriver()->GetControllerNodeId() == m_nodeId )
 				{
 					Log::Write( LogLevel_Detail, m_nodeId, "Load Controller Manufacturer Specific Config");
-					ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
+					Internal::CC::ManufacturerSpecific* cc = static_cast<Internal::CC::ManufacturerSpecific*>( GetCommandClass( Internal::CC::ManufacturerSpecific::StaticGetCommandClassId() ) );
 					if( cc  ) {
 						cc->SetInstance(1);
 						cc->SetProductDetails(GetDriver()->GetManufacturerId(), GetDriver()->GetProductType(), GetDriver()->GetProductId() );
@@ -390,11 +390,11 @@ void Node::AdvanceQueries
 					 * XXX TODO: This could probably be reworked a bit to make this a Mandatory CC for all devices regardless
 					 * of Generic/Specific Type. Then we can drop the Second ManufacturerSpecific QueryStage later.
 					 */
-					ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
+					Internal::CC::ManufacturerSpecific* cc = static_cast<Internal::CC::ManufacturerSpecific*>( GetCommandClass( Internal::CC::ManufacturerSpecific::StaticGetCommandClassId() ) );
 					if( cc  )
 					{
 						cc->SetInstance(1);
-						m_queryPending = cc->RequestState( CommandClass::RequestFlag_Static, 1, Driver::MsgQueue_Query );
+						m_queryPending = cc->RequestState( Internal::CC::CommandClass::RequestFlag_Static, 1, Driver::MsgQueue_Query );
 						addQSC = m_queryPending;
 					}
 					if( !m_queryPending )
@@ -411,7 +411,7 @@ void Node::AdvanceQueries
 				{
 					// obtain from the node a list of command classes that it 1) supports and 2) controls (separated by a mark in the buffer)
 					Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_NodeInfo" );
-					Msg* msg = new Msg( "Request Node Info", m_nodeId, REQUEST, FUNC_ID_ZW_REQUEST_NODE_INFO, false, true, FUNC_ID_ZW_APPLICATION_UPDATE );
+					Internal::Msg* msg = new Internal::Msg( "Request Node Info", m_nodeId, REQUEST, FUNC_ID_ZW_REQUEST_NODE_INFO, false, true, FUNC_ID_ZW_APPLICATION_UPDATE );
 					msg->Append( m_nodeId );
 					GetDriver()->SendMsg( msg, Driver::MsgQueue_Query );
 					m_queryPending = true;
@@ -428,11 +428,11 @@ void Node::AdvanceQueries
 			case QueryStage_NodePlusInfo:
 			{
 				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_NodePlusInfo" );
-				ZWavePlusInfo* pluscc = static_cast<ZWavePlusInfo*>( GetCommandClass( ZWavePlusInfo::StaticGetCommandClassId() ) );
+				Internal::CC::ZWavePlusInfo* pluscc = static_cast<Internal::CC::ZWavePlusInfo*>( GetCommandClass( Internal::CC::ZWavePlusInfo::StaticGetCommandClassId() ) );
 
 				if ( pluscc )
 				{
-					m_queryPending = pluscc->RequestState( CommandClass::RequestFlag_Static, 1, Driver::MsgQueue_Query );
+					m_queryPending = pluscc->RequestState( Internal::CC::CommandClass::RequestFlag_Static, 1, Driver::MsgQueue_Query );
 				}
 				if (m_queryPending)
 				{
@@ -454,7 +454,7 @@ void Node::AdvanceQueries
 				 */
 				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_SecurityReport" );
 
-				Security* seccc = static_cast<Security*>( GetCommandClass( Security::StaticGetCommandClassId() ) );
+				Internal::CC::Security* seccc = static_cast<Internal::CC::Security*>( GetCommandClass( Internal::CC::Security::StaticGetCommandClassId() ) );
 
 				if( seccc )
 				{
@@ -483,12 +483,12 @@ void Node::AdvanceQueries
 					// Manufacturer Specific data is requested before the other command class data so
 					// that we can modify the supported command classes list through the product XML files.
 					Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_ManufacturerSpecific2" );
-					ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
+					Internal::CC::ManufacturerSpecific* cc = static_cast<Internal::CC::ManufacturerSpecific*>( GetCommandClass( Internal::CC::ManufacturerSpecific::StaticGetCommandClassId() ) );
 					/* don't do this if its the Controller Node */
 					if( cc && (GetDriver()->GetControllerNodeId() != m_nodeId))
 					{
 						cc->SetInstance(1);
-						m_queryPending = cc->RequestState( CommandClass::RequestFlag_Static, 1, Driver::MsgQueue_Query );
+						m_queryPending = cc->RequestState( Internal::CC::CommandClass::RequestFlag_Static, 1, Driver::MsgQueue_Query );
 						addQSC = m_queryPending;
 					}
 					if( !m_queryPending )
@@ -499,7 +499,7 @@ void Node::AdvanceQueries
 				}
 				else
 				{
-					ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
+					Internal::CC::ManufacturerSpecific* cc = static_cast<Internal::CC::ManufacturerSpecific*>( GetCommandClass( Internal::CC::ManufacturerSpecific::StaticGetCommandClassId() ) );
 					if( cc  )
 					{
 						cc->SetInstance(1);
@@ -514,13 +514,13 @@ void Node::AdvanceQueries
 			{
 				// Get the version information (if the device supports COMMAND_CLASS_VERSION
 				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_Versions" );
-				Version* vcc = static_cast<Version*>( GetCommandClass( Version::StaticGetCommandClassId() ) );
+				Internal::CC::Version* vcc = static_cast<Internal::CC::Version*>( GetCommandClass( Internal::CC::Version::StaticGetCommandClassId() ) );
 				if( vcc )
 				{
 					Log::Write(LogLevel_Info, m_nodeId, "Requesting Versions");
-					for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
+					for( map<uint8,Internal::CC::CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 					{
-						CommandClass* cc = it->second;
+						Internal::CC::CommandClass* cc = it->second;
 						Log::Write(LogLevel_Info, m_nodeId, "Requesting Versions for %s", cc->GetCommandClassName().c_str());
 
 						if( cc->GetMaxVersion() > 1 )
@@ -549,7 +549,7 @@ void Node::AdvanceQueries
 			{
 				// if the device at this node supports multiple instances, obtain a list of these instances
 				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_Instances" );
-				MultiInstance* micc = static_cast<MultiInstance*>( GetCommandClass( MultiInstance::StaticGetCommandClassId() ) );
+				Internal::CC::MultiInstance* micc = static_cast<Internal::CC::MultiInstance*>( GetCommandClass( Internal::CC::MultiInstance::StaticGetCommandClassId() ) );
 				if( micc )
 				{
 					m_queryPending = micc->RequestInstances();
@@ -576,14 +576,14 @@ void Node::AdvanceQueries
 				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_Static" );
 				/* Dont' do this for Controller Nodes */
 				if ( GetDriver()->GetControllerNodeId() != m_nodeId ) {
-					for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
+					for( map<uint8,Internal::CC::CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 					{
 						if( !it->second->IsAfterMark() )
 						{
-							m_queryPending |= it->second->RequestStateForAllInstances( CommandClass::RequestFlag_Static, Driver::MsgQueue_Query );
+							m_queryPending |= it->second->RequestStateForAllInstances( Internal::CC::CommandClass::RequestFlag_Static, Driver::MsgQueue_Query );
 						} else {
 							/* Controlling CC's might still need to retrieve some info */
-							m_queryPending |= it->second->RequestStateForAllInstances( CommandClass::RequestFlag_AfterMark, Driver::MsgQueue_Query );
+							m_queryPending |= it->second->RequestStateForAllInstances( Internal::CC::CommandClass::RequestFlag_AfterMark, Driver::MsgQueue_Query );
 						}
 					}
 				}
@@ -612,7 +612,7 @@ void Node::AdvanceQueries
 				// and alive. Based on the response or lack of response
 				// will determine next step. Called here when configuration exists.
 				//
-				NoOperation* noop = static_cast<NoOperation*>( GetCommandClass( NoOperation::StaticGetCommandClassId() ) );
+				Internal::CC::NoOperation* noop = static_cast<Internal::CC::NoOperation*>( GetCommandClass( Internal::CC::NoOperation::StaticGetCommandClassId() ) );
 				/* Don't do this if its to the Controller */
 				if( GetDriver()->GetControllerNodeId() != m_nodeId )
 				{
@@ -631,7 +631,7 @@ void Node::AdvanceQueries
 			{
 				// if this device supports COMMAND_CLASS_ASSOCIATION, determine to which groups this node belong
 				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_Associations" );
-				MultiChannelAssociation* macc = static_cast<MultiChannelAssociation*>( GetCommandClass( MultiChannelAssociation::StaticGetCommandClassId() ) );
+				Internal::CC::MultiChannelAssociation* macc = static_cast<Internal::CC::MultiChannelAssociation*>( GetCommandClass( Internal::CC::MultiChannelAssociation::StaticGetCommandClassId() ) );
 				if( macc )
 				{
 					macc->RequestAllGroups( 0 );
@@ -640,7 +640,7 @@ void Node::AdvanceQueries
 				}
 				else
 				{
-					Association* acc = static_cast<Association*>( GetCommandClass( Association::StaticGetCommandClassId() ) );
+					Internal::CC::Association* acc = static_cast<Internal::CC::Association*>( GetCommandClass( Internal::CC::Association::StaticGetCommandClassId() ) );
 					if( acc )
 					{
 						acc->RequestAllGroups( 0 );
@@ -670,11 +670,11 @@ void Node::AdvanceQueries
 				// Request the session values from the command classes in turn
 				// examples of Session information are: current thermostat setpoints, node names and climate control schedules
 				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_Session" );
-				for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
+				for( map<uint8,Internal::CC::CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 				{
 					if( !it->second->IsAfterMark() )
 					{
-						m_queryPending |= it->second->RequestStateForAllInstances( CommandClass::RequestFlag_Session, Driver::MsgQueue_Query );
+						m_queryPending |= it->second->RequestStateForAllInstances( Internal::CC::CommandClass::RequestFlag_Session, Driver::MsgQueue_Query );
 					}
 				}
 				addQSC = m_queryPending;
@@ -730,7 +730,7 @@ void Node::AdvanceQueries
 				GetDriver()->QueueNotification( notification );
 
 				/* if its a sleeping node, this will send a NoMoreInformation Packet to the device */
-				WakeUp* cc = static_cast<WakeUp*>( GetCommandClass( WakeUp::StaticGetCommandClassId() ) );
+				Internal::CC::WakeUp* cc = static_cast<Internal::CC::WakeUp*>( GetCommandClass( Internal::CC::WakeUp::StaticGetCommandClassId() ) );
 				if( cc )
 				{
 					cc->SendPending();
@@ -1146,7 +1146,7 @@ void Node::ReadXML
 						m_productName = str;
 					}
 
-					ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
+					Internal::CC::ManufacturerSpecific* cc = static_cast<Internal::CC::ManufacturerSpecific*>( GetCommandClass( Internal::CC::ManufacturerSpecific::StaticGetCommandClassId() ) );
 					/* don't do this if its the Controller Node */
 					if( cc ) {
 						cc->SetProductDetails(manufacturerId, productType, productId);
@@ -1270,7 +1270,7 @@ void Node::ReadCommandClassesXML
 					remove = true;
 				}
 
-				CommandClass* cc = GetCommandClass( id );
+				Internal::CC::CommandClass* cc = GetCommandClass( id );
 				if( remove )
 				{
 					// Remove support for the command class
@@ -1280,7 +1280,7 @@ void Node::ReadCommandClassesXML
 				{
 					if( NULL == cc )
 					{
-						if (Security::StaticGetCommandClassId() == id && !GetDriver()->isNetworkKeySet()) {
+						if (Internal::CC::Security::StaticGetCommandClassId() == id && !GetDriver()->isNetworkKeySet()) {
 							Log::Write(LogLevel_Warning, "Security Command Class cannot be Loaded. NetworkKey is not set");
 							ccElement = ccElement->NextSiblingElement();
 							continue;
@@ -1431,9 +1431,9 @@ void Node::WriteXML
 	TiXmlElement* ccsElement = new TiXmlElement( "CommandClasses" );
 	nodeElement->LinkEndChild( ccsElement );
 
-	for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
+	for( map<uint8,Internal::CC::CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 	{
-		if( it->second->GetCommandClassId() == NoOperation::StaticGetCommandClassId() ) // don't output NoOperation
+		if( it->second->GetCommandClassId() == Internal::CC::NoOperation::StaticGetCommandClassId() ) // don't output NoOperation
 		{
 			continue;
 		}
@@ -1580,7 +1580,7 @@ void Node::UpdateProtocolInfo
 			// Device does not always listen, so we need the WakeUp handler.  We can't
 			// wait for the command class list because the request for the command
 			// classes may need to go in the wakeup queue itself!
-			if( CommandClass* pCommandClass = AddCommandClass( WakeUp::StaticGetCommandClassId() ) )
+			if( Internal::CC::CommandClass* pCommandClass = AddCommandClass( Internal::CC::WakeUp::StaticGetCommandClassId() ) )
 			{
 				pCommandClass->SetInstance( 1 );
 			}
@@ -1627,7 +1627,7 @@ void Node::SetProtocolInfo
 	 * first (before other CC's start sending stuff and slowing down our exchange
 	 */
 	if (m_secured) {
-		if (Security *pCommandClass = static_cast<Security *>(GetCommandClass(Security::StaticGetCommandClassId()))) {
+		if (Internal::CC::Security *pCommandClass = static_cast<Internal::CC::Security *>(GetCommandClass(Internal::CC::Security::StaticGetCommandClassId()))) {
 			/* Security CC has already been loaded, most likely via the SetDeviceClasses Function above */
 			if (!GetDriver()->isNetworkKeySet()) {
 				Log::Write(LogLevel_Warning, m_nodeId, "Security Command Class Disabled. NetworkKey is not Set");
@@ -1637,8 +1637,8 @@ void Node::SetProtocolInfo
 		} else {
 			/* Security CC is not loaded, see if its in our NIF frame and load if necessary */
 			for (int i = 3; i < _length; i++) {
-				if (_protocolInfo[i] == Security::StaticGetCommandClassId()) {
-					pCommandClass = static_cast<Security *>(AddCommandClass(_protocolInfo[i]));
+				if (_protocolInfo[i] == Internal::CC::Security::StaticGetCommandClassId()) {
+					pCommandClass = static_cast<Internal::CC::Security *>(AddCommandClass(_protocolInfo[i]));
 					if (!GetDriver()->isNetworkKeySet()) {
 						Log::Write(LogLevel_Warning, m_nodeId, "Security Command Class Disabled. NetworkKey is not Set");
 					} else {
@@ -1686,7 +1686,7 @@ string Node::GetInstanceLabel
 {
 	string label;
 	/* find the CommandClass */
-	CommandClass *_cc = GetCommandClass(_ccid);
+	Internal::CC::CommandClass *_cc = GetCommandClass(_ccid);
 	if ( _cc )
 		label = _cc->GetInstanceLabel(_instance);
 	/* if the Label is Empty - Then use the Global Label */
@@ -1696,7 +1696,7 @@ string Node::GetInstanceLabel
 		else {
 			/* construct a Default Label */
 			std::ostringstream sstream;
-			sstream << Localization::Get()->GetGlobalLabel("Instance") << " " << (int)_instance << ":";
+			sstream << Internal::Localization::Get()->GetGlobalLabel("Instance") << " " << (int)_instance << ":";
 			label = sstream.str();
 		}
 	}
@@ -1712,9 +1712,9 @@ uint8 Node::GetNumInstances
 	int instances = 1;
 	if ( _ccid == 0 )
 	{
-		ccid = MultiInstance::StaticGetCommandClassId();
+		ccid = Internal::CC::MultiInstance::StaticGetCommandClassId();
 	}
-	if ( CommandClass *cc = GetCommandClass(ccid) )
+	if ( Internal::CC::CommandClass *cc = GetCommandClass(ccid) )
 	{
 		return cc->GetNumInstances();
 	}
@@ -1754,14 +1754,14 @@ void Node::SetSecuredClasses
 			continue;
 		}
 		/* Check if this is a CC that is already registered with the node */
-		if (CommandClass *pCommandClass = GetCommandClass(_data[i]))
+		if (Internal::CC::CommandClass *pCommandClass = GetCommandClass(_data[i]))
 		{
 			/* if it was specified the he NIF frame, and came in as part of the Security SupportedReport message
 			 * then it can support both Clear Text and Secured Comms. So do a check first
 			 */
 			if (pCommandClass->IsInNIF()) {
 				/* if the CC Supports Security and our SecurityStrategy says we should encrypt it, then mark it as encrypted */
-				if (pCommandClass->IsSecureSupported() && (ShouldSecureCommandClass(_data[i]) == SecurityStrategy_Supported )) {
+				if (pCommandClass->IsSecureSupported() && (Internal::ShouldSecureCommandClass(_data[i]) == Internal::SecurityStrategy_Supported )) {
 					pCommandClass->SetSecured();
 					Log::Write( LogLevel_Info, m_nodeId, "    %s (Secured) - %s", pCommandClass->GetCommandClassName().c_str(), pCommandClass->IsInNIF() ? "InNIF": "NotInNIF");
 				}
@@ -1776,7 +1776,7 @@ void Node::SetSecuredClasses
 				/* we need to get the endpoint from the Security CC, to map over to the target CC if this
 				 * is triggered by a SecurityCmd_SupportedReport from a instance
 				 */
-				CommandClass *secc = GetCommandClass(Security::StaticGetCommandClassId());
+				Internal::CC::CommandClass *secc = GetCommandClass(Internal::CC::Security::StaticGetCommandClassId());
 				int ep = secc->GetEndPoint(_instance);
 				pCommandClass->SetEndPoint(_instance, ep);
 				pCommandClass->SetInstance(_instance);
@@ -1785,9 +1785,9 @@ void Node::SetSecuredClasses
 		/* it might be a new CC we havn't seen as part of the NIF. In that case
 		 * its only supported via the Security CC, so no need to check our SecurityStrategy, just
 		 * encrypt it regardless */
-		else if( CommandClasses::IsSupported( _data[i] ) )
+		else if( Internal::CC::CommandClasses::IsSupported( _data[i] ) )
 		{
-			if( CommandClass* pCommandClass = AddCommandClass( _data[i] ) )
+			if( Internal::CC::CommandClass* pCommandClass = AddCommandClass( _data[i] ) )
 			{
 				// If this class came after the COMMAND_CLASS_MARK, then we do not create values.
 				if( afterMark )
@@ -1809,16 +1809,16 @@ void Node::SetSecuredClasses
 				/* set our Static Request Flags */
 				uint8 request = 0;
 
-				if( GetCommandClass( MultiInstance::StaticGetCommandClassId() ) )
+				if( GetCommandClass( Internal::CC::MultiInstance::StaticGetCommandClassId() ) )
 				{
 					// Request instances
-					request |= (uint8)CommandClass::StaticRequest_Instances;
+					request |= (uint8)Internal::CC::CommandClass::StaticRequest_Instances;
 				}
 
-				if( GetCommandClass( Version::StaticGetCommandClassId() ) )
+				if( GetCommandClass( Internal::CC::Version::StaticGetCommandClassId() ) )
 				{
 					// Request versions
-					request |= (uint8)CommandClass::StaticRequest_Version;
+					request |= (uint8)Internal::CC::CommandClass::StaticRequest_Version;
 				}
 
 				if( request )
@@ -1833,7 +1833,7 @@ void Node::SetSecuredClasses
 		}
 	}
 	Log::Write( LogLevel_Info, m_nodeId, "  UnSecured command classes for node %d (instance %d):", m_nodeId, _instance );
-	for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
+	for( map<uint8,Internal::CC::CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 	{
 		if (!it->second->IsSecured())
 			Log::Write( LogLevel_Info, m_nodeId, "    %s (Unsecured) - %s", it->second->GetCommandClassName().c_str(), it->second->IsInNIF() ? "InNIF" : "NotInNIF" );
@@ -1879,13 +1879,13 @@ void Node::UpdateNodeInfo
 				continue;
 			}
 
-			if( CommandClasses::IsSupported( _data[i] ) )
+			if( Internal::CC::CommandClasses::IsSupported( _data[i] ) )
 			{
-				if (Security::StaticGetCommandClassId() == _data[i] && !GetDriver()->isNetworkKeySet()) {
-					Log::Write (LogLevel_Info, m_nodeId, "    %s (Disabled - Network Key Not Set)", Security::StaticGetCommandClassName().c_str());
+				if (Internal::CC::Security::StaticGetCommandClassId() == _data[i] && !GetDriver()->isNetworkKeySet()) {
+					Log::Write (LogLevel_Info, m_nodeId, "    %s (Disabled - Network Key Not Set)", Internal::CC::Security::StaticGetCommandClassName().c_str());
 					continue;
 				}
-				if( CommandClass* pCommandClass = AddCommandClass( _data[i] ) )
+				if( Internal::CC::CommandClass* pCommandClass = AddCommandClass( _data[i] ) )
 				{
 					/* this CC was in the NIF frame */
 					pCommandClass->SetInNIF();
@@ -1901,7 +1901,7 @@ void Node::UpdateNodeInfo
 					pCommandClass->SetInstance( 1 );
 					newCommandClasses = true;
 					Log::Write( LogLevel_Info, m_nodeId, "    %s", pCommandClass->GetCommandClassName().c_str() );
-				} else if (CommandClass *pCommandClass = GetCommandClass( _data[i] ) ) {
+				} else if (Internal::CC::CommandClass *pCommandClass = GetCommandClass( _data[i] ) ) {
 					/* this CC was in the NIF frame */
 					pCommandClass->SetInNIF();
 					Log::Write( LogLevel_Info, m_nodeId, "    %s (Existing)", pCommandClass->GetCommandClassName().c_str() );
@@ -1930,7 +1930,7 @@ void Node::UpdateNodeInfo
 	}
 
 	// Treat the node info frame as a sign that the node is awake
-	if( WakeUp* wakeUp = static_cast<WakeUp*>( GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
+	if( Internal::CC::WakeUp* wakeUp = static_cast<Internal::CC::WakeUp*>( GetCommandClass( Internal::CC::WakeUp::StaticGetCommandClassId() ) ) )
 	{
 		wakeUp->SetAwake( true );
 	}
@@ -1991,21 +1991,21 @@ void Node::SetStaticRequests
 {
 	uint8 request = 0;
 
-	if( GetCommandClass( MultiInstance::StaticGetCommandClassId() ) )
+	if( GetCommandClass( Internal::CC::MultiInstance::StaticGetCommandClassId() ) )
 	{
 		// Request instances
-		request |= (uint8)CommandClass::StaticRequest_Instances;
+		request |= (uint8)Internal::CC::CommandClass::StaticRequest_Instances;
 	}
 
-	if( GetCommandClass( Version::StaticGetCommandClassId() ) )
+	if( GetCommandClass( Internal::CC::Version::StaticGetCommandClassId() ) )
 	{
 		// Request versions
-		request |= (uint8)CommandClass::StaticRequest_Version;
+		request |= (uint8)Internal::CC::CommandClass::StaticRequest_Version;
 	}
 
 	if( request )
 	{
-		for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
+		for( map<uint8,Internal::CC::CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 		{
 			it->second->SetStaticRequest( request );
 		}
@@ -2027,7 +2027,7 @@ void Node::SetNodeName
 	Notification* notification = new Notification( Notification::Type_NodeNaming );
 	notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
 	GetDriver()->QueueNotification( notification );
-	if( NodeNaming* cc = static_cast<NodeNaming*>( GetCommandClass( NodeNaming::StaticGetCommandClassId() ) ) )
+	if( Internal::CC::NodeNaming* cc = static_cast<Internal::CC::NodeNaming*>( GetCommandClass( Internal::CC::NodeNaming::StaticGetCommandClassId() ) ) )
 	{
 		// The node supports naming, so we try to write the name into the device
 		cc->SetName( _nodeName );
@@ -2048,7 +2048,7 @@ void Node::SetLocation
 	Notification* notification = new Notification( Notification::Type_NodeNaming );
 	notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
 	GetDriver()->QueueNotification( notification );
-	if( NodeNaming* cc = static_cast<NodeNaming*>( GetCommandClass( NodeNaming::StaticGetCommandClassId() ) ) )
+	if( Internal::CC::NodeNaming* cc = static_cast<Internal::CC::NodeNaming*>( GetCommandClass( Internal::CC::NodeNaming::StaticGetCommandClassId() ) ) )
 	{
 		// The node supports naming, so we try to write the location into the device
 		cc->SetLocation( _location );
@@ -2066,7 +2066,7 @@ void Node::ApplicationCommandHandler
 
 )
 {
-	if( CommandClass* pCommandClass = GetCommandClass( _data[5] ) )
+	if( Internal::CC::CommandClass* pCommandClass = GetCommandClass( _data[5] ) )
 	{
 		if (pCommandClass->IsSecured() && !encrypted) {
 			Log::Write( LogLevel_Warning, m_nodeId, "Received a Clear Text Message for the CommandClass %s which is Secured", pCommandClass->GetCommandClassName().c_str());
@@ -2095,16 +2095,16 @@ void Node::ApplicationCommandHandler
 	}
 	else
 	{
-		if( _data[5] == ControllerReplication::StaticGetCommandClassId() )
+		if( _data[5] == Internal::CC::ControllerReplication::StaticGetCommandClassId() )
 		{
 			// This is a controller replication message, and we do not support it.
 			// We have to at least acknowledge the message to avoid locking the sending device.
-			Log::Write( LogLevel_Info, m_nodeId, "ApplicationCommandHandler - Default acknowledgement of controller replication data" );
+			Log::Write( LogLevel_Info, m_nodeId, "ApplicationCommandHandler - Default acknowledgment of controller replication data" );
 
-			Msg* msg = new Msg( "Replication Command Complete", m_nodeId, REQUEST, FUNC_ID_ZW_REPLICATION_COMMAND_COMPLETE, false );
+			Internal::Msg* msg = new Internal::Msg( "Replication Command Complete", m_nodeId, REQUEST, FUNC_ID_ZW_REPLICATION_COMMAND_COMPLETE, false );
 			GetDriver()->SendMsg( msg, Driver::MsgQueue_Command );
 		}
-		else if ( _data[5] == MultiInstance::StaticGetCommandClassId() ) {
+		else if ( _data[5] == Internal::CC::MultiInstance::StaticGetCommandClassId() ) {
 			// Devices that support MultiChannelAssociation may send a MultiChannel Encapsulated message if there is a Instance set in the Association Groups
 			// So we will dynamically load the MultiChannel CC if we receive a encapsulated message
 			// We only do this after the QueryStage is Complete as we don't want to Add this CC to the list, and then confusing OZW that
@@ -2115,7 +2115,7 @@ void Node::ApplicationCommandHandler
 			}
 
 			Log::Write (LogLevel_Info, m_nodeId, "ApplicationCommandHandler - Received a MultiInstance Message but MulitInstance CC isn't loaded. Loading it... ");
-			if (CommandClass* pCommandClass = AddCommandClass(MultiInstance::StaticGetCommandClassId())) {
+			if (Internal::CC::CommandClass* pCommandClass = AddCommandClass(Internal::CC::MultiInstance::StaticGetCommandClassId())) {
 				pCommandClass->ReceivedCntIncr();
 				if (!pCommandClass->IsAfterMark()) {
 					if (!pCommandClass->HandleMsg( &_data[6], _data[4] ) )
@@ -2141,12 +2141,12 @@ void Node::ApplicationCommandHandler
 // <Node::GetCommandClass>
 // Get the specified command class object if supported, otherwise NULL
 //-----------------------------------------------------------------------------
-CommandClass* Node::GetCommandClass
+Internal::CC::CommandClass* Node::GetCommandClass
 (
 		uint8 const _commandClassId
 )const
 {
-	map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.find( _commandClassId );
+	map<uint8,Internal::CC::CommandClass*>::const_iterator it = m_commandClassMap.find( _commandClassId );
 	if( it != m_commandClassMap.end() )
 	{
 		return it->second;
@@ -2160,7 +2160,7 @@ CommandClass* Node::GetCommandClass
 // <Node::AddCommandClass>
 // Add a command class to the node
 //-----------------------------------------------------------------------------
-CommandClass* Node::AddCommandClass
+Internal::CC::CommandClass* Node::AddCommandClass
 (
 		uint8 const _commandClassId
 )
@@ -2172,7 +2172,7 @@ CommandClass* Node::AddCommandClass
 	}
 
 	// Create the command class object and add it to our map
-	if( CommandClass* pCommandClass = CommandClasses::CreateCommandClass( _commandClassId, m_homeId, m_nodeId ) )
+	if( Internal::CC::CommandClass* pCommandClass = Internal::CC::CommandClasses::CreateCommandClass( _commandClassId, m_homeId, m_nodeId ) )
 	{
 		m_commandClassMap[_commandClassId] = pCommandClass;
 		return pCommandClass;
@@ -2194,7 +2194,7 @@ void Node::RemoveCommandClass
 		uint8 const _commandClassId
 )
 {
-	map<uint8,CommandClass*>::iterator it = m_commandClassMap.find( _commandClassId );
+	map<uint8,Internal::CC::CommandClass*>::iterator it = m_commandClassMap.find( _commandClassId );
 	if( it == m_commandClassMap.end() )
 	{
 		// Class is not found
@@ -2202,7 +2202,7 @@ void Node::RemoveCommandClass
 	}
 
 	// Remove all the values associated with this class
-	if( ValueStore* store = GetValueStore() )
+	if( Internal::VC::ValueStore* store = GetValueStore() )
 	{
 		store->RemoveCommandClassValues( _commandClassId );
 	}
@@ -2225,40 +2225,40 @@ bool Node::SetConfigParam
 		uint8 const _size
 )
 {
-	if( Configuration* cc = static_cast<Configuration*>( GetCommandClass( Configuration::StaticGetCommandClassId() ) ) )
+	if( Internal::CC::Configuration* cc = static_cast<Internal::CC::Configuration*>( GetCommandClass( Internal::CC::Configuration::StaticGetCommandClassId() ) ) )
 	{
 		// First try to find an existing value representing the parameter, and set that.
-		if( Value* value = cc->GetValue( 1, _param ) )
+		if( Internal::VC::Value* value = cc->GetValue( 1, _param ) )
 		{
 			switch( value->GetID().GetType() )
 			{
 				case ValueID::ValueType_Bool:
 				{
-					ValueBool* valueBool = static_cast<ValueBool*>( value );
+					Internal::VC::ValueBool* valueBool = static_cast<Internal::VC::ValueBool*>( value );
 					valueBool->Set( _value != 0 );
 					break;
 				}
 				case ValueID::ValueType_Byte:
 				{
-					ValueByte* valueByte = static_cast<ValueByte*>( value );
+					Internal::VC::ValueByte* valueByte = static_cast<Internal::VC::ValueByte*>( value );
 					valueByte->Set( (uint8)_value );
 					break;
 				}
 				case ValueID::ValueType_Short:
 				{
-					ValueShort* valueShort = static_cast<ValueShort*>( value );
+					Internal::VC::ValueShort* valueShort = static_cast<Internal::VC::ValueShort*>( value );
 					valueShort->Set( (uint16)_value );
 					break;
 				}
 				case ValueID::ValueType_Int:
 				{
-					ValueInt* valueInt = static_cast<ValueInt*>( value );
+					Internal::VC::ValueInt* valueInt = static_cast<Internal::VC::ValueInt*>( value );
 					valueInt->Set( _value );
 					break;
 				}
 				case ValueID::ValueType_List:
 				{
-					ValueList* valueList = static_cast<ValueList*>( value );
+					Internal::VC::ValueList* valueList = static_cast<Internal::VC::ValueList*>( value );
 					valueList->SetByValue( _value );
 					break;
 				}
@@ -2289,7 +2289,7 @@ void Node::RequestConfigParam
 		uint8 const _param
 )
 {
-	if( Configuration* cc = static_cast<Configuration*>( GetCommandClass( Configuration::StaticGetCommandClassId() ) ) )
+	if( Internal::CC::Configuration* cc = static_cast<Internal::CC::Configuration*>( GetCommandClass( Internal::CC::Configuration::StaticGetCommandClassId() ) ) )
 	{
 		cc->RequestValue( 0, _param, 1, Driver::MsgQueue_Send );
 	}
@@ -2305,13 +2305,13 @@ bool Node::RequestAllConfigParams
 )
 {
 	bool res = false;
-	if( Configuration* cc = static_cast<Configuration*>( GetCommandClass( Configuration::StaticGetCommandClassId() ) ) )
+	if( Internal::CC::Configuration* cc = static_cast<Internal::CC::Configuration*>( GetCommandClass( Internal::CC::Configuration::StaticGetCommandClassId() ) ) )
 	{
 		// Go through all the values in the value store, and request all those which are in the Configuration command class
-		for( ValueStore::Iterator it = m_values->Begin(); it != m_values->End(); ++it )
+		for( Internal::VC::ValueStore::Iterator it = m_values->Begin(); it != m_values->End(); ++it )
 		{
-			Value* value = it->second;
-			if( value->GetID().GetCommandClassId() == Configuration::StaticGetCommandClassId() && !value->IsWriteOnly() )
+			Internal::VC::Value* value = it->second;
+			if( value->GetID().GetCommandClassId() == Internal::CC::Configuration::StaticGetCommandClassId() && !value->IsWriteOnly() )
 			{
 				/* put the ConfigParams Request into the MsgQueue_Query queue. This is so MsgQueue_Send doesn't get backlogged with a
 				 * lot of ConfigParams requests, and should help speed up any user generated messages being sent out (as the MsgQueue_Send has a higher
@@ -2334,11 +2334,11 @@ bool Node::RequestDynamicValues
 )
 {
 	bool res = false;
-	for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
+	for( map<uint8,Internal::CC::CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 	{
 		if( !it->second->IsAfterMark() )
 		{
-			res |= it->second->RequestStateForAllInstances( CommandClass::RequestFlag_Dynamic, Driver::MsgQueue_Send );
+			res |= it->second->RequestStateForAllInstances( Internal::CC::CommandClass::RequestFlag_Dynamic, Driver::MsgQueue_Send );
 		}
 	}
 
@@ -2352,7 +2352,7 @@ void Node::RefreshValuesOnWakeup
 (
 )
 {
-	for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
+	for( map<uint8,Internal::CC::CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 	{
 		if( !it->second->IsAfterMark() )
 		{
@@ -2377,7 +2377,7 @@ void Node::SetLevel
 		adjustedLevel = 99;
 	}
 
-	if( Basic* cc = static_cast<Basic*>( GetCommandClass( Basic::StaticGetCommandClassId() ) ) )
+	if( Internal::CC::Basic* cc = static_cast<Internal::CC::Basic*>( GetCommandClass( Internal::CC::Basic::StaticGetCommandClassId() ) ) )
 	{
 		cc->Set( adjustedLevel );
 	}
@@ -2392,7 +2392,7 @@ void Node::SetNodeOn
 )
 {
 	// Level is 0-99, with 0 = off and 99 = fully on. 255 = turn on at last level.
-	if( Basic* cc = static_cast<Basic*>( GetCommandClass( Basic::StaticGetCommandClassId() ) ) )
+	if( Internal::CC::Basic* cc = static_cast<Internal::CC::Basic*>( GetCommandClass( Internal::CC::Basic::StaticGetCommandClassId() ) ) )
 	{
 		cc->Set( 255 );
 	}
@@ -2407,7 +2407,7 @@ void Node::SetNodeOff
 )
 {
 	// Level is 0-99, with 0 = off and 99 = fully on. 255 = turn on at last level.
-	if( Basic* cc = static_cast<Basic*>( GetCommandClass( Basic::StaticGetCommandClassId() ) ) )
+	if( Internal::CC::Basic* cc = static_cast<Internal::CC::Basic*>( GetCommandClass( Internal::CC::Basic::StaticGetCommandClassId() ) ) )
 	{
 		cc->Set( 0 );
 	}
@@ -2447,8 +2447,8 @@ bool Node::CreateValueBitSet
 		uint8 const _pollIntensity
 )
 {
-	ValueBitSet* value = new ValueBitSet( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _pollIntensity );
-	ValueStore* store = GetValueStore();
+	Internal::VC::ValueBitSet* value = new Internal::VC::ValueBitSet( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _pollIntensity );
+	Internal::VC::ValueStore* store = GetValueStore();
 	if( store->AddValue( value ) )
 	{
 		value->Release();
@@ -2480,8 +2480,8 @@ bool Node::CreateValueBool
 		uint8 const _pollIntensity
 )
 {
-	ValueBool* value = new ValueBool( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _pollIntensity );
-	ValueStore* store = GetValueStore();
+	Internal::VC::ValueBool* value = new Internal::VC::ValueBool( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _pollIntensity );
+	Internal::VC::ValueStore* store = GetValueStore();
 	if( store->AddValue( value ) )
 	{
 		value->Release();
@@ -2506,8 +2506,8 @@ bool Node::CreateValueButton
 		uint8 const _pollIntensity
 )
 {
-	ValueButton* value = new ValueButton( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _pollIntensity );
-	ValueStore* store = GetValueStore();
+	Internal::VC::ValueButton* value = new Internal::VC::ValueButton( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _pollIntensity );
+	Internal::VC::ValueStore* store = GetValueStore();
 	if( store->AddValue( value ) )
 	{
 		value->Release();
@@ -2536,8 +2536,8 @@ bool Node::CreateValueByte
 		uint8 const _pollIntensity
 )
 {
-	ValueByte* value = new ValueByte( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _pollIntensity );
-	ValueStore* store = GetValueStore();
+	Internal::VC::ValueByte* value = new Internal::VC::ValueByte( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _pollIntensity );
+	Internal::VC::ValueStore* store = GetValueStore();
 	if( store->AddValue( value ) )
 	{
 		value->Release();
@@ -2566,8 +2566,8 @@ bool Node::CreateValueDecimal
 		uint8 const _pollIntensity
 )
 {
-	ValueDecimal* value = new ValueDecimal( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _pollIntensity );
-	ValueStore* store = GetValueStore();
+	Internal::VC::ValueDecimal* value = new Internal::VC::ValueDecimal( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _pollIntensity );
+	Internal::VC::ValueStore* store = GetValueStore();
 	if( store->AddValue( value ) )
 	{
 		value->Release();
@@ -2596,8 +2596,8 @@ bool Node::CreateValueInt
 		uint8 const _pollIntensity
 )
 {
-	ValueInt* value = new ValueInt( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _pollIntensity );
-	ValueStore* store = GetValueStore();
+	Internal::VC::ValueInt* value = new Internal::VC::ValueInt( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _pollIntensity );
+	Internal::VC::ValueStore* store = GetValueStore();
 	if( store->AddValue( value ) )
 	{
 		value->Release();
@@ -2623,13 +2623,13 @@ bool Node::CreateValueList
 	bool const _readOnly,
 	bool const _writeOnly,
 	uint8 const _size,
-	vector<ValueList::Item> const& _items,
+	vector<Internal::VC::ValueList::Item> const& _items,
 	int32 const _default,
 	uint8 const _pollIntensity
 )
 {
-	ValueList* value = new ValueList(m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _items, _default, _pollIntensity, _size);
-	ValueStore* store = GetValueStore();
+	Internal::VC::ValueList* value = new Internal::VC::ValueList(m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _items, _default, _pollIntensity, _size);
+	Internal::VC::ValueStore* store = GetValueStore();
 	if (store->AddValue(value))
 	{
 		value->Release();
@@ -2658,8 +2658,8 @@ bool Node::CreateValueRaw
 		uint8 const _pollIntensity
 )
 {
-	ValueRaw* value = new ValueRaw( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _length, _pollIntensity );
-	ValueStore* store = GetValueStore();
+	Internal::VC::ValueRaw* value = new Internal::VC::ValueRaw( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _length, _pollIntensity );
+	Internal::VC::ValueStore* store = GetValueStore();
 	if( store->AddValue( value ) )
 	{
 		value->Release();
@@ -2687,8 +2687,8 @@ bool Node::CreateValueSchedule
 		uint8 const _pollIntensity
 )
 {
-	ValueSchedule* value = new ValueSchedule( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _pollIntensity );
-	ValueStore* store = GetValueStore();
+	Internal::VC::ValueSchedule* value = new Internal::VC::ValueSchedule( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _pollIntensity );
+	Internal::VC::ValueStore* store = GetValueStore();
 	if( store->AddValue( value ) )
 	{
 		value->Release();
@@ -2717,8 +2717,8 @@ bool Node::CreateValueShort
 		uint8 const _pollIntensity
 )
 {
-	ValueShort* value = new ValueShort( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _pollIntensity );
-	ValueStore* store = GetValueStore();
+	Internal::VC::ValueShort* value = new Internal::VC::ValueShort( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _pollIntensity );
+	Internal::VC::ValueStore* store = GetValueStore();
 	if( store->AddValue( value ) )
 	{
 		value->Release();
@@ -2747,8 +2747,8 @@ bool Node::CreateValueString
 		uint8 const _pollIntensity
 )
 {
-	ValueString* value = new ValueString( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _pollIntensity );
-	ValueStore* store = GetValueStore();
+	Internal::VC::ValueString* value = new Internal::VC::ValueString( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _pollIntensity );
+	Internal::VC::ValueStore* store = GetValueStore();
 	if( store->AddValue( value ) )
 	{
 		value->Release();
@@ -2765,10 +2765,10 @@ bool Node::CreateValueString
 //-----------------------------------------------------------------------------
 void Node::RemoveValueList
 (
-		ValueList* _value
+		Internal::VC::ValueList* _value
 )
 {
-	ValueStore* store = GetValueStore();
+	Internal::VC::ValueStore* store = GetValueStore();
 	store->RemoveValue( _value->GetID().GetValueStoreKey() );
 }
 
@@ -2782,30 +2782,30 @@ bool Node::CreateValueFromXML
 		TiXmlElement const* _valueElement
 )
 {
-	Value* value = NULL;
+	Internal::VC::Value* value = NULL;
 
 	// Create the value
-	ValueID::ValueType type = Value::GetTypeEnumFromName( _valueElement->Attribute( "type" ) );
+	ValueID::ValueType type = Internal::VC::Value::GetTypeEnumFromName( _valueElement->Attribute( "type" ) );
 
 	switch( type )
 	{
-		case ValueID::ValueType_BitSet:		{	value = new ValueBitSet(); 		break;  }
-		case ValueID::ValueType_Bool:		{	value = new ValueBool();		break;	}
-		case ValueID::ValueType_Byte:		{	value = new ValueByte();		break;	}
-		case ValueID::ValueType_Decimal:	{	value = new ValueDecimal();		break;	}
-		case ValueID::ValueType_Int:		{	value = new ValueInt();			break;	}
-		case ValueID::ValueType_List:		{	value = new ValueList();		break;	}
-		case ValueID::ValueType_Schedule:	{	value = new ValueSchedule();	break;	}
-		case ValueID::ValueType_Short:		{	value = new ValueShort();		break;	}
-		case ValueID::ValueType_String:		{	value = new ValueString();		break;	}
-		case ValueID::ValueType_Button:		{	value = new ValueButton();		break;	}
-		case ValueID::ValueType_Raw:		{	value = new ValueRaw();			break;  }
+		case ValueID::ValueType_BitSet:		{	value = new Internal::VC::ValueBitSet(); 		break;  }
+		case ValueID::ValueType_Bool:		{	value = new Internal::VC::ValueBool();		break;	}
+		case ValueID::ValueType_Byte:		{	value = new Internal::VC::ValueByte();		break;	}
+		case ValueID::ValueType_Decimal:	{	value = new Internal::VC::ValueDecimal();		break;	}
+		case ValueID::ValueType_Int:		{	value = new Internal::VC::ValueInt();			break;	}
+		case ValueID::ValueType_List:		{	value = new Internal::VC::ValueList();		break;	}
+		case ValueID::ValueType_Schedule:	{	value = new Internal::VC::ValueSchedule();	break;	}
+		case ValueID::ValueType_Short:		{	value = new Internal::VC::ValueShort();		break;	}
+		case ValueID::ValueType_String:		{	value = new Internal::VC::ValueString();		break;	}
+		case ValueID::ValueType_Button:		{	value = new Internal::VC::ValueButton();		break;	}
+		case ValueID::ValueType_Raw:		{	value = new Internal::VC::ValueRaw();			break;  }
 	}
 
 	if( value )
 	{
 		value->ReadXML( m_homeId, m_nodeId, _commandClassId, _valueElement );
-		ValueStore* store = GetValueStore();
+		Internal::VC::ValueStore* store = GetValueStore();
 		if( store->AddValue( value ) )
 		{
 			value->Release();
@@ -2832,8 +2832,8 @@ void Node::ReadValueFromXML
 {
 	int32 intVal;
 
-	ValueID::ValueGenre genre = Value::GetGenreEnumFromName( _valueElement->Attribute( "genre" ) );
-	ValueID::ValueType type = Value::GetTypeEnumFromName( _valueElement->Attribute( "type" ) );
+	ValueID::ValueGenre genre = Internal::VC::Value::GetGenreEnumFromName( _valueElement->Attribute( "genre" ) );
+	ValueID::ValueType type = Internal::VC::Value::GetTypeEnumFromName( _valueElement->Attribute( "type" ) );
 
 	uint8 instance = 0;
 	if( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "instance", &intVal ) )
@@ -2852,9 +2852,9 @@ void Node::ReadValueFromXML
 	// Try to get the value from the ValueStore (everything except configuration parameters
 	// should already have been created when the command class instance count was read in).
 	// Create it if it doesn't already exist.
-	if( ValueStore* store = GetValueStore() )
+	if( Internal::VC::ValueStore* store = GetValueStore() )
 	{
-		if( Value* value = store->GetValue( id.GetValueStoreKey() ) )
+		if( Internal::VC::Value* value = store->GetValue( id.GetValueStoreKey() ) )
 		{
 			// Check if values type are the same
 			ValueID::ValueType v_type = value->GetID().GetType();
@@ -2878,7 +2878,7 @@ void Node::ReadValueFromXML
 // <Node::GetValue>
 // Get the value object with the specified ID
 //-----------------------------------------------------------------------------
-Value* Node::GetValue
+Internal::VC::Value* Node::GetValue
 (
 		ValueID const& _id
 )
@@ -2891,15 +2891,15 @@ Value* Node::GetValue
 // <Node::GetValue>
 // Get the value object with the specified settings
 //-----------------------------------------------------------------------------
-Value* Node::GetValue
+Internal::VC::Value* Node::GetValue
 (
 		uint8 const _commandClassId,
 		uint8 const _instance,
 		uint16 const _valueIndex
 )
 {
-	Value* value = NULL;
-	ValueStore* store = GetValueStore();
+	Internal::VC::Value* value = NULL;
+	Internal::VC::ValueStore* store = GetValueStore();
 	// This increments the value's reference count
 	value = store->GetValue( ValueID::GetValueStoreKey( _commandClassId, _instance, _valueIndex ) );
 	return value;
@@ -2916,7 +2916,7 @@ bool Node::RemoveValue
 		uint16 const _valueIndex
 )
 {
-	ValueStore* store = GetValueStore();
+	Internal::VC::ValueStore* store = GetValueStore();
 	return store->RemoveValue( ValueID::GetValueStoreKey( _commandClassId, _instance, _valueIndex ) );
 }
 
@@ -3276,14 +3276,14 @@ bool Node::SetDeviceClasses
 		// Device does not always listen, so we need the WakeUp handler.  We can't
 		// wait for the command class list because the request for the command
 		// classes may need to go in the wakeup queue itself!
-		if( CommandClass* pCommandClass = AddCommandClass( WakeUp::StaticGetCommandClassId() ) )
+		if( Internal::CC::CommandClass* pCommandClass = AddCommandClass( Internal::CC::WakeUp::StaticGetCommandClassId() ) )
 		{
 			pCommandClass->SetInstance( 1 );
 		}
 	}
 
 	// Apply any COMMAND_CLASS_BASIC remapping
-	if( Basic* cc = static_cast<Basic*>( GetCommandClass( Basic::StaticGetCommandClassId() ) ) )
+	if( Internal::CC::Basic* cc = static_cast<Internal::CC::Basic*>( GetCommandClass( Internal::CC::Basic::StaticGetCommandClassId() ) ) )
 	{
 		cc->SetMapping( basicMapping );
 	}
@@ -3291,13 +3291,13 @@ bool Node::SetDeviceClasses
 	// Write the mandatory command classes to the log
 	if( !m_commandClassMap.empty() )
 	{
-		map<uint8,CommandClass*>::const_iterator cit;
+		map<uint8,Internal::CC::CommandClass*>::const_iterator cit;
 
 		Log::Write( LogLevel_Info, m_nodeId, "  Mandatory Command Classes for Node %d:", m_nodeId );
 		bool reportedClasses = false;
 		for( cit = m_commandClassMap.begin(); cit != m_commandClassMap.end(); ++cit )
 		{
-			if( !cit->second->IsAfterMark() && cit->second->GetCommandClassId() != NoOperation::StaticGetCommandClassId() )
+			if( !cit->second->IsAfterMark() && cit->second->GetCommandClassId() != Internal::CC::NoOperation::StaticGetCommandClassId() )
 			{
 				Log::Write( LogLevel_Info, m_nodeId, "    %s", cit->second->GetCommandClassName().c_str() );
 				reportedClasses = true;
@@ -3368,9 +3368,9 @@ bool Node::SetPlusDeviceClasses
 			int i = 0;
 			while (uint8 ccid = _commandClasses[i++])
 			{
-				if( CommandClasses::IsSupported( ccid ) )
+				if( Internal::CC::CommandClasses::IsSupported( ccid ) )
 				{
-					Log::Write( LogLevel_Info, m_nodeId, "    %s", CommandClasses::GetName(ccid).c_str());
+					Log::Write( LogLevel_Info, m_nodeId, "    %s", Internal::CC::CommandClasses::GetName(ccid).c_str());
 				}
 				else
 				{
@@ -3409,9 +3409,9 @@ bool Node::SetPlusDeviceClasses
 			int i = 0;
 			while (uint8 ccid = _commandClasses[i++])
 			{
-				if( CommandClasses::IsSupported( ccid ) )
+				if( Internal::CC::CommandClasses::IsSupported( ccid ) )
 				{
-					Log::Write( LogLevel_Info, m_nodeId, "    %s", CommandClasses::GetName(ccid).c_str());
+					Log::Write( LogLevel_Info, m_nodeId, "    %s", Internal::CC::CommandClasses::GetName(ccid).c_str());
 				}
 				else
 				{
@@ -3449,9 +3449,9 @@ bool Node::SetPlusDeviceClasses
 			int i = 0;
 			while (uint8 ccid = _commandClasses[i++])
 			{
-				if( CommandClasses::IsSupported( ccid ) )
+				if( Internal::CC::CommandClasses::IsSupported( ccid ) )
 				{
-					Log::Write( LogLevel_Info, m_nodeId, "    %s", CommandClasses::GetName(ccid).c_str());
+					Log::Write( LogLevel_Info, m_nodeId, "    %s", Internal::CC::CommandClasses::GetName(ccid).c_str());
 				}
 				else
 				{
@@ -3506,14 +3506,14 @@ bool Node::AddMandatoryCommandClasses
 			continue;
 		}
 
-		if( CommandClasses::IsSupported( cc ) )
+		if( Internal::CC::CommandClasses::IsSupported( cc ) )
 		{
-			if (Security::StaticGetCommandClassId() == cc && !GetDriver()->isNetworkKeySet()) {
+			if (Internal::CC::Security::StaticGetCommandClassId() == cc && !GetDriver()->isNetworkKeySet()) {
 				Log::Write(LogLevel_Warning, m_nodeId, "Security Command Class Cannot be Enabled - NetworkKey is not set");
 				continue;
 			}
 
-			if( CommandClass* commandClass = AddCommandClass( cc ) )
+			if( Internal::CC::CommandClass* commandClass = AddCommandClass( cc ) )
 			{
 				// If this class came after the COMMAND_CLASS_MARK, then we do not create values.
 				if( afterMark )
@@ -3649,7 +3649,7 @@ void Node::GetNodeStatistics
 
 	_data->m_quality = m_quality;
 	memcpy( _data->m_lastReceivedMessage, m_lastReceivedMessage, sizeof(m_lastReceivedMessage) );
-	for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
+	for( map<uint8,Internal::CC::CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 	{
 		CommandClassData ccData;
 		ccData.m_commandClassId = it->second->GetCommandClassId();
@@ -3811,7 +3811,7 @@ uint8 *Node::GenerateNonceKey() {
 	if (this->m_lastnonce >= 8)
 		this->m_lastnonce = 0;
 	for (uint8 i = 0; i < 8; i++) {
-		PrintHex("NONCES", (const uint8_t*)this->m_nonces[i], 8);
+		Internal::PrintHex("NONCES", (const uint8_t*)this->m_nonces[i], 8);
 	}
 	return &this->m_nonces[idx][0];
 }
@@ -3829,7 +3829,7 @@ uint8 *Node::GetNonceKey(uint32 nonceid) {
 	}
 	Log::Write(LogLevel_Warning, m_nodeId, "A Nonce with id %x does not exist", nonceid);
 	for (uint8 i = 0; i < 8; i++) {
-		PrintHex("NONCES", (const uint8_t*)this->m_nonces[i], 8);
+		Internal::PrintHex("NONCES", (const uint8_t*)this->m_nonces[i], 8);
 	}
 	return NULL;
 }
@@ -3893,7 +3893,7 @@ string Node::GetNodeTypeString() {
 //-----------------------------------------------------------------------------
 bool Node::IsNodeReset()
 {
-	DeviceResetLocally *drl = static_cast<DeviceResetLocally *>(GetCommandClass(DeviceResetLocally::StaticGetCommandClassId()));
+	Internal::CC::DeviceResetLocally *drl = static_cast<Internal::CC::DeviceResetLocally *>(GetCommandClass(Internal::CC::DeviceResetLocally::StaticGetCommandClassId()));
 	if (drl)
 		return drl->IsDeviceReset();
 	else return false;
@@ -3908,7 +3908,7 @@ bool Node::IsNodeReset()
 //-----------------------------------------------------------------------------
 void Node::SetProductDetails
 (
-	ProductDescriptor *product
+	Internal::ProductDescriptor *product
 )
 {
 	/* if there is a ProductDescriptor already assigned, remove the reference */
@@ -3944,7 +3944,7 @@ void Node::setFileConfigRevision
 )
 {
 	m_fileConfigRevision = rev;
-	ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
+	Internal::CC::ManufacturerSpecific* cc = static_cast<Internal::CC::ManufacturerSpecific*>( GetCommandClass( Internal::CC::ManufacturerSpecific::StaticGetCommandClassId() ) );
 	if( cc  )
 	{
 		cc->setFileConfigRevision(rev);
@@ -3963,7 +3963,7 @@ void Node::setLoadedConfigRevision
 )
 {
 	m_loadedConfigRevision = rev;
-	ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
+	Internal::CC::ManufacturerSpecific* cc = static_cast<Internal::CC::ManufacturerSpecific*>( GetCommandClass( Internal::CC::ManufacturerSpecific::StaticGetCommandClassId() ) );
 	if( cc  )
 	{
 		cc->setLoadedConfigRevision(rev);
@@ -3982,7 +3982,7 @@ void Node::setLatestConfigRevision
 )
 {
 	m_latestConfigRevision = rev;
-	ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
+	Internal::CC::ManufacturerSpecific* cc = static_cast<Internal::CC::ManufacturerSpecific*>( GetCommandClass( Internal::CC::ManufacturerSpecific::StaticGetCommandClassId() ) );
 	if( cc  )
 	{
 		cc->setLatestConfigRevision(rev);
@@ -4043,7 +4043,7 @@ Node::ChangeLogEntry const Node::GetChangeLog
 // <Node::GetMetaDataId>
 // Translate the MetaData String to a ID
 //-----------------------------------------------------------------------------
-Node::MetaDataFields const Node::GetMetaDataId(string name) {
+Node::MetaDataFields Node::GetMetaDataId(string name) {
 	if (name == "OzwInfoPage") return MetaData_OzwInfoPage_URL;
 	if (name == "ZWProductPage") return MetaData_ZWProductPage_URL;
 	if (name == "ProductPic") return MetaData_ProductPic;
@@ -4148,7 +4148,8 @@ void Node::ReadMetaDataFromXML(TiXmlElement const* _valueElement) {
 							default:
 								break;
 						}
-						this->m_metadata[GetMetaDataId(name)] = metadata->GetText();
+						if (metadata->GetText())
+							this->m_metadata[GetMetaDataId(name)] = metadata->GetText();
 					} else if (!strcmp( metadata->Value(), "ChangeLog" )) {
 						TiXmlElement const* entry = metadata->FirstChildElement("Entry");
 						while (entry) {

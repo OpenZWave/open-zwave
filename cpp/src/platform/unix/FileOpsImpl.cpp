@@ -39,7 +39,7 @@
 #include "FileOpsImpl.h"
 #include "Utils.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::Platform;
 using std::ios_base;
 
 //-----------------------------------------------------------------------------

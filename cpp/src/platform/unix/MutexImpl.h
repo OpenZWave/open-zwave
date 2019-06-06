@@ -33,6 +33,8 @@
 
 namespace OpenZWave
 {
+	namespace Internal {
+		namespace Platform {
 	class MutexImpl
 	{
 	private:
@@ -49,7 +51,8 @@ namespace OpenZWave
 		int32				m_lockCount;				// Keep track of the locks (there can be more than one if they occur on the same thread.
 		pthread_mutex_t		m_criticalSection;
 	};
-
+		} // namespace Platform
+	} // namespace Internal
 } // namespace OpenZWave
 
 #endif //_MutexIF_H

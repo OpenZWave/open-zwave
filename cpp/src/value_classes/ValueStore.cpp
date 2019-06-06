@@ -31,7 +31,7 @@
 #include "Notification.h"
 #include "Localization.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::VC;
 
 
 //-----------------------------------------------------------------------------

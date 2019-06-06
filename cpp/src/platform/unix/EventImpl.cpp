@@ -31,7 +31,7 @@
 #include <stdio.h>
 #include <sys/time.h>
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::Platform;
 
 //-----------------------------------------------------------------------------
 //	<EventImpl::EventImpl>

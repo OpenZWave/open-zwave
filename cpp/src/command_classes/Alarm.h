@@ -34,7 +34,10 @@
 namespace OpenZWave
 {
 	class ValueByte;
-
+	namespace Internal
+	{
+	namespace CC
+	{
 	/** \brief Implements COMMAND_CLASS_NOTIFICATION (0x71), a Z-Wave device command class.
 	 * \ingroup CommandClass
 	 */
@@ -59,21 +62,21 @@ namespace OpenZWave
 		/** \brief Handle a response to a message associated with this command class. (Inherited from CommandClass) */
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 ) override;
 		virtual uint8 GetMaxVersion() override { return 8; }
-		virtual bool SetValue( Value const& _value ) override;
+		virtual bool SetValue( Internal::VC::Value const& _value ) override;
 
 
 	private:
 		Alarm( uint32 const _homeId, uint8 const _nodeId );
-		void SetupEvents(uint32 type, uint32 index, vector<ValueList::Item> *_items, uint32 const _instance);
+		void SetupEvents(uint32 type, uint32 index, vector<Internal::VC::ValueList::Item> *_items, uint32 const _instance);
 		void ClearAlarm(uint32 type);
 		void ClearEventParams(uint32 const _instance);
 		bool m_v1Params;
 		std::vector<uint32> m_ParamsSet;
 		uint32 m_ClearTimeout;
 		std::map<uint32, uint32> m_TimersToInstances;
-
-
 	};
+	} // namespace CommandClass
+	} // namespace Internal
 
 } // namespace OpenZWave
 

@@ -38,9 +38,15 @@
 
 namespace OpenZWave
 {
+
 class Msg;
 class Node;
 class Value;
+
+namespace Internal
+{
+namespace CC
+{
 /** \defgroup CommandClass Z-Wave CommandClass Support
  *
  * This is the CommandClasses that OZW currently supports. Typically, a Application does not need
@@ -80,12 +86,12 @@ public:
 	void SetCommandClassLabel(string label);
 	virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 ) = 0;
 	virtual bool HandleIncomingMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
-	virtual bool SetValue( Value const& _value ){ return false; }
+	virtual bool SetValue( Internal::VC::Value const& _value ){ return false; }
 	virtual void SetValueBasic( uint8 const _instance, uint8 const _level ){}		// Class specific handling of BASIC value mapping
 	virtual void SetVersion( uint8 const _version ); // Made out-of-line to allow checks against downgrade
 
 	bool RequestStateForAllInstances( uint32 const _requestFlags, Driver::MsgQueue const _queue );
-	bool CheckForRefreshValues(Value const* _value );
+	bool CheckForRefreshValues(Internal::VC::Value const* _value );
 
 	// The highest version number of the command class implemented by OpenZWave.  We only need
 	// to do version gets on command classes that override this with a number greater than one.
@@ -97,7 +103,7 @@ public:
 	uint8 GetNodeId()const{ return m_nodeId; }
 	Driver* GetDriver()const;
 	Node* GetNodeUnsafe()const;
-	Value* GetValue( uint8 const _instance, uint16 const _index );
+	Internal::VC::Value* GetValue( uint8 const _instance, uint16 const _index );
 	bool RemoveValue( uint8 const _instance, uint16 const _index );
 	uint8 GetEndPoint( uint8 const _instance )
 	{
@@ -209,6 +215,8 @@ private:
 
 };
 //@}
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

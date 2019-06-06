@@ -39,7 +39,7 @@
 #include "value_classes/ValueBool.h"
 #include "value_classes/ValueByte.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::CC;
 
 enum SwitchBinaryCmd
 {
@@ -112,7 +112,7 @@ bool SwitchBinary::HandleMsg
 		Log::Write( LogLevel_Info, GetNodeId(), "Received SwitchBinary report from node %d: level=%s", GetNodeId(), _data[1] ? "On" : "Off" );
 
 		// data[1] => Switch state
-		if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, ValueID_Index_SwitchBinary::Level ) ) )
+		if( Internal::VC::ValueBool* value = static_cast<Internal::VC::ValueBool*>( GetValue( _instance, ValueID_Index_SwitchBinary::Level ) ) )
 		{
 			value->OnValueRefreshed( _data[1] != 0 );
 			value->Release();
@@ -121,7 +121,7 @@ bool SwitchBinary::HandleMsg
 		if ( GetVersion() >= 2) {
 
 			// data[2] => target state
-			if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, ValueID_Index_SwitchBinary::TargetState ) ) )
+			if( Internal::VC::ValueBool* value = static_cast<Internal::VC::ValueBool*>( GetValue( _instance, ValueID_Index_SwitchBinary::TargetState ) ) )
 			{
 				value->OnValueRefreshed( _data[2] != 0 );
 				value->Release();
@@ -129,7 +129,7 @@ bool SwitchBinary::HandleMsg
 				
 			// data[3] might be duration
 			if (_length > 3) {
-				if ( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_SwitchBinary::Duration ) ) )
+				if ( Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>( GetValue( _instance, ValueID_Index_SwitchBinary::Duration ) ) )
 				{
 					value->OnValueRefreshed( _data[3] );
 					value->Release();
@@ -149,7 +149,7 @@ bool SwitchBinary::HandleMsg
 //-----------------------------------------------------------------------------
 bool SwitchBinary::SetValue
 (
-	Value const& _value
+	Internal::VC::Value const& _value
 )
 {
 	bool res = false;
@@ -159,18 +159,18 @@ bool SwitchBinary::SetValue
 	{
 		case ValueID_Index_SwitchBinary::Level:
 		{
-			if( ValueBool* value = static_cast<ValueBool*>( GetValue( instance, ValueID_Index_SwitchBinary::Level ) ) )
+			if( Internal::VC::ValueBool* value = static_cast<Internal::VC::ValueBool*>( GetValue( instance, ValueID_Index_SwitchBinary::Level ) ) )
 			{
-				res = SetState( instance, (static_cast<ValueBool const*>(&_value))->GetValue() );
+				res = SetState( instance, (static_cast<Internal::VC::ValueBool const*>(&_value))->GetValue() );
 				value->Release();
 			}
 			break;
 		}
 		case ValueID_Index_SwitchBinary::Duration:
 		{
-			if( ValueByte* value = static_cast<ValueByte*>( GetValue( instance, ValueID_Index_SwitchBinary::Duration ) ) )
+			if( Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>( GetValue( instance, ValueID_Index_SwitchBinary::Duration ) ) )
 			{
-				value->OnValueRefreshed( (static_cast<ValueByte const*>(&_value))->GetValue() );
+				value->OnValueRefreshed( (static_cast<Internal::VC::ValueByte const*>(&_value))->GetValue() );
 				value->Release();
 			}
 			res = true;
@@ -200,11 +200,11 @@ void SwitchBinary::SetValueBasic
 	RequestValue( 0, 0, _instance, Driver::MsgQueue_Send );
 	if( Node* node = GetNodeUnsafe() )
 	{
-		if( WakeUp* wakeUp = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
+		if( Internal::CC::WakeUp* wakeUp = static_cast<Internal::CC::WakeUp*>( node->GetCommandClass( Internal::CC::WakeUp::StaticGetCommandClassId() ) ) )
 		{
 			if( !wakeUp->IsAwake() )
 			{
-				if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, 0 ) ) )
+				if(Internal::VC::ValueBool* value = static_cast<Internal::VC::ValueBool*>( GetValue( _instance, 0 ) ) )
 				{
 					value->OnValueRefreshed( _value != 0 );
 					value->Release();
@@ -234,7 +234,7 @@ bool SwitchBinary::SetState
 	
 	if( GetVersion() >= 2 )
 	{
-		ValueByte* durationValue = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_SwitchBinary::Duration ) );
+		Internal::VC::ValueByte* durationValue = static_cast<Internal::VC::ValueByte*>( GetValue( _instance, ValueID_Index_SwitchBinary::Duration ) );
 		uint8 duration = durationValue->GetValue();
 		durationValue->Release();
 		if( duration == 0xff )

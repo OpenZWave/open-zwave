@@ -34,7 +34,7 @@
 
 #include "value_classes/ValueByte.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::CC;
 
 
 const uint8 MANUFACTURER_ID_FIBARO[2] = { 0x01, 0x0f };
@@ -65,8 +65,8 @@ bool ManufacturerProprietary::HandleMsg
             FIBARO_VENETIEN_BLINDS_REPORT_ID[1] == payload[1] &&
             FIBARO_VENETIEN_BLINDS_REPORT_ID[2] == payload[2] )
         {
-        ValueByte* blindsValue = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_ManufacturerProprietary::FibaroVenetianBlinds_Blinds ) );
-        ValueByte* tiltValue   = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_ManufacturerProprietary::FibaroVenetianBlinds_Tilt ) );
+		Internal::VC::ValueByte* blindsValue = static_cast<Internal::VC::ValueByte*>( GetValue( _instance, ValueID_Index_ManufacturerProprietary::FibaroVenetianBlinds_Blinds ) );
+		Internal::VC::ValueByte* tiltValue   = static_cast<Internal::VC::ValueByte*>( GetValue( _instance, ValueID_Index_ManufacturerProprietary::FibaroVenetianBlinds_Tilt ) );
 
         if( NULL != blindsValue && NULL != tiltValue)
         {
@@ -136,14 +136,14 @@ bool ManufacturerProprietary::RequestValue
 //-----------------------------------------------------------------------------
 bool ManufacturerProprietary::SetValue
 (
-    Value const& _value
+	Internal::VC::Value const& _value
 )
 {
     uint64 value_id = _value.GetID().GetIndex();
     Msg* msg = new Msg( "ManufacturerProprietary_SetValue", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 
     if (ValueID_Index_ManufacturerProprietary::FibaroVenetianBlinds_Blinds == value_id || ValueID_Index_ManufacturerProprietary::FibaroVenetianBlinds_Tilt == value_id){
-        ValueByte const* value = static_cast<ValueByte const*>(&_value);
+    	Internal::VC::ValueByte const* value = static_cast<Internal::VC::ValueByte const*>(&_value);
 
         msg->SetInstance( this, _value.GetID().GetInstance() );
         msg->Append( GetNodeId() );

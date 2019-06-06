@@ -33,6 +33,11 @@
 
 namespace OpenZWave
 {
+namespace Internal
+{
+namespace Platform
+{
+
 	/** \brief Windows-specific implementation of the Mutex class.
 	 */
 	class MutexImpl
@@ -51,7 +56,8 @@ namespace OpenZWave
 		CRITICAL_SECTION	m_criticalSection;
 		uint32				m_lockCount;				// Keep track of the locks (there can be more than one if they occur on the same thread.
 	};
-
+} // namespace Platform
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif //_MutexIF_H

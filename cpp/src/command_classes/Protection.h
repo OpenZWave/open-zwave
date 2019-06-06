@@ -32,7 +32,10 @@
 
 namespace OpenZWave
 {
-	class ValueList;
+namespace Internal
+{
+namespace CC
+{
 
 	/** \brief Implements COMMAND_CLASS_PROTECTION (0x75), a Z-Wave device command class.
 	 * \ingroup CommandClass
@@ -59,7 +62,7 @@ namespace OpenZWave
 		virtual uint8 const GetCommandClassId() const override { return StaticGetCommandClassId(); }
 		virtual string const GetCommandClassName() const override { return StaticGetCommandClassName(); }
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 ) override;
-		virtual bool SetValue( Value const& _value ) override;
+		virtual bool SetValue( Internal::VC::Value const& _value ) override;
 
 	protected:
 		virtual void CreateVars( uint8 const _instance ) override;
@@ -67,7 +70,8 @@ namespace OpenZWave
 	private:
 		Protection( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
 	};
-
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

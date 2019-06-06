@@ -33,7 +33,7 @@
 #include <winstring.h>
 #include <ppltasks.h>
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::Platform;
 using namespace Windows::Devices::SerialCommunication;
 using namespace Windows::Devices::Enumeration;
 using namespace Windows::Storage::Streams;

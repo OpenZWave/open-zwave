@@ -42,24 +42,19 @@
 
 namespace OpenZWave
 {
+	namespace Internal {
+		namespace CC {
+			class CommandClass;
+		}
+		namespace VC {
+			class Value;
+			class ValueStore;
+		}
+		class Msg;
+	}
 	class Options;
 	class Node;
-	class Msg;
-	class Value;
-	class Event;
-	class Mutex;
-	class SerialPort;
-	class Thread;
 	class Notification;
-	class ValueBitSet;
-	class ValueBool;
-	class ValueByte;
-	class ValueDecimal;
-	class ValueInt;
-	class ValueList;
-	class ValueShort;
-	class ValueString;
-	class ValueRaw;
 
 	/** \brief
 	 *   The main public interface to OpenZWave.
@@ -110,13 +105,12 @@ namespace OpenZWave
 	class OPENZWAVE_EXPORT Manager
 	{
 		friend class Driver;
-		friend class CommandClass;
+		friend class Internal::CC::CommandClass;
 		friend class Group;
 		friend class Node;
-		friend class Value;
-		friend class ValueStore;
-		friend class ValueButton;
-		friend class Msg;
+		friend class Internal::VC::Value;
+		friend class Internal::VC::ValueStore;
+		friend class Internal::Msg;
 
 	public:
 		typedef void (*pfnOnNotification_t)( Notification const* _pNotification, void* _context );
@@ -1780,7 +1774,7 @@ OPENZWAVE_EXPORT_WARNINGS_OFF
 		list<Watcher*>					m_watchers;							// List of all the registered watchers.
 		list<list<Watcher*>::iterator*> m_watcherIterators;					// Iterators currently operating on the list of watchers
 OPENZWAVE_EXPORT_WARNINGS_ON
-		Mutex*							m_notificationMutex;
+		Internal::Platform::Mutex*							m_notificationMutex;
 
 	//-----------------------------------------------------------------------------
 	// Controller commands

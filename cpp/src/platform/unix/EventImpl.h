@@ -33,6 +33,9 @@
 
 namespace OpenZWave
 {
+	namespace Internal {
+		namespace Platform {
+
 	class EventImpl
 	{
 	private:
@@ -55,7 +58,8 @@ namespace OpenZWave
 		bool			m_isSignaled;
 		unsigned int		m_waitingThreads;
 	};
-
+		} // namespace Platform
+	} // namespace Internal
 } // namespace OpenZWave
 
 #endif //_EventImpl_H

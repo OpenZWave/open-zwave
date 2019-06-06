@@ -34,7 +34,7 @@
 #include "Manager.h"
 #include <ctime>
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::VC;
 
 
 //-----------------------------------------------------------------------------
@@ -79,7 +79,7 @@ ValueShort::ValueShort
 	m_max = SHRT_MAX;
 }
 
-string const ValueShort::GetAsString
+std::string const ValueShort::GetAsString
 (
 ) const
 {

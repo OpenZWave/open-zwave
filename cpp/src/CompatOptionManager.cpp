@@ -30,6 +30,7 @@
 #include "platform/Log.h"
 
 namespace OpenZWave {
+namespace Internal {
 
 CompatOptionFlagDefintions availableCompatFlags[] =
 {
@@ -81,7 +82,7 @@ uint16_t availableDiscoveryFlagsCount = sizeof(availableDiscoveryFlags) / sizeof
 CompatOptionManager::CompatOptionManager
 (
 		CompatOptionType type,
-		CommandClass *owner
+		Internal::CC::CommandClass *owner
 ):
 m_owner(owner),
 m_comtype(type)
@@ -451,4 +452,5 @@ string CompatOptionManager::GetXMLTagName
 	assert(0);	
 	return "Unknown";
 }
-} /* namespace OpenZWave */
+} // namespace Internal
+} // namespace OpenZWave

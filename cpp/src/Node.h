@@ -44,21 +44,32 @@ class TiXmlNode;
 
 namespace OpenZWave
 {
-	class CommandClass;
+	namespace Internal {
+		namespace CC {
+			class CommandClass;
+			class Association;
+			class AssociationCommandConfiguration;
+			class ControllerReplication;
+			class Hail;
+			class ManufacturerSpecific;
+			class MultiChannelAssociation;
+			class MultiInstance;
+			class NodeNaming;
+			class Version;
+			class ZWavePlusInfo;
+		}
+		namespace VC {
+			class Value;
+			class ValueStore;
+		}
+		namespace Platform {
+			class Mutex;
+		}
+		class ProductDescriptor;
+		class ManufacturerSpecificDB;
+	}
 	class Driver;
 	class Group;
-	class ValueStore;
-	class Value;
-	class ValueBool;
-	class ValueButton;
-	class ValueByte;
-	class ValueDecimal;
-	class ValueInt;
-	class ValueSchedule;
-	class ValueShort;
-	class ValueString;
-	class Mutex;
-	class ProductDescriptor;
 
 	/** \brief The Node class describes a Z-Wave node object...typically a device on the
 	 *  Z-Wave network.
@@ -68,47 +79,20 @@ namespace OpenZWave
 			friend class Manager;
 			friend class Driver;
 			friend class Group;
-			friend class Value;
+			friend class Internal::VC::Value;
 			friend class ValueButton;
-			friend class Alarm;
-			friend class Association;
-			friend class AssociationCommandConfiguration;
-			friend class Basic;
-			friend class Battery;
-			friend class ClimateControlSchedule;
-			friend class Clock;
-			friend class CommandClass;
-			friend class ControllerReplication;
-			friend class EnergyProduction;
-			friend class Hail;
-			friend class Indicator;
-			friend class Language;
-			friend class Lock;
-			friend class ManufacturerSpecific;
-			friend class ManufacturerSpecificDB;
-			friend class Meter;
-			friend class MeterPulse;
-			friend class MultiInstance;
-			friend class MultiChannelAssociation;
-			friend class NodeNaming;
-			friend class Protection;
-			friend class Security;
-			friend class SensorAlarm;
-			friend class SensorBinary;
-			friend class SensorMultilevel;
-			friend class SwitchAll;
-			friend class SwitchBinary;
-			friend class SwitchMultilevel;
-			friend class SwitchToggleBinary;
-			friend class SwitchToggleMultilevel;
-			friend class ThermostatFanMode;
-			friend class ThermostatFanState;
-			friend class ThermostatMode;
-			friend class ThermostatOperatingState;
-			friend class ThermostatSetpoint;
-			friend class Version;
-			friend class WakeUp;
-			friend class ZWavePlusInfo;
+			friend class Internal::CC::Association;
+			friend class Internal::CC::AssociationCommandConfiguration;
+			friend class Internal::CC::CommandClass;
+			friend class Internal::CC::ControllerReplication;
+			friend class Internal::CC::Hail;
+			friend class Internal::CC::ManufacturerSpecific;
+			friend class Internal::CC::MultiInstance;
+			friend class Internal::CC::MultiChannelAssociation;
+			friend class Internal::CC::NodeNaming;
+			friend class Internal::CC::Version;
+			friend class Internal::CC::ZWavePlusInfo;
+			friend class Internal::ManufacturerSpecificDB;
 
 			//-----------------------------------------------------------------------------
 			// Construction
@@ -400,7 +384,7 @@ namespace OpenZWave
 			 * \return Pointer to the requested CommandClass object if supported, otherwise NULL.
 			 * \see CommandClass, m_commandClassMap
 			 */
-			CommandClass* GetCommandClass( uint8 const _commandClassId)const;
+			Internal::CC::CommandClass* GetCommandClass( uint8 const _commandClassId)const;
 			void ApplicationCommandHandler( uint8 const* _data, bool encrypted );
 
 			/**
@@ -437,7 +421,7 @@ namespace OpenZWave
 			 * was already there or if the CommandClass object creation failed).
 			 * \see CommandClass, CommandClasses::CreateCommandClass, m_commandClassMap
 			 */
-			CommandClass* AddCommandClass( uint8 const _commandClassId);
+			Internal::CC::CommandClass* AddCommandClass( uint8 const _commandClassId);
 			/**
 			 * Removes a command class object from the node (via the m_commandClassMap).  Before removing the
 			 * object, this function also removes any values stored in the object's ValueStore.
@@ -450,7 +434,7 @@ namespace OpenZWave
 			void ReadCommandClassesXML( TiXmlElement const* _ccsElement );
 			void WriteXML( TiXmlElement* _nodeElement );
 
-			map<uint8,CommandClass*>		m_commandClassMap;	/**< Map of command class ids and pointers to associated command class objects */
+			map<uint8,Internal::CC::CommandClass*>		m_commandClassMap;	/**< Map of command class ids and pointers to associated command class objects */
 			bool							m_secured; /**< Is this Node added Securely */
 			map<uint8, string>				m_globalInstanceLabel; /** < The Global Labels for Instances for CC that dont define their own labels */
 
@@ -459,7 +443,7 @@ namespace OpenZWave
 			// Configuration Revision Related Classes
 			//-----------------------------------------------------------------------------
 		public:
-			void SetProductDetails(ProductDescriptor *product);
+			void SetProductDetails(Internal::ProductDescriptor *product);
 			/** Get a path to the config file for this device
 			 *
 			 * @return a path relative to the config directory for the config file. returns a empty string if a config file is not present.
@@ -503,7 +487,7 @@ namespace OpenZWave
 		private:
 
 
-			ProductDescriptor *m_Product;
+			Internal::ProductDescriptor *m_Product;
 
 
 			uint32 m_fileConfigRevision;
@@ -528,8 +512,8 @@ namespace OpenZWave
 		public:
 			ValueID CreateValueID( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint16 const _valueIndex, ValueID::ValueType const _type );
 
-			Value* GetValue( ValueID const& _id );
-			Value* GetValue( uint8 const _commandClassId, uint8 const _instance, uint16 const _valueIndex );
+			Internal::VC::Value* GetValue( ValueID const& _id );
+			Internal::VC::Value* GetValue( uint8 const _commandClassId, uint8 const _instance, uint16 const _valueIndex );
 			bool RemoveValue( uint8 const _commandClassId, uint8 const _instance, uint16 const _valueIndex );
 
 			// Helpers for creating values
@@ -539,22 +523,22 @@ namespace OpenZWave
 			bool CreateValueByte( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint16 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, uint8 const _default, uint8 const _pollIntensity );
 			bool CreateValueDecimal( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint16 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, string const& _default, uint8 const _pollIntensity );
 			bool CreateValueInt( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint16 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, int32 const _default, uint8 const _pollIntensity );
-			bool CreateValueList( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint16 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, uint8 const _size, vector<ValueList::Item> const& _items, int32 const _default, uint8 const _pollIntensity );
+			bool CreateValueList( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint16 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, uint8 const _size, vector<Internal::VC::ValueList::Item> const& _items, int32 const _default, uint8 const _pollIntensity );
 			bool CreateValueRaw( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint16 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, uint8 const* _default, uint8 const _length, uint8 const _pollIntensity );
 			bool CreateValueSchedule( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint16 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, uint8 const _pollIntensity );
 			bool CreateValueShort( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint16 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, int16 const _default, uint8 const _pollIntensity );
 			bool CreateValueString( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint16 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, string const& _default, uint8 const _pollIntensity );
 
 			// helpers for removing values
-			void RemoveValueList( ValueList* _value );
+			void RemoveValueList( Internal::VC::ValueList* _value );
 
 			void ReadValueFromXML( uint8 const _commandClassId, TiXmlElement const* _valueElement );
 			bool CreateValueFromXML( uint8 const _commandClassId, TiXmlElement const* _valueElement );
 
 		private:
-			ValueStore* GetValueStore()const{ return m_values; }
+			Internal::VC::ValueStore* GetValueStore()const{ return m_values; }
 
-			ValueStore*	m_values;			// Values reported via command classes
+			Internal::VC::ValueStore*	m_values;			// Values reported via command classes
 
 			//-----------------------------------------------------------------------------
 			// Configuration Parameters (handled by the Configuration command class)
@@ -702,8 +686,8 @@ namespace OpenZWave
 			uint32 m_receivedUnsolicited;		// Number of messages received unsolicited
 			uint32 m_lastRequestRTT;			// Last message request RTT
 			uint32 m_lastResponseRTT;			// Last message response RTT
-			TimeStamp m_sentTS;					// Last message sent time
-			TimeStamp m_receivedTS;				// Last message received time
+			Internal::Platform::TimeStamp m_sentTS;					// Last message sent time
+			Internal::Platform::TimeStamp m_receivedTS;				// Last message received time
 			uint32 m_averageRequestRTT;			// Average Request round trip time.
 			uint32 m_averageResponseRTT;		// Average Response round trip time.
 			uint8 m_quality;					// Node quality measure
@@ -776,7 +760,7 @@ namespace OpenZWave
 				string description;
 			};
 			string const GetMetaData(MetaDataFields);
-			MetaDataFields const GetMetaDataId(string);
+			MetaDataFields GetMetaDataId(string);
 			string const GetMetaDataString(MetaDataFields);
 			ChangeLogEntry const GetChangeLog(uint32_t);
 

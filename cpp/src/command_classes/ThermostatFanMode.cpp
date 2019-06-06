@@ -38,7 +38,7 @@
 
 #include "tinyxml.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::CC;
 
 enum ThermostatFanModeCmd
 {
@@ -49,7 +49,7 @@ enum ThermostatFanModeCmd
 	ThermostatFanModeCmd_SupportedReport			= 0x05
 };
 
-static string const c_modeName[] =
+static std::string const c_modeName[] =
 {
 	"Auto Low",
 	"On Low",
@@ -74,7 +74,7 @@ void ThermostatFanMode::ReadXML
 
 	if( GetNodeUnsafe() )
 	{
-		vector<ValueList::Item>	supportedModes;
+		vector<Internal::VC::ValueList::Item>	supportedModes;
 
 		TiXmlElement const* supportedModesElement = _ccElement->FirstChildElement( "SupportedModes" );
 		if( supportedModesElement )
@@ -93,7 +93,7 @@ void ThermostatFanMode::ReadXML
 							Log::Write (LogLevel_Warning, GetNodeId(), "index Value in XML was greater than range. Setting to Invalid");
 							index = 7;
 						}
-						ValueList::Item item;
+						Internal::VC::ValueList::Item item;
 						item.m_value = index;
 						item.m_label = c_modeName[index];
 						supportedModes.push_back( item );
@@ -129,9 +129,9 @@ void ThermostatFanMode::WriteXML
 		TiXmlElement* supportedModesElement = new TiXmlElement( "SupportedModes" );
 		_ccElement->LinkEndChild( supportedModesElement );
 
-		for( vector<ValueList::Item>::iterator it = m_supportedModes.begin(); it != m_supportedModes.end(); ++it )
+		for( vector<Internal::VC::ValueList::Item>::iterator it = m_supportedModes.begin(); it != m_supportedModes.end(); ++it )
 		{
-			ValueList::Item const& item = *it;
+			Internal::VC::ValueList::Item const& item = *it;
 
 			TiXmlElement* modeElement = new TiXmlElement( "Mode" );
 			supportedModesElement->LinkEndChild( modeElement );
@@ -234,9 +234,9 @@ bool ThermostatFanMode::HandleMsg
 		bool validMode = false;
 		uint8 mode = (int32)_data[1];
 
-		for (vector<ValueList::Item>::iterator it = m_supportedModes.begin(); it != m_supportedModes.end(); ++it )
+		for (vector<Internal::VC::ValueList::Item>::iterator it = m_supportedModes.begin(); it != m_supportedModes.end(); ++it )
 		{
-			ValueList::Item const& item = *it;
+			Internal::VC::ValueList::Item const& item = *it;
 			if (item.m_value == mode) {
 				validMode = true;
 				break;
@@ -245,7 +245,7 @@ bool ThermostatFanMode::HandleMsg
 		if( validMode )
 		{
 			// We have received the thermostat mode from the Z-Wave device
-			if( ValueList* valueList = static_cast<ValueList*>( GetValue( _instance, ValueID_Index_ThermostatFanMode::FanMode ) ) )
+			if( Internal::VC::ValueList* valueList = static_cast<Internal::VC::ValueList*>( GetValue( _instance, ValueID_Index_ThermostatFanMode::FanMode ) ) )
 			{
 				valueList->OnValueRefreshed( (int32)_data[1] );
 				if (valueList->GetItem())
@@ -278,7 +278,7 @@ bool ThermostatFanMode::HandleMsg
 			{
 				if( ( _data[i] & (1<<bit) ) != 0 )
 				{
-					ValueList::Item item;
+					Internal::VC::ValueList::Item item;
 					item.m_value = (int32)((i-1)<<3) + bit;
 
 					/* Minus 1 here as the Unknown Entry is our addition */
@@ -311,12 +311,12 @@ bool ThermostatFanMode::HandleMsg
 //-----------------------------------------------------------------------------
 bool ThermostatFanMode::SetValue
 (
-	Value const& _value
+	Internal::VC::Value const& _value
 )
 {
 	if( ValueID::ValueType_List == _value.GetID().GetType() )
 	{
-		ValueList const* value = static_cast<ValueList const*>(&_value);
+		Internal::VC::ValueList const* value = static_cast<Internal::VC::ValueList const*>(&_value);
 		if (value->GetItem() == NULL)
 			return false;
 

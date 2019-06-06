@@ -37,7 +37,11 @@
 
 #ifndef _ValueIDIndexes_H
 #define _ValueIDIndexes_H
+namespace OpenZWave
+{
 
 #include "ValueIDIndexesDefines.h"
+
+}
 
 #endif

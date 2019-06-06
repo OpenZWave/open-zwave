@@ -32,9 +32,10 @@
 
 namespace OpenZWave
 {
-	class ValueBool;
-	class ValueButton;
-	class ValueByte;
+namespace Internal
+{
+namespace CC
+{
 
 	/** \brief Implements COMMAND_CLASS_SWITCH_MULTILEVEL (0x26), a Z-Wave device command class.
 	 * \ingroup CommandClass
@@ -55,7 +56,7 @@ namespace OpenZWave
 		virtual string const GetCommandClassName() const override { return StaticGetCommandClassName(); }
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 ) override;
 		virtual bool HandleIncomingMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 ) override;
-		virtual bool SetValue( Value const& _value ) override;
+		virtual bool SetValue( Internal::VC::Value const& _value ) override;
 		virtual void SetValueBasic( uint8 const _instance, uint8 const _value ) override;
 		virtual void SetVersion( uint8 const _version ) override;
 
@@ -79,7 +80,8 @@ namespace OpenZWave
 		bool StartLevelChange( uint8 const _instance, SwitchMultilevelDirection const _direction );
 		bool StopLevelChange( uint8 const _instance );
 	};
-
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

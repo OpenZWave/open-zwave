@@ -37,6 +37,11 @@
 
 namespace OpenZWave
 {
+namespace Internal
+{
+namespace Platform
+{
+
 	/** \brief Windows specific implementation of Wait objects.
 	 */
 	class WaitImpl
@@ -66,7 +71,8 @@ namespace OpenZWave
 		Wait*				m_owner;
 		CRITICAL_SECTION	m_criticalSection;
 	};
-
+} // namespace Platform
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif //_WaitImpl_H

@@ -35,7 +35,7 @@
 
 #include "value_classes/ValueByte.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::CC;
 
 enum SensorAlarmCmd
 {
@@ -91,7 +91,7 @@ bool SensorAlarm::RequestState
 	{
 		for( uint8 i=0; i<SensorAlarm_Count; ++i )
 		{
-			Value* value = GetValue( 1, i );
+			Internal::VC::Value* value = GetValue( 1, i );
 			if( value != NULL )
 			{
 				value->Release();
@@ -165,7 +165,7 @@ bool SensorAlarm::HandleMsg
 	if( SensorAlarmCmd_Report == (SensorAlarmCmd)_data[0] )
 	{
 		// We have received an alarm state report from the Z-Wave device
-		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, _data[2] ) ) )
+		if( Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>( GetValue( _instance, _data[2] ) ) )
 		{
 			uint8 sourceNodeId = _data[1];
 			uint8 state = _data[3];

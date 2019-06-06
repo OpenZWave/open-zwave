@@ -33,12 +33,16 @@
 
 namespace OpenZWave
 {
+namespace Internal
+{
+namespace CC
+{
 	/** \brief Implements COMMAND_CLASS_ASSOCIATION (0x85), a Z-Wave device command class.
 	 *\ingroup CommandClass
 	 */
 	class Association: public CommandClass
 	{
-		friend class Group;
+		friend class OpenZWave::Group;
 
 	public:
 		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new Association( _homeId, _nodeId ); }
@@ -69,7 +73,8 @@ namespace OpenZWave
 		uint8			m_numGroups;		// Number of groups supported by the device.  255 is reported by certain manufacturers and requires special handling.
 		vector<uint8>	m_pendingMembers;	// Used to build a list of group members from multiple reports
 	};
-
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

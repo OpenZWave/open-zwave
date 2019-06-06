@@ -35,7 +35,7 @@
 
 #include "value_classes/ValueByte.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::CC;
 
 enum IndicatorCmd
 {
@@ -108,7 +108,7 @@ bool Indicator::HandleMsg
 	{
 		Log::Write( LogLevel_Info, GetNodeId(), "Received an Indicator report: Indicator=%d", _data[1] );
 
-		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_Indicator::Indicator ) ) )
+		if( Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>( GetValue( _instance, ValueID_Index_Indicator::Indicator ) ) )
 		{
 			value->OnValueRefreshed( _data[1] );
 			value->Release();
@@ -125,12 +125,12 @@ bool Indicator::HandleMsg
 //-----------------------------------------------------------------------------
 bool Indicator::SetValue
 (
-	Value const& _value
+		Internal::VC::Value const& _value
 )
 {
 	if( ValueID::ValueType_Byte == _value.GetID().GetType() )
 	{
-		ValueByte const* value = static_cast<ValueByte const*>(&_value);
+		Internal::VC::ValueByte const* value = static_cast<Internal::VC::ValueByte const*>(&_value);
 
 		Log::Write( LogLevel_Info, GetNodeId(), "Indicator::SetValue - Setting indicator to %d", value->GetValue());
 		Msg* msg = new Msg( "IndicatorCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );

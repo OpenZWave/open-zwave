@@ -33,7 +33,7 @@
 #include "Driver.h"
 #include "platform/Log.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::CC;
 
 //
 // CRC-CCITT (0x1D0F)

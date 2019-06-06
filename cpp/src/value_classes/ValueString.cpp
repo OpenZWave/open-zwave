@@ -31,7 +31,7 @@
 #include "platform/Log.h"
 #include "Manager.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::VC;
 
 
 //-----------------------------------------------------------------------------

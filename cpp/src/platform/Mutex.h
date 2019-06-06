@@ -32,6 +32,10 @@
 
 namespace OpenZWave
 {
+	namespace Internal
+	{
+		namespace Platform
+		{
 	class MutexImpl;
 
 	/** \brief Implements a platform-independent mutex--for serializing access to a shared resource.
@@ -82,7 +86,8 @@ namespace OpenZWave
 
 		MutexImpl*	m_pImpl;					// Pointer to an object that encapsulates the platform-specific implementation of a mutex.
 	};
-
+		} // namespace Platform
+	} // namespace Internal
 } // namespace OpenZWave
 
 #endif //_Mutex_H

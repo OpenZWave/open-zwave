@@ -67,21 +67,21 @@ Options* Options::Create
 			userPath += "/";
 		}
 
-		FileOps::Create();
-		if( !FileOps::FolderExists( configPath ) )
+		Internal::Platform::FileOps::Create();
+		if( !Internal::Platform::FileOps::FolderExists( configPath ) )
 		{
 			Log::Create( "", false, true, LogLevel_Debug, LogLevel_Debug, LogLevel_None );
 			/* Try some default directories */
-			if ( FileOps::FolderExists( "config/" ) )
+			if ( Internal::Platform::FileOps::FolderExists( "config/" ) )
 			{
 				Log::Write( LogLevel_Error, "Cannot find a path to the configuration files at %s, Using config/ instead...", configPath.c_str() );
 				configPath = "config/";
-			} else if (FileOps::FolderExists("/etc/openzwave/" ) )
+			} else if (Internal::Platform::FileOps::FolderExists("/etc/openzwave/" ) )
 			{
 				Log::Write( LogLevel_Error, "Cannot find a path to the configuration files at %s, Using /etc/openzwave/ instead...", configPath.c_str() );
 				configPath = "/etc/openzwave/";
 #ifdef SYSCONFDIR
-			} else if ( FileOps::FolderExists(SYSCONFDIR ) )
+			} else if ( Internal::Platform::FileOps::FolderExists(SYSCONFDIR ) )
 			{
 				Log::Write( LogLevel_Error, "Cannot find a path to the configuration files at %s, Using %s instead...", configPath.c_str(), SYSCONFDIR);
 				configPath = SYSCONFDIR;
@@ -92,7 +92,7 @@ Options* Options::Create
 				return NULL;
 			}
 		}
-		FileOps::Destroy();
+		Internal::Platform::FileOps::Destroy();
 		s_instance = new Options( configPath, userPath, _commandLine );
 
 		// Add the default options
@@ -217,7 +217,7 @@ bool Options::AddOptionBool
 	option->m_valueBool = _value;
 
 	// save in m_options map
-	string lowerName = ToLower( _name );
+	string lowerName = Internal::ToLower( _name );
 	m_options[lowerName] = option;
 	return true;
 }
@@ -242,7 +242,7 @@ bool Options::AddOptionInt
 	option->m_valueInt = _value;
 
 	// save in m_options map
-	string lowerName = ToLower( _name );
+	string lowerName = Internal::ToLower( _name );
 	m_options[lowerName] = option;
 	return true;
 }
@@ -269,7 +269,7 @@ bool Options::AddOptionString
 	option->m_append = _append;
 
 	// save in m_options map
-	string lowerName = ToLower( _name );
+	string lowerName = Internal::ToLower( _name );
 	m_options[lowerName] = option;
 	return true;
 }
@@ -576,7 +576,7 @@ Options::Option* Options::Find
 	string const& _name
 )
 {
-	string lowername = ToLower( _name );
+	string lowername = Internal::ToLower( _name );
 	map<string,Option*>::iterator it = m_options.find( lowername );
 	if( it != m_options.end() )
 	{
@@ -597,7 +597,7 @@ bool Options::Option::SetValueFromString
 {
 	if( OptionType_Bool == m_type )
 	{
-		string lowerValue = ToLower( _value );
+		string lowerValue = Internal::ToLower( _value );
 		if( ( lowerValue == "true" ) || ( lowerValue == "1" ) )
 		{
 			m_valueBool = true;

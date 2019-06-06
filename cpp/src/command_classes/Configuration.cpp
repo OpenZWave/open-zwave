@@ -40,7 +40,7 @@
 #include "value_classes/ValueList.h"
 #include "value_classes/ValueShort.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::CC;
 
 enum ConfigurationCmd
 {
@@ -72,43 +72,43 @@ bool Configuration::HandleMsg
 			paramValue |= (int32)_data[i+3];
 		}
 
-		if ( Value* value = GetValue( 1, parameter ) )
+		if ( Internal::VC::Value* value = GetValue( 1, parameter ) )
 		{
 			switch ( value->GetID().GetType() )
 			{
 				case ValueID::ValueType_BitSet:
 				{
-					ValueBitSet* vbs = static_cast<ValueBitSet*>( value );
+					Internal::VC::ValueBitSet* vbs = static_cast<Internal::VC::ValueBitSet*>( value );
 					vbs->OnValueRefreshed( paramValue );
 					break;
 				}
 				case ValueID::ValueType_Bool:
 				{
-					ValueBool* valueBool = static_cast<ValueBool*>( value );
+					Internal::VC::ValueBool* valueBool = static_cast<Internal::VC::ValueBool*>( value );
 					valueBool->OnValueRefreshed( paramValue != 0 );
 					break;
 				}
 				case ValueID::ValueType_Byte:
 				{
-					ValueByte* valueByte = static_cast<ValueByte*>( value );
+					Internal::VC::ValueByte* valueByte = static_cast<Internal::VC::ValueByte*>( value );
 					valueByte->OnValueRefreshed( (uint8)paramValue );
 					break;
 				}
 				case ValueID::ValueType_Short:
 				{
-					ValueShort* valueShort = static_cast<ValueShort*>( value );
+					Internal::VC::ValueShort* valueShort = static_cast<Internal::VC::ValueShort*>( value );
 					valueShort->OnValueRefreshed( (int16)paramValue );
 					break;
 				}
 				case ValueID::ValueType_Int:
 				{
-					ValueInt* valueInt = static_cast<ValueInt*>( value );
+					Internal::VC::ValueInt* valueInt = static_cast<Internal::VC::ValueInt*>( value );
 					valueInt->OnValueRefreshed( paramValue );
 					break;
 				}
 				case ValueID::ValueType_List:
 				{
-					ValueList* valueList = static_cast<ValueList*>( value );
+					Internal::VC::ValueList* valueList = static_cast<Internal::VC::ValueList*>( value );
 					valueList->OnValueRefreshed( paramValue );
 					break;
 				}
@@ -165,7 +165,7 @@ bool Configuration::HandleMsg
 //-----------------------------------------------------------------------------
 bool Configuration::SetValue
 (
-	Value const& _value
+	Internal::VC::Value const& _value
 )
 {
 	uint16 param = _value.GetID().GetIndex();
@@ -173,44 +173,44 @@ bool Configuration::SetValue
 	{
 		case ValueID::ValueType_BitSet:
 		{
-			ValueBitSet const& vbs = static_cast<ValueBitSet const&>( _value );
+			Internal::VC::ValueBitSet const& vbs = static_cast<Internal::VC::ValueBitSet const&>( _value );
 			Set( param, (int32)vbs.GetValue(), vbs.GetSize() );
 			return true;
 		}
 		case ValueID::ValueType_Bool:
 		{
-			ValueBool const& valueBool = static_cast<ValueBool const&>( _value );
+			Internal::VC::ValueBool const& valueBool = static_cast<Internal::VC::ValueBool const&>( _value );
 			Set( param, (int32)valueBool.GetValue(), 1 );
 			return true;
 		}
 		case ValueID::ValueType_Byte:
 		{
-			ValueByte const& valueByte = static_cast<ValueByte const&>( _value );
+			Internal::VC::ValueByte const& valueByte = static_cast<Internal::VC::ValueByte const&>( _value );
 			Set( param, (int32)valueByte.GetValue(), 1 );
 			return true;
 		}
 		case ValueID::ValueType_Short:
 		{
-			ValueShort const& valueShort = static_cast<ValueShort const&>( _value );
+			Internal::VC::ValueShort const& valueShort = static_cast<Internal::VC::ValueShort const&>( _value );
 			Set( param, (int32)valueShort.GetValue(), 2 );
 			return true;
 		}
 		case ValueID::ValueType_Int:
 		{
-			ValueInt const& valueInt = static_cast<ValueInt const&>( _value );
+			Internal::VC::ValueInt const& valueInt = static_cast<Internal::VC::ValueInt const&>( _value );
 			Set( param, valueInt.GetValue(), 4 );
 			return true;
 		}
 		case ValueID::ValueType_List:
 		{
-			ValueList const& valueList = static_cast<ValueList const&>( _value );
+			Internal::VC::ValueList const& valueList = static_cast<Internal::VC::ValueList const&>( _value );
 			if (valueList.GetItem() != NULL)
 				Set( param, valueList.GetItem()->m_value, valueList.GetSize() );
 			return true;
 		}
 		case ValueID::ValueType_Button:
 		{
-			ValueButton const& valueButton = static_cast<ValueButton const&>( _value );
+			Internal::VC::ValueButton const& valueButton = static_cast<Internal::VC::ValueButton const&>( _value );
 			Set( param, valueButton.IsPressed(), 1 );
 			return true;
 		}

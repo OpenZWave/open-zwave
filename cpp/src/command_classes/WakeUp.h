@@ -35,9 +35,14 @@
 
 namespace OpenZWave
 {
-	class Msg;
-	class ValueInt;
-	class Mutex;
+
+namespace Internal
+{
+	namespace Platform {
+		class Mutex;
+	}
+namespace CC
+{
 
 	/** \brief Implements COMMAND_CLASS_WAKE_UP (0x84), a Z-Wave device command class.
 	 * \ingroup CommandClass
@@ -70,7 +75,7 @@ namespace OpenZWave
 		virtual uint8 const GetCommandClassId() const override { return StaticGetCommandClassId(); }
 		virtual string const GetCommandClassName() const override { return StaticGetCommandClassName(); }
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 ) override;
-		virtual bool SetValue( Value const& _value ) override;
+		virtual bool SetValue( Internal::VC::Value const& _value ) override;
 		virtual void SetVersion( uint8 const _version ) override;
 
 		virtual uint8 GetMaxVersion() override { return 2; }
@@ -81,12 +86,13 @@ namespace OpenZWave
 	private:
 		WakeUp( uint32 const _homeId, uint8 const _nodeId );
 
-		Mutex*						m_mutex;			// Serialize access to the pending queue
+		Internal::Platform::Mutex*						m_mutex;			// Serialize access to the pending queue
 		list<Driver::MsgQueueItem>	m_pendingQueue;		// Messages waiting to be sent when the device wakes up
 		bool						m_awake;
 		bool						m_pollRequired;
 	};
-
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

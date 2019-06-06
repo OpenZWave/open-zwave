@@ -36,11 +36,12 @@
 #include "platform/unix/DNSImpl.h"	// Platform-specific implementation of a DNS Operations
 #endif
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::Platform;
 
 DNS::DNS
 (
-)
+) :
+	status(DNSError_None)
 {
 	this->m_pImpl = new DNSImpl();
 }

@@ -33,6 +33,11 @@
 
 namespace OpenZWave
 {
+namespace Internal
+{
+namespace Platform
+{
+
 	/** \brief Windows-specific implementation of the Event class.
 	 */
 	class EventImpl
@@ -53,7 +58,8 @@ namespace OpenZWave
 
 		HANDLE	m_hEvent;
 	};
-
+} // namespace Platform
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif //_EventImpl_H

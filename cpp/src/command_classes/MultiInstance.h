@@ -33,6 +33,11 @@
 
 namespace OpenZWave
 {
+namespace Internal
+{
+namespace CC
+{
+
 	/** \brief Implements COMMAND_CLASS_MULTI_INSTANCE (0x60), a Z-Wave device command class.
 	 * \ingroup CommandClass
 	 */
@@ -91,7 +96,8 @@ namespace OpenZWave
 		set<uint8>	m_endPointCommandClasses;
 
 	};
-
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

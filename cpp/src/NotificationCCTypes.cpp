@@ -33,7 +33,7 @@
 #include "Utils.h"
 #include "platform/Log.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal;
 
 NotificationCCTypes *NotificationCCTypes::m_instance = NULL;
 std::map<uint32, NotificationCCTypes::NotificationTypes *> NotificationCCTypes::Notifications;
@@ -258,7 +258,7 @@ void NotificationCCTypes::ReadXML
 
 }
 
-string NotificationCCTypes::GetEventParamNames
+std::string NotificationCCTypes::GetEventParamNames
 (
 		NotificationEventParamTypes type
 )
@@ -286,7 +286,7 @@ string NotificationCCTypes::GetEventParamNames
 	return "Unknown";
 }
 
-string NotificationCCTypes::GetAlarmType
+std::string NotificationCCTypes::GetAlarmType
 (
 		uint32 type
 )
@@ -298,7 +298,7 @@ string NotificationCCTypes::GetAlarmType
 	return "Unknown";
 }
 
-string NotificationCCTypes::GetEventForAlarmType
+std::string NotificationCCTypes::GetEventForAlarmType
 (
 		uint32 type,
 		uint32 event

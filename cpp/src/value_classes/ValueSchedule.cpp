@@ -32,7 +32,7 @@
 #include "Msg.h"
 #include "platform/Log.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::VC;
 
 //-----------------------------------------------------------------------------
 // <ValueSchedule::ValueSchedule>
@@ -359,7 +359,7 @@ bool ValueSchedule::FindSwitchPoint
 	return false;
 }
 
-string const ValueSchedule::GetAsString() const {
+std::string const ValueSchedule::GetAsString() const {
 	/* we should actuall find a way to return the arrays of switchpoints nicely */
 	return "SwitchPoint";
 }

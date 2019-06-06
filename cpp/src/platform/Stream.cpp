@@ -33,7 +33,7 @@
 
 #include <cstdio>
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::Platform;
 
 //-----------------------------------------------------------------------------
 //	<Stream::Stream>

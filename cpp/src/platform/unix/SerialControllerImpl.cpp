@@ -43,7 +43,7 @@ cfsetspeed(struct termios *tios, speed_t speed)
 }
 #endif
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::Platform;
 
 //-----------------------------------------------------------------------------
 // <SerialControllerImpl::SerialControllerImpl>
@@ -54,7 +54,8 @@ SerialControllerImpl::SerialControllerImpl
 	SerialController* _owner
 ):
 	m_owner( _owner ),
-	m_hSerialController( -1 )
+	m_hSerialController( -1 ),
+	m_pThread( NULL )
 {
 }
 
