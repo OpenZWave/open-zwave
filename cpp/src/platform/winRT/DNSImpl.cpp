@@ -32,54 +32,55 @@
 
 #include "DNSImpl.h"
 
-
-
-using namespace OpenZWave;
-
-DNSImpl::DNSImpl
-(
-)
+namespace OpenZWave
 {
+	namespace Internal
+	{
+		namespace Platform
+		{
 
-}
+			DNSImpl::DNSImpl()
+			{
 
-DNSImpl::~DNSImpl
-(
-)
-{
+			}
 
-}
+			DNSImpl::~DNSImpl()
+			{
 
-bool DNSImpl::LookupTxT
-(
-string lookup,
-string &result
-)
-{
+			}
+
+			bool DNSImpl::LookupTxT(string lookup, string &result)
+			{
 #if 0
-	PDNS_RECORD qr, rp;
-	DNS_STATUS rc;
+				PDNS_RECORD qr, rp;
+				DNS_STATUS rc;
 
-	rc = DnsQuery(lookup.c_str(), DNS_TYPE_TEXT, DNS_QUERY_STANDARD, NULL, &qr, NULL);
-	if (rc != ERROR_SUCCESS) {
-		Log::Write(LogLevel_Warning, "Error looking up txt Record: %s - %d", lookup.c_str(), rc);
-		status = DNSError_InternaError;
-		return false;
-	}
+				rc = DnsQuery(lookup.c_str(), DNS_TYPE_TEXT, DNS_QUERY_STANDARD, NULL, &qr, NULL);
+				if (rc != ERROR_SUCCESS)
+				{
+					Log::Write(LogLevel_Warning, "Error looking up txt Record: %s - %d", lookup.c_str(), rc);
+					status = DNSError_InternaError;
+					return false;
+				}
 
-	for (rp = qr; rp != NULL; rp = rp->pNext) {
-		if (rp->wType == DNS_TYPE_TEXT) {
-			result = rp->Data.TXT.pStringArray[0];
-			status = DNSError_None;
-			break;
-		}
-	}
+				for (rp = qr; rp != NULL; rp = rp->pNext)
+				{
+					if (rp->wType == DNS_TYPE_TEXT)
+					{
+						result = rp->Data.TXT.pStringArray[0];
+						status = DNSError_None;
+						break;
+					}
+				}
 
-	DnsRecordListFree(qr, DnsFreeRecordList);
+				DnsRecordListFree(qr, DnsFreeRecordList);
 
-	return true;
+				return true;
 #endif
-	Log::Write(LogLevel_Error, "DNS Lookups Not Implemented on WinRT Platform");
-	status = DNSError_InternalError;
-	return false;
-}
+				Log::Write(LogLevel_Error, "DNS Lookups Not Implemented on WinRT Platform");
+				status = DNSError_InternalError;
+				return false;
+			}
+		} // namespace Platform
+	} // namespace Internal
+} // namespace OpenZWave

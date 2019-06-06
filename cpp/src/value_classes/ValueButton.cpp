@@ -32,81 +32,61 @@
 #include "Node.h"
 #include "platform/Log.h"
 
-using namespace OpenZWave;
-
+namespace OpenZWave
+{
+	namespace Internal
+	{
+		namespace VC
+		{
 
 //-----------------------------------------------------------------------------
 // <ValueButton::ValueButton>
 // Constructor
 //-----------------------------------------------------------------------------
-ValueButton::ValueButton
-(
-	uint32 const _homeId,
-	uint8 const _nodeId,
-	ValueID::ValueGenre const _genre,
-	uint8 const _commandClassId,
-	uint8 const _instance,
-	uint16 const _index,
-	string const& _label,
-	uint8 const _pollIntensity
-):
-	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Button, _label, "", false, true, true, _pollIntensity ),
-	m_pressed( false )
-{
-}
+			ValueButton::ValueButton(uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint16 const _index, string const& _label, uint8 const _pollIntensity) :
+					Value(_homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Button, _label, "", false, true, true, _pollIntensity), m_pressed(false)
+			{
+			}
 
 //-----------------------------------------------------------------------------
 // <ValueButton::ReadXML>
 // Apply settings from XML
 //-----------------------------------------------------------------------------
-void ValueButton::ReadXML
-(
-	uint32 const _homeId,
-	uint8 const _nodeId,
-	uint8 const _commandClassId,
-	TiXmlElement const* _valueElement
-)
-{
-	Value::ReadXML( _homeId, _nodeId, _commandClassId, _valueElement );
-}
+			void ValueButton::ReadXML(uint32 const _homeId, uint8 const _nodeId, uint8 const _commandClassId, TiXmlElement const* _valueElement)
+			{
+				Value::ReadXML(_homeId, _nodeId, _commandClassId, _valueElement);
+			}
 
 //-----------------------------------------------------------------------------
 // <ValueButton::WriteXML>
 // Write ourselves to an XML document
 //-----------------------------------------------------------------------------
-void ValueButton::WriteXML
-(
-	TiXmlElement* _valueElement
-)
-{
-	Value::WriteXML( _valueElement );
-}
+			void ValueButton::WriteXML(TiXmlElement* _valueElement)
+			{
+				Value::WriteXML(_valueElement);
+			}
 
 //-----------------------------------------------------------------------------
 // <ValueButton::PressButton>
 // Start an activity in a device
 //-----------------------------------------------------------------------------
-bool ValueButton::PressButton
-(
-)
-{
-	// Set the value in the device.
-	m_pressed = true;
-	return Value::Set();
-}
+			bool ValueButton::PressButton()
+			{
+				// Set the value in the device.
+				m_pressed = true;
+				return Value::Set();
+			}
 
 //-----------------------------------------------------------------------------
 // <ValueButton::ReleaseButton>
 // Stop an activity in a device
 //-----------------------------------------------------------------------------
-bool ValueButton::ReleaseButton
-(
-)
-{
-	// Set the value in the device.
-	m_pressed = false;
-	return Value::Set();
-}
-
-
-
+			bool ValueButton::ReleaseButton()
+			{
+				// Set the value in the device.
+				m_pressed = false;
+				return Value::Set();
+			}
+		} // namespace VC
+	} // namespace Internal
+} // namespace OpenZWave

@@ -32,116 +32,90 @@
 #include "Manager.h"
 #include <ctime>
 
-using namespace OpenZWave;
-
+namespace OpenZWave
+{
+	namespace Internal
+	{
+		namespace VC
+		{
 
 //-----------------------------------------------------------------------------
 // <ValueDecimal::ValueDecimal>
 // Constructor
 //-----------------------------------------------------------------------------
-ValueDecimal::ValueDecimal
-(
-	uint32 const _homeId,
-	uint8 const _nodeId,
-	ValueID::ValueGenre const _genre,
-	uint8 const _commandClassId,
-	uint8 const _instance,
-	uint16 const _index,
-	string const& _label,
-	string const& _units,
-	bool const _readOnly,
-	bool const _writeOnly,
-	string const& _value,
-	uint8 const _pollIntensity
-):
-  	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Decimal, _label, _units, _readOnly, _writeOnly, false, _pollIntensity ),
-	m_value( _value ),
-	m_valueCheck( "" ),
-	m_newValue( "" ),
-	m_precision( 0 )
-{
-}
+			ValueDecimal::ValueDecimal(uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint16 const _index, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, string const& _value, uint8 const _pollIntensity) :
+					Value(_homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Decimal, _label, _units, _readOnly, _writeOnly, false, _pollIntensity), m_value(_value), m_valueCheck(""), m_newValue(""), m_precision(0)
+			{
+			}
 
 //-----------------------------------------------------------------------------
 // <ValueDecimal::ReadXML>
 // Apply settings from XML
 //-----------------------------------------------------------------------------
-void ValueDecimal::ReadXML
-(
-	uint32 const _homeId,
-	uint8 const _nodeId,
-	uint8 const _commandClassId,
-	TiXmlElement const* _valueElement
-)
-{
-	Value::ReadXML( _homeId, _nodeId, _commandClassId, _valueElement );
+			void ValueDecimal::ReadXML(uint32 const _homeId, uint8 const _nodeId, uint8 const _commandClassId, TiXmlElement const* _valueElement)
+			{
+				Value::ReadXML(_homeId, _nodeId, _commandClassId, _valueElement);
 
-	char const* str = _valueElement->Attribute( "value" );
-	if( str )
-	{
-		m_value = str;
-	}
-	else
-	{
-		Log::Write( LogLevel_Info, "Missing default decimal value from xml configuration: node %d, class 0x%02x, instance %d, index %d", _nodeId,  _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
-	}
-}
+				char const* str = _valueElement->Attribute("value");
+				if (str)
+				{
+					m_value = str;
+				}
+				else
+				{
+					Log::Write(LogLevel_Info, "Missing default decimal value from xml configuration: node %d, class 0x%02x, instance %d, index %d", _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex());
+				}
+			}
 
 //-----------------------------------------------------------------------------
 // <ValueDecimal::WriteXML>
 // Write ourselves to an XML document
 //-----------------------------------------------------------------------------
-void ValueDecimal::WriteXML
-(
-	TiXmlElement* _valueElement
-)
-{
-	Value::WriteXML( _valueElement );
-	_valueElement->SetAttribute( "value", m_value.c_str() );
-}
+			void ValueDecimal::WriteXML(TiXmlElement* _valueElement)
+			{
+				Value::WriteXML(_valueElement);
+				_valueElement->SetAttribute("value", m_value.c_str());
+			}
 
 //-----------------------------------------------------------------------------
 // <ValueDecimal::Set>
 // Set a new value in the device
 //-----------------------------------------------------------------------------
-bool ValueDecimal::Set
-(
-	string const& _value
-)
-{
-	// create a temporary copy of this value to be submitted to the Set() call and set its value to the function param
-  	ValueDecimal* tempValue = new ValueDecimal( *this );
-	tempValue->m_value = _value;
+			bool ValueDecimal::Set(string const& _value)
+			{
+				// create a temporary copy of this value to be submitted to the Set() call and set its value to the function param
+				ValueDecimal* tempValue = new ValueDecimal(*this);
+				tempValue->m_value = _value;
 
-	// Set the value in the device.
-	bool ret = ((Value*)tempValue)->Set();
+				// Set the value in the device.
+				bool ret = ((Value*) tempValue)->Set();
 
-	// clean up the temporary value
-	delete tempValue;
+				// clean up the temporary value
+				delete tempValue;
 
-	return ret;
-}
+				return ret;
+			}
 
 //-----------------------------------------------------------------------------
 // <ValueDecimal::OnValueRefreshed>
 // A value in a device has been refreshed
 //-----------------------------------------------------------------------------
-void ValueDecimal::OnValueRefreshed
-(
-	string const& _value
-)
-{
-	switch( VerifyRefreshedValue( (void*) &m_value, (void*) &m_valueCheck, (void*) &_value, ValueID::ValueType_Decimal) )
-	{
-	case 0:		// value hasn't changed, nothing to do
-		break;
-	case 1:		// value has changed (not confirmed yet), save _value in m_valueCheck
-		m_valueCheck = _value;
-		break;
-	case 2:		// value has changed (confirmed), save _value in m_value
-		m_value = _value;
-		break;
-	case 3:		// all three values are different, so wait for next refresh to try again
-		break;
-	}
-}
+			void ValueDecimal::OnValueRefreshed(string const& _value)
+			{
+				switch (VerifyRefreshedValue((void*) &m_value, (void*) &m_valueCheck, (void*) &_value, ValueID::ValueType_Decimal))
+				{
+					case 0:		// value hasn't changed, nothing to do
+						break;
+					case 1:		// value has changed (not confirmed yet), save _value in m_valueCheck
+						m_valueCheck = _value;
+						break;
+					case 2:		// value has changed (confirmed), save _value in m_value
+						m_value = _value;
+						break;
+					case 3:		// all three values are different, so wait for next refresh to try again
+						break;
+				}
+			}
+		} // namespace VC
+	} // namespace Internal
+} // namespace OpenZWave

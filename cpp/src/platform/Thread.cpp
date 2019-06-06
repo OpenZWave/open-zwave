@@ -37,89 +37,79 @@
 #include "platform/unix/ThreadImpl.h"	// Platform-specific implementation of a thread
 #endif
 
-using namespace OpenZWave;
-
+namespace OpenZWave
+{
+	namespace Internal
+	{
+		namespace Platform
+		{
 
 //-----------------------------------------------------------------------------
 //	<Thread::Thread>
 //	Constructor
 //-----------------------------------------------------------------------------
-Thread::Thread
-(
-	string const& _name
-)
-{
-	m_exitEvent = new Event();
-	m_pImpl = new ThreadImpl( this, _name );
-}
+			Thread::Thread(string const& _name)
+			{
+				m_exitEvent = new Event();
+				m_pImpl = new ThreadImpl(this, _name);
+			}
 
 //-----------------------------------------------------------------------------
 //	<Thread::~Thread>
 //	Destructor
 //-----------------------------------------------------------------------------
-Thread::~Thread
-(
-)
-{
-	delete m_pImpl;
-	m_exitEvent->Release();
-}
+			Thread::~Thread()
+			{
+				delete m_pImpl;
+				m_exitEvent->Release();
+			}
 
 //-----------------------------------------------------------------------------
 //	<Thread::Start>
 //	Start a function running on this thread
 //-----------------------------------------------------------------------------
-bool Thread::Start
-(
-	pfnThreadProc_t _pfnThreadProc,
-	void* _context
-)
-{
-	return( m_pImpl->Start( _pfnThreadProc, m_exitEvent, _context ) );
-}
+			bool Thread::Start(pfnThreadProc_t _pfnThreadProc, void* _context)
+			{
+				return (m_pImpl->Start(_pfnThreadProc, m_exitEvent, _context));
+			}
 
 //-----------------------------------------------------------------------------
 //	<Thread::Stop>
 //	Stop a function running on this thread
 //-----------------------------------------------------------------------------
-bool Thread::Stop
-(
-)
-{
-	int32 timeout = 2000;	// Give the thread 2 seconds to exit
-	m_exitEvent->Set();
+			bool Thread::Stop()
+			{
+				int32 timeout = 2000;	// Give the thread 2 seconds to exit
+				m_exitEvent->Set();
 
-	if( Wait::Single( this, timeout ) < 0 )
-	{
-		// Timed out
-			m_pImpl->Terminate();
-		return false;
-	}
+				if (Wait::Single(this, timeout) < 0)
+				{
+					// Timed out
+					m_pImpl->Terminate();
+					return false;
+				}
 
-	return true;
-}
+				return true;
+			}
 
 //-----------------------------------------------------------------------------
 //	<Thread::Sleep>
 //	Causes the thread to sleep for the specified number of milliseconds.
 //-----------------------------------------------------------------------------
-void Thread::Sleep
-(
-	uint32 _milliseconds
-)
-{
-	return( m_pImpl->Sleep( _milliseconds ) );
-}
+			void Thread::Sleep(uint32 _milliseconds)
+			{
+				return (m_pImpl->Sleep(_milliseconds));
+			}
 
 //-----------------------------------------------------------------------------
 //	<Thread::IsSignalled>
 //	Test whether the event is set
 //-----------------------------------------------------------------------------
-bool Thread::IsSignalled
-(
-)
-{
-	return m_pImpl->IsSignalled();
-}
-
+			bool Thread::IsSignalled()
+			{
+				return m_pImpl->IsSignalled();
+			}
+		} // namespace Platform
+	} // namespace Internal
+} // namespace OpenZWave
 

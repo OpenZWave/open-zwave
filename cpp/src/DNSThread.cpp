@@ -29,116 +29,101 @@
 #include "Utils.h"
 #include "Driver.h"
 
-using namespace OpenZWave;
-
-
-DNSThread::DNSThread
-(
-Driver *driver
-):
-m_driver (driver),
-m_dnsMutex ( new Mutex() ),
-m_dnsRequestEvent ( new Event() )
+namespace OpenZWave
 {
-}
-
-DNSThread::~DNSThread
-(
-)
-{
-
-}
-
-void DNSThread::DNSThreadEntryPoint
-(
-		Event* _exitEvent,
-		void* _context
-)
-{
-	DNSThread* dns = (DNSThread*)_context;
-	if( dns )
+	namespace Internal
 	{
-		dns->DNSThreadProc( _exitEvent );
-	}
-}
 
-void DNSThread::DNSThreadProc
-(
-Event* _exitEvent
-)
-{
-	Log::Write(LogLevel_Info, "Starting DNSThread");
-	while( true )
-	{
-		// DNSThread has been initialized
-		const uint32 count = 2;
+		DNSThread::DNSThread(Driver *driver) :
+				m_driver(driver), m_dnsMutex(new Internal::Platform::Mutex()), m_dnsRequestEvent(new Internal::Platform::Event())
+		{
+		}
 
-		Wait* waitObjects[count];
+		DNSThread::~DNSThread()
+		{
 
-		int32 timeout = Wait::Timeout_Infinite;
+		}
+
+		void DNSThread::DNSThreadEntryPoint(Internal::Platform::Event* _exitEvent, void* _context)
+		{
+			DNSThread* dns = (DNSThread*) _context;
+			if (dns)
+			{
+				dns->DNSThreadProc(_exitEvent);
+			}
+		}
+
+		void DNSThread::DNSThreadProc(Internal::Platform::Event* _exitEvent)
+		{
+			Log::Write(LogLevel_Info, "Starting DNSThread");
+			while (true)
+			{
+				// DNSThread has been initialized
+				const uint32 count = 2;
+
+				Internal::Platform::Wait* waitObjects[count];
+
+				int32 timeout = Internal::Platform::Wait::Timeout_Infinite;
 //		timeout = 5000;
 
+				waitObjects[0] = _exitEvent;				// Thread must exit.
+				waitObjects[1] = m_dnsRequestEvent;			// DNS Request
+				// Wait for something to do
 
-		waitObjects[0] = _exitEvent;				// Thread must exit.
-		waitObjects[1] = m_dnsRequestEvent;			// DNS Request
-		// Wait for something to do
+				int32 res = Internal::Platform::Wait::Multiple(waitObjects, count, timeout);
 
-		int32 res = Wait::Multiple( waitObjects, count, timeout );
-
-		switch (res) {
-			case -1: /* timeout */
-				Log::Write(LogLevel_Warning, "DNSThread Timeout...");
-				break;
-			case 0: /* exitEvent */
-				Log::Write(LogLevel_Info, "Stopping DNSThread");
-				return;
-			case 1: /* dnsEvent */
-				processResult();
-				break;
+				switch (res)
+				{
+					case -1: /* timeout */
+						Log::Write(LogLevel_Warning, "DNSThread Timeout...");
+						break;
+					case 0: /* exitEvent */
+						Log::Write(LogLevel_Info, "Stopping DNSThread");
+						return;
+					case 1: /* dnsEvent */
+						processResult();
+						break;
+				}
+			}
 		}
-	}
-}
 
-bool DNSThread::sendRequest
-(
-DNSLookup *lookup
-)
-{
-	Log::Write(LogLevel_Info, lookup->NodeID, "Queuing Lookup on %s for Node %d", lookup->lookup.c_str(), lookup->NodeID);
-	LockGuard LG(m_dnsMutex);
-	m_dnslist.push_back(lookup);
-	m_dnsRequestEvent->Set();
-	return true;
-}
+		bool DNSThread::sendRequest(DNSLookup *lookup)
+		{
+			Log::Write(LogLevel_Info, lookup->NodeID, "Queuing Lookup on %s for Node %d", lookup->lookup.c_str(), lookup->NodeID);
+			LockGuard LG(m_dnsMutex);
+			m_dnslist.push_back(lookup);
+			m_dnsRequestEvent->Set();
+			return true;
+		}
 
-void DNSThread::processResult
-(
-)
-{
-	string result;
-	DNSLookup *lookup;
-	{
-		LockGuard LG(m_dnsMutex);
-		lookup = m_dnslist.front();
-		m_dnslist.pop_front();
-		if (m_dnslist.empty())
-			m_dnsRequestEvent->Reset();
-	}
-	Log::Write(LogLevel_Info, "LookupTxT Checking %s", lookup->lookup.c_str());
-	if (!m_dnsresolver.LookupTxT(lookup->lookup, lookup->result)) {
-		Log::Write(LogLevel_Warning, "Lookup on %s Failed", lookup->lookup.c_str());
-	} else {
-		Log::Write(LogLevel_Info, "Lookup for %s returned %s", lookup->lookup.c_str(), lookup->result.c_str());
-	}
-	lookup->status = m_dnsresolver.status;
+		void DNSThread::processResult()
+		{
+			string result;
+			Internal::DNSLookup *lookup;
+			{
+				LockGuard LG(m_dnsMutex);
+				lookup = m_dnslist.front();
+				m_dnslist.pop_front();
+				if (m_dnslist.empty())
+					m_dnsRequestEvent->Reset();
+			}
+			Log::Write(LogLevel_Info, "LookupTxT Checking %s", lookup->lookup.c_str());
+			if (!m_dnsresolver.LookupTxT(lookup->lookup, lookup->result))
+			{
+				Log::Write(LogLevel_Warning, "Lookup on %s Failed", lookup->lookup.c_str());
+			}
+			else
+			{
+				Log::Write(LogLevel_Info, "Lookup for %s returned %s", lookup->lookup.c_str(), lookup->result.c_str());
+			}
+			lookup->status = m_dnsresolver.status;
 
-	/* send the response back to the Driver for processing */
-	Driver::EventMsg *event = new Driver::EventMsg();
-	event->type = Driver::EventMsg::Event_DNS;
-	event->event.lookup = lookup;
-	this->m_driver->SubmitEventMsg(event);
+			/* send the response back to the Driver for processing */
+			Driver::EventMsg *event = new Driver::EventMsg();
+			event->type = Driver::EventMsg::Event_DNS;
+			event->event.lookup = lookup;
+			this->m_driver->SubmitEventMsg(event);
 
-
-}
-
-
+		}
+	} // namespace Internal
+} // namespace OpenZWave
