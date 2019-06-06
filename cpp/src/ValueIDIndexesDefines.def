@@ -993,7 +993,7 @@ struct ignore_assign {
     ignore_assign(int value) : _value(value) { }
     operator int() const { return _value; }
 
-    const ignore_assign& operator =(int dummy) { return *this; }
+    const ignore_assign& operator =(int dummy) { (void)dummy; return *this; }
 
     int _value;
 };
@@ -1068,8 +1068,8 @@ struct EnumName {                                                      \
 ENUM(ValueID_Index_Alarm,
 		Type_Start = 0,
 		Type_Smoke_Alarm = 1,
-		Type_Carbon_Monoxied = 2,
-		Type_Carbon_Dixoide = 3,
+		Type_Carbon_Monoxide = 2,
+		Type_Carbon_Dioxide = 3,
 		Type_Heat = 4,
 		Type_Water = 5,
 		Type_Access_Control = 6,

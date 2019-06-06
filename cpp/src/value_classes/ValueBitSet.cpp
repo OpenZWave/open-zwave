@@ -56,7 +56,7 @@ ValueBitSet::ValueBitSet
 	uint32 const _value,
 	uint8 const _pollIntensity
 ):
-  	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Bool, _label, _units, _readOnly, _writeOnly, false, _pollIntensity ),
+  	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_BitSet, _label, _units, _readOnly, _writeOnly, false, _pollIntensity ),
 	m_value( _value ),
 	m_valueCheck( false ),
 	m_newValue( false ),
@@ -410,7 +410,7 @@ void ValueBitSet::OnValueRefreshed
 	uint32 const _value
 )
 {
-	switch( VerifyRefreshedValue( (void*) &m_value, (void*) &m_valueCheck, (void*) &_value, ValueID::ValueType_Bool) )
+	switch( VerifyRefreshedValue( (void*) &m_value, (void*) &m_valueCheck, (void*) &_value, ValueID::ValueType_BitSet) )
 	{
 	case 0:		// value hasn't changed, nothing to do
 		break;

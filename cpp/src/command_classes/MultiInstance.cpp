@@ -390,11 +390,11 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 			m_endPointCommandClasses.insert( commandClassId );
 
 			// Ensure the node supports this command class
-			CommandClass* cc = node->GetCommandClass( commandClassId, afterMark );
+			CommandClass* cc = node->GetCommandClass( commandClassId );
 
 			if( !cc )
 			{
-				cc = node->AddCommandClass( commandClassId, afterMark );
+				cc = node->AddCommandClass( commandClassId );
 			}
 			if( cc && afterMark )
 			{
@@ -460,9 +460,9 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 									Log::Write(LogLevel_Info, GetNodeId(), "        Skipping Security_Supported_Get, as the Node is not Secured");
 							} else {
 								Log::Write(LogLevel_Info, GetNodeId(), "        Sending Security_Supported_Get to Instance %d", i);
-								Security *seccc = static_cast<Security*>(node->GetCommandClass(Security::StaticGetCommandClassId(), afterMark));
+								Security *seccc = static_cast<Security*>(node->GetCommandClass(Security::StaticGetCommandClassId()));
 								/* this will trigger a SecurityCmd_SupportedGet on the _instance of the Device. */
-								if (seccc) {
+								if (seccc && !seccc->IsAfterMark()) {
 									seccc->Init(i);
 								}
 							}
@@ -635,7 +635,7 @@ void MultiInstance::HandleMultiChannelEncap
 			 *
 			 */
 			if (endPoint == 0) {
-				Log::Write( LogLevel_Error, GetNodeId(), "MultiChannelEncap with endpoint set to 0 - Send to Root Device");
+				Log::Write( LogLevel_Info, GetNodeId(), "MultiChannelEncap with endpoint set to 0 - Send to Root Device");
 				pCommandClass->HandleMsg(&_data[4], _length-4);
 				return;
 			}
@@ -645,17 +645,10 @@ void MultiInstance::HandleMultiChannelEncap
 			if (instance == 0)
 				instance = 1;
 			Log::Write( LogLevel_Info, GetNodeId(), "Received a MultiChannelEncap from node %d, endpoint %d for Command Class %s", GetNodeId(), endPoint, pCommandClass->GetCommandClassName().c_str() );
-			pCommandClass->HandleMsg( &_data[4], _length-4, instance );
-		}
-		else if (CommandClass* pCommandClass = node->GetCommandClass( commandClassId, true ) )
-		{
-			uint8 instance = pCommandClass->GetInstance( endPoint );
-			/* we can never have a 0 Instance */
-			if (instance == 0)
-				instance = 1;
-			Log::Write( LogLevel_Info, GetNodeId(), "Received a Incoming MultiChannelEncap from node %d, endpoint %d for Command Class %s", GetNodeId(), endPoint, pCommandClass->GetCommandClassName().c_str() );
-			pCommandClass->HandleIncomingMsg( &_data[4], _length-4, instance );
-
+			if (!pCommandClass->IsAfterMark())
+				pCommandClass->HandleMsg( &_data[4], _length-4, instance );
+			else
+				pCommandClass->HandleIncomingMsg( &_data[4], _length-4, instance);
 		}
 		else
 		{

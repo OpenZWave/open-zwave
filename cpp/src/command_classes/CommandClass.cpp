@@ -878,3 +878,9 @@ void CommandClass::refreshValuesOnWakeup
 	}
 }
 
+
+bool CommandClass::HandleIncomingMsg( uint8 const* _data, uint32 const _length, uint32 const _instance) {
+	Log::Write(LogLevel_Warning, GetNodeId(), "Routing HandleIncomingMsg to HandleMsg - Please Report: %s ", GetCommandClassName().c_str());
+	return HandleMsg(_data, _length, _instance);
+}
+
