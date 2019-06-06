@@ -43,6 +43,11 @@
 
 using namespace OpenZWave::Internal::CC;
 
+namespace OpenZWave {
+	namespace Internal {
+		namespace CC {
+
+
 enum WakeUpCmd
 {
 	WakeUpCmd_IntervalSet		= 0x04,
@@ -538,6 +543,9 @@ void WakeUp::CreateVars
 				break;
 			}
 			}
+		}
+	}
+}
 		}
 	}
 }
