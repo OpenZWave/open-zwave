@@ -42,6 +42,10 @@
 
 namespace OpenZWave
 {
+	namespace Internal
+	{
+		namespace Platform
+		{
 	class SerialControllerImpl
 	{
 	public:
@@ -67,7 +71,8 @@ namespace OpenZWave
 
 		static void SerialReadThreadEntryPoint( Event* _exitEvent, void* _content );
 	};
-
+} // namespace platform
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif //_SerialControllerImpl_H

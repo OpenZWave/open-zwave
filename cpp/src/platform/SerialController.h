@@ -34,9 +34,14 @@
 
 namespace OpenZWave
 {
-	class Driver;
-	class Msg;
-	class SerialControllerImpl;
+	namespace Internal
+	{
+		namespace Platform
+		{
+
+//	class Driver;
+//	class Msg;
+		class SerialControllerImpl;
 
 	/** \brief Interface for controllers that implement a Serial Interface (USB Serial Port Emulation)
 	 * \ingroup Platform
@@ -131,10 +136,11 @@ namespace OpenZWave
         SerialController::StopBits  m_stopBits;
 		string						m_serialControllerName;
 
-		SerialControllerImpl*	    m_pImpl;	// Pointer to an object that encapsulates the platform-specific implementation of the serial port.
+		OpenZWave::Internal::Platform::SerialControllerImpl*	    m_pImpl;	// Pointer to an object that encapsulates the platform-specific implementation of the serial port.
 		bool			            m_bOpen;
 	};
-
+		} // namespace Platform
+	} // namespace Internal
 } // namespace OpenZWave
 
 #endif //_SerialController_H

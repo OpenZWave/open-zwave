@@ -59,7 +59,7 @@ errno_t fopen_s(FILE** pFile, const char *filename, const char *mode)
 
 
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::Platform;
 
 //-----------------------------------------------------------------------------
 //	<LogImpl::LogImpl>

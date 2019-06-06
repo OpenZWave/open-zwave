@@ -39,7 +39,7 @@
 #include "platform/unix/SerialControllerImpl.h"	// Platform-specific implementation of a serial port
 #endif
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::Platform;
 
 
 //-----------------------------------------------------------------------------

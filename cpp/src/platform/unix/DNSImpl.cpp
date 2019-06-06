@@ -35,11 +35,12 @@
 
 
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::Platform;
 
 DNSImpl::DNSImpl
 (
-)
+) :
+	status(DNSError_None)
 {
     res_init();
 }

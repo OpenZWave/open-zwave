@@ -38,16 +38,13 @@
 #include "Node.h"
 #include "platform/Event.h"
 #include "platform/Mutex.h"
+#include "platform/Thread.h"
 #include "platform/TimeStamp.h"
 #include "aes/aescpp.h"
 
 namespace OpenZWave
 {
 	class Msg;
-	class Event;
-	class Mutex;
-	class Controller;
-	class Thread;
 	class Notification;
 	class DNSThread;
 	struct DNSLookup;
@@ -71,6 +68,10 @@ namespace OpenZWave
 		namespace VC {
 			class Value;
 			class ValueStore;
+		}
+		namespace Platform {
+			class Controller;
+
 		}
 	}
 
@@ -132,7 +133,7 @@ namespace OpenZWave
 		/**
 		 *  Entry point for driverThread
 		 */
-		static void DriverThreadEntryPoint( Event* _exitEvent, void* _context );
+		static void DriverThreadEntryPoint( Internal::Platform::Event* _exitEvent, void* _context );
 		/**
 		 *  ThreadProc for driverThread.  This is where all the "action" takes place.
 		 *  <p>
@@ -151,7 +152,7 @@ namespace OpenZWave
 		 *  and remove the message from the queue.  Otherwise, resend the message.
 		 *  - If something did happen [reset m_wakeEvent]
 		 */
-		void DriverThreadProc( Event* _exitEvent );
+		void DriverThreadProc( Internal::Platform::Event* _exitEvent );
 		/**
 		 *  Initialize the controller.  Open the specified serial port, start the serialThread
 		 *  and pollThread, then send a NAK to the device [presumably to flush it].
@@ -173,16 +174,16 @@ namespace OpenZWave
 		 */
 		void RemoveQueues( uint8 const _nodeId );
 
-		Thread*					m_driverThread;			/**< Thread for reading from the Z-Wave controller, and for creating and managing the other threads for sending, polling etc. */
+		Internal::Platform::Thread*					m_driverThread;			/**< Thread for reading from the Z-Wave controller, and for creating and managing the other threads for sending, polling etc. */
 		DNSThread*				m_dns;					/**< DNSThread Class */
-		Thread*					m_dnsThread;			/**< Thread for DNS Queries */
-		Mutex*					m_initMutex;            /**< Mutex to ensure proper ordering of initialization/deinitialization */
+		Internal::Platform::Thread*					m_dnsThread;			/**< Thread for DNS Queries */
+		Internal::Platform::Mutex*					m_initMutex;            /**< Mutex to ensure proper ordering of initialization/deinitialization */
 		bool					m_exit;					/**< Flag that is set when the application is exiting. */
 		bool					m_init;					/**< Set to true once the driver has been initialised */
 		bool					m_awakeNodesQueried;	/**< Set to true once the driver has polled all awake nodes */
 		bool					m_allNodesQueried;		/**< Set to true once the driver has polled all nodes */
 		bool					m_notifytransactions;
-		TimeStamp				m_startTime;			/**< Time this driver started (for log report purposes) */
+		Internal::Platform::TimeStamp				m_startTime;			/**< Time this driver started (for log report purposes) */
 
 	//-----------------------------------------------------------------------------
 	//	Configuration
@@ -197,7 +198,7 @@ namespace OpenZWave
 	//-----------------------------------------------------------------------------
 	private:
 		TimerThread*    m_timer;					/**< TimerThread Class */
-		Thread*         m_timerThread;    /**< Thread for timer events */
+		Internal::Platform::Thread*         m_timerThread;    /**< Thread for timer events */
 
 	public:
 		TimerThread*		GetTimer() { return m_timer; }
@@ -269,21 +270,12 @@ namespace OpenZWave
 		 *  \param _nodeId The nodeId (index into the node array) identifying the node to be returned
 		 *  \return
 		 *  A pointer to the specified node (if it exists) or NULL if not.
-		 *  \see LockNodes, ReleaseNodes
 		 */
 		Node* GetNode( uint8 _nodeId );
-		/**
-		 *  Lock the nodes so no other thread can modify them.
-		 */
-		//void LockNodes();
-		/**
-		 *  Release the lock on the nodes so other threads can modify them.
-		 */
-		//void ReleaseNodes();
 
 		ControllerInterface			m_controllerInterfaceType;				// Specifies the controller's hardware interface
 		string					m_controllerPath;							// name or path used to open the controller hardware.
-		Controller*				m_controller;								// Handles communications with the controller hardware.
+		Internal::Platform::Controller*				m_controller;								// Handles communications with the controller hardware.
 		uint32					m_homeId;									// Home ID of the Z-Wave controller.  Not valid until the DriverReady notification has been received.
 
 		string					m_libraryVersion;							// Version of the Z-Wave Library used by the controller.
@@ -302,7 +294,7 @@ namespace OpenZWave
 		bool					m_hasExtendedTxStatus;						// True if the controller accepted SERIAL_API_SETUP_CMD_TX_STATUS_REPORT
 		uint8					m_Controller_nodeId;						// Z-Wave Controller's own node ID.
 		Node*					m_nodes[256];								// Array containing all the node objects.
-		Mutex*					m_nodeMutex;								// Serializes access to node data
+		Internal::Platform::Mutex*					m_nodeMutex;								// Serializes access to node data
 
 		Internal::CC::ControllerReplication*	m_controllerReplication;					// Controller replication is handled separately from the other command classes, due to older hand-held controllers using invalid node IDs.
 
@@ -394,10 +386,10 @@ namespace OpenZWave
 		bool DisablePoll( const ValueID &_valueId );
 		bool isPolled( const ValueID &_valueId );
 		void SetPollIntensity( const ValueID &_valueId, uint8 _intensity );
-		static void PollThreadEntryPoint( Event* _exitEvent, void* _context );
-		void PollThreadProc( Event* _exitEvent );
+		static void PollThreadEntryPoint( Internal::Platform::Event* _exitEvent, void* _context );
+		void PollThreadProc( Internal::Platform::Event* _exitEvent );
 
-		Thread*					m_pollThread;								// Thread for polling devices on the Z-Wave network
+		Internal::Platform::Thread*					m_pollThread;								// Thread for polling devices on the Z-Wave network
 		struct PollEntry
 		{
 			ValueID	m_id;
@@ -406,7 +398,7 @@ namespace OpenZWave
 OPENZWAVE_EXPORT_WARNINGS_OFF
 		list<PollEntry>			m_pollList;									// List of nodes that need to be polled
 OPENZWAVE_EXPORT_WARNINGS_ON
-		Mutex*					m_pollMutex;								// Serialize access to the polling list
+		Internal::Platform::Mutex*					m_pollMutex;								// Serialize access to the polling list
 		int32					m_pollInterval;								// Time interval during which all nodes must be polled
 		bool					m_bIntervalBetweenPolls;					// if true, the library intersperses m_pollInterval between polls; if false, the library attempts to complete all polls within m_pollInterval
 
@@ -561,7 +553,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 
 	private:
 		// The public interface is provided via the wrappers in the Manager class
-		void ResetController( Event* _evt );
+		void ResetController( Internal::Platform::Event* _evt );
 		void SoftReset();
 		void RequestNodeNeighbors( uint8 const _nodeId, uint32 const _requestFlags );
 
@@ -595,7 +587,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 
 		void UpdateNodeRoutes( uint8 const_nodeId, bool _doUpdate = false );
 
-		Event*					m_controllerResetEvent;
+		Internal::Platform::Event*					m_controllerResetEvent;
 
 	//-----------------------------------------------------------------------------
 	//	Sending Z-Wave messages
@@ -738,11 +730,11 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 OPENZWAVE_EXPORT_WARNINGS_OFF
 		list<MsgQueueItem>			m_msgQueue[MsgQueue_Count];
 OPENZWAVE_EXPORT_WARNINGS_ON
-		Event*					m_queueEvent[MsgQueue_Count];		// Events for each queue, which are signaled when the queue is not empty
-		Mutex*					m_sendMutex;						// Serialize access to the queues
+		Internal::Platform::Event*					m_queueEvent[MsgQueue_Count];		// Events for each queue, which are signaled when the queue is not empty
+		Internal::Platform::Mutex*					m_sendMutex;						// Serialize access to the queues
 		Msg*					m_currentMsg;
 		MsgQueue				m_currentMsgQueueSource;			// identifies which queue held m_currentMsg
-		TimeStamp				m_resendTimeStamp;
+		Internal::Platform::TimeStamp				m_resendTimeStamp;
 
 	//-----------------------------------------------------------------------------
 	// Network functions
@@ -810,7 +802,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 OPENZWAVE_EXPORT_WARNINGS_OFF
 		list<Notification*>		m_notifications;
 OPENZWAVE_EXPORT_WARNINGS_ON
-		Event*				m_notificationsEvent;
+		Internal::Platform::Event*				m_notificationsEvent;
 
 	//-----------------------------------------------------------------------------
 	//	Statistics
@@ -916,8 +908,8 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		OPENZWAVE_EXPORT_WARNINGS_OFF
 				list<EventMsg *>			m_eventQueueMsg;
 		OPENZWAVE_EXPORT_WARNINGS_ON
-				Event*					m_queueMsgEvent;				// Events for each queue, which are signalled when the queue is not empty
-				Mutex*					m_eventMutex;						// Serialize access to the queues
+				Internal::Platform::Event*					m_queueMsgEvent;				// Events for each queue, which are signalled when the queue is not empty
+				Internal::Platform::Mutex*					m_eventMutex;						// Serialize access to the queues
 
 
 	//-----------------------------------------------------------------------------

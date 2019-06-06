@@ -146,7 +146,7 @@ ozwversion Manager::getVersion() {
 Manager::Manager
 (
 ):
-m_notificationMutex( new Mutex() )
+m_notificationMutex( new Internal::Platform::Mutex() )
 {
 	// Ensure the singleton instance is set
 	s_instance = this;
@@ -4022,15 +4022,15 @@ void Manager::ResetController
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		Event *event = new Event();
+		Internal::Platform::Event *event = new Internal::Platform::Event();
 		driver->ResetController( event );
-		Wait::Single( event );
+		Internal::Platform::Wait::Single( event );
 		event->Release();
 		string path = driver->GetControllerPath();
 		Driver::ControllerInterface intf = driver->GetControllerInterfaceType();
 		RemoveDriver( path );
 		AddDriver( path, intf );
-		Wait::Multiple( NULL, 0, 500 );
+		Internal::Platform::Wait::Multiple( NULL, 0, 500 );
 	}
 OPENZWAVE_DEPRECATED_WARNINGS_OFF;
 	RemoveAllScenes( _homeId );

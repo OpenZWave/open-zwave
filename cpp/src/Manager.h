@@ -59,14 +59,16 @@ namespace OpenZWave
 //			class ValueRaw;
 			class ValueStore;
 		}
+		namespace Platform {
+//			class Event;
+//			class Mutex;
+//			class SerialPort;
+//			class Thread;
+		}
 	}
 	class Options;
 	class Node;
 	class Msg;
-	class Event;
-	class Mutex;
-	class SerialPort;
-	class Thread;
 	class Notification;
 
 	/** \brief
@@ -1787,7 +1789,7 @@ OPENZWAVE_EXPORT_WARNINGS_OFF
 		list<Watcher*>					m_watchers;							// List of all the registered watchers.
 		list<list<Watcher*>::iterator*> m_watcherIterators;					// Iterators currently operating on the list of watchers
 OPENZWAVE_EXPORT_WARNINGS_ON
-		Mutex*							m_notificationMutex;
+		Internal::Platform::Mutex*							m_notificationMutex;
 
 	//-----------------------------------------------------------------------------
 	// Controller commands

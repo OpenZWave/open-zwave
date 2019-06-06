@@ -37,7 +37,7 @@
 #include "platform/unix/TimeStampImpl.h"	// Platform-specific implementation of a TimeStamp
 #endif
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::Platform;
 
 //-----------------------------------------------------------------------------
 //	<TimeStamp::TimeStamp>
@@ -88,7 +88,7 @@ int32 TimeStamp::TimeRemaining
 //	<TimeStamp::GetAsString>
 //	Return object as a string
 //-----------------------------------------------------------------------------
-string TimeStamp::GetAsString
+std::string TimeStamp::GetAsString
 (
 )
 {

@@ -62,11 +62,11 @@ HttpClient::HttpClient
 		OpenZWave::Driver *drv
 ):
 i_HttpClient(drv),
-m_exitEvent( new Event() ),
-m_httpThread ( new Thread( "HttpThread" ) ),
+m_exitEvent( new Internal::Platform::Event() ),
+m_httpThread ( new Internal::Platform::Thread( "HttpThread" ) ),
 m_httpThreadRunning(false),
-m_httpMutex ( new Mutex() ),
-m_httpDownloadEvent ( new Event() )
+m_httpMutex ( new Internal::Platform::Mutex() ),
+m_httpDownloadEvent ( new Internal::Platform::Event() )
 {
 }
 
@@ -105,8 +105,8 @@ bool HttpClient::StartDownload
 			}
 
 			/* make sure the Folder Exists */
-			if (!FileOps::Create()->FolderExists(ozwdirname(transfer->filename))) {
-				if (!FileOps::Create()->FolderCreate(ozwdirname(transfer->filename))) {
+			if (!Internal::Platform::FileOps::Create()->FolderExists(ozwdirname(transfer->filename))) {
+				if (!Internal::Platform::FileOps::Create()->FolderCreate(ozwdirname(transfer->filename))) {
 					Log::Write(LogLevel_Warning, "File Transfer Failed. Could not create Destination Folder: %s", ozwdirname(transfer->filename).c_str());
 					delete transfer;
 					return false;
@@ -114,8 +114,8 @@ bool HttpClient::StartDownload
 			}
 
 			/* does the file exist, if so, rotate it out (by doing a copy) */
-			if (FileOps::Create()->FileExists(transfer->filename)) {
-				if (!FileOps::Create()->FileRotate(transfer->filename)) {
+			if (Internal::Platform::FileOps::Create()->FileExists(transfer->filename)) {
+				if (!Internal::Platform::FileOps::Create()->FileRotate(transfer->filename)) {
 					Log::Write(LogLevel_Warning, "File Transfer Failed. Could not Rotate Existing File: %s", transfer->filename.c_str());
 					delete transfer;
 					return false;
@@ -124,7 +124,7 @@ bool HttpClient::StartDownload
 
 
 			/* make sure the target file is writeable */
-			if (!FileOps::Create()->FileWriteable(transfer->filename)) {
+			if (!Internal::Platform::FileOps::Create()->FileWriteable(transfer->filename)) {
 				Log::Write(LogLevel_Warning, "File %s is not writable", transfer->filename.c_str());
 				delete transfer;
 				return false;
@@ -138,29 +138,29 @@ bool HttpClient::StartDownload
 }
 void HttpClient::HttpThreadProc
 (
-		Event* _exitEvent,
+		Internal::Platform::Event* _exitEvent,
 		void* _context
 )
 {
 	HttpClient *client = (HttpClient *)_context;
 	client->m_httpThreadRunning = true;
 
-	SimpleHTTPClient::InitNetwork();
+	Internal::Platform::InitNetwork();
 	bool keepgoing = true;
 	while( keepgoing )
 	{
 		const uint32 count = 2;
 
-		Wait* waitObjects[count];
+		Internal::Platform::Wait* waitObjects[count];
 
-		int32 timeout = Wait::Timeout_Infinite;
+		int32 timeout = Internal::Platform::Wait::Timeout_Infinite;
 		timeout = 10000;
 
 		waitObjects[0] = client->m_exitEvent;					// Thread must exit.
 		waitObjects[1] = client->m_httpDownloadEvent;			// Http Request
 		// Wait for something to do
 
-		int32 res = Wait::Multiple( waitObjects, count, timeout );
+		int32 res = Internal::Platform::Wait::Multiple( waitObjects, count, timeout );
 
 		switch (res) {
 			case -1: /* timeout */
@@ -181,7 +181,7 @@ void HttpClient::HttpThreadProc
 						client->m_httpDownloadEvent->Reset();
 				}
 				Log::Write(LogLevel_Debug, "Download Starting for %s (%s)", download->url.c_str(), download->filename.c_str());
-				SimpleHTTPClient::HttpSocket *ht = new SimpleHTTPClient::HttpSocket();
+				Internal::Platform::HttpSocket *ht = new Internal::Platform::HttpSocket();
 			    ht->SetKeepAlive(0);
 			    ht->SetBufsizeIn(64 * 1024);
 			    ht->SetDownloadFile(download->filename);
@@ -198,6 +198,6 @@ void HttpClient::HttpThreadProc
 				break;
 		}
 	}
-	SimpleHTTPClient::StopNetwork();
+	Internal::Platform::StopNetwork();
     client->m_httpThreadRunning = false;
 }

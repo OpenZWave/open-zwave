@@ -35,6 +35,10 @@
 
 namespace OpenZWave
 {
+	namespace Internal
+	{
+	namespace Platform
+	{
 	/** \brief Windows implementation of a timestamp.
 	 */
 	class TimeStampImpl
@@ -84,7 +88,8 @@ namespace OpenZWave
 
 		struct timespec m_stamp;
 	};
-
+	} // namespace Platform
+	} // namespace Internal
 } // namespace OpenZWave
 
 #endif //_TimeStampImpl_H

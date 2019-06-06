@@ -37,8 +37,8 @@ DNSThread::DNSThread
 Driver *driver
 ):
 m_driver (driver),
-m_dnsMutex ( new Mutex() ),
-m_dnsRequestEvent ( new Event() )
+m_dnsMutex ( new Internal::Platform::Mutex() ),
+m_dnsRequestEvent ( new Internal::Platform::Event() )
 {
 }
 
@@ -51,7 +51,7 @@ DNSThread::~DNSThread
 
 void DNSThread::DNSThreadEntryPoint
 (
-		Event* _exitEvent,
+		Internal::Platform::Event* _exitEvent,
 		void* _context
 )
 {
@@ -64,7 +64,7 @@ void DNSThread::DNSThreadEntryPoint
 
 void DNSThread::DNSThreadProc
 (
-Event* _exitEvent
+		Internal::Platform::Event* _exitEvent
 )
 {
 	Log::Write(LogLevel_Info, "Starting DNSThread");
@@ -73,9 +73,9 @@ Event* _exitEvent
 		// DNSThread has been initialized
 		const uint32 count = 2;
 
-		Wait* waitObjects[count];
+		Internal::Platform::Wait* waitObjects[count];
 
-		int32 timeout = Wait::Timeout_Infinite;
+		int32 timeout = Internal::Platform::Wait::Timeout_Infinite;
 //		timeout = 5000;
 
 
@@ -83,7 +83,7 @@ Event* _exitEvent
 		waitObjects[1] = m_dnsRequestEvent;			// DNS Request
 		// Wait for something to do
 
-		int32 res = Wait::Multiple( waitObjects, count, timeout );
+		int32 res = Internal::Platform::Wait::Multiple( waitObjects, count, timeout );
 
 		switch (res) {
 			case -1: /* timeout */

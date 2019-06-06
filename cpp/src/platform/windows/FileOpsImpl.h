@@ -35,6 +35,11 @@
 
 namespace OpenZWave
 {
+namespace Internal
+{
+namespace Platform
+{
+
 	class FileOpsImpl
 	{
 		friend class FileOps;
@@ -51,7 +56,8 @@ namespace OpenZWave
 		bool FolderCreate( const string _dirname);
 
 	};
-
+} // namespace Platform
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif //_FileOpsImpl_H

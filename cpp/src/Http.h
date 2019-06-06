@@ -92,15 +92,15 @@ namespace OpenZWave
 			bool StartDownload(HttpDownload *transfer);
 		private:
 
-			static void HttpThreadProc(Event* _exitEvent,  void* _context);
+			static void HttpThreadProc(Internal::Platform::Event* _exitEvent,  void* _context);
 			//Driver* 	m_driver;
-			Event* 		m_exitEvent;
+			Internal::Platform::Event* 		m_exitEvent;
 
-			Thread*		m_httpThread;
+			Internal::Platform::Thread*		m_httpThread;
 			bool		m_httpThreadRunning;
-			Mutex*			  m_httpMutex;
+			Internal::Platform::Mutex*			  m_httpMutex;
 			list<HttpDownload *> m_httpDownlist;
-			Event*			  m_httpDownloadEvent;
+			Internal::Platform::Event*			  m_httpDownloadEvent;
 
 	};
 

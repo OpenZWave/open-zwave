@@ -32,6 +32,10 @@
 
 namespace OpenZWave
 {
+namespace Internal
+{
+namespace Platform
+{
 	class TimeStampImpl;
 
 	/** \brief Implements a platform-independent TimeStamp.
@@ -85,7 +89,8 @@ namespace OpenZWave
 
 		TimeStampImpl*	m_pImpl;					// Pointer to an object that encapsulates the platform-specific implementation of the TimeStamp.
 	};
-
+} // namespace Platform
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif //_TimeStamp_H

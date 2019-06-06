@@ -30,7 +30,7 @@
 #include "Defs.h"
 #include "EventImpl.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::Platform;
 
 
 //-----------------------------------------------------------------------------

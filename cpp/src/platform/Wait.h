@@ -34,6 +34,10 @@
 
 namespace OpenZWave
 {
+	namespace Internal
+	{
+		namespace Platform
+		{
 	class WaitImpl;
 
 	/** \brief Platform-independent definition of Wait objects.
@@ -107,7 +111,8 @@ namespace OpenZWave
 	
 		WaitImpl*	m_pImpl;					// Pointer to an object that encapsulates the platform-specific implementation of a Wait object.
 	};
-
+		} // namespace Platform
+	} // namespace Internal
 } // namespace OpenZWave
 
 #endif //_Wait_H

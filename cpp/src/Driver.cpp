@@ -147,17 +147,17 @@ Driver::Driver
 		string const& _controllerPath,
 		ControllerInterface const& _interface
 ):
-m_driverThread( new Thread( "driver" ) ),
+m_driverThread( new Internal::Platform::Thread( "driver" ) ),
 m_dns ( new DNSThread(this) ),
-m_dnsThread ( new Thread( "dns" ) ),
-m_initMutex(new Mutex()),
+m_dnsThread ( new Internal::Platform::Thread( "dns" ) ),
+m_initMutex(new Internal::Platform::Mutex()),
 m_exit( false ),
 m_init( false ),
 m_awakeNodesQueried( false ),
 m_allNodesQueried( false ),
 m_notifytransactions( false ),
 m_timer ( new TimerThread( this ) ),
-m_timerThread ( new Thread( "timer" ) ),
+m_timerThread ( new Internal::Platform::Thread( "timer" ) ),
 m_controllerInterfaceType( _interface ),
 m_controllerPath( _controllerPath ),
 m_controller( NULL ),
@@ -172,7 +172,7 @@ m_initVersion( 0 ),
 m_initCaps( 0 ),
 m_controllerCaps( 0 ),
 m_Controller_nodeId ( 0 ),
-m_nodeMutex( new Mutex() ),
+m_nodeMutex( new Internal::Platform::Mutex() ),
 m_controllerReplication( NULL ),
 m_transmitOptions( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE | TRANSMIT_OPTION_EXPLORE ),
 m_waitingForAck( false ),
@@ -180,17 +180,17 @@ m_expectedCallbackId( 0 ),
 m_expectedReply( 0 ),
 m_expectedCommandClassId( 0 ),
 m_expectedNodeId( 0 ),
-m_pollThread( new Thread( "poll" ) ),
-m_pollMutex( new Mutex() ),
+m_pollThread( new Internal::Platform::Thread( "poll" ) ),
+m_pollMutex( new Internal::Platform::Mutex() ),
 m_pollInterval( 0 ),
 m_bIntervalBetweenPolls( false ),				// if set to true (via SetPollInterval), the pollInterval will be interspersed between each poll (so a much smaller m_pollInterval like 100, 500, or 1,000 may be appropriate)
 m_currentControllerCommand( NULL ),
 m_SUCNodeId( 0 ),
 m_controllerResetEvent( NULL ),
-m_sendMutex( new Mutex() ),
+m_sendMutex( new Internal::Platform::Mutex() ),
 m_currentMsg( NULL ),
 m_virtualNeighborsReceived( false ),
-m_notificationsEvent( new Event() ),
+m_notificationsEvent( new Internal::Platform::Event() ),
 m_SOFCnt( 0 ),
 m_ACKWaiting( 0 ),
 m_readAborts( 0 ),
@@ -217,16 +217,16 @@ AuthKey( 0 ),
 EncryptKey( 0 ),
 m_nonceReportSent( 0 ),
 m_nonceReportSentAttempt( 0 ),
-m_queueMsgEvent (new Event() ),
-m_eventMutex (new Mutex() )
+m_queueMsgEvent (new Internal::Platform::Event() ),
+m_eventMutex (new Internal::Platform::Mutex() )
 {
 	// set a timestamp to indicate when this driver started
-	TimeStamp m_startTime;
+	Internal::Platform::TimeStamp m_startTime;
 
 	// Create the message queue events
 	for( int32 i=0; i<MsgQueue_Count; ++i )
 	{
-		m_queueEvent[i] = new Event();
+		m_queueEvent[i] = new Internal::Platform::Event();
 	}
 
 	// Clear the nodes array
@@ -235,19 +235,19 @@ m_eventMutex (new Mutex() )
 	// Clear the virtual neighbors array
 	memset( m_virtualNeighbors, 0, NUM_NODE_BITFIELD_BYTES );
 
-	// Initilize the Network Keys
+	// Initialize the Network Keys
 
 	initNetworkKeys(false);
 
 #ifdef USE_HID
 	if( ControllerInterface_Hid == _interface )
 	{
-		m_controller = new HidController();
+		m_controller = new Internal::Platform::HidController();
 	}
 	else
 #endif
 	{
-		m_controller = new SerialController();
+		m_controller = new Internal::Platform::SerialController();
 	}
 	m_controller->SetSignalThreshold( 1 );
 
@@ -410,7 +410,7 @@ void Driver::Start
 //-----------------------------------------------------------------------------
 void Driver::DriverThreadEntryPoint
 (
-		Event* _exitEvent,
+		Internal::Platform::Event* _exitEvent,
 		void* _context
 )
 {
@@ -427,7 +427,7 @@ void Driver::DriverThreadEntryPoint
 //-----------------------------------------------------------------------------
 void Driver::DriverThreadProc
 (
-		Event* _exitEvent
+		Internal::Platform::Event* _exitEvent
 )
 {
 #define WAITOBJECTCOUNT 11
@@ -439,7 +439,7 @@ void Driver::DriverThreadProc
 		if( Init( attempts ) )
 		{
 			// Driver has been initialised
-			Wait* waitObjects[WAITOBJECTCOUNT];
+			Internal::Platform::Wait* waitObjects[WAITOBJECTCOUNT];
 			waitObjects[0] = _exitEvent;						// Thread must exit.
 			waitObjects[1] = m_notificationsEvent;				// Notifications waiting to be sent.
 			waitObjects[2] = m_queueMsgEvent; ;					// a DNS and HTTP Event
@@ -452,7 +452,7 @@ void Driver::DriverThreadProc
 			waitObjects[9] = m_queueEvent[MsgQueue_Query];		// Node queries are pending.
 			waitObjects[10] = m_queueEvent[MsgQueue_Poll];		// Poll request is waiting.
 
-			TimeStamp retryTimeStamp;
+			Internal::Platform::TimeStamp retryTimeStamp;
 			int retryTimeout = RETRY_TIMEOUT;
 			Options::Get()->GetOptionAsInt( "RetryTimeout", &retryTimeout );
 			//retryTimeout = RETRY_TIMEOUT * 10;
@@ -460,7 +460,7 @@ void Driver::DriverThreadProc
 			{
 				Log::Write( LogLevel_StreamDetail, "      Top of DriverThreadProc loop." );
 				uint32 count = WAITOBJECTCOUNT;
-				int32 timeout = Wait::Timeout_Infinite;
+				int32 timeout = Internal::Platform::Wait::Timeout_Infinite;
 
 				// if the ManufacturerDB class is setting up, we can't do anything yet
 				if (mfsisReady == false) {
@@ -487,7 +487,7 @@ void Driver::DriverThreadProc
 				}
 
 				// Wait for something to do
-				int32 res = Wait::Multiple( waitObjects, count, timeout );
+				int32 res = Internal::Platform::Wait::Multiple( waitObjects, count, timeout );
 
 				switch( res )
 				{
@@ -562,7 +562,7 @@ void Driver::DriverThreadProc
 		if( attempts < 25 )
 		{
 			// Retry every 5 seconds for the first two minutes
-			if( Wait::Single( _exitEvent, 5000 ) == 0 )
+			if( Internal::Platform::Wait::Single( _exitEvent, 5000 ) == 0 )
 			{
 				// Exit signalled.
 				return;
@@ -571,7 +571,7 @@ void Driver::DriverThreadProc
 		else
 		{
 			// Retry every 30 seconds after that
-			if( Wait::Single( _exitEvent, 30000 ) == 0 )
+			if( Internal::Platform::Wait::Single( _exitEvent, 30000 ) == 0 )
 			{
 				// Exit signalled.
 				return;
@@ -1764,7 +1764,7 @@ bool Driver::ReadMsg
 
 		// Read the length byte.  Keep trying until we get it.
 		m_controller->SetSignalThreshold( 1 );
-		int32 response = Wait::Single( m_controller, 50 );
+		int32 response = Internal::Platform::Wait::Single( m_controller, 50 );
 		if( response < 0 )
 		{
 			Log::Write( LogLevel_Warning, "WARNING: 50ms passed without finding the length byte...aborting frame read");
@@ -1774,7 +1774,7 @@ bool Driver::ReadMsg
 
 		m_controller->Read( &buffer[1], 1 );
 		m_controller->SetSignalThreshold( buffer[1] );
-		if( Wait::Single( m_controller, 500 ) < 0 )
+		if( Internal::Platform::Wait::Single( m_controller, 500 ) < 0 )
 		{
 			Log::Write( LogLevel_Warning, "WARNING: 500ms passed without reading the rest of the frame...aborting frame read" );
 			m_readAborts++;
@@ -4462,7 +4462,7 @@ void Driver::SetPollIntensity
 //-----------------------------------------------------------------------------
 void Driver::PollThreadEntryPoint
 (
-		Event* _exitEvent,
+		Internal::Platform::Event* _exitEvent,
 		void* _context
 )
 {
@@ -4479,7 +4479,7 @@ void Driver::PollThreadEntryPoint
 //-----------------------------------------------------------------------------
 void Driver::PollThreadProc
 (
-		Event* _exitEvent
+		Internal::Platform::Event* _exitEvent
 )
 {
 	while( 1 )
@@ -4579,7 +4579,7 @@ void Driver::PollThreadProc
 					|| !m_msgQueue[MsgQueue_Query].empty()
 					|| m_currentMsg != NULL )
 			{
-				i32 = Wait::Single( _exitEvent, 10);		// test conditions every 10ms
+				i32 = Internal::Platform::Wait::Single( _exitEvent, 10);		// test conditions every 10ms
 				if( i32 == 0 )
 				{
 					// Exit has been called
@@ -4595,7 +4595,7 @@ void Driver::PollThreadProc
 			}
 
 			// ready for next poll...insert the pollInterval delay
-			i32 = Wait::Single( _exitEvent, pollInterval );
+			i32 = Internal::Platform::Wait::Single( _exitEvent, pollInterval );
 			if( i32 == 0 )
 			{
 				// Exit has been called
@@ -4605,7 +4605,7 @@ void Driver::PollThreadProc
 		else		// poll list is empty or awake nodes haven't been fully queried yet
 		{
 			// don't poll just yet, wait for the pollInterval or exit before re-checking to see if the pollList has elements
-			int32 i32 = Wait::Single( _exitEvent, 500 );
+			int32 i32 = Internal::Platform::Wait::Single( _exitEvent, 500 );
 			if( i32 == 0 )
 			{
 				// Exit has been called
@@ -5346,7 +5346,7 @@ Internal::VC::Value* Driver::GetValue
 //-----------------------------------------------------------------------------
 void Driver::ResetController
 (
-		Event* _evt
+		Internal::Platform::Event* _evt
 )
 {
 	m_controllerResetEvent = _evt;
@@ -7262,7 +7262,7 @@ void Driver::processConfigRevision
 		DNSLookup *result
 )
 {
-	if (result->status == DNSError_None) {
+	if (result->status == Internal::Platform::DNSError_None) {
 		if (result->type == DNS_Lookup_ConfigRevision) {
 			if (result->NodeID > 0) {
 				LockGuard LG(m_nodeMutex);
@@ -7310,17 +7310,17 @@ void Driver::processConfigRevision
 			}
 			return;
 		}
-	} else if (result->status == DNSError_NotFound) {
+	} else if (result->status == Internal::Platform::DNSError_NotFound) {
 		Log::Write(LogLevel_Info, "Not Found for Device record %s", result->lookup.c_str());
 		Notification* notification = new Notification( Notification::Type_UserAlerts );
 		notification->SetUserAlertNotification(Notification::Alert_DNSError);
 		QueueNotification( notification );
-	} else if (result->status == DNSError_DomainError) {
+	} else if (result->status == Internal::Platform::DNSError_DomainError) {
 		Log::Write(LogLevel_Warning, "Domain Error Looking up record %s", result->lookup.c_str());
 		Notification* notification = new Notification( Notification::Type_UserAlerts );
 		notification->SetUserAlertNotification(Notification::Alert_DNSError);
 		QueueNotification( notification );
-	} else if (result->status == DNSError_InternalError) {
+	} else if (result->status == Internal::Platform::DNSError_InternalError) {
 		Log::Write(LogLevel_Warning, "Internal DNS Error looking up record %s", result->lookup.c_str());
 		Notification* notification = new Notification( Notification::Type_UserAlerts );
 		notification->SetUserAlertNotification(Notification::Alert_DNSError);

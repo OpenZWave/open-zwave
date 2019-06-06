@@ -75,7 +75,7 @@ namespace OpenZWave
 		struct TimerEventEntry
 		{
 			Timer *instance;
-			TimeStamp timestamp;
+			Internal::Platform::TimeStamp timestamp;
 			TimerCallback callback;
 			uint32 id;
 		};
@@ -85,7 +85,7 @@ namespace OpenZWave
 		 * \param _exitEvent Exit event indicating the thread should exit
 		 * \param _context A TimerThread object
 		 */
-		static void TimerThreadEntryPoint( Event* _exitEvent, void* _context );
+		static void TimerThreadEntryPoint( Internal::Platform::Event* _exitEvent, void* _context );
 
 	private:
 		//Driver*	m_driver;
@@ -108,14 +108,14 @@ namespace OpenZWave
 		 * Main class entry point for the timer thread. Contains the main timer loop.
 		 * \param _exitEvent Exit event indicating the thread should exit
 		 */
-		void TimerThreadProc( Event* _exitEvent );
+		void TimerThreadProc( Internal::Platform::Event* _exitEvent );
 
 
     /** A list of upcoming timer events */
 		list<TimerEventEntry *> m_timerEventList;
 
-		Event*				m_timerEvent;   // Event to signal new timed action requested
-		Mutex*				m_timerMutex;   // Serialize access to class members
+		Internal::Platform::Event*				m_timerEvent;   // Event to signal new timed action requested
+		Internal::Platform::Mutex*				m_timerMutex;   // Serialize access to class members
 		int32					m_timerTimeout; // Time in milliseconds to wait until next event
 	};
 

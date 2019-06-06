@@ -33,7 +33,7 @@
 #include <stdio.h>
 #include <errno.h>
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::Platform;
 
 //-----------------------------------------------------------------------------
 //	<MutexImpl::MutexImpl>

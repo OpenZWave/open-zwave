@@ -30,7 +30,7 @@
 #include "Defs.h"
 #include "TimeStampImpl.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::Platform;
 
 //-----------------------------------------------------------------------------
 //	<TimeStampImpl::TimeStampImpl>

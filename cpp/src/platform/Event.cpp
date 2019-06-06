@@ -36,7 +36,7 @@
 #include "platform/unix/EventImpl.h"	// Platform-specific implementation of an event
 #endif
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::Platform;
 
 //-----------------------------------------------------------------------------
 //	<Event::Event>

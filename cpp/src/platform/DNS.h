@@ -36,7 +36,10 @@
 
 namespace OpenZWave
 {
-	class DNSImpl;
+	namespace Internal
+	{
+		namespace Platform {
+			class DNSImpl;
 
 	/** \brief Return codes for DNS lookups
 	 * \ingroup Platform
@@ -73,6 +76,8 @@ namespace OpenZWave
 	private:
 			DNSImpl *m_pImpl;
 	};
-}
+		} // namespace Platform
+	} // namespace Internal
+} // namespace OpenZWave
 
 #endif

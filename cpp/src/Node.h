@@ -72,10 +72,12 @@ namespace OpenZWave
 		class ValueString;
 #endif
 		}
+		namespace Platform {
+			class Mutex;
+		}
 	}
 	class Driver;
 	class Group;
-	class Mutex;
 	class ProductDescriptor;
 
 	/** \brief The Node class describes a Z-Wave node object...typically a device on the
@@ -693,8 +695,8 @@ namespace OpenZWave
 			uint32 m_receivedUnsolicited;		// Number of messages received unsolicited
 			uint32 m_lastRequestRTT;			// Last message request RTT
 			uint32 m_lastResponseRTT;			// Last message response RTT
-			TimeStamp m_sentTS;					// Last message sent time
-			TimeStamp m_receivedTS;				// Last message received time
+			Internal::Platform::TimeStamp m_sentTS;					// Last message sent time
+			Internal::Platform::TimeStamp m_receivedTS;				// Last message received time
 			uint32 m_averageRequestRTT;			// Average Request round trip time.
 			uint32 m_averageResponseRTT;		// Average Response round trip time.
 			uint8 m_quality;					// Node quality measure

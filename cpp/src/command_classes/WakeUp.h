@@ -36,11 +36,11 @@
 namespace OpenZWave
 {
 
-	class Msg;
-	class ValueInt;
-	class Mutex;
 namespace Internal
 {
+	namespace Platform {
+		class Mutex;
+	}
 namespace CC
 {
 
@@ -86,7 +86,7 @@ namespace CC
 	private:
 		WakeUp( uint32 const _homeId, uint8 const _nodeId );
 
-		Mutex*						m_mutex;			// Serialize access to the pending queue
+		Internal::Platform::Mutex*						m_mutex;			// Serialize access to the pending queue
 		list<Driver::MsgQueueItem>	m_pendingQueue;		// Messages waiting to be sent when the device wakes up
 		bool						m_awake;
 		bool						m_pollRequired;

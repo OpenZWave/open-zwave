@@ -84,7 +84,9 @@
 
 namespace OpenZWave
 {
-namespace SimpleHTTPClient
+namespace Internal
+{
+namespace Platform
 {
 
 #ifdef MINIHTTP_USE_POLARSSL
@@ -1588,6 +1590,6 @@ bool deleteWhenDone
 }
 
 #endif
-
-} // namespace HttpClient
+} // namespace Platform
+} // namespace Internal
 } // namespace OpenZWave

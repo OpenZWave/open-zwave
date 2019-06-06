@@ -41,6 +41,11 @@ typedef struct hid_device_ hid_device;
 
 namespace OpenZWave
 {
+namespace Internal
+{
+namespace Platform
+{
+
 	class Driver;
 	class Msg;
 	class Thread;
@@ -150,7 +155,8 @@ namespace OpenZWave
 		string			m_hidControllerName;
 		bool			m_bOpen;
 	};
-
+} // namespace Platform
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

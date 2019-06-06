@@ -65,7 +65,7 @@ WakeUp::WakeUp
 		uint8 const _nodeId
 ):
 CommandClass( _homeId, _nodeId ),
-m_mutex( new Mutex() ),
+m_mutex( new Internal::Platform::Mutex() ),
 m_awake( true ),
 m_pollRequired( false )
 {

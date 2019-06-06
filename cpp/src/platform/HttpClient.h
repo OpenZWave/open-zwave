@@ -55,9 +55,10 @@ namespace OpenZWave
  * a Basic HTTP Client for talking to webservers
  */
 
-namespace SimpleHTTPClient
+namespace Internal
 {
-
+	namespace Platform
+	{
 /** \brief Initialize the Network for HTTP requests
   * \ingroup SimpleHttpClient
   *
@@ -254,7 +255,7 @@ struct Request
   * Talk to a HTTP(s) server
   *
   */
-class HttpSocket : public OpenZWave::SimpleHTTPClient::TcpSocket
+class HttpSocket : public OpenZWave::Internal::Platform::TcpSocket
 {
 public:
 
@@ -376,9 +377,8 @@ public:
 };
 
 #endif
-
-} // end HttpClient namespace
-} // end openzwave namespace
-
+	} // namespace Platform
+} // namespace Internal
+} // namespace OpenZWave
 
 #endif

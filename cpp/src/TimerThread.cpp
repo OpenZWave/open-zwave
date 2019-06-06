@@ -38,7 +38,7 @@ using namespace OpenZWave;
 //-----------------------------------------------------------------------------
 void TimerThread::TimerThreadEntryPoint
 (
-		Event* _exitEvent,
+		Internal::Platform::Event* _exitEvent,
 		void* _context
 )
 {
@@ -58,9 +58,9 @@ TimerThread::TimerThread
 		Driver *_driver
 ):
 //m_driver( _driver ),
-m_timerEvent( new Event() ),
-m_timerMutex( new Mutex() ),
-m_timerTimeout( Wait::Timeout_Infinite )
+m_timerEvent( new Internal::Platform::Event() ),
+m_timerMutex( new Internal::Platform::Mutex() ),
+m_timerTimeout( Internal::Platform::Wait::Timeout_Infinite )
 {
 }
 
@@ -89,23 +89,23 @@ TimerThread::~TimerThread
 //-----------------------------------------------------------------------------
 void TimerThread::TimerThreadProc
 (
-		Event* _exitEvent
+		Internal::Platform::Event* _exitEvent
 )
 {
 	Log::Write( LogLevel_Info, "Timer: thread starting" );
 
-	Wait* waitObjects[2];
+	Internal::Platform::Wait* waitObjects[2];
 	waitObjects[0] = _exitEvent;
 	waitObjects[1] = m_timerEvent;
 	uint32 count = 2;
 
 	// Initially no timer events so infinite timeout.
-	m_timerTimeout = Wait::Timeout_Infinite;
+	m_timerTimeout = Internal::Platform::Wait::Timeout_Infinite;
 
 	while( 1 )
 	{
 		Log::Write( LogLevel_Detail, "Timer: waiting with timeout %d ms", m_timerTimeout );
-		int32 res = Wait::Multiple( waitObjects, count, m_timerTimeout );
+		int32 res = Internal::Platform::Wait::Multiple( waitObjects, count, m_timerTimeout );
 
 		if (res == 0)
 		{
@@ -114,7 +114,7 @@ void TimerThread::TimerThreadProc
 
 		} else {
 			// Timeout or new entry to timer list.
-			m_timerTimeout = Wait::Timeout_Infinite;
+			m_timerTimeout = Internal::Platform::Wait::Timeout_Infinite;
 
 			// Go through all waiting actions, and see if any need to be performed.
 			LockGuard LG(m_timerMutex);
@@ -128,7 +128,7 @@ void TimerThread::TimerThreadProc
 					te->instance->TimerFireEvent(te);
 				} else {
 					// Time remaining.
-					m_timerTimeout = (m_timerTimeout == Wait::Timeout_Infinite) ? tr : std::min(m_timerTimeout, tr);
+					m_timerTimeout = (m_timerTimeout == Internal::Platform::Wait::Timeout_Infinite) ? tr : std::min(m_timerTimeout, tr);
 					++it;
 				}
 			}

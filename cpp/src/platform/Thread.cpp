@@ -37,7 +37,7 @@
 #include "platform/unix/ThreadImpl.h"	// Platform-specific implementation of a thread
 #endif
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::Platform;
 
 
 //-----------------------------------------------------------------------------

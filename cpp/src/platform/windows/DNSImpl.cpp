@@ -34,7 +34,7 @@
 
 
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::Platform;
 
 DNSImpl::DNSImpl
 (

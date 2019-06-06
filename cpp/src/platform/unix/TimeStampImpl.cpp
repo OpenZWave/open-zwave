@@ -30,7 +30,7 @@
 #include "Defs.h"
 #include "TimeStampImpl.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::Platform;
 
 //-----------------------------------------------------------------------------
 //	<TimeStampImpl::TimeStampImpl>
@@ -107,7 +107,7 @@ int32 TimeStampImpl::TimeRemaining
 //	<TimeStampImpl::GetAsString>
 //	Return a string representation
 //-----------------------------------------------------------------------------
-string TimeStampImpl::GetAsString
+std::string TimeStampImpl::GetAsString
 (
 )
 {

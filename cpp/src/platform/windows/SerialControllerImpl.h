@@ -35,6 +35,10 @@
 
 namespace OpenZWave
 {
+	namespace Internal
+	{
+		namespace Platform
+		{
 	class SerialControllerImpl
 	{
 	public:
@@ -59,7 +63,8 @@ namespace OpenZWave
 		HANDLE						m_hExit;
 		HANDLE						m_hSerialController;
 	};
-
+		} // namespace Platform
+	} // namespace Internal
 } // namespace OpenZWave
 
 #endif //_SerialControllerImpl_H

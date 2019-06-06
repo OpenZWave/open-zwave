@@ -39,11 +39,15 @@
 
 namespace OpenZWave
 {
-	class Mutex;
+	namespace Internal {
+		namespace Platform {
+			class Mutex;
+		}
+	}
 	class Driver;
 
 
-	class ProductDescriptor : public Ref
+	class ProductDescriptor : public Internal::Platform::Ref
 			{
 			public:
 				ProductDescriptor
@@ -129,7 +133,7 @@ namespace OpenZWave
 
 
 
-		Mutex*					m_MfsMutex;            /**< Mutex to ensure its accessed by a single thread at a time */
+		Internal::Platform::Mutex*					m_MfsMutex;            /**< Mutex to ensure its accessed by a single thread at a time */
 
 		static ManufacturerSpecificDB *s_instance;
 	public:

@@ -34,6 +34,10 @@
 
 namespace OpenZWave
 {
+	namespace Internal
+	{
+		namespace Platform
+		{
 	class FileOpsImpl;
 
 	/** \brief Implements platform-independent File Operations.
@@ -107,7 +111,8 @@ namespace OpenZWave
 		static FileOpsImpl* m_pImpl;					// Pointer to an object that encapsulates the platform-specific implementation of the FileOps.
 		static FileOps* s_instance;
 	};
-
+		} // namespace Platform
+	} // namespace Internal
 } // namespace OpenZWave
 
 #endif //_FileOps_H

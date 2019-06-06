@@ -34,6 +34,11 @@
 
 namespace OpenZWave
 {
+namespace Internal
+{
+namespace Platform
+{
+
 	class Thread;
 	class Event;
 
@@ -64,7 +69,8 @@ namespace OpenZWave
 		bool					m_bIsRunning;
 		string					m_name;
 	};
-
+} // namespace Platform
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif //_ThreadImpl_H

@@ -49,7 +49,7 @@ namespace VC
 	/** \brief Base class for values associated with a node.
 	 * \ingroup ValueID
 	 */
-	class Value: public Ref
+	class Value: public Internal::Platform::Ref
 	{
 		friend class OpenZWave::Driver;
 		friend class ValueStore;

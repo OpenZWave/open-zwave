@@ -31,7 +31,7 @@
 #include "ThreadImpl.h"
 #include "Options.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::Platform;
 using namespace Concurrency;
 using namespace Windows::Foundation;
 using namespace Windows::System::Threading;

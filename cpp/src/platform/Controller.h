@@ -36,7 +36,10 @@
 
 namespace OpenZWave
 {
-	class Driver;
+	namespace Internal
+	{
+		namespace Platform
+		{
 
 	/** \defgroup Platform Platform Abstraction Support
 	 *
@@ -111,7 +114,8 @@ namespace OpenZWave
 		 */
 		uint32 Read( uint8* _buffer, uint32 _length );
 	};
-
+} // namespace Platform
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif //_Controller_H

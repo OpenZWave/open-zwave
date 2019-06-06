@@ -38,7 +38,7 @@
 namespace OpenZWave
 {
 
-class LabelLocalizationEntry : public Ref
+class LabelLocalizationEntry : public Internal::Platform::Ref
 {
 public:
     LabelLocalizationEntry (uint16 _index, uint32 _pos = -1);
@@ -56,7 +56,7 @@ private:
 };
 
 
-class ValueLocalizationEntry : public Ref
+class ValueLocalizationEntry : public Internal::Platform::Ref
 {
 public:
     ValueLocalizationEntry ( uint8 _commandClass, uint16 _index, uint32 _pos = -1 );

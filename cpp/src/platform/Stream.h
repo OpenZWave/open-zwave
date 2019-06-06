@@ -35,7 +35,11 @@
 
 namespace OpenZWave
 {
-	class Mutex;
+	namespace Internal
+	{
+		namespace Platform
+		{
+		class Mutex;
 
 	/** \brief Platform-independent definition of a circular buffer.
 	 * \ingroup Platform
@@ -129,7 +133,8 @@ namespace OpenZWave
 		uint32	m_tail;
  		Mutex*	m_mutex;
 	};
-
+		} // namespace Platform
+	} // namespace Internal
 } // namespace OpenZWave
 
 #endif //_Event_H

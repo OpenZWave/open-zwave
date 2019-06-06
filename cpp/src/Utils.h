@@ -110,7 +110,7 @@ namespace OpenZWave
 
 	struct LockGuard
 	{
-			LockGuard(Mutex* mutex) : _ref(mutex)
+			LockGuard(Internal::Platform::Mutex* mutex) : _ref(mutex)
 			{
 				//std::cout << "Locking" << std::endl;
 				_ref->Lock();
@@ -137,7 +137,7 @@ namespace OpenZWave
 			LockGuard& operator = ( LockGuard const& );
 
 
-			Mutex* _ref;
+			Internal::Platform::Mutex* _ref;
 	};
 
 	string ozwdirname(string);

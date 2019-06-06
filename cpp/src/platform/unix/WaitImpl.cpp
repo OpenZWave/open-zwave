@@ -34,7 +34,7 @@
 #include <errno.h>
 #include <string.h>
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::Platform;
 
 //-----------------------------------------------------------------------------
 //	<WaitImpl::WaitImpl>

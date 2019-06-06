@@ -32,7 +32,7 @@
 #include "Defs.h"
 #include "LogImpl.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::Platform;
 
 //-----------------------------------------------------------------------------
 //	<LogImpl::LogImpl>
@@ -256,7 +256,7 @@ void LogImpl::SetLoggingState
 //	<LogImpl::GetTimeStampString>
 //	Generate a string with formatted current time
 //-----------------------------------------------------------------------------
-string LogImpl::GetTimeStampString
+std::string LogImpl::GetTimeStampString
 (
 )
 {
@@ -282,7 +282,7 @@ string LogImpl::GetTimeStampString
 //	<LogImpl::GetNodeString>
 //	Generate a string with formatted node id
 //-----------------------------------------------------------------------------
-string LogImpl::GetNodeString
+std::string LogImpl::GetNodeString
 (
 		uint8 const _nodeId
 )
@@ -308,7 +308,7 @@ string LogImpl::GetNodeString
 //	<LogImpl::GetThreadId>
 //	Generate a string with formatted thread id
 //-----------------------------------------------------------------------------
-string LogImpl::GetThreadId
+std::string LogImpl::GetThreadId
 (
 )
 {
@@ -335,7 +335,7 @@ void LogImpl::SetLogFileName
 //	<LogImpl::GetLogLevelString>
 //	Provide a new log file name (applicable to future writes)
 //-----------------------------------------------------------------------------
-string LogImpl::GetLogLevelString
+std::string LogImpl::GetLogLevelString
 (
 		LogLevel _level
 )
