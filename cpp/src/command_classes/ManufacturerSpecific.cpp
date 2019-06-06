@@ -173,7 +173,7 @@ void ManufacturerSpecific::SetProductDetails
 {
 
 	string configPath = "";
-	ProductDescriptor *product = GetDriver()->GetManufacturerSpecificDB()->getProduct(manufacturerId, productType, productId);
+	Internal::ProductDescriptor *product = GetDriver()->GetManufacturerSpecificDB()->getProduct(manufacturerId, productType, productId);
 
 	Node *node = GetNodeUnsafe();
 	if (!product) {

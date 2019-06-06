@@ -30,6 +30,7 @@
 #include "platform/Log.h"
 
 namespace OpenZWave {
+namespace Internal {
 
 CompatOptionFlagDefintions availableCompatFlags[] =
 {
@@ -451,4 +452,5 @@ string CompatOptionManager::GetXMLTagName
 	assert(0);	
 	return "Unknown";
 }
-} /* namespace OpenZWave */
+} // namespace Internal
+} // namespace OpenZWave

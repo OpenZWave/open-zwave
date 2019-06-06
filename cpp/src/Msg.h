@@ -36,12 +36,12 @@
 
 namespace OpenZWave
 {
+	class Driver;
+
 	namespace Internal {
 		namespace CC {
 			class CommandClass;
 		}
-	}
-	class Driver;
 
 	/** \brief Message object to be passed to and from devices on the Z-Wave network.
 	 */
@@ -202,7 +202,7 @@ namespace OpenZWave
 		uint32			m_homeId;
 		static uint8	s_nextCallbackId;		// counter to get a unique callback id
 	};
-
+	} // namespace Internal
 } // namespace OpenZWave
 
 #endif //_Msg_H

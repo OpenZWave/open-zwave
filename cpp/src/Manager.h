@@ -48,27 +48,12 @@ namespace OpenZWave
 		}
 		namespace VC {
 			class Value;
-//			class ValueBitSet;
-//			class ValueBool;
-//			class ValueByte;
-//			class ValueDecimal;
-//			class ValueInt;
-//			class ValueList;
-//			class ValueShort;
-//			class ValueString;
-//			class ValueRaw;
 			class ValueStore;
 		}
-		namespace Platform {
-//			class Event;
-//			class Mutex;
-//			class SerialPort;
-//			class Thread;
-		}
+		class Msg;
 	}
 	class Options;
 	class Node;
-	class Msg;
 	class Notification;
 
 	/** \brief
@@ -125,7 +110,7 @@ namespace OpenZWave
 		friend class Node;
 		friend class Internal::VC::Value;
 		friend class Internal::VC::ValueStore;
-		friend class Msg;
+		friend class Internal::Msg;
 
 	public:
 		typedef void (*pfnOnNotification_t)( Notification const* _pNotification, void* _context );

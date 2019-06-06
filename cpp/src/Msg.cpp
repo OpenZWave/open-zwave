@@ -36,7 +36,7 @@
 #include "command_classes/Security.h"
 #include "aes/aescpp.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal;
 
 /* Callback for normal messages start at 10. Special Messages using a Callback prior to 10 */
 uint8 Msg::s_nextCallbackId = 10;
@@ -234,7 +234,7 @@ void Msg::UpdateCallbackId()
 // <Msg::GetAsString>
 // Create a string containing the raw data
 //-----------------------------------------------------------------------------
-string Msg::GetAsString()
+std::string Msg::GetAsString()
 {
 	string str = m_logText;
 
@@ -317,7 +317,7 @@ void Msg::MultiEncap
 // <Node::GetDriver>
 // Get a pointer to our driver
 //-----------------------------------------------------------------------------
-Driver* Msg::GetDriver
+OpenZWave::Driver* Msg::GetDriver
 (
 )const
 {

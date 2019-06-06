@@ -46,9 +46,9 @@ using std::tr1::function;
 namespace OpenZWave
 {
 	class Driver;
-	class Thread;
+namespace Internal
+{
 	class Timer;
-
 	/** \brief The TimerThread class makes it possible to schedule events to happen
 	 *  at a certain time in the future.
 	 */
@@ -180,6 +180,7 @@ namespace OpenZWave
 
 
 	};
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif // _TIMERTHREAD_H_

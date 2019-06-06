@@ -38,6 +38,7 @@
 #include "aes/aescpp.h"
 
 namespace OpenZWave {
+	namespace Internal {
 	//using namespace OpenZWave;
 
 	//-----------------------------------------------------------------------------
@@ -69,7 +70,7 @@ namespace OpenZWave {
 
 		uint8 bufsize = _length - 19 + 4; /* the size of buffer */
 #ifdef DEBUG
-		PrintHex("Raw Auth (minus IV)", buffer, bufsize);
+		Internal::PrintHex("Raw Auth (minus IV)", buffer, bufsize);
 		Log::Write(LogLevel_Debug, _receivingNode, "Raw Auth (Minus IV) Size: %d (%d)", bufsize, bufsize+16);
 #endif
 
@@ -122,7 +123,7 @@ namespace OpenZWave {
 		}
 		/* we only care about the first 8 bytes of tmpauth as the mac */
 #ifdef DEBUG
-		PrintHex("Computed Auth", tmpauth, 8);
+		Internal::PrintHex("Computed Auth", tmpauth, 8);
 #endif
 		/* so only copy 8 bytes to the _authentication var */
 		memcpy(_authentication, tmpauth, 8);
@@ -194,14 +195,14 @@ namespace OpenZWave {
 		uint8 encryptedpayload[30];
 		aes_mode_reset(driver->GetEncKey());
 #ifdef DEBUG
-		PrintHex("Plain Text Packet:", plaintextmsg, m_length-5-3);
+		Internal::PrintHex("Plain Text Packet:", plaintextmsg, m_length-5-3);
 #endif
 		if (aes_ofb_encrypt(plaintextmsg, encryptedpayload, m_length-5-3, initializationVector, driver->GetEncKey()) == EXIT_FAILURE) {
 			Log::Write(LogLevel_Warning, _receivingNode, "Failed to Encrypt Packet");
 			return false;
 		}
 #ifdef DEBUG
-		PrintHex("Encrypted Packet", encryptedpayload, m_length-5-3);
+		Internal::PrintHex("Encrypted Packet", encryptedpayload, m_length-5-3);
 #endif
 		/* now add the Encrypted output to the packet */
 		for (int i = 0; i < m_length-5-3; i++) {
@@ -231,7 +232,7 @@ namespace OpenZWave {
 		}
 		e_buffer[len++] = csum;
 #ifdef DEBUG
-		PrintHex("Encrypted Packet", e_buffer, len);
+		Internal::PrintHex("Encrypted Packet", e_buffer, len);
 		Log::Write(LogLevel_Info, "Length: %d", len);
 #endif
 		return true;
@@ -278,7 +279,7 @@ namespace OpenZWave {
 			uint8* m_buffer
 	)
 	{
-		PrintHex("Raw", e_buffer, e_length);
+		Internal::PrintHex("Raw", e_buffer, e_length);
 
 		if (e_length < 19) {
 			Log::Write(LogLevel_Warning, _sendingNode, "Received a Encrypted Message that is too Short. Dropping it");
@@ -314,10 +315,10 @@ namespace OpenZWave {
 
 #ifdef DEBUG
 		Log::Write(LogLevel_Debug, _sendingNode, "Encrypted Packet Sizes: %d (Total) %d (Payload)", e_length, encryptedpacketsize);
-		PrintHex("IV", iv, 16);
-		PrintHex("Encrypted", encyptedpacket, 16);
+		Internal::PrintHex("IV", iv, 16);
+		Internal::PrintHex("Encrypted", encyptedpacket, 16);
 		/* Mac Starts after Encrypted Packet. */
-		PrintHex("Auth", &e_buffer[11+encryptedpacketsize], 8);
+		Internal::PrintHex("Auth", &e_buffer[11+encryptedpacketsize], 8);
 #endif
 		aes_mode_reset(driver->GetEncKey());
 #if 0
@@ -327,13 +328,13 @@ namespace OpenZWave {
 			Log::Write(LogLevel_Warning, GetNodeId(), "Failed to Decrypt Packet");
 			return false;
 		}
-		PrintHex("Pck", decryptpacket, 19);
+		Internal::PrintHex("Pck", decryptpacket, 19);
 #else
 		if (aes_ofb_decrypt(encyptedpacket, m_buffer, encryptedpacketsize, iv, driver->GetEncKey()) == EXIT_FAILURE) {
 			Log::Write(LogLevel_Warning, _sendingNode, "Failed to Decrypt Packet");
 			return false;
 		}
-		Log::Write(LogLevel_Detail, _sendingNode, "Decrypted Packet: %s", PktToString(m_buffer, encryptedpacketsize).c_str());
+		Log::Write(LogLevel_Detail, _sendingNode, "Decrypted Packet: %s", Internal::PktToString(m_buffer, encryptedpacketsize).c_str());
 #endif
 		uint8 mac[32];
 		/* we have to regenerate the IV as the ofb decryption routine will alter it. */
@@ -358,11 +359,11 @@ namespace OpenZWave {
 		string securestrategy;
 		Options::Get()->GetOptionAsString( "SecurityStrategy", &securestrategy );
 
-		if (ToUpper(securestrategy) == "ESSENTIAL") {
+		if (Internal::ToUpper(securestrategy) == "ESSENTIAL") {
 			return SecurityStrategy_Essential;
-		} else if (ToUpper(securestrategy) == "SUPPORTED") {
+		} else if (Internal::ToUpper(securestrategy) == "SUPPORTED") {
 			return SecurityStrategy_Supported;
-		} else if (ToUpper(securestrategy) == "CUSTOM") {
+		} else if (Internal::ToUpper(securestrategy) == "CUSTOM") {
 			string customsecurecc;
 			Options::Get()->GetOptionAsString( "CustomSecuredCC", &customsecurecc);
 
@@ -380,5 +381,5 @@ namespace OpenZWave {
 		}
 		return SecurityStrategy_Essential;
 	}
-
-}
+	} // namespace Internal
+} // namespace OpenZWave

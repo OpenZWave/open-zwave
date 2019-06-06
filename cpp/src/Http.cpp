@@ -37,7 +37,7 @@
 #include "platform/FileOps.h"
 #include "Utils.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal;
 
 i_HttpClient::i_HttpClient
 (

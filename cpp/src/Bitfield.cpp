@@ -27,7 +27,7 @@
 
 #include "Bitfield.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal;
 
 /* Note: we have our own "BitSet" class rather than using the Std Library version
  * as the Std Library version can not be resized at runtime. This version can. Its the basis

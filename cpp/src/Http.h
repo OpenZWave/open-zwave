@@ -35,7 +35,11 @@
 
 namespace OpenZWave
 {
+	class Driver;
 
+
+namespace Internal
+{
 	/* This is a abstract class you can implement if you wish to override the built in HTTP Client
 	 * Code in OZW with your own code.
 	 *
@@ -64,8 +68,6 @@ namespace OpenZWave
 			Status transferStatus;
 
 	};
-
-	class Driver;
 
 	class i_HttpClient {
 		public:
@@ -105,7 +107,7 @@ namespace OpenZWave
 	};
 
 
-
+} // namespace Internal
 } /* namespace OpenZWave */
 
 

@@ -37,15 +37,17 @@ class TiXmlElement;
 
 namespace OpenZWave
 {
-	class ValueID;
+	namespace Internal
+	{
+
 
 	/** \brief Collection of ValueIDs to be treated as a unit.
 	 */
 	class Scene
 	{
-		friend class Manager;
-		friend class Driver;
-		friend class Node;
+		friend class OpenZWave::Manager;
+		friend class OpenZWave::Driver;
+		friend class OpenZWave::Node;
 
 	//-----------------------------------------------------------------------------
 	// Construction
@@ -99,7 +101,7 @@ namespace OpenZWave
 		static uint8				s_sceneCnt;
 		static Scene*				s_scenes[256];
 	};
-
+	} // namespace Internal
 } //namespace OpenZWave
 
 #endif //_Scene_H

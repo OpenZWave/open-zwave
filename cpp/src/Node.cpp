@@ -228,7 +228,7 @@ Node::~Node
 		}
 	}
 
-	Scene::RemoveValues( m_homeId, m_nodeId );
+	Internal::Scene::RemoveValues( m_homeId, m_nodeId );
 
 	// Delete the values
 	delete m_values;
@@ -298,7 +298,7 @@ void Node::AdvanceQueries
 				if( !ProtocolInfoReceived() )
 				{
 					Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_ProtocolInfo" );
-					Msg* msg = new Msg( "Get Node Protocol Info", m_nodeId, REQUEST, FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO, false );
+					Internal::Msg* msg = new Internal::Msg( "Get Node Protocol Info", m_nodeId, REQUEST, FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO, false );
 					msg->Append( m_nodeId );
 					GetDriver()->SendMsg( msg, Driver::MsgQueue_Query );
 					m_queryPending = true;
@@ -411,7 +411,7 @@ void Node::AdvanceQueries
 				{
 					// obtain from the node a list of command classes that it 1) supports and 2) controls (separated by a mark in the buffer)
 					Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_NodeInfo" );
-					Msg* msg = new Msg( "Request Node Info", m_nodeId, REQUEST, FUNC_ID_ZW_REQUEST_NODE_INFO, false, true, FUNC_ID_ZW_APPLICATION_UPDATE );
+					Internal::Msg* msg = new Internal::Msg( "Request Node Info", m_nodeId, REQUEST, FUNC_ID_ZW_REQUEST_NODE_INFO, false, true, FUNC_ID_ZW_APPLICATION_UPDATE );
 					msg->Append( m_nodeId );
 					GetDriver()->SendMsg( msg, Driver::MsgQueue_Query );
 					m_queryPending = true;
@@ -1696,7 +1696,7 @@ string Node::GetInstanceLabel
 		else {
 			/* construct a Default Label */
 			std::ostringstream sstream;
-			sstream << Localization::Get()->GetGlobalLabel("Instance") << " " << (int)_instance << ":";
+			sstream << Internal::Localization::Get()->GetGlobalLabel("Instance") << " " << (int)_instance << ":";
 			label = sstream.str();
 		}
 	}
@@ -1761,7 +1761,7 @@ void Node::SetSecuredClasses
 			 */
 			if (pCommandClass->IsInNIF()) {
 				/* if the CC Supports Security and our SecurityStrategy says we should encrypt it, then mark it as encrypted */
-				if (pCommandClass->IsSecureSupported() && (ShouldSecureCommandClass(_data[i]) == SecurityStrategy_Supported )) {
+				if (pCommandClass->IsSecureSupported() && (Internal::ShouldSecureCommandClass(_data[i]) == Internal::SecurityStrategy_Supported )) {
 					pCommandClass->SetSecured();
 					Log::Write( LogLevel_Info, m_nodeId, "    %s (Secured) - %s", pCommandClass->GetCommandClassName().c_str(), pCommandClass->IsInNIF() ? "InNIF": "NotInNIF");
 				}
@@ -2099,9 +2099,9 @@ void Node::ApplicationCommandHandler
 		{
 			// This is a controller replication message, and we do not support it.
 			// We have to at least acknowledge the message to avoid locking the sending device.
-			Log::Write( LogLevel_Info, m_nodeId, "ApplicationCommandHandler - Default acknowledgement of controller replication data" );
+			Log::Write( LogLevel_Info, m_nodeId, "ApplicationCommandHandler - Default acknowledgment of controller replication data" );
 
-			Msg* msg = new Msg( "Replication Command Complete", m_nodeId, REQUEST, FUNC_ID_ZW_REPLICATION_COMMAND_COMPLETE, false );
+			Internal::Msg* msg = new Internal::Msg( "Replication Command Complete", m_nodeId, REQUEST, FUNC_ID_ZW_REPLICATION_COMMAND_COMPLETE, false );
 			GetDriver()->SendMsg( msg, Driver::MsgQueue_Command );
 		}
 		else if ( _data[5] == Internal::CC::MultiInstance::StaticGetCommandClassId() ) {
@@ -3811,7 +3811,7 @@ uint8 *Node::GenerateNonceKey() {
 	if (this->m_lastnonce >= 8)
 		this->m_lastnonce = 0;
 	for (uint8 i = 0; i < 8; i++) {
-		PrintHex("NONCES", (const uint8_t*)this->m_nonces[i], 8);
+		Internal::PrintHex("NONCES", (const uint8_t*)this->m_nonces[i], 8);
 	}
 	return &this->m_nonces[idx][0];
 }
@@ -3829,7 +3829,7 @@ uint8 *Node::GetNonceKey(uint32 nonceid) {
 	}
 	Log::Write(LogLevel_Warning, m_nodeId, "A Nonce with id %x does not exist", nonceid);
 	for (uint8 i = 0; i < 8; i++) {
-		PrintHex("NONCES", (const uint8_t*)this->m_nonces[i], 8);
+		Internal::PrintHex("NONCES", (const uint8_t*)this->m_nonces[i], 8);
 	}
 	return NULL;
 }
@@ -3908,7 +3908,7 @@ bool Node::IsNodeReset()
 //-----------------------------------------------------------------------------
 void Node::SetProductDetails
 (
-	ProductDescriptor *product
+	Internal::ProductDescriptor *product
 )
 {
 	/* if there is a ProductDescriptor already assigned, remove the reference */
@@ -4148,7 +4148,8 @@ void Node::ReadMetaDataFromXML(TiXmlElement const* _valueElement) {
 							default:
 								break;
 						}
-						this->m_metadata[GetMetaDataId(name)] = metadata->GetText();
+						if (metadata->GetText())
+							this->m_metadata[GetMetaDataId(name)] = metadata->GetText();
 					} else if (!strcmp( metadata->Value(), "ChangeLog" )) {
 						TiXmlElement const* entry = metadata->FirstChildElement("Entry");
 						while (entry) {

@@ -35,7 +35,6 @@
 
 namespace OpenZWave
 {
-	//using namespace Internal::CC;
 	namespace Internal {
 		namespace CC {
 			class ApplicationStatus;
@@ -49,6 +48,7 @@ namespace OpenZWave
 			class Value;
 			class ValueStore;
 		}
+		class ManufacturerSpecificDB;
 	}
 	/** \brief Provides a container for data sent via the notification callback
 	 *    handler installed by a call to Manager::AddWatcher.
@@ -70,7 +70,7 @@ namespace OpenZWave
 		friend class Internal::CC::SceneActivation;
 		friend class Internal::CC::WakeUp;
 		friend class Internal::CC::ApplicationStatus;
-		friend class ManufacturerSpecificDB;
+		friend class Internal::ManufacturerSpecificDB;
 		/* allow us to Stream a Notification */
 		//friend std::ostream &operator<<(std::ostream &os, const Notification &dt);
 

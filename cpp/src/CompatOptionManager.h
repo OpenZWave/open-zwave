@@ -39,7 +39,6 @@ namespace OpenZWave {
 		namespace CC {
 			class CommandClass;
 		}
-	}
 
 enum CompatOptionFlags
 {
@@ -140,7 +139,7 @@ private:
 	CompatOptionFlagDefintions *m_availableFlags;
 	uint32_t m_availableFlagsCount;
 };
-
+	} // namespace Internal
 } /* namespace OpenZWave */
 
 #endif /* CPP_SRC_COMPATOPTIONMANAGER_H_ */

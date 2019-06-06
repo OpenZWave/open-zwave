@@ -30,7 +30,7 @@
 #include "platform/Log.h"
 #include "Driver.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal;
 
 //-----------------------------------------------------------------------------
 // <TimerThread::TimerThreadEntryPoint>

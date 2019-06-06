@@ -61,24 +61,15 @@ namespace OpenZWave
 		namespace VC {
 			class Value;
 			class ValueStore;
-#if 0
-		class ValueBool;
-		class ValueButton;
-		class ValueByte;
-		class ValueDecimal;
-		class ValueInt;
-		class ValueSchedule;
-		class ValueShort;
-		class ValueString;
-#endif
 		}
 		namespace Platform {
 			class Mutex;
 		}
+		class ProductDescriptor;
+		class ManufacturerSpecificDB;
 	}
 	class Driver;
 	class Group;
-	class ProductDescriptor;
 
 	/** \brief The Node class describes a Z-Wave node object...typically a device on the
 	 *  Z-Wave network.
@@ -101,7 +92,7 @@ namespace OpenZWave
 			friend class Internal::CC::NodeNaming;
 			friend class Internal::CC::Version;
 			friend class Internal::CC::ZWavePlusInfo;
-			friend class ManufacturerSpecificDB;
+			friend class Internal::ManufacturerSpecificDB;
 
 			//-----------------------------------------------------------------------------
 			// Construction
@@ -452,7 +443,7 @@ namespace OpenZWave
 			// Configuration Revision Related Classes
 			//-----------------------------------------------------------------------------
 		public:
-			void SetProductDetails(ProductDescriptor *product);
+			void SetProductDetails(Internal::ProductDescriptor *product);
 			/** Get a path to the config file for this device
 			 *
 			 * @return a path relative to the config directory for the config file. returns a empty string if a config file is not present.
@@ -496,7 +487,7 @@ namespace OpenZWave
 		private:
 
 
-			ProductDescriptor *m_Product;
+			Internal::ProductDescriptor *m_Product;
 
 
 			uint32 m_fileConfigRevision;

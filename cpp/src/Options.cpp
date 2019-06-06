@@ -217,7 +217,7 @@ bool Options::AddOptionBool
 	option->m_valueBool = _value;
 
 	// save in m_options map
-	string lowerName = ToLower( _name );
+	string lowerName = Internal::ToLower( _name );
 	m_options[lowerName] = option;
 	return true;
 }
@@ -242,7 +242,7 @@ bool Options::AddOptionInt
 	option->m_valueInt = _value;
 
 	// save in m_options map
-	string lowerName = ToLower( _name );
+	string lowerName = Internal::ToLower( _name );
 	m_options[lowerName] = option;
 	return true;
 }
@@ -269,7 +269,7 @@ bool Options::AddOptionString
 	option->m_append = _append;
 
 	// save in m_options map
-	string lowerName = ToLower( _name );
+	string lowerName = Internal::ToLower( _name );
 	m_options[lowerName] = option;
 	return true;
 }
@@ -576,7 +576,7 @@ Options::Option* Options::Find
 	string const& _name
 )
 {
-	string lowername = ToLower( _name );
+	string lowername = Internal::ToLower( _name );
 	map<string,Option*>::iterator it = m_options.find( lowername );
 	if( it != m_options.end() )
 	{
@@ -597,7 +597,7 @@ bool Options::Option::SetValueFromString
 {
 	if( OptionType_Bool == m_type )
 	{
-		string lowerValue = ToLower( _value );
+		string lowerValue = Internal::ToLower( _value );
 		if( ( lowerValue == "true" ) || ( lowerValue == "1" ) )
 		{
 			m_valueBool = true;

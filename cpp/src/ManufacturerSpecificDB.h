@@ -39,12 +39,11 @@
 
 namespace OpenZWave
 {
+	class Driver;
 	namespace Internal {
 		namespace Platform {
 			class Mutex;
 		}
-	}
-	class Driver;
 
 
 	class ProductDescriptor : public Internal::Platform::Ref
@@ -151,8 +150,8 @@ private:
 
 	};
 
-
-}
+	} // namespace Internal
+} // namespace OpenZWave
 
 
 #endif

@@ -37,11 +37,11 @@
 #include "Notification.h"
 #include "Utils.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal;
 
 ManufacturerSpecificDB *ManufacturerSpecificDB::s_instance = NULL;
-map<uint16,string> ManufacturerSpecificDB::s_manufacturerMap;
-map<int64,ProductDescriptor*> ManufacturerSpecificDB::s_productMap;
+std::map<uint16,std::string> ManufacturerSpecificDB::s_manufacturerMap;
+std::map<int64,ProductDescriptor*> ManufacturerSpecificDB::s_productMap;
 bool ManufacturerSpecificDB::s_bXmlLoaded = false;
 
 ManufacturerSpecificDB *ManufacturerSpecificDB::Create

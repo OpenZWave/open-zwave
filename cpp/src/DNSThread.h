@@ -48,8 +48,6 @@ namespace OpenZWave
 			class Mutex;
 			class Thread;
 		}
-	}
-
 
 	enum LookupType {
 		DNS_Lookup_ConfigRevision = 1
@@ -70,7 +68,7 @@ namespace OpenZWave
 	 */
 	class OPENZWAVE_EXPORT DNSThread
 	{
-			friend class Driver;
+			friend class OpenZWave::Driver;
 		private:
 			DNSThread(Driver *);
 			virtual ~DNSThread();
@@ -99,6 +97,7 @@ namespace OpenZWave
 
 
 	}; /* class DNSThread */
+	} // namespace Internal
 } /* namespace OpenZWave */
 
 

@@ -37,6 +37,9 @@
 
 namespace OpenZWave
 {
+namespace Internal
+{
+
 
 class LabelLocalizationEntry : public Internal::Platform::Ref
 {
@@ -139,6 +142,6 @@ private:
 
 
 };
-
-};
+} // namespace Internal
+} // namespace OpenZWave
 #endif // VALUEHELP_H

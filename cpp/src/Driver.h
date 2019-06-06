@@ -44,14 +44,7 @@
 
 namespace OpenZWave
 {
-	class Msg;
 	class Notification;
-	class DNSThread;
-	struct DNSLookup;
-	class TimerThread;
-	class i_HttpClient;
-	struct HttpDownload;
-	class ManufacturerSpecificDB;
 	namespace Internal {
 		namespace CC {
 			class ApplicationStatus;
@@ -71,8 +64,14 @@ namespace OpenZWave
 		}
 		namespace Platform {
 			class Controller;
-
 		}
+		class DNSThread;
+		struct DNSLookup;
+		class i_HttpClient;
+		struct HttpDownload;
+		class ManufacturerSpecificDB;
+		class Msg;
+		class TimerThread;
 	}
 
 	/** \brief The Driver class handles communication between OpenZWave
@@ -85,8 +84,8 @@ namespace OpenZWave
 		friend class Group;
 		friend class Internal::CC::CommandClass;
 		friend class Internal::CC::ControllerReplication;
-		friend class DNSThread;
-		friend class i_HttpClient;
+		friend class Internal::DNSThread;
+		friend class Internal::i_HttpClient;
 		friend class Internal::VC::Value;
 		friend class Internal::VC::ValueStore;
 		friend class Internal::CC::Basic;
@@ -97,8 +96,8 @@ namespace OpenZWave
 		friend class Internal::CC::WakeUp;
 		friend class Internal::CC::ApplicationStatus; /* for Notification messages */
 		friend class Internal::CC::Security;
-		friend class Msg;
-		friend class ManufacturerSpecificDB;
+		friend class Internal::Msg;
+		friend class Internal::ManufacturerSpecificDB;
 		friend class TimerThread;
 
 	//-----------------------------------------------------------------------------
@@ -175,7 +174,7 @@ namespace OpenZWave
 		void RemoveQueues( uint8 const _nodeId );
 
 		Internal::Platform::Thread*					m_driverThread;			/**< Thread for reading from the Z-Wave controller, and for creating and managing the other threads for sending, polling etc. */
-		DNSThread*				m_dns;					/**< DNSThread Class */
+		Internal::DNSThread*				m_dns;					/**< DNSThread Class */
 		Internal::Platform::Thread*					m_dnsThread;			/**< Thread for DNS Queries */
 		Internal::Platform::Mutex*					m_initMutex;            /**< Mutex to ensure proper ordering of initialization/deinitialization */
 		bool					m_exit;					/**< Flag that is set when the application is exiting. */
@@ -197,11 +196,11 @@ namespace OpenZWave
 	//	Timer
 	//-----------------------------------------------------------------------------
 	private:
-		TimerThread*    m_timer;					/**< TimerThread Class */
+		Internal::TimerThread*    m_timer;					/**< TimerThread Class */
 		Internal::Platform::Thread*         m_timerThread;    /**< Thread for timer events */
 
 	public:
-		TimerThread*		GetTimer() { return m_timer; }
+		Internal::TimerThread*		GetTimer() { return m_timer; }
 
 	//-----------------------------------------------------------------------------
 	//	Controller
@@ -406,7 +405,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 	//	Retrieving Node information
 	//-----------------------------------------------------------------------------
 	public:
-		uint8 GetNodeNumber( Msg const* _msg )const{ return  ( _msg == NULL ? 0 : _msg->GetTargetNodeId() ); }
+		uint8 GetNodeNumber( Internal::Msg const* _msg )const{ return  ( _msg == NULL ? 0 : _msg->GetTargetNodeId() ); }
 
 	private:
 		/**
@@ -605,7 +604,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 			MsgQueue_Count		// Number of message queues
 		};
 
-		void SendMsg( Msg* _msg, MsgQueue const _queue );
+		void SendMsg( Internal::Msg* _msg, MsgQueue const _queue );
 
 		/**
 		 * Fetch the transmit options
@@ -720,7 +719,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 			}
 
 			MsgQueueCmd			m_command;
-			Msg*				m_msg;
+			Internal::Msg*				m_msg;
 			uint8				m_nodeId;
 			Node::QueryStage		m_queryStage;
 			bool				m_retry;
@@ -732,7 +731,7 @@ OPENZWAVE_EXPORT_WARNINGS_OFF
 OPENZWAVE_EXPORT_WARNINGS_ON
 		Internal::Platform::Event*					m_queueEvent[MsgQueue_Count];		// Events for each queue, which are signaled when the queue is not empty
 		Internal::Platform::Mutex*					m_sendMutex;						// Serialize access to the queues
-		Msg*					m_currentMsg;
+		Internal::Msg*					m_currentMsg;
 		MsgQueue				m_currentMsgQueueSource;			// identifies which queue held m_currentMsg
 		Internal::Platform::TimeStamp				m_resendTimeStamp;
 
@@ -896,8 +895,8 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 			};
 			EventType type;
 			union {
-					DNSLookup *lookup;
-					HttpDownload *httpdownload;
+					Internal::DNSLookup *lookup;
+					Internal::HttpDownload *httpdownload;
 			} event;
 		};
 
@@ -922,20 +921,20 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		void ReloadNode(uint8 const _nodeId);
 
 	private:
-		void processConfigRevision(DNSLookup *);
+		void processConfigRevision(Internal::DNSLookup *);
 
 	//-----------------------------------------------------------------------------
 	//	HTTP Client Related
 	//-----------------------------------------------------------------------------
 
 	public:
-		bool setHttpClient(i_HttpClient *client);
+		bool setHttpClient(Internal::i_HttpClient *client);
 	private:
 		bool startConfigDownload(uint16 _manufacturerId, uint16 _productType, uint16 _productId, string configfile, uint8 node = 0);
 		bool startMFSDownload(string configfile);
 		bool refreshNodeConfig(uint8 node);
-		void processDownload(HttpDownload *);
-		i_HttpClient *m_httpClient;
+		void processDownload(Internal::HttpDownload *);
+		Internal::i_HttpClient *m_httpClient;
 
 	//-----------------------------------------------------------------------------
 	//	Metadata Related
@@ -951,11 +950,11 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 	//-----------------------------------------------------------------------------
 
 	public:
-		ManufacturerSpecificDB *GetManufacturerSpecificDB();
+		Internal::ManufacturerSpecificDB *GetManufacturerSpecificDB();
 		bool downloadConfigRevision(Node *);
 		bool downloadMFSRevision();
 	private:
-		ManufacturerSpecificDB *m_mfs;
+		Internal::ManufacturerSpecificDB *m_mfs;
 
 	};
 

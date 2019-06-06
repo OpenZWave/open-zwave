@@ -33,6 +33,8 @@
 
 namespace OpenZWave
 {
+	namespace Internal {
+
 class OPENZWAVE_EXPORT Bitfield
 {
 	friend class Iterator;
@@ -78,6 +80,7 @@ private:
 	uint32			m_numSetBits;
 	uint32			m_value;
 };
+	} // namespace OpenZWave
 } // namespace OpenZWave
 
 #endif

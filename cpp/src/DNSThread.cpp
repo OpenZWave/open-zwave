@@ -29,7 +29,7 @@
 #include "Utils.h"
 #include "Driver.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal;
 
 
 DNSThread::DNSThread
@@ -116,7 +116,7 @@ void DNSThread::processResult
 )
 {
 	string result;
-	DNSLookup *lookup;
+	Internal::DNSLookup *lookup;
 	{
 		LockGuard LG(m_dnsMutex);
 		lookup = m_dnslist.front();
