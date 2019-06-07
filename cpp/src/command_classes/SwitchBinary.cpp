@@ -261,20 +261,12 @@ namespace OpenZWave
 			{
 				if (Node* node = GetNodeUnsafe())
 				{
-					switch (GetVersion())
+					if (GetVersion() >= 2)
 					{
-						case 2:
-						{
-							node->CreateValueByte(ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_SwitchBinary::Duration, "Transition Duration", "", false, false, 0xff, 0);
-							node->CreateValueBool(ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_SwitchBinary::TargetState, "Target State", "", true, false, true, 0);
-							// Fall through to version 1
-						}
-						case 1:
-						{
-							node->CreateValueBool(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_SwitchBinary::Level, "Switch", "", false, false, false, 0);
-							break;
-						}
+						node->CreateValueByte(ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_SwitchBinary::Duration, "Transition Duration", "", false, false, 0xff, 0);
+						node->CreateValueBool(ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_SwitchBinary::TargetState, "Target State", "", true, false, true, 0);
 					}
+					node->CreateValueBool(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_SwitchBinary::Level, "Switch", "", false, false, false, 0);
 				}
 			}
 		} // namespace CC

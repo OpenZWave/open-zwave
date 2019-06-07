@@ -482,22 +482,14 @@ namespace OpenZWave
 				{
 					if (!node->IsController())	// We don't add the interval value for controllers, because they don't appear to ever wake up on their own.
 					{
-						switch (GetVersion())
+						if (GetVersion() >= 2)
 						{
-							case 1:
-							{
-								node->CreateValueInt(ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_WakeUp::Interval, "Wake-up Interval", "Seconds", false, false, 3600, 0);
-								break;
-							}
-							case 2:
-							{
-								node->CreateValueInt(ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_WakeUp::Min_Interval, "Minimum Wake-up Interval", "Seconds", true, false, 0, 0);
-								node->CreateValueInt(ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_WakeUp::Max_Interval, "Maximum Wake-up Interval", "Seconds", true, false, 0, 0);
-								node->CreateValueInt(ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_WakeUp::Default_Interval, "Default Wake-up Interval", "Seconds", true, false, 0, 0);
-								node->CreateValueInt(ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_WakeUp::Interval_Step, "Wake-up Interval Step", "Seconds", true, false, 0, 0);
-								break;
-							}
+							node->CreateValueInt(ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_WakeUp::Min_Interval, "Minimum Wake-up Interval", "Seconds", true, false, 0, 0);
+							node->CreateValueInt(ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_WakeUp::Max_Interval, "Maximum Wake-up Interval", "Seconds", true, false, 0, 0);
+							node->CreateValueInt(ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_WakeUp::Default_Interval, "Default Wake-up Interval", "Seconds", true, false, 0, 0);
+							node->CreateValueInt(ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_WakeUp::Interval_Step, "Wake-up Interval Step", "Seconds", true, false, 0, 0);
 						}
+						node->CreateValueInt(ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_WakeUp::Interval, "Wake-up Interval", "Seconds", false, false, 3600, 0);
 					}
 				}
 			}
