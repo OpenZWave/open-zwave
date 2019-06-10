@@ -71,6 +71,7 @@ namespace OpenZWave
 				static bool Create();
 				string GetSensorName(uint32);
 				string GetSensorUnit(uint32, uint8);
+				string GetSensorUnitName(uint32, uint8);
 				const SensorScales GetSensorScales(uint32);
 
 				//-----------------------------------------------------------------------------

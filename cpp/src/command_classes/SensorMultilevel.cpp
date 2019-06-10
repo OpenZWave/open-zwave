@@ -247,7 +247,7 @@ namespace OpenZWave
 								defaultScale = sensorScale;
 							Log::Write(LogLevel_Info, GetNodeId(), "Received SensorMultiLevel supported Scale report from node %d for Sensor %s: %s (%d)", GetNodeId(), SensorMultiLevelCCTypes::Get()->GetSensorName(sensorType).c_str(), SensorMultiLevelCCTypes::Get()->GetSensorUnit(sensorType, sensorScale).c_str(), sensorScale);
 							Internal::VC::ValueList::Item item;
-							item.m_label = SensorMultiLevelCCTypes::Get()->GetSensorUnit(sensorType, sensorScale);
+							item.m_label = SensorMultiLevelCCTypes::Get()->GetSensorUnitName(sensorType, sensorScale);
 							item.m_value = sensorScale;
 							items.push_back(item);
 						}

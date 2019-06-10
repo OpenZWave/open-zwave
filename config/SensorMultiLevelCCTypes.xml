@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SensorTypes xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
+<SensorTypes xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
 	<SensorType id="1" name="Air Temperature">
 		<SensorScale id="0" name="Celsius">C</SensorScale>
 		<SensorScale id="1" name="Fahrenheit">F</SensorScale>
@@ -62,7 +62,7 @@
 		<SensorScale id="0" name="Amps">A</SensorScale>
 		<SensorScale id="1" name="MilliAmps">mA</SensorScale>
 	</SensorType>
-	<SensorType id="17" name="Carbon Dioxide Level">
+	<SensorType id="17" name="Carbon Dioxide">
 		<SensorScale id="0" name="Parts Per Million">Ppm</SensorScale>
 	</SensorType>
 	<SensorType id="18" name="Air Flow">
@@ -114,7 +114,7 @@
 	<SensorType id="28" name="Electrical Resistivity">
 		<SensorScale id="0" name="Ohm Meter">Ωm</SensorScale>
 	</SensorType>
-	<SensorType id="29" name="Electrical COnductivity">
+	<SensorType id="29" name="Electrical Conductivity">
 		<SensorScale id="0" name="Siemens Per Meter">S⋅m-1</SensorScale>
 	</SensorType>
 	<SensorType id="30" name="Loudness">
@@ -212,7 +212,7 @@
 	<SensorType id="57" name="Water Pressure">
 		<SensorScale id="0" name="Kilopascal">kPa</SensorScale>
 	</SensorType>
-	<SensorType id="58" name="RF Singal Strength">
+	<SensorType id="58" name="RF Signal Strength">
 		<SensorScale id="0" name="RSSI">RSSI</SensorScale>
 		<SensorScale id="1" name="dBm">dBm</SensorScale>
 	</SensorType>
@@ -223,7 +223,7 @@
 	<SensorType id="60" name="Respiratory Rate">
 		<SensorScale id="0" name="Breaths per Minute">Bpm</SensorScale>
 	</SensorType>
-	<SensorType id="61" name="Relative Modulation Level">
+	<SensorType id="61" name="Relative Modulation">
 		<SensorScale id="0" name="Percent">%</SensorScale>
 	</SensorType>
 	<SensorType id="62" name="Boiler Water Temperature">
@@ -242,7 +242,7 @@
 		<SensorScale id="0" name="Celcius">C</SensorScale>
 		<SensorScale id="1" name="Fahrenheit">F</SensorScale>
 	</SensorType>
-	<SensorType id="66" name="Water Chlorine Level">
+	<SensorType id="66" name="Water Chlorine">
 		<SensorScale id="0" name="Milligram per Liter">mg/l</SensorScale>
 	</SensorType>
 	<SensorType id="67" name="Water Acidity">

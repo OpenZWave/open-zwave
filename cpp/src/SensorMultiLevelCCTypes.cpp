@@ -133,6 +133,13 @@ namespace OpenZWave
 							}
 							ss->name = str;
 							trim(ss->name);
+
+							str = SensorScaleElement->GetText();
+							if (str) {
+								ss->unit = str;
+								trim(ss->unit);
+							}
+
 							if (st->allSensorScales.find(ss->id) == st->allSensorScales.end())
 								st->allSensorScales[ss->id] = ss;
 							else
@@ -181,7 +188,22 @@ namespace OpenZWave
 
 		std::string SensorMultiLevelCCTypes::GetSensorUnit(uint32 type, uint8 scale)
 		{
+			if (SensorTypes.find(type) == SensorTypes.end())
+			{
+				Log::Write(LogLevel_Warning, "SensorMultiLevelCCTypes::GetSensorUnit - Unknown SensorType %d", type);
+				return "";
+			}
+			SensorScales ss = SensorTypes.at(type)->allSensorScales;
+			if (ss.find(scale) == ss.end())
+			{
+				Log::Write(LogLevel_Warning, "SensorMultiLevelCCTypes::GetSensorUnit - Unknown SensorScale %d", scale);
+				return "";
 
+			}
+			return ss.at(scale)->unit;
+		}
+
+		std::string SensorMultiLevelCCTypes::GetSensorUnitName(uint32 type, uint8 scale) {
 			if (SensorTypes.find(type) == SensorTypes.end())
 			{
 				Log::Write(LogLevel_Warning, "SensorMultiLevelCCTypes::GetSensorUnit - Unknown SensorType %d", type);
@@ -195,7 +217,9 @@ namespace OpenZWave
 
 			}
 			return ss.at(scale)->name;
+
 		}
+
 
 		const SensorMultiLevelCCTypes::SensorScales SensorMultiLevelCCTypes::GetSensorScales(uint32 type)
 		{
