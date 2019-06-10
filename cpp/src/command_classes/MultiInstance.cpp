@@ -338,6 +338,7 @@ namespace OpenZWave
 						{
 							afterMark = true;
 							Log::Write(LogLevel_Info, GetNodeId(), "    Controlled CommandClasses:");
+							continue;
 						}
 
 						m_endPointCommandClasses.insert(commandClassId);
@@ -347,7 +348,7 @@ namespace OpenZWave
 
 						if (!cc)
 						{
-							cc = node->AddCommandClass(commandClassId);
+							cc = node->AddCommandClass(commandClassId, endPoint);
 						}
 						if (cc && afterMark)
 						{

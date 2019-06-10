@@ -161,6 +161,7 @@ namespace OpenZWave
 							if (_data[2] > 0)
 							{
 								pCommandClass->SetVersion(_data[2]);
+								pCommandClass->CreateVars(_instance);
 							}
 							else
 							{
