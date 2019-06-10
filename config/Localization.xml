@@ -814,7 +814,7 @@
 	</CommandClass>
 	<CommandClass id="49">
 		<Label>COMMAND_CLASS_SENSOR_MULTILEVEL</Label>
-		<Value index="0">
+<!--	<Value index="0">
 			<Help>Undefined Sensor State</Help>
 			<Label>Undefined</Label>
 		</Value>
@@ -946,6 +946,7 @@
 			<Help>Moisture Sensor Value</Help>
 			<Label>Moisture</Label>
 		</Value>
+		-->
 	</CommandClass>
 		<CommandClass id="121">
 		<Label>COMMAND_CLASS_SOUND_SWITCH</Label>
