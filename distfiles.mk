@@ -1489,6 +1489,7 @@ DISTFILES =	.gitignore \
 	cpp/src/value_classes/ValueByte.h \
 	cpp/src/value_classes/ValueDecimal.cpp \
 	cpp/src/value_classes/ValueDecimal.h \
+	cpp/src/value_classes/ValueID.cpp \
 	cpp/src/value_classes/ValueID.h \
 	cpp/src/value_classes/ValueInt.cpp \
 	cpp/src/value_classes/ValueInt.h \
