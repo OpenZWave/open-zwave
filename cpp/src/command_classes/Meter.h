@@ -77,9 +77,6 @@ namespace OpenZWave
 						return 5;
 					}
 
-				protected:
-					virtual void CreateVars(uint8 const _instance) override;
-
 				private:
 					Meter(uint32 const _homeId, uint8 const _nodeId);
 					int32_t GetScale(uint8_t const *_data, uint32_t const_length);

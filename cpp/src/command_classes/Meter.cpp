@@ -476,20 +476,6 @@ namespace OpenZWave
 				return false;
 			}
 
-//-----------------------------------------------------------------------------
-// <Meter::CreateVars>
-// Create the values managed by this command class
-//-----------------------------------------------------------------------------
-			void Meter::CreateVars(uint8 const _instance)
-			{
-				if (Node* node = GetNodeUnsafe())
-				{
-#if 0
-					node->CreateValueDecimal(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_Meter::Meter_1, "Unknown", "", true, false, "0.0", 0);
-#endif
-				}
-			}
-
 			//-----------------------------------------------------------------------------
 			// <Meter::GetScale>
 			// Decode The Scale as its all over the place in different versions
