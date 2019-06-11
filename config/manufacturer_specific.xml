@@ -1830,6 +1830,7 @@
     <Product config="zooz/zen21.xml" id="1e1c" name="ZEN21 Switch V2.0" type="b111"/>
   </Manufacturer>
   <Manufacturer id="0315" name="zwaveproducts.com">
+    <Product type="4447" id="3031" name="PA-100" config="zwp/PA-100.xml"/>
     <Product config="zwp/WD-100.xml" id="3034" name="WD-100" type="4447"/>
   </Manufacturer>
   <Manufacturer id="0021" name="Zykronix"></Manufacturer>
