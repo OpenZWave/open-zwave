@@ -364,7 +364,7 @@ namespace OpenZWave
 				scale = GetScale(_data, _length);
 				int8 meterType = (MeterType) (_data[1] & 0x1f);
 
-				uint16_t index = (((meterType -1) * 8) + scale);
+				uint16_t index = (((meterType -1) * 16) + scale);
 				Log::Write(LogLevel_Info, GetNodeId(), "Received Meter Report for %s (%d) with Units %s (%d) on Index %d: %s",MeterTypes.at(index).Label.c_str(), meterType, MeterTypes.at(index).Unit.c_str(), scale, index, valueStr.c_str());
 
 				Internal::VC::ValueDecimal* value = static_cast<Internal::VC::ValueDecimal*>(GetValue(_instance, index));
