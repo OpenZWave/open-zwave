@@ -714,6 +714,7 @@ DISTFILES =	.gitignore \
 	config/images/qubino/ZMNHVDx.png \
 	config/images/qubino/ZMNHWD1.png \
 	config/images/qubino/ZMNHYDx.png \
+	config/images/qubino/zmnhxdx.png \
 	config/images/quby/qb2.png \
 	config/images/rcs/em52-zw.png \
 	config/images/rcs/therm0009.png \
