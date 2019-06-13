@@ -366,11 +366,12 @@ int main( int argc, char* argv[] )
 			{
 				ValueID v = *it2;
 				printf("\t ValueLabel: %s \n", Manager::Get()->GetValueLabel(v).c_str());
-				printf("\t\t ValueType: %d \n", v.GetType());
+				printf("\t\t ValueType: %s (%d) \n", v.GetTypeAsString().c_str(), v.GetType());
 				printf("\t\t ValueHelp: %s \n", Manager::Get()->GetValueHelp(v).c_str());
 				printf("\t\t ValueUnits: %s \n", Manager::Get()->GetValueUnits(v).c_str());
 				printf("\t\t ValueMin: %d \n", Manager::Get()->GetValueMin(v));
 				printf("\t\t ValueMax: %d \n", Manager::Get()->GetValueMax(v));
+				printf("\t\t ValueGenre: %s (%d)\n", v.GetGenreAsString().c_str(), v.GetGenre());
 
 				if( v.GetCommandClassId() == COMMAND_CLASS_BASIC )
 				{

@@ -403,6 +403,7 @@ exit 0</Command>
     <ClCompile Include="..\..\..\src\value_classes\ValueByte.cpp" />
     <ClCompile Include="..\..\..\src\value_classes\ValueDecimal.cpp" />
     <ClCompile Include="..\..\..\src\value_classes\ValueInt.cpp" />
+    <ClCompile Include="..\..\..\src\value_classes\ValueID.cpp" />
     <ClCompile Include="..\..\..\src\value_classes\ValueList.cpp" />
     <ClCompile Include="..\..\..\src\value_classes\ValueShort.cpp" />
     <ClCompile Include="..\..\..\src\value_classes\ValueStore.cpp" />
