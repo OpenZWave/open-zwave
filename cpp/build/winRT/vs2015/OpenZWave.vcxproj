@@ -386,6 +386,7 @@ exit 0</Command>
     <ClInclude Include="..\..\..\src\platform\Wait.h" />
     <ClInclude Include="..\..\..\src\platform\winRT\HidControllerWinRT.h" />
     <ClInclude Include="..\..\..\src\Scene.h" />
+    <ClInclude Include="..\..\..\src\SensorMultiLevelCCTypes.h" />
     <ClInclude Include="..\..\..\src\Utils.h" />
     <ClInclude Include="..\..\..\src\value_classes\ValueButton.h" />
     <ClInclude Include="..\..\..\src\value_classes\ValueRaw.h" />
@@ -517,6 +518,7 @@ exit 0</Command>
     <ClCompile Include="..\..\..\src\platform\TimeStamp.cpp" />
     <ClCompile Include="..\..\..\src\platform\Wait.cpp" />
     <ClCompile Include="..\..\..\src\Scene.cpp" />
+    <ClInclude Include="..\..\..\src\SensorMultiLevelCCTypes.cpp" />
     <ClCompile Include="..\..\..\src\Utils.cpp" />
     <ClCompile Include="..\..\..\src\value_classes\ValueButton.cpp" />
     <ClCompile Include="..\..\..\src\value_classes\ValueRaw.cpp" />

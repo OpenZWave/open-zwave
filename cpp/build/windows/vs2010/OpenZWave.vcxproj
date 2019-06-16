@@ -230,6 +230,7 @@ exit 0</Command>
     <ClInclude Include="..\..\..\src\Defs.h" />
     <ClInclude Include="..\..\..\src\Driver.h" />
     <ClInclude Include="..\..\..\src\DNSThread.h" />
+    <ClInclude Include="..\..\..\src\SensorMultiLevelCCTypes.h" />
     <ClInclude Include="..\..\..\src\TimerThread.h" />
     <ClInclude Include="..\..\..\src\Http.h" />
     <ClInclude Include="..\..\..\src\Group.h" />
@@ -354,6 +355,7 @@ exit 0</Command>
     <ClCompile Include="..\..\..\src\CompatOptionManager.cpp" />
     <ClCompile Include="..\..\..\src\Driver.cpp" />
     <ClCompile Include="..\..\..\src\DNSThread.cpp" />
+    <ClCompile Include="..\..\..\src\SensorMultiLevelCCTypes.cpp" />
     <ClCompile Include="..\..\..\src\TimerThread.cpp" />
     <ClCompile Include="..\..\..\src\Http.cpp" />
     <ClCompile Include="..\..\..\src\Group.cpp" />

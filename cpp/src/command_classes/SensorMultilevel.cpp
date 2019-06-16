@@ -208,7 +208,7 @@ namespace OpenZWave
 				{
 					string msg = "";
 
-					if (Node* node = GetNodeUnsafe())
+					if (GetNodeUnsafe())
 					{
 						for (uint8 i = 1; i <= (_length - 2); i++)
 						{
