@@ -1122,6 +1122,8 @@
     <Product config="mcohome/mh7h.xml" id="5102" name="MH7H Water/Electrical Heating Thermostat" type="0732"/>
     <!--US-->
     <Product config="mcohome/mhs513.xml" id="0103" name="Touch Panel Switch MH-S513" type="5102"/>
+    <!--AU-->
+    <Product config="mcohome/mhp511.xml" id="1453" name="Dimmer Touch Panel Switch MH-P511" type="511a"/>
   </Manufacturer>
   <Manufacturer id="0222" name="MCT CO. LTD"></Manufacturer>
   <Manufacturer id="0027" name="Meedio LLC"></Manufacturer>
