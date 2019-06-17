@@ -1,4 +1,4 @@
-Open-ZWave Library
+![Open-ZWave Library](https://github.com/OpenZWave/open-zwave-web/raw/master/gfx/OZW_SF.png)
 ==================
 
 Our goal is to create free software library that interfaces with selected Z-Wave PC controllers, allowing anyone to create applications that manipulate and respond to devices on a Z-Wave network, without requiring in-depth knowledge of the Z-Wave protocol.
@@ -14,11 +14,16 @@ There is a example application on how to interface with the library called MinOZ
 If you are using a Application that uses OZW, you should first check with the Application Developers for support. As OZW is a library used by dozens of large opensource home automation applications, we can not support application related issues here. If your application developer indicates the problem may be with OZW, please follow the guidelines below. 
 
 First thing you should do if you are running into troubles is search our [mailing list](https://groups.google.com/forum/#!forum/openzwave). There is a high chance that your problem may have already been discussed on the list. 
-If your still having problems, you should Generate a Log file and upload your Log to the [Log Analyzer on our homepage](http://www.openzwave.com/log-analyzer), which will check for common issues, and provide some basic recommendations. Please follow the instructions on that page to ensure your log file contains the relevant information. 
+If you're still having problems, you should Generate a Log file and upload your Log to the [Log Analyzer on our homepage](http://www.openzwave.com/log-analyzer), which will check for common issues, and provide some basic recommendations. Please follow the instructions on that page to ensure your log file contains the relevant information. 
 
 If you think you have found a bug, please see the next section. 
 
 For General Questions/How Do I etc, please post a message to our [mailing list](https://groups.google.com/forum/#!forum/openzwave)
+
+## Language Wrappers
+A number of members of the community have developed wrappers for OpenZWave for other languages. Those actively maintained wrappers can be found at the OpenZWave Organisation page at https://github.com/OpenZWave
+
+If you have developed a wrapper for another language, and would like to publish it under the OpenZWave organisation (and gain access to things like CI, Distribution Build Servers etc) please contact Fishwaldo on our mailing list. 
 
 ## Opening or Contributing to a Issue on Github
 Z-Wave is a reasonably complex protocol, and thus, it almost always necessary for us to review a OZW Log file to determine what’s going on. As GitHub does not support attachments on Issues, please upload a [LogFile](http://www.openzwave.com/log-analyzer) and then create a issue on [GitHub](https://github.com/OpenZWave/open-zwave/issues). Please include a link to the LogFile Scan results (check the "Public Results" button on the results page and copy the URL it links to). 
@@ -36,11 +41,18 @@ We are happy to accept Pull Requests via GitHub. A few things to follow when pre
 4. Finally, if you have signed a NDA with Sigma Designs, we are unable to accept your changes. OZW is developed by reverse engineering and consulting publically available information. We have not signed a NDA with Sigma, and do not want users to infringe upon their agreement with Sigma either. 
 
 ## Final Words
-As mentioned above, Open-ZWave is developed by mainly reverse engineering the protocol as well as consulting various public information on the Internet. We have not used any of the Sigma SDK’s or documentation and thus often it will take us a while to support new features of Z-Wave. 
-We have had very preliminary discussions with both the Z-Wave Alliance and Sigma previously but we do not have any "official" endorsement from either of them (though that is a goal for the developers). We do believe that OZW has benefited the Z-Wave ecosystem though, and have received feedback that we are well known by various Z-Wave Vendors. 
-That being said, although our license (LGPL) permits commercial applications (provided your follow the rules) we strong recommend you consult a lawyer prior to implementing OZW support into your application. 
+As of Sept, 2016, Sigma has released a large portion (not all) of the Z-Wave Protocol Specifications into the public domain. Prior to Sept, 2016, OpenZWave was developed by mainly reverse engineering the protocol as well as consulting various public information on the Internet. 
+
+The Z-Wave Specifications can now be found at http://zwavepublic.com/ and we welcome contributions or
+reviews of the specifications against our code base. 
+
+OpenZWave is a opensource program that is LGPL licensed. This does allow commercial applications to utilize the openzwave libary, but we ask that you support us by either contributing any changes back to the community, or consider a donation of Z-Wave hardware to the developers so we can continue to ensure openzwave works well with the z-wave ecosystem. (You should also be aware that of the Z-Wave restrictions about selling software that implements this public standard. Please consult Sigma, or the Z-Wave Alliance for further info)
 
 Of course, for Open Source applications, as long as you abide by our License (LGPL) we would love to welcome you the OZW community!
 
-And for those that are wondering, you cannot use OZW to create Z-Wave Nodes. This is not the goal of the library, and we believe that if we started implementing a software stack that allowed users to start creating Z-Wave Nodes, Sigma designs would not be so happy about our existence. Hence please avoid discussing this topic on our mailing list . 
+And for those that are wondering, you cannot use OZW to create Z-Wave Nodes. This is not the goal of the library. We allow applications to talk to Z-Wave nodes on the network via a Z-Wave Controller. 
 
+<p align="center">
+<img src="https://github.com/OpenZWave/open-zwave/raw/master/docs/images%2Bcss/zwalliance_250x100.jpg"><br>
+OpenZWave is a Affiliate Member of the Z-Wave Alliance
+</p>

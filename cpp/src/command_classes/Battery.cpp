@@ -35,112 +35,104 @@
 
 #include "value_classes/ValueByte.h"
 
-using namespace OpenZWave;
-
-enum BatteryCmd
+namespace OpenZWave
 {
-	BatteryCmd_Get		= 0x02,
-	BatteryCmd_Report	= 0x03
-};
+	namespace Internal
+	{
+		namespace CC
+		{
+
+			enum BatteryCmd
+			{
+				BatteryCmd_Get = 0x02,
+				BatteryCmd_Report = 0x03
+			};
 
 //-----------------------------------------------------------------------------
 // <Battery::RequestState>
 // Request current state from the device
 //-----------------------------------------------------------------------------
-bool Battery::RequestState
-(
-	uint32 const _requestFlags,
-	uint8 const _instance,
-	Driver::MsgQueue const _queue
-)
-{
-	if( _requestFlags & RequestFlag_Dynamic )
-	{
-		return RequestValue( _requestFlags, 0, _instance, _queue );
-	}
+			bool Battery::RequestState(uint32 const _requestFlags, uint8 const _instance, Driver::MsgQueue const _queue)
+			{
+				if (_requestFlags & RequestFlag_Dynamic)
+				{
+					return RequestValue(_requestFlags, ValueID_Index_Battery::Level, _instance, _queue);
+				}
 
-	return false;
-}
+				return false;
+			}
 
 //-----------------------------------------------------------------------------
 // <Battery::RequestValue>
 // Request current value from the device
 //-----------------------------------------------------------------------------
-bool Battery::RequestValue
-(
-	uint32 const _requestFlags,
-	uint8 const _dummy1,	// = 0 (not used)
-	uint8 const _instance,
-	Driver::MsgQueue const _queue
-)
-{
-	if( _instance != 1 )
-	{
-		// This command class doesn't work with multiple instances
-		return false;
-	}
-	if ( IsGetSupported() )
-	{
-		Msg* msg = new Msg( "BatteryCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-		msg->Append( GetNodeId() );
-		msg->Append( 2 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( BatteryCmd_Get );
-		msg->Append( GetDriver()->GetTransmitOptions() );
-		GetDriver()->SendMsg( msg, _queue );
-		return true;
-	} else {
-		Log::Write(  LogLevel_Info, GetNodeId(), "BatteryCmd_Get Not Supported on this node");
-	}
-	return false;
-}
+			bool Battery::RequestValue(uint32 const _requestFlags, uint16 const _dummy1,	// = 0 (not used)
+					uint8 const _instance, Driver::MsgQueue const _queue)
+			{
+				if (_instance != 1)
+				{
+					// This command class doesn't work with multiple instances
+					return false;
+				}
+				if (m_com.GetFlagBool(COMPAT_FLAG_GETSUPPORTED))
+				{
+					Msg* msg = new Msg("BatteryCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
+					msg->Append(GetNodeId());
+					msg->Append(2);
+					msg->Append(GetCommandClassId());
+					msg->Append(BatteryCmd_Get);
+					msg->Append(GetDriver()->GetTransmitOptions());
+					GetDriver()->SendMsg(msg, _queue);
+					return true;
+				}
+				else
+				{
+					Log::Write(LogLevel_Info, GetNodeId(), "BatteryCmd_Get Not Supported on this node");
+				}
+				return false;
+			}
 
 //-----------------------------------------------------------------------------
 // <Battery::HandleMsg>
 // Handle a message from the Z-Wave network
 //-----------------------------------------------------------------------------
-bool Battery::HandleMsg
-(
-	uint8 const* _data,
-	uint32 const _length,
-	uint32 const _instance	// = 1
-)
-{
-	if (BatteryCmd_Report == (BatteryCmd)_data[0])
-	{
-		// We have received a battery level report from the Z-Wave device.
-		// Devices send 0xff instead of zero for a low battery warning.
-		uint8 batteryLevel = _data[1];
-		if( batteryLevel == 0xff )
-		{
-			batteryLevel = 0;
-		}
+			bool Battery::HandleMsg(uint8 const* _data, uint32 const _length, uint32 const _instance	// = 1
+					)
+			{
+				if (BatteryCmd_Report == (BatteryCmd) _data[0])
+				{
+					// We have received a battery level report from the Z-Wave device.
+					// Devices send 0xff instead of zero for a low battery warning.
+					uint8 batteryLevel = _data[1];
+					if (batteryLevel == 0xff)
+					{
+						batteryLevel = 0;
+					}
 
-		Log::Write( LogLevel_Info, GetNodeId(), "Received Battery report from node %d: level=%d", GetNodeId(), batteryLevel );
+					Log::Write(LogLevel_Info, GetNodeId(), "Received Battery report from node %d: level=%d", GetNodeId(), batteryLevel);
 
-		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, 0 ) ) )
-		{
-			value->OnValueRefreshed( batteryLevel );
-			value->Release();
-		}
-		return true;
-	}
-	return false;
-}
+					if (Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>(GetValue(_instance, ValueID_Index_Battery::Level)))
+					{
+						value->OnValueRefreshed(batteryLevel);
+						value->Release();
+					}
+					return true;
+				}
+				return false;
+			}
 
 //-----------------------------------------------------------------------------
 // <Battery::CreateVars>
 // Create the values managed by this command class
 //-----------------------------------------------------------------------------
-void Battery::CreateVars
-(
-	uint8 const _instance
-)
-{
-	if( Node* node = GetNodeUnsafe() )
-	{
-	  	node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Battery Level", "%", true, false, 100, 0 );
-	}
-}
-
+			void Battery::CreateVars(uint8 const _instance)
+			{
+				if (Node* node = GetNodeUnsafe())
+				{
+					node->CreateValueByte(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_Battery::Level, "Battery Level", "%", true, false, 100, 0);
+				}
+			}
+		} // namespace CC
+	} // namespace Internal
+} // namespace OpenZWave
 

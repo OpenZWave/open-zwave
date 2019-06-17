@@ -28,38 +28,43 @@
 #ifndef _SerialControllerImpl_H
 #define _SerialControllerImpl_H
 
-#include <Windows.h>
+#include <windows.h>
 
 #include "Defs.h"
 #include "platform/SerialController.h"
 
 namespace OpenZWave
 {
-	class SerialControllerImpl
+	namespace Internal
 	{
-	public:
-		void ReadThreadProc();
+		namespace Platform
+		{
+			class SerialControllerImpl
+			{
+				public:
+					void ReadThreadProc();
 
-	private:
-		friend class SerialController;
+				private:
+					friend class SerialController;
 
-		SerialControllerImpl( SerialController* _owner );
-		~SerialControllerImpl();
+					SerialControllerImpl(SerialController* _owner);
+					~SerialControllerImpl();
 
-		bool Open();
-		void Close();
+					bool Open();
+					void Close();
 
-		uint32 Write( uint8* _buffer, uint32 _length );
-		
-		bool Init( uint32 const _attempts );
-		void Read();
+					uint32 Write(uint8* _buffer, uint32 _length);
 
-		SerialController*			m_owner;
-		HANDLE						m_hThread;
-		HANDLE						m_hExit;
-		HANDLE						m_hSerialController;
-	};
+					bool Init(uint32 const _attempts);
+					void Read();
 
+					SerialController* m_owner;
+					HANDLE m_hThread;
+					HANDLE m_hExit;
+					HANDLE m_hSerialController;
+			};
+		} // namespace Platform
+	} // namespace Internal
 } // namespace OpenZWave
 
 #endif //_SerialControllerImpl_H

@@ -42,32 +42,37 @@
 
 namespace OpenZWave
 {
-	class SerialControllerImpl
+	namespace Internal
 	{
-	public:
-		void ReadThreadProc( Event* _exitEvent );
+		namespace Platform
+		{
+			class SerialControllerImpl
+			{
+				public:
+					void ReadThreadProc(Event* _exitEvent);
 
-	private:
-		friend class SerialController;
+				private:
+					friend class SerialController;
 
-		SerialControllerImpl( SerialController* _owner );
-		~SerialControllerImpl();
+					SerialControllerImpl(SerialController* _owner);
+					~SerialControllerImpl();
 
-		bool Open();
-		void Close();
+					bool Open();
+					void Close();
 
-		uint32 Write( uint8* _buffer, uint32 _length );
+					uint32 Write(uint8* _buffer, uint32 _length);
 
-		bool Init( uint32 const _attempts );
-		void Read();
+					bool Init(uint32 const _attempts);
+					void Read(Event* _exitEvent);
 
-		SerialController*	m_owner;
-		int			m_hSerialController;
-		Thread*			m_pThread;
+					SerialController* m_owner;
+					int m_hSerialController;
+					Thread* m_pThread;
 
-		static void SerialReadThreadEntryPoint( Event* _exitEvent, void* _content );
-	};
-
+					static void SerialReadThreadEntryPoint(Event* _exitEvent, void* _content);
+			};
+		} // namespace platform
+	} // namespace Internal
 } // namespace OpenZWave
 
 #endif //_SerialControllerImpl_H

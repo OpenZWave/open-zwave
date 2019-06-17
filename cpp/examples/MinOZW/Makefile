@@ -10,16 +10,18 @@
 .PHONY:	default clean
 
 
-DEBUG_CFLAGS    := -Wall -Wno-format -ggdb -DDEBUG
-RELEASE_CFLAGS  := -Wall -Wno-unknown-pragmas -Wno-format -O3
+DEBUG_CFLAGS    := -Wall -Wno-format -ggdb -DDEBUG $(CPPFLAGS)
+RELEASE_CFLAGS  := -Wall -Wno-unknown-pragmas -Wno-format -O3 $(CPPFLAGS)
 
 DEBUG_LDFLAGS	:= -g
 
 top_srcdir := $(abspath $(dir $(lastword $(MAKEFILE_LIST)))../../../)
 
+#where is put the temporary library
+LIBDIR  	?= $(top_builddir)
 
 INCLUDES	:= -I $(top_srcdir)/cpp/src -I $(top_srcdir)/cpp/tinyxml/ -I $(top_srcdir)/cpp/hidapi/hidapi/
-LIBS =  $(wildcard $(LIBDIR)/*.so $(LIBDIR)/*.dylib $(top_builddir)/*.so $(top_builddir)/*.dylib $(top_builddir)/cpp/build/*.so $(top_builddir)/cpp/build/*.dylib )
+LIBS =  $(wildcard $(LIBDIR)/*.so $(LIBDIR)/*.dylib $(top_builddir)/cpp/build/*.so $(top_builddir)/cpp/build/*.dylib )
 LIBSDIR = $(abspath $(dir $(firstword $(LIBS))))
 minozwsrc := $(notdir $(wildcard $(top_srcdir)/cpp/examples/MinOZW/*.cpp))
 VPATH := $(top_srcdir)/cpp/examples/MinOZW
@@ -35,21 +37,37 @@ include $(top_srcdir)/cpp/build/support.mk
 #if we are on a Mac, add these flags and libs to the compile and link phases 
 ifeq ($(UNAME),Darwin)
 CFLAGS += -DDARWIN
-ARCH += -arch i386 -arch x86_64
+ifeq ($(DARWIN_MOJAVE_UP),1)
+# Newer macOS releases don't support i386 so only build 64-bit
+TARCH	+= -arch x86_64
+else
+# Support older versions of OSX that may need to build both 32-bit and 64-bit
+TARCH	+= -arch i386 -arch x86_64
+endif
 endif
 
 # Dup from main makefile, but that is not included when building here..
 ifeq ($(UNAME),FreeBSD)
-ifeq (,$(wildcard /usr/include/iconv.h))
+LDFLAGS+= -lusb
+
+ifeq ($(shell test $$(uname -U) -ge 1002000; echo $$?),1)
+ifeq (,$(wildcard /usr/local/include/iconv.h))
+$(error FreeBSD pre 10.2: Please install libiconv from ports)
+else
 CFLAGS += -I/usr/local/include
 LDFLAGS+= -L/usr/local/lib -liconv
 endif
-LDFLAGS+= -lusb
+endif
+
+else ifeq ($(UNAME),NetBSD)
+LDFLAGS+= -L/usr/pkg/lib -lusb-1.0
+else ifeq ($(UNAME),SunOS)
+LDFLAGS+= -lusb-1.0
 endif
 
 $(OBJDIR)/MinOZW:	$(patsubst %.cpp,$(OBJDIR)/%.o,$(minozwsrc))
 	@echo "Linking $(OBJDIR)/MinOZW"
-	$(LD) $(LDFLAGS) $(ARCH) -o $@ $< $(LIBS) -pthread
+	$(LD) $(LDFLAGS) $(TARCH) -o $@ $< $(LIBS) -pthread
 
 $(top_builddir)/MinOZW: $(top_srcdir)/cpp/examples/MinOZW/MinOZW.in $(OBJDIR)/MinOZW
 	@echo "Creating Temporary Shell Launch Script"

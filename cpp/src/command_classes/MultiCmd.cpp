@@ -33,45 +33,51 @@
 #include "Driver.h"
 #include "platform/Log.h"
 
-using namespace OpenZWave;
-
+namespace OpenZWave
+{
+	namespace Internal
+	{
+		namespace CC
+		{
 
 //-----------------------------------------------------------------------------
 // <MultiCmd::HandleMsg>
 // Handle a message from the Z-Wave network
 //-----------------------------------------------------------------------------
-bool MultiCmd::HandleMsg
-(
-	uint8 const* _data,
-	uint32 const _length,
-	uint32 const _instance	// = 1
-)
-{
-	if( MultiCmdCmd_Encap == (MultiCmdCmd)_data[0] )
-	{
-		Log::Write( LogLevel_Info, GetNodeId(), "Received encapsulated multi-command from node %d", GetNodeId() );
-
-		if( Node const* node = GetNodeUnsafe() )
-		{
-			// Iterate over commands
-			uint8 base = 2;
-			for( uint8 i=0; i<_data[1]; ++i )
+			bool MultiCmd::HandleMsg(uint8 const* _data, uint32 const _length, uint32 const _instance	// = 1
+					)
 			{
-				uint8 length = _data[base];
-				uint8 commandClassId = _data[base+1];
-
-				if( CommandClass* pCommandClass = node->GetCommandClass( commandClassId ) )
+				if (MultiCmdCmd_Encap == (MultiCmdCmd) _data[0])
 				{
-					pCommandClass->HandleMsg( &_data[base+2], length-1 );
+					Log::Write(LogLevel_Info, GetNodeId(), "Received encapsulated multi-command from node %d", GetNodeId());
+
+					if (Node const* node = GetNodeUnsafe())
+					{
+						// Iterate over commands
+						uint8 base = 2;
+						for (uint8 i = 0; i < _data[1]; ++i)
+						{
+							uint8 length = _data[base];
+							uint8 commandClassId = _data[base + 1];
+
+							if (CommandClass* pCommandClass = node->GetCommandClass(commandClassId))
+							{
+								if (!pCommandClass->IsAfterMark())
+									pCommandClass->HandleMsg(&_data[base + 2], length - 1);
+								else
+									pCommandClass->HandleIncomingMsg(&_data[base + 2], length - 1);
+							}
+
+							base += (length + 1);
+						}
+					}
+
+					Log::Write(LogLevel_Info, GetNodeId(), "End of encapsulated multi-command from node %d", GetNodeId());
+					return true;
 				}
-
-				base += (length + 1);
+				return false;
 			}
-		}
-
-		Log::Write( LogLevel_Info, GetNodeId(), "End of encapsulated multi-command from node %d", GetNodeId() );
-		return true;
-	}
-	return false;
-}
+		} // namespace CC
+	} // namespace Internal
+} // namespace OpenZWave
 

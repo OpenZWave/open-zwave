@@ -30,78 +30,74 @@
 
 #ifdef WIN32
 #include "platform/windows/EventImpl.h"	// Platform-specific implementation of an event
+#elif defined WINRT
+#include "platform/winRT/EventImpl.h"	// Platform-specific implementation of an event
 #else
 #include "platform/unix/EventImpl.h"	// Platform-specific implementation of an event
 #endif
 
-using namespace OpenZWave;
+namespace OpenZWave
+{
+	namespace Internal
+	{
+		namespace Platform
+		{
 
 //-----------------------------------------------------------------------------
 //	<Event::Event>
 //	Constructor
 //-----------------------------------------------------------------------------
-Event::Event
-(
-):
-	m_pImpl( new EventImpl() )
-{
-}
+			Event::Event() :
+					m_pImpl(new EventImpl())
+			{
+			}
 
 //-----------------------------------------------------------------------------
 //	<Event::~Event>
 //	Destructor
 //-----------------------------------------------------------------------------
-Event::~Event
-(
-)
-{
-	delete m_pImpl;
-}
+			Event::~Event()
+			{
+				delete m_pImpl;
+			}
 
 //-----------------------------------------------------------------------------
 //	<Event::Set>
 //	Set the event to signalled
 //-----------------------------------------------------------------------------
-void Event::Set
-(
-)
-{
-	m_pImpl->Set();
-	Notify();			// Notify any watchers that the event is now set
-}
+			void Event::Set()
+			{
+				m_pImpl->Set();
+				Notify();			// Notify any watchers that the event is now set
+			}
 
 //-----------------------------------------------------------------------------
 //	<Event::Reset>
 //	Set the event to not signalled
 //-----------------------------------------------------------------------------
-void Event::Reset
-(
-)
-{
-	m_pImpl->Reset();
-}
+			void Event::Reset()
+			{
+				m_pImpl->Reset();
+			}
 
 //-----------------------------------------------------------------------------
 //	<Event::IsSignalled>
 //	Test whether the event is set
 //-----------------------------------------------------------------------------
-bool Event::IsSignalled
-(
-)
-{
-	return m_pImpl->IsSignalled();
-}
+			bool Event::IsSignalled()
+			{
+				return m_pImpl->IsSignalled();
+			}
 
 //-----------------------------------------------------------------------------
 //	<Event::Wait>
 //	Wait for the event to become signalled
 //-----------------------------------------------------------------------------
-bool Event::Wait
-(
-	int32 const _timeout
-)
-{
-	return m_pImpl->Wait( _timeout );
-}
-
+			bool Event::Wait(int32 const _timeout)
+			{
+				return m_pImpl->Wait(_timeout);
+			}
+		} // namespace Platform
+	} // namespace Internal
+} // namespace OpenZWave
 

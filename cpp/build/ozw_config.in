@@ -1,0 +1,62 @@
+#!/bin/sh
+# Little Utility Application to get the OpenZwave Build Configuration
+#
+# You can use it in Makefiles etc as:
+# gcc `ozw_config --Libs` `ozw_config --Cflags` test.c -o test
+echoerr() { echo "$@" 1>&2; }
+
+function getValue {
+	IFS="=: "
+	while read -r name value 
+	do
+		if [ "--"$name == $1 ]
+		then
+			echo "${value//\"/}" | tr -d '\r\n'
+		fi
+	done <<< $inputfile
+}
+
+pcfile=@pkgconfigfile@
+key=$1
+if [ "$key" == "--with-pc" ]
+then
+	pcfile=$2
+	key=$3
+fi
+if [ ! -f $pcfile ]
+then
+	echoerr "$pcfile does not exist"
+	exit 128
+fi
+
+inputfile=`cat $pcfile | grep -vE '^(\s*$|#)'`
+if [ ! -z $key ] || [ "$key" == "--help" ] 
+then
+	if [ "$key" == "--Libs" ]
+	then
+		value="-L$(getValue "--libdir") -lopenzwave"
+	elif [ "$key" == "--Cflags" ]
+	then
+		value="-I$(getValue "--includedir")"
+	else
+		value=$(getValue $key)
+	fi
+	if [ ! -z "$value" ]
+	then
+		echo $value
+	else
+		exit 128
+	fi
+else
+	echo "OpenZWave Build Configuration Utility"
+	echo ""
+	echo "Options Available:"
+	echo "--with-pc <file> - Use a Alternative pc file"
+	echo ""
+	echo "Get Build Variables:"
+	IFS="=: "
+	while read -r name value 
+	do
+		echo "--${name//\"/}"
+	done <<< $inputfile
+fi

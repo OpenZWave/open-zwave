@@ -48,7 +48,7 @@ When make install is called the following happens:
 	Installed into (prefix)/bin/ directory
 
 The Static Version of the library is never installed, but will be created in
-cpp/lib directory after a successfull make.
+top build directory after a successfull make.
 
 Windows Versions
 ================

@@ -35,196 +35,171 @@
 
 #include "value_classes/ValueList.h"
 
-using namespace OpenZWave;
-
-enum SwitchAllCmd
+namespace OpenZWave
 {
-	SwitchAllCmd_Set	= 0x01,
-	SwitchAllCmd_Get	= 0x02,
-	SwitchAllCmd_Report	= 0x03,
-	SwitchAllCmd_On		= 0x04,
-	SwitchAllCmd_Off	= 0x05
-};
+	namespace Internal
+	{
+		namespace CC
+		{
 
-static char const* c_switchAllStateName[] =
-{
-	"Disabled",
-	"Off Enabled",
-	"On Enabled",
-	"On and Off Enabled"
-};
+			enum SwitchAllCmd
+			{
+				SwitchAllCmd_Set = 0x01,
+				SwitchAllCmd_Get = 0x02,
+				SwitchAllCmd_Report = 0x03,
+				SwitchAllCmd_On = 0x04,
+				SwitchAllCmd_Off = 0x05
+			};
+
+			static char const* c_switchAllStateName[] =
+			{ "Disabled", "Off Enabled", "On Enabled", "On and Off Enabled" };
 
 //-----------------------------------------------------------------------------
 // <SwitchAll::RequestState>
 // Request current state from the device
 //-----------------------------------------------------------------------------
-bool SwitchAll::RequestState
-(
-	uint32 const _requestFlags,
-	uint8 const _instance,
-	Driver::MsgQueue const _queue
-)
-{
-	if( _requestFlags & RequestFlag_Session )
-	{
-		return RequestValue( _requestFlags, 0, _instance, _queue );
-	}
+			bool SwitchAll::RequestState(uint32 const _requestFlags, uint8 const _instance, Driver::MsgQueue const _queue)
+			{
+				if (_requestFlags & RequestFlag_Session)
+				{
+					return RequestValue(_requestFlags, 0, _instance, _queue);
+				}
 
-	return false;
-}
+				return false;
+			}
 
 //-----------------------------------------------------------------------------
 // <SwitchAll::RequestValue>
 // Request current value from the device
 //-----------------------------------------------------------------------------
-bool SwitchAll::RequestValue
-(
-	uint32 const _requestFlags,
-	uint8 const _dummy1,	// = 0 (not used)
-	uint8 const _instance,
-	Driver::MsgQueue const _queue
-)
-{
-	if ( IsGetSupported() )
-	{
-		Msg* msg = new Msg( "SwitchAllCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-		msg->SetInstance( this, _instance );
-		msg->Append( GetNodeId() );
-		msg->Append( 2 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( SwitchAllCmd_Get );
-		msg->Append( GetDriver()->GetTransmitOptions() );
-		GetDriver()->SendMsg( msg, _queue );
-		return true;
-	} else {
-		Log::Write(  LogLevel_Info, GetNodeId(), "SwitchAllCmd_Get Not Supported on this node");
-	}
-	return false;
-}
+			bool SwitchAll::RequestValue(uint32 const _requestFlags, uint16 const _dummy1,	// = 0 (not used)
+					uint8 const _instance, Driver::MsgQueue const _queue)
+			{
+				if (m_com.GetFlagBool(COMPAT_FLAG_GETSUPPORTED))
+				{
+					Msg* msg = new Msg("SwitchAllCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
+					msg->SetInstance(this, _instance);
+					msg->Append(GetNodeId());
+					msg->Append(2);
+					msg->Append(GetCommandClassId());
+					msg->Append(SwitchAllCmd_Get);
+					msg->Append(GetDriver()->GetTransmitOptions());
+					GetDriver()->SendMsg(msg, _queue);
+					return true;
+				}
+				else
+				{
+					Log::Write(LogLevel_Info, GetNodeId(), "SwitchAllCmd_Get Not Supported on this node");
+				}
+				return false;
+			}
 
 //-----------------------------------------------------------------------------
 // <SwitchAll::HandleMsg>
 // Handle a message from the Z-Wave network
 //-----------------------------------------------------------------------------
-bool SwitchAll::HandleMsg
-(
-	uint8 const* _data,
-	uint32 const _length,
-	uint32 const _instance	// = 1
-)
-{
-	if (SwitchAllCmd_Report == (SwitchAllCmd)_data[0])
-	{
-		if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, 0 ) ) )
-		{
-			value->OnValueRefreshed( (int32)_data[1] );
-			value->Release();
-			if (value->GetItem())
-				Log::Write( LogLevel_Info, GetNodeId(), "Received SwitchAll report from node %d: %s", GetNodeId(), value->GetItem()->m_label.c_str() );
-			else
-				Log::Write( LogLevel_Info, GetNodeId(), "Received SwitchAll report from node %d: %d", GetNodeId(), _data[1]);
-		}
- 		return true;
-	}
+			bool SwitchAll::HandleMsg(uint8 const* _data, uint32 const _length, uint32 const _instance	// = 1
+					)
+			{
+				if (SwitchAllCmd_Report == (SwitchAllCmd) _data[0])
+				{
+					if (Internal::VC::ValueList* value = static_cast<Internal::VC::ValueList*>(GetValue(_instance, ValueID_Index_SwitchAll::SwitchAll)))
+					{
+						value->OnValueRefreshed((int32) _data[1]);
+						value->Release();
+						if (value->GetItem())
+							Log::Write(LogLevel_Info, GetNodeId(), "Received SwitchAll report from node %d: %s", GetNodeId(), value->GetItem()->m_label.c_str());
+						else
+							Log::Write(LogLevel_Info, GetNodeId(), "Received SwitchAll report from node %d: %d", GetNodeId(), _data[1]);
+					}
+					return true;
+				}
 
-	return false;
-}
+				return false;
+			}
 
 //-----------------------------------------------------------------------------
 // <SwitchAll::SetValue>
 // Set the device's response to SWITCH_ALL commands
 //-----------------------------------------------------------------------------
-bool SwitchAll::SetValue
-(
-	Value const& _value
-)
-{
-	if( ValueID::ValueType_List == _value.GetID().GetType() )
-	{
-		ValueList const* value = static_cast<ValueList const*>(&_value);
-		ValueList::Item const *item = value->GetItem();
-		if (item == NULL)
-			return false;
+			bool SwitchAll::SetValue(Internal::VC::Value const& _value)
+			{
+				if (ValueID::ValueType_List == _value.GetID().GetType())
+				{
+					Internal::VC::ValueList const* value = static_cast<Internal::VC::ValueList const*>(&_value);
+					Internal::VC::ValueList::Item const *item = value->GetItem();
+					if (item == NULL)
+						return false;
 
-		Log::Write( LogLevel_Info, GetNodeId(), "SwitchAll::Set - %s on node %d", item->m_label.c_str(), GetNodeId() );
-		Msg* msg = new Msg( "SwitchAllCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-		msg->SetInstance( this, _value.GetID().GetInstance() );
-		msg->Append( GetNodeId() );
-		msg->Append( 3 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( SwitchAllCmd_Set );
-		msg->Append( (uint8)item->m_value );
-		msg->Append( GetDriver()->GetTransmitOptions() );
-		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
-		return true;
-	}
+					Log::Write(LogLevel_Info, GetNodeId(), "SwitchAll::Set - %s on node %d", item->m_label.c_str(), GetNodeId());
+					Msg* msg = new Msg("SwitchAllCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
+					msg->SetInstance(this, _value.GetID().GetInstance());
+					msg->Append(GetNodeId());
+					msg->Append(3);
+					msg->Append(GetCommandClassId());
+					msg->Append(SwitchAllCmd_Set);
+					msg->Append((uint8) item->m_value);
+					msg->Append(GetDriver()->GetTransmitOptions());
+					GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
+					return true;
+				}
 
-	return false;
-}
+				return false;
+			}
 
 //-----------------------------------------------------------------------------
 // <SwitchAll::Off>
 // Send a command to switch all devices off
 //-----------------------------------------------------------------------------
-void SwitchAll::Off
-(
-	Driver* _driver,
-	uint8 const _nodeId
-)
-{
-	Log::Write( LogLevel_Info, _nodeId, "SwitchAll::Off (Node=%d)", _nodeId );
-	Msg* msg = new Msg( "SwitchAllCmd_Off", _nodeId, REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-	msg->Append( _nodeId );
-	msg->Append( 2 );
-	msg->Append( StaticGetCommandClassId() );
-	msg->Append( SwitchAllCmd_Off );
-	msg->Append( _driver->GetTransmitOptions() );
-	_driver->SendMsg( msg, Driver::MsgQueue_Send );
-}
+			void SwitchAll::Off(Driver* _driver, uint8 const _nodeId)
+			{
+				Log::Write(LogLevel_Info, _nodeId, "SwitchAll::Off (Node=%d)", _nodeId);
+				Msg* msg = new Msg("SwitchAllCmd_Off", _nodeId, REQUEST, FUNC_ID_ZW_SEND_DATA, true);
+				msg->Append(_nodeId);
+				msg->Append(2);
+				msg->Append(StaticGetCommandClassId());
+				msg->Append(SwitchAllCmd_Off);
+				msg->Append(_driver->GetTransmitOptions());
+				_driver->SendMsg(msg, Driver::MsgQueue_Send);
+			}
 
 //-----------------------------------------------------------------------------
 // <SwitchAll::On>
 // Send a command to switch all devices on
 //-----------------------------------------------------------------------------
-void SwitchAll::On
-(
-	Driver* _driver,
-	uint8 const _nodeId
-)
-{
-	Log::Write( LogLevel_Info, _nodeId, "SwitchAll::On (Node=%d)", _nodeId );
-	Msg* msg = new Msg( "SwitchAllCmd_On", _nodeId, REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-	msg->Append( _nodeId );
-	msg->Append( 2 );
-	msg->Append( StaticGetCommandClassId() );
-	msg->Append( SwitchAllCmd_On );
-	msg->Append( _driver->GetTransmitOptions() );
-	_driver->SendMsg( msg, Driver::MsgQueue_Send );
-}
+			void SwitchAll::On(Driver* _driver, uint8 const _nodeId)
+			{
+				Log::Write(LogLevel_Info, _nodeId, "SwitchAll::On (Node=%d)", _nodeId);
+				Msg* msg = new Msg("SwitchAllCmd_On", _nodeId, REQUEST, FUNC_ID_ZW_SEND_DATA, true);
+				msg->Append(_nodeId);
+				msg->Append(2);
+				msg->Append(StaticGetCommandClassId());
+				msg->Append(SwitchAllCmd_On);
+				msg->Append(_driver->GetTransmitOptions());
+				_driver->SendMsg(msg, Driver::MsgQueue_Send);
+			}
 
 //-----------------------------------------------------------------------------
 // <SwitchAll::CreateVars>
 // Create the values managed by this command class
 //-----------------------------------------------------------------------------
-void SwitchAll::CreateVars
-(
-	uint8 const _instance
-)
-{
-	if( Node* node = GetNodeUnsafe() )
-	{
-		vector<ValueList::Item> items;
-		for( int i=0; i<4; ++i )
-		{
-			ValueList::Item item;
-			item.m_label = c_switchAllStateName[i];
-			item.m_value = (i==3) ? 0x000000ff : i;
-			items.push_back( item );
-		}
+			void SwitchAll::CreateVars(uint8 const _instance)
+			{
+				if (Node* node = GetNodeUnsafe())
+				{
+					vector<Internal::VC::ValueList::Item> items;
+					for (int i = 0; i < 4; ++i)
+					{
+						Internal::VC::ValueList::Item item;
+						item.m_label = c_switchAllStateName[i];
+						item.m_value = (i == 3) ? 0x000000ff : i;
+						items.push_back(item);
+					}
 
-		node->CreateValueList(  ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Switch All", "", false, false, 1, items, 0, 0 );
-	}
-}
-
-
+					node->CreateValueList(ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_SwitchAll::SwitchAll, "Switch All", "", false, false, 1, items, 0, 0);
+				}
+			}
+		} // namespace CC
+	} // namespace Internal
+} // namespace OpenZWave
 
