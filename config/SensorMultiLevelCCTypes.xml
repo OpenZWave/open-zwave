@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SensorTypes xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
+<SensorTypes xmlns='https://github.com/OpenZWave/open-zwave' Revision="3">
 	<SensorType id="1" name="Air Temperature">
 		<SensorScale id="0" name="Celsius">C</SensorScale>
 		<SensorScale id="1" name="Fahrenheit">F</SensorScale>
@@ -8,9 +8,10 @@
 		<SensorScale id="0" name="Percent">%</SensorScale>
 		<SensorScale id="1" name="Dimensionless"></SensorScale>
 	</SensorType>
-	<SensorType id="3" name="Luminance">
+	<!-- DKD13867 Z-Wave Specification release 2019B registry says Illuminance and Lux-->
+	<SensorType id="3" name="Illuminance">
 		<SensorScale id="0" name="Percent">%</SensorScale>
-		<SensorScale id="1" name="Lux">cd/m2</SensorScale>
+		<SensorScale id="1" name="Lux">Lux</SensorScale>
 	</SensorType>
 	<SensorType id="4" name="Power">
 		<SensorScale id="0" name="Watt">Watt</SensorScale>
