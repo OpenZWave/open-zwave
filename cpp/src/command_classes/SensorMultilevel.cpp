@@ -187,7 +187,7 @@ namespace OpenZWave
 						msg->Append(4);
 						msg->Append(GetCommandClassId());
 						msg->Append(SensorMultilevelCmd_Get);
-						msg->Append(_index);
+						msg->Append((uint8_t)(_index & 0xFF));
 						msg->Append(scale);
 						msg->Append(GetDriver()->GetTransmitOptions());
 						GetDriver()->SendMsg(msg, _queue);
