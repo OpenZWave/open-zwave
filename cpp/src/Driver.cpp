@@ -1184,7 +1184,7 @@ bool Driver::WriteMsg(string const &msg)
 
 	Log::Write(LogLevel_Detail, "");
 
-	if (m_nonceReportSent > 0)
+	if (m_nonceReportSent > 0 && node != NULL)
 	{
 		/* send a new NONCE report */
 		SendNonceKey(m_nonceReportSent, node->GenerateNonceKey());
