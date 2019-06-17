@@ -379,6 +379,42 @@ if (defined($CFG::versiondb{"config/NotificationCCTypes.xml"}))
 }
 }
 
+sub CheckSensorMultiLevelCCTypes {
+    my %configfiles = map { lc $_ => 1} @{$_[0]};
+    # create object
+    my $xml = new XML::Simple;
+    my $data = $xml->XMLin("config/SensorMultiLevelCCTypes.xml", KeyAttr => "", ForceArray => [ 'SensorTypes' ] );
+    # do a check of MFS Revision etc
+    my $md5 = digest_file_hex("config/SensorMultiLevelCCTypes.xml", "SHA-512");
+    if (defined($CFG::versiondb{"config/SensorMultiLevelCCTypes.xml"}))
+    {
+        if ($CFG::versiondb{"config/SensorMultiLevelCCTypes.xml"}{md5} != $md5)
+        {
+            my $dbr = $CFG::versiondb{"config/SensorMultiLevelCCTypes.xml"}->{Revision};
+            my $fr = $data->{Revision};
+            if ($dbr ge $fr )
+            {
+                print "config/SensorMultiLevelCCTypes.xml"." - md5 does not match Database - Database Revision:";
+                print $CFG::versiondb{"config/SensorMultiLevelCCTypes.xml"}->{Revision}." File Revision:".int $data->{Revision};
+                print "\n";
+                LogError("config/SensorMultiLevelCCTypes.xml", 8, "Revision Number Was Not Bumped");
+            } else {
+                my %versions;
+                $versions{md5} = $md5;
+                $versions{Revision} = $data->{Revision};
+                $CFG::versiondb{"config/SensorMultiLevelCCTypes.xml"} = \%versions;
+                print("config/SensorMultiLevelCCTypes.xml"." - Updating Database\n");
+            }
+        }
+    } else {
+        my %versions;
+        $versions{md5} = $md5;
+        $versions{Revision} = $data->{Revision};
+        $CFG::versiondb{"config/SensorMultiLevelCCTypes.xml"} = \%versions;
+        print("config/SensorMultiLevelCCTypes.xml"." - Adding new file to Database\n");
+    }
+}
+
 
 sub PrettyPrintErrors() {
 	if (length(%errors) > 1) {
@@ -576,6 +612,7 @@ foreach my $key (@dirs)
 CheckFileExists(\@filelist);
 CheckLocalization();
 CheckNotificationCCTypes();
+CheckSensorMultiLevelCCTypes();
 
 if ($doxml == 0) { 
 	PrettyPrintErrors();
