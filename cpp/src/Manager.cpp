@@ -40,6 +40,7 @@
 #include "NotificationCCTypes.h"
 #include "Options.h"
 #include "Scene.h"
+#include "SensorMultiLevelCCTypes.h"
 #include "Utils.h"
 
 #include "platform/Mutex.h"
@@ -195,7 +196,7 @@ Manager::Manager() :
 	Log::Write(LogLevel_Always, "OpenZwave Version %s Starting Up", getVersionLongAsString().c_str());
 	Log::Write(LogLevel_Always, "Using Language Localization %s", Internal::Localization::Get()->GetSelectedLang().c_str());
 	Internal::NotificationCCTypes::Create();
-
+	Internal::SensorMultiLevelCCTypes::Create();
 }
 
 //-----------------------------------------------------------------------------
