@@ -2586,6 +2586,14 @@ namespace OpenZWave
 			 * \return a string containing the requested metadata
 			 */
 			string const GetMetaData(uint32 const _homeId, uint8 const _nodeId, Node::MetaDataFields _metadata);
+
+			/**
+			* \brief Retrieve metadataField enum value based its name
+			* \param name The Node::MetaDataFields enum member name as string
+			* \return the index of that entry in Node::MetaDataFields
+			*/
+			Node::MetaDataFields const GetMetaDataId(string const name);
+
 			/**
 			 * \brief Retrieve ChangeLogs about a configuration revision
 			 * \param _homeId The Home ID of the driver for the node

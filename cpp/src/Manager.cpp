@@ -4733,6 +4733,15 @@ return "";
 }
 
 //-----------------------------------------------------------------------------
+// <Manager::GetMetaDataId>
+// Helper function to get a specific MetaDataField based on its name
+//-----------------------------------------------------------------------------
+Node::MetaDataFields const GetMetaDataId(string const name)
+{
+	return Node::GetMetaDataId(name);
+}
+
+//-----------------------------------------------------------------------------
 // <Manager::GetChangeLog>
 // Retrieve ChangeLog of a Configuration File about a Node.
 //-----------------------------------------------------------------------------
