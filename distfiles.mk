@@ -329,6 +329,8 @@ DISTFILES =	.gitignore \
 	config/heiman/HS1WL-Z.xml \
 	config/heiman/HS2SK-Z.xml \
 	config/heiman/HS2WD-Z.xml \
+	config/heltun/he-zw-sw-5a-1.xml \
+	config/heltun/he-zw-therm-fc1.xml \
 	config/heltun/he-zw-therm-fl2.xml \
 	config/homeseer/ezmotionplus.xml \
 	config/homeseer/hs-fc200plus.xml \
@@ -712,6 +714,7 @@ DISTFILES =	.gitignore \
 	config/images/qubino/ZMNHVDx.png \
 	config/images/qubino/ZMNHWD1.png \
 	config/images/qubino/ZMNHYDx.png \
+	config/images/qubino/zmnhxdx.png \
 	config/images/quby/qb2.png \
 	config/images/rcs/em52-zw.png \
 	config/images/rcs/therm0009.png \
@@ -1487,6 +1490,7 @@ DISTFILES =	.gitignore \
 	cpp/src/value_classes/ValueByte.h \
 	cpp/src/value_classes/ValueDecimal.cpp \
 	cpp/src/value_classes/ValueDecimal.h \
+	cpp/src/value_classes/ValueID.cpp \
 	cpp/src/value_classes/ValueID.h \
 	cpp/src/value_classes/ValueInt.cpp \
 	cpp/src/value_classes/ValueInt.h \
