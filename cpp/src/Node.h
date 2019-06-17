@@ -903,9 +903,10 @@ namespace OpenZWave
 					string description;
 			};
 			string const GetMetaData(MetaDataFields);
-			MetaDataFields GetMetaDataId(string);
 			string const GetMetaDataString(MetaDataFields);
 			ChangeLogEntry const GetChangeLog(uint32_t);
+		public:
+			MetaDataFields GetMetaDataId(string);
 
 		private:
 			void ReadMetaDataFromXML(TiXmlElement const* _valueElement);
