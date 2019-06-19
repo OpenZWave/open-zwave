@@ -136,7 +136,7 @@ void OnNotification
 			// One of the node values has changed
 			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
 			{
-				nodeInfo = nodeInfo;		// placeholder for real action
+				(void)nodeInfo;		// placeholder for real action
 			}
 			break;
 		}
@@ -146,7 +146,7 @@ void OnNotification
 			// One of the node's association groups has changed
 			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
 			{
-				nodeInfo = nodeInfo;		// placeholder for real action
+				(void)nodeInfo;		// placeholder for real action
 			}
 			break;
 		}
@@ -186,7 +186,7 @@ void OnNotification
 			// basic_set or hail message.
 			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
 			{
-				nodeInfo = nodeInfo;		// placeholder for real action
+				(void)nodeInfo;		// placeholder for real action
 			}
 			break;
 		}
