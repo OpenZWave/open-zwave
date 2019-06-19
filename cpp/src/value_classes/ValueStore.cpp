@@ -30,6 +30,7 @@
 #include "Manager.h"
 #include "Notification.h"
 #include "Localization.h"
+#include "platform/Log.h"
 
 namespace OpenZWave
 {
@@ -106,7 +107,11 @@ namespace OpenZWave
 					}
 
 					// Now release and remove the value from the store
-					value->Release();
+					int32 references = value->Release();
+					if (references > 0)
+						Log::Write(LogLevel_Warning, "Value Not Deleted - Still in use %d times: CC: %d - %s - %s - %d", references, valueId.GetCommandClassId(), valueId.GetTypeAsString().c_str(), value->GetLabel().c_str(), value->GetID());
+					else
+						Log::Write(LogLevel_Debug, "Value Deleted");
 					m_values.erase(it);
 
 					return true;
