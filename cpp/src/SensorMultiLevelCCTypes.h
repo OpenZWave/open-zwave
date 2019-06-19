@@ -50,7 +50,7 @@ namespace OpenZWave
 						string name;
 						string unit;
 				};
-				typedef std::map<uint8, SensorMultiLevelCCTypes::SensorMultiLevelScales *> SensorScales;
+				typedef std::map<uint8, std::shared_ptr<SensorMultiLevelCCTypes::SensorMultiLevelScales> > SensorScales;
 				class SensorMultiLevelTypes
 				{
 					public:
@@ -79,7 +79,7 @@ namespace OpenZWave
 				//-----------------------------------------------------------------------------
 			private:
 				static SensorMultiLevelCCTypes* m_instance;
-				static std::map<uint32, SensorMultiLevelCCTypes::SensorMultiLevelTypes *> SensorTypes;
+				static std::map<uint32, std::shared_ptr<SensorMultiLevelCCTypes::SensorMultiLevelTypes> > SensorTypes;
 				static uint32 m_revision;
 		};
 	} // namespace Internal

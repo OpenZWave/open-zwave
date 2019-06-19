@@ -3569,7 +3569,7 @@ bool Node::IsNodeReset()
 // <Node::SetProductDetails>
 // Assign a ProductDetails class to this node
 //-----------------------------------------------------------------------------
-void Node::SetProductDetails(Internal::ProductDescriptor *product)
+void Node::SetProductDetails(std::shared_ptr<Internal::ProductDescriptor> product)
 {
 	/* if there is a ProductDescriptor already assigned, remove the reference */
 	if (m_Product)

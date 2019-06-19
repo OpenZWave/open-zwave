@@ -39,7 +39,7 @@ namespace OpenZWave
 	{
 
 		NotificationCCTypes *NotificationCCTypes::m_instance = NULL;
-		std::map<uint32, NotificationCCTypes::NotificationTypes *> NotificationCCTypes::Notifications;
+		std::map<uint32, std::shared_ptr<NotificationCCTypes::NotificationTypes> > NotificationCCTypes::Notifications;
 		uint32 NotificationCCTypes::m_revision(0);
 
 		NotificationCCTypes::NotificationCCTypes()
@@ -232,7 +232,7 @@ namespace OpenZWave
 									aep->name = str;
 									trim(aep->name);
 									if (ne->EventParams.find(aep->id) == ne->EventParams.end())
-										ne->EventParams[aep->id] = aep;
+										ne->EventParams[aep->id] = std::shared_ptr<NotificationEventParams>(aep);
 									else
 									{
 										Log::Write(LogLevel_Warning, "NotificationCCTypes::ReadXML: Error in %s - A AlarmEventParam with id %d already exists. Skipping ", nextElement->GetDocument()->GetUserData(), aep->id);
@@ -242,7 +242,7 @@ namespace OpenZWave
 								nextElement = nextElement->NextSiblingElement();
 							}
 							if (nt->Events.find(ne->id) == nt->Events.end())
-								nt->Events[ne->id] = ne;
+								nt->Events[ne->id] = std::shared_ptr<NotificationEvents>(ne);
 							else
 							{
 								Log::Write(LogLevel_Warning, "NotificationCCTypes::ReadXML: Error in %s - A AlarmEventElement with id %d already exists. Skipping ", AlarmEventElement->GetDocument()->GetUserData(), ne->id);
@@ -252,7 +252,7 @@ namespace OpenZWave
 						AlarmEventElement = AlarmEventElement->NextSiblingElement();
 					}
 					if (Notifications.find(nt->id) == Notifications.end())
-						Notifications[nt->id] = nt;
+						Notifications[nt->id] = std::shared_ptr<NotificationTypes>(nt);
 					else
 					{
 						Log::Write(LogLevel_Warning, "NotificationCCTypes::ReadXML: Error in %s - A AlarmTypeElement with id %d already exists. Skipping ", AlarmTypeElement->GetDocument()->GetUserData(), nt->id);
@@ -282,7 +282,7 @@ namespace OpenZWave
 			}
 			exit(0);
 #endif
-
+			delete pDoc;
 		}
 
 		std::string NotificationCCTypes::GetEventParamNames(NotificationEventParamTypes type)
@@ -323,7 +323,7 @@ namespace OpenZWave
 
 		std::string NotificationCCTypes::GetEventForAlarmType(uint32 type, uint32 event)
 		{
-			if (const NotificationCCTypes::NotificationEvents *ne = NotificationCCTypes::GetAlarmNotificationEvents(type, event))
+			if (const std::shared_ptr<NotificationCCTypes::NotificationEvents> ne = NotificationCCTypes::GetAlarmNotificationEvents(type, event))
 			{
 				return ne->name;
 			}
@@ -331,7 +331,7 @@ namespace OpenZWave
 			return "Unknown";
 		}
 
-		const NotificationCCTypes::NotificationTypes* NotificationCCTypes::GetAlarmNotificationTypes(uint32 type)
+		const std::shared_ptr<NotificationCCTypes::NotificationTypes> NotificationCCTypes::GetAlarmNotificationTypes(uint32 type)
 		{
 			if (Notifications.find(type) != Notifications.end())
 			{
@@ -344,9 +344,9 @@ namespace OpenZWave
 			return NULL;
 		}
 
-		const NotificationCCTypes::NotificationEvents* NotificationCCTypes::GetAlarmNotificationEvents(uint32 type, uint32 event)
+		const std::shared_ptr<NotificationCCTypes::NotificationEvents> NotificationCCTypes::GetAlarmNotificationEvents(uint32 type, uint32 event)
 		{
-			if (const NotificationCCTypes::NotificationTypes *nt = GetAlarmNotificationTypes(type))
+			if (const std::shared_ptr<NotificationCCTypes::NotificationTypes> nt = GetAlarmNotificationTypes(type))
 			{
 				if (nt->Events.find(event) != nt->Events.end())
 				{
@@ -357,9 +357,9 @@ namespace OpenZWave
 			return NULL;
 		}
 
-		const std::map<uint32, NotificationCCTypes::NotificationEventParams*> NotificationCCTypes::GetAlarmNotificationEventParams(uint32 type, uint32 event)
+		const std::map<uint32, std::shared_ptr<NotificationCCTypes::NotificationEventParams> > NotificationCCTypes::GetAlarmNotificationEventParams(uint32 type, uint32 event)
 		{
-			if (const NotificationCCTypes::NotificationTypes *nt = GetAlarmNotificationTypes(type))
+			if (const std::shared_ptr<NotificationCCTypes::NotificationTypes> nt = GetAlarmNotificationTypes(type))
 			{
 				if (nt->Events.find(event) != nt->Events.end())
 				{
@@ -367,7 +367,7 @@ namespace OpenZWave
 				}
 				Log::Write(LogLevel_Warning, "NotificationCCTypes::GetAlarmNotificationEventParams - Unknown Alarm Event %d for Alarm Type %s (%d)", event, GetAlarmType(type).c_str(), type);
 			}
-			return std::map<uint32, NotificationCCTypes::NotificationEventParams*>();
+			return std::map<uint32, std::shared_ptr<NotificationCCTypes::NotificationEventParams> >();
 		}
 
 		bool NotificationCCTypes::Create()

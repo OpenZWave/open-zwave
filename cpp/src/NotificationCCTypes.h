@@ -66,14 +66,14 @@ namespace OpenZWave
 					public:
 						uint32 id;
 						string name;
-						std::map<uint32, NotificationCCTypes::NotificationEventParams*> EventParams;
+						std::map<uint32, std::shared_ptr<NotificationCCTypes::NotificationEventParams> > EventParams;
 				};
 				class NotificationTypes
 				{
 					public:
 						uint32 id;
 						string name;
-						std::map<uint32, NotificationCCTypes::NotificationEvents *> Events;
+						std::map<uint32, std::shared_ptr<NotificationCCTypes::NotificationEvents> > Events;
 				};
 
 				//-----------------------------------------------------------------------------
@@ -89,16 +89,16 @@ namespace OpenZWave
 				static string GetEventParamNames(NotificationEventParamTypes);
 				string GetAlarmType(uint32);
 				string GetEventForAlarmType(uint32, uint32);
-				const NotificationTypes *GetAlarmNotificationTypes(uint32);
-				const NotificationEvents *GetAlarmNotificationEvents(uint32, uint32);
-				const std::map<uint32, NotificationCCTypes::NotificationEventParams*> GetAlarmNotificationEventParams(uint32, uint32);
+				const std::shared_ptr<NotificationCCTypes::NotificationTypes> GetAlarmNotificationTypes(uint32);
+				const std::shared_ptr<NotificationEvents> GetAlarmNotificationEvents(uint32, uint32);
+				const std::map<uint32, std::shared_ptr<NotificationCCTypes::NotificationEventParams>> GetAlarmNotificationEventParams(uint32, uint32);
 
 				//-----------------------------------------------------------------------------
 				// Instance Functions
 				//-----------------------------------------------------------------------------
 			private:
 				static NotificationCCTypes* m_instance;
-				static std::map<uint32, NotificationCCTypes::NotificationTypes *> Notifications;
+				static std::map<uint32,std::shared_ptr<NotificationCCTypes::NotificationTypes> > Notifications;
 				static uint32 m_revision;
 		};
 	} // namespace Internal

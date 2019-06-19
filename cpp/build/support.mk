@@ -81,6 +81,9 @@ endif
 ifeq ($(UNAME),Darwin)
 AR     := libtool -static -o 
 RANLIB := ranlib
+CC     := clang
+CXX    := clang++
+LD     := clang++
 else
 AR     := $(CROSS_COMPILE)ar rc
 RANLIB := $(CROSS_COMPILE)ranlib

@@ -39,7 +39,7 @@ namespace OpenZWave
 	{
 
 		SensorMultiLevelCCTypes *SensorMultiLevelCCTypes::m_instance = NULL;
-		std::map<uint32, SensorMultiLevelCCTypes::SensorMultiLevelTypes *> SensorMultiLevelCCTypes::SensorTypes;
+		std::map<uint32, std::shared_ptr<SensorMultiLevelCCTypes::SensorMultiLevelTypes> > SensorMultiLevelCCTypes::SensorTypes;
 		uint32 SensorMultiLevelCCTypes::m_revision(0);
 
 		SensorMultiLevelCCTypes::SensorMultiLevelCCTypes()
@@ -141,7 +141,7 @@ namespace OpenZWave
 							}
 
 							if (st->allSensorScales.find(ss->id) == st->allSensorScales.end())
-								st->allSensorScales[ss->id] = ss;
+								st->allSensorScales[ss->id] = std::shared_ptr<SensorMultiLevelCCTypes::SensorMultiLevelScales>(ss);
 							else
 							{
 								Log::Write(LogLevel_Warning, "SensorMultiLevelCCTypes::ReadXML: Error in %s at line %d - A SensorScale with id %d already exists. Skipping ", SensorScaleElement->GetDocument()->GetUserData(), SensorScaleElement->Row(), ss->id);
@@ -151,7 +151,7 @@ namespace OpenZWave
 						SensorScaleElement = SensorScaleElement->NextSiblingElement();
 					}
 					if (SensorTypes.find(st->id) == SensorTypes.end())
-						SensorTypes[st->id] = st;
+						SensorTypes[st->id] = std::shared_ptr<SensorMultiLevelCCTypes::SensorMultiLevelTypes>(st);
 					else
 					{
 						Log::Write(LogLevel_Warning, "SensorMultiLevelCCTypes::ReadXML: Error in %s at line %d - A SensorTypeElement with id %d already exists. Skipping ", SensorTypeElement->GetDocument()->GetUserData(), SensorTypeElement->Row(), st->id);
@@ -173,7 +173,7 @@ namespace OpenZWave
 			}
 			exit(0);
 #endif
-
+			delete pDoc;
 		}
 
 		std::string SensorMultiLevelCCTypes::GetSensorName(uint32 type)
