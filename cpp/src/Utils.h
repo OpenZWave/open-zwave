@@ -37,9 +37,11 @@
 #include <sstream>
 #include <vector>
 #ifndef WIN32
+#ifndef WINRT
 #ifdef DEBUG
 #include <execinfo.h>
 #include <cxxabi.h>
+#endif
 #endif
 #endif
 
@@ -153,7 +155,9 @@ namespace OpenZWave
 		string intToString(int x);
 
 		const char* rssi_to_string(uint8 _data);
+
 #ifndef WIN32
+#ifndef WINRT
 #ifdef DEBUG
 		class StackTraceGenerator
 		{
@@ -248,6 +252,7 @@ namespace OpenZWave
 		        return stackFrames;
 		    }
 		};
+#endif
 #endif
 #endif
 	} // namespace Internal

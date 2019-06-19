@@ -66,8 +66,8 @@ LDFLAGS+= -lusb-1.0
 endif
 
 $(OBJDIR)/MinOZW:	$(patsubst %.cpp,$(OBJDIR)/%.o,$(minozwsrc))
-	@echo "Linking $(OBJDIR)/MinOZW"
-	$(LD) $(LDFLAGS) $(TARCH) -o $@ $< $(LIBS) -pthread
+	@echo "Linking MinOZW"
+	@$(LD) $(LDFLAGS) $(TARCH) -o $@ $< $(LIBS) -pthread
 
 $(top_builddir)/MinOZW: $(top_srcdir)/cpp/examples/MinOZW/MinOZW.in $(OBJDIR)/MinOZW
 	@echo "Creating Temporary Shell Launch Script"
