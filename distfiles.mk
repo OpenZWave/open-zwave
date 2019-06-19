@@ -1148,6 +1148,7 @@ DISTFILES =	.gitignore \
 	config/zwp/PA-100.xml \
 	config/zwp/WD-100.xml \
 	config/zwscene.xsd \
+	cpp/build/LeakSanitizer-Suppressions.txt \
 	cpp/build/Makefile \
 	cpp/build/OZW_RunTests.sh \
 	cpp/build/libopenzwave.pc.in \
