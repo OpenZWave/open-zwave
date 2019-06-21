@@ -187,7 +187,7 @@ namespace OpenZWave
 							m_userCode[i].status = UserCode_Available;
 							/* silly compilers */
 							for (int j = 0; j < 10; j++)
-								m_userCode[i].usercode[i] = 0;
+								m_userCode[i].usercode[j] = 0;
 						}
 						if (m_com.GetFlagBool(COMPAT_FLAG_UC_EXPOSERAWVALUE))
 						{
