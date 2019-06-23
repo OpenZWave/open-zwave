@@ -206,13 +206,13 @@ Default setting: 15</Help>
       <Item label="forced trailing edge control" value="1"/>
       <Item label="control mode selected automatically (based on auto-calibration)" value="2"/>
     </Value>
-    <Value genre="config" index="31" instance="1" label="Load control mode" read_only="true" size="1" type="list" value="0">
+    <Value genre="config" index="31" instance="1" label="Load control mode recognized during auto-calibration" read_only="true" size="1" type="list" value="0">
       <Help>Load control mode recognized during auto-calibration.</Help>
       <Item label="leading edge" value="0"/>
       <Item label="trailing edge" value="1"/>
     </Value>
     <Value genre="config" index="32" instance="1" label="On/Off mode" size="1" type="list" value="2">
-      <Help>Load control mode recognized during auto-calibration.</Help>
+      <Help>Enable for non-dimmable light sources. Forced auto-calibration will set this parame-ter’s value to 2.</Help>
       <Item label="on/off mode disabled (dimming is possible)" value="0"/>
       <Item label="on/off mode enabled (dimming is not possible)" value="1"/>
       <Item label="mode selected automatically" value="2"/>
