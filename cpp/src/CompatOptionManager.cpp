@@ -447,7 +447,7 @@ namespace OpenZWave
 			}
 			if (m_CompatVals.at(flag).type == COMPAT_FLAG_TYPE_BOOL_ARRAY)
 			{
-				if (index == -1) {
+				if (index == (uint32_t)-1) {
 					Log::Write(LogLevel_Warning, m_owner->GetNodeId(), "GetFlagBool: (%s) - Flag %s had Invalid Index", m_owner->GetCommandClassName().c_str(), GetFlagName(flag).c_str());
 					return m_CompatVals.at(flag).valBool;
 				}
@@ -474,7 +474,7 @@ namespace OpenZWave
 			}
 			if (m_CompatVals.at(flag).type == COMPAT_FLAG_TYPE_BYTE_ARRAY)
 			{
-				if (index == -1) {
+				if (index == (uint32_t)-1) {
 					Log::Write(LogLevel_Warning, m_owner->GetNodeId(), "GetFlagByte: (%s) - Flag %s had Invalid Index", m_owner->GetCommandClassName().c_str(), GetFlagName(flag).c_str());
 					return m_CompatVals.at(flag).valByte;
 				}
@@ -502,7 +502,7 @@ namespace OpenZWave
 			}
 			if (m_CompatVals.at(flag).type == COMPAT_FLAG_TYPE_SHORT_ARRAY)
 			{
-				if (index == -1) {
+				if (index == (uint32_t)-1) {
 					Log::Write(LogLevel_Warning, m_owner->GetNodeId(), "GetFlagShort: (%s) - Flag %s had Invalid Index", m_owner->GetCommandClassName().c_str(), GetFlagName(flag).c_str());
 					return m_CompatVals.at(flag).valShort;
 				}
@@ -530,7 +530,7 @@ namespace OpenZWave
 			}
 			if (m_CompatVals.at(flag).type == COMPAT_FLAG_TYPE_INT_ARRAY)
 			{
-				if (index == -1) {
+				if (index == (uint32_t)-1) {
 					Log::Write(LogLevel_Warning, m_owner->GetNodeId(), "GetFlagInt: (%s) - Flag %s had Invalid Index", m_owner->GetCommandClassName().c_str(), GetFlagName(flag).c_str());
 					return m_CompatVals.at(flag).valInt;
 				}
@@ -560,7 +560,7 @@ namespace OpenZWave
 			}
 			if (m_CompatVals.at(flag).type == COMPAT_FLAG_TYPE_BOOL_ARRAY)
 			{
-				if (index == -1) {
+				if (index == (uint32_t)-1) {
 					Log::Write(LogLevel_Warning, m_owner->GetNodeId(), "SetFlagBool: (%s) - Flag %s had Invalid Index", m_owner->GetCommandClassName().c_str(), GetFlagName(flag).c_str());
 					return false;
 				}
@@ -592,7 +592,7 @@ namespace OpenZWave
 			}
 			if (m_CompatVals.at(flag).type == COMPAT_FLAG_TYPE_BYTE_ARRAY)
 			{
-				if (index == -1) {
+				if (index == (uint32_t)-1) {
 					Log::Write(LogLevel_Warning, m_owner->GetNodeId(), "SetFlagByte: (%s) - Flag %s had Invalid Index", m_owner->GetCommandClassName().c_str(), GetFlagName(flag).c_str());
 					return false;
 				}
@@ -624,7 +624,7 @@ namespace OpenZWave
 			}
 			if (m_CompatVals.at(flag).type == COMPAT_FLAG_TYPE_SHORT_ARRAY)
 			{
-				if (index == -1) {
+				if (index == (uint32_t)-1) {
 					Log::Write(LogLevel_Warning, m_owner->GetNodeId(), "SetFlagShort: (%s) - Flag %s had Invalid Index", m_owner->GetCommandClassName().c_str(), GetFlagName(flag).c_str());
 					return false;
 				}
@@ -656,7 +656,7 @@ namespace OpenZWave
 			}
 			if (m_CompatVals.at(flag).type == COMPAT_FLAG_TYPE_INT_ARRAY)
 			{
-				if (index == -1) {
+				if (index == (uint32_t)-1) {
 					Log::Write(LogLevel_Warning, m_owner->GetNodeId(), "SetFlagInt: (%s) - Flag %s had Invalid Index", m_owner->GetCommandClassName().c_str(), GetFlagName(flag).c_str());
 					return false;
 				}
