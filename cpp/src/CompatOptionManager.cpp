@@ -56,6 +56,7 @@ namespace OpenZWave
 		{ "ClassGetVersionSupported", COMPAT_FLAG_VERSION_GETCLASSVERSION, COMPAT_FLAG_TYPE_BOOL },
 		{ "DelayNoMoreInfo", COMPAT_FLAG_WAKEUP_DELAYNMI, COMPAT_FLAG_TYPE_INT },
 		{ "RemoveCC", COMPAT_FLAG_MI_REMOVECC, COMPAT_FLAG_TYPE_BOOL_ARRAY },
+		{ "VerifyChanged", COMPAT_FLAG_VERIFYCHANGED, COMPAT_FLAG_TYPE_BOOL_ARRAY },
 		};
 
 		uint16_t availableCompatFlagsCount = sizeof(availableCompatFlags) / sizeof(availableCompatFlags[0]);
@@ -182,7 +183,6 @@ namespace OpenZWave
 								{
 									if (m_CompatVals[it->second].valBool != !strcmp(value.c_str(), "true"))
 									{
-										std::cout << "adding" << std::endl;
 										string indexVal = valElement->Attribute("index");
 										uint32 index = strtol(indexVal.c_str(), &pStopChar, 10);
 										m_CompatVals[it->second].valBoolArray.insert(std::pair<uint32, bool>(index, !strcmp(value.c_str(), "true")));
