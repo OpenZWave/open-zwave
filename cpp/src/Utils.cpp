@@ -210,7 +210,7 @@ namespace OpenZWave
 #if (defined _WINDOWS || defined WIN32 || defined _MSC_VER) && (!defined MINGW && !defined __MINGW32__ && !defined __MINGW64__)
 
 /* Windows doesn't have localtime_r - use the "secure" version instead */
-struct tm *localtime_r(time_t *_clock, struct tm *_result)
+struct tm *localtime_r(const time_t *_clock, struct tm *_result)
 {
 	_localtime64_s(_result, _clock);
 	return _result;
