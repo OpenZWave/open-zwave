@@ -34,6 +34,8 @@ DISTFILES =	.gitignore \
 	config/Localization.xsd \
 	config/NotificationCCTypes.xml \
 	config/NotificationCCTypes.xsd \
+	config/SensorMultiLevelCCTypes.xml \
+	config/SensorMultiLevelCCTypes.xsd \
 	config/act/lfm20.xml \
 	config/act/zdm230.xml \
 	config/act/zdp100.xml \
@@ -329,6 +331,8 @@ DISTFILES =	.gitignore \
 	config/heiman/HS1WL-Z.xml \
 	config/heiman/HS2SK-Z.xml \
 	config/heiman/HS2WD-Z.xml \
+	config/heltun/he-zw-sw-5a-1.xml \
+	config/heltun/he-zw-therm-fc1.xml \
 	config/heltun/he-zw-therm-fl2.xml \
 	config/homeseer/ezmotionplus.xml \
 	config/homeseer/hs-fc200plus.xml \
@@ -713,6 +717,7 @@ DISTFILES =	.gitignore \
 	config/images/qubino/ZMNHVDx.png \
 	config/images/qubino/ZMNHWD1.png \
 	config/images/qubino/ZMNHYDx.png \
+	config/images/qubino/zmnhxdx.png \
 	config/images/quby/qb2.png \
 	config/images/rcs/em52-zw.png \
 	config/images/rcs/therm0009.png \
@@ -1145,6 +1150,7 @@ DISTFILES =	.gitignore \
 	config/zwp/PA-100.xml \
 	config/zwp/WD-100.xml \
 	config/zwscene.xsd \
+	cpp/build/LeakSanitizer-Suppressions.txt \
 	cpp/build/Makefile \
 	cpp/build/OZW_RunTests.sh \
 	cpp/build/libopenzwave.pc.in \
@@ -1162,8 +1168,6 @@ DISTFILES =	.gitignore \
 	cpp/build/windows/installer/openzwave.nsi \
 	cpp/build/windows/mingw-w64/Makefile \
 	cpp/build/windows/mingw32/Makefile \
-	cpp/build/windows/vs2008/OpenZWave.sln \
-	cpp/build/windows/vs2008/OpenZWave.vcproj \
 	cpp/build/windows/vs2010/OpenZWave.sln \
 	cpp/build/windows/vs2010/OpenZWave.vcxproj \
 	cpp/build/windows/vs2010/OpenZWave.vcxproj.filters \
@@ -1172,8 +1176,6 @@ DISTFILES =	.gitignore \
 	cpp/examples/MinOZW/Makefile \
 	cpp/examples/MinOZW/MinOZW.in \
 	cpp/examples/windows/MinOZW/Main.cpp \
-	cpp/examples/windows/MinOZW/vs2008/MinOZW.sln \
-	cpp/examples/windows/MinOZW/vs2008/MinOZW.vcproj \
 	cpp/examples/windows/MinOZW/vs2010/MinOZW.sln \
 	cpp/examples/windows/MinOZW/vs2010/MinOZW.vcxproj \
 	cpp/examples/windows/MinOZW/vs2010/MinOZW.vcxproj.filters \
@@ -1254,6 +1256,8 @@ DISTFILES =	.gitignore \
 	cpp/src/Options.h \
 	cpp/src/Scene.cpp \
 	cpp/src/Scene.h \
+	cpp/src/SensorMultiLevelCCTypes.cpp \
+	cpp/src/SensorMultiLevelCCTypes.h \
 	cpp/src/TimerThread.cpp \
 	cpp/src/TimerThread.h \
 	cpp/src/Utils.cpp \
@@ -1489,6 +1493,7 @@ DISTFILES =	.gitignore \
 	cpp/src/value_classes/ValueByte.h \
 	cpp/src/value_classes/ValueDecimal.cpp \
 	cpp/src/value_classes/ValueDecimal.h \
+	cpp/src/value_classes/ValueID.cpp \
 	cpp/src/value_classes/ValueID.h \
 	cpp/src/value_classes/ValueInt.cpp \
 	cpp/src/value_classes/ValueInt.h \

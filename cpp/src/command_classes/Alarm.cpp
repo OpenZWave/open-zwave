@@ -254,10 +254,10 @@ namespace OpenZWave
 						/* do any Event Params that are sent over */
 						if (EventParamLength > 0)
 						{
-							const std::map<uint32, NotificationCCTypes::NotificationEventParams*> nep = NotificationCCTypes::Get()->GetAlarmNotificationEventParams(NotificationType, NotificationEvent);
+							const std::map<uint32, std::shared_ptr<NotificationCCTypes::NotificationEventParams> > nep = NotificationCCTypes::Get()->GetAlarmNotificationEventParams(NotificationType, NotificationEvent);
 							if (nep.size() > 0)
 							{
-								for (std::map<uint32, NotificationCCTypes::NotificationEventParams*>::const_iterator it = nep.begin(); it != nep.end(); it++)
+								for (std::map<uint32, std::shared_ptr<NotificationCCTypes::NotificationEventParams> >::const_iterator it = nep.begin(); it != nep.end(); it++)
 								{
 									switch (it->second->type)
 									{
@@ -473,9 +473,9 @@ namespace OpenZWave
 									{
 										/* EventSupported is only compatible in Version 3 and above */
 										vector<Internal::VC::ValueList::Item> _items;
-										if (const NotificationCCTypes::NotificationTypes *nt = NotificationCCTypes::Get()->GetAlarmNotificationTypes(index))
+										if (const std::shared_ptr<NotificationCCTypes::NotificationTypes> nt = NotificationCCTypes::Get()->GetAlarmNotificationTypes(index))
 										{
-											for (std::map<uint32, NotificationCCTypes::NotificationEvents *>::const_iterator it = nt->Events.begin(); it != nt->Events.end(); it++)
+											for (std::map<uint32, std::shared_ptr<NotificationCCTypes::NotificationEvents> >::const_iterator it = nt->Events.begin(); it != nt->Events.end(); it++)
 											{
 												/* Create it */
 												SetupEvents(index, it->first, &_items, _instance);
@@ -547,7 +547,7 @@ namespace OpenZWave
 			}
 			void Alarm::SetupEvents(uint32 type, uint32 index, vector<Internal::VC::ValueList::Item> *_items, uint32 const _instance)
 			{
-				if (const NotificationCCTypes::NotificationEvents *ne = NotificationCCTypes::Get()->GetAlarmNotificationEvents(type, index))
+				if (const std::shared_ptr<NotificationCCTypes::NotificationEvents> ne = NotificationCCTypes::Get()->GetAlarmNotificationEvents(type, index))
 				{
 					Log::Write(LogLevel_Info, GetNodeId(), "\tEvent Type %d: %s ", ne->id, ne->name.c_str());
 					Internal::VC::ValueList::Item item;
@@ -557,7 +557,7 @@ namespace OpenZWave
 					/* If there are Params - Lets create the correct types now */
 					if (Node* node = GetNodeUnsafe())
 					{
-						for (std::map<uint32, NotificationCCTypes::NotificationEventParams*>::const_iterator it = ne->EventParams.begin(); it != ne->EventParams.end(); it++)
+						for (std::map<uint32, std::shared_ptr<NotificationCCTypes::NotificationEventParams> >::const_iterator it = ne->EventParams.begin(); it != ne->EventParams.end(); it++)
 						{
 							switch (it->second->type)
 							{

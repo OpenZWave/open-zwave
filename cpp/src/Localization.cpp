@@ -43,9 +43,9 @@ namespace OpenZWave
 	{
 
 		Localization *Localization::m_instance = NULL;
-		std::map<uint64, ValueLocalizationEntry*> Localization::m_valueLocalizationMap;
-		std::map<uint8, LabelLocalizationEntry*> Localization::m_commandClassLocalizationMap;
-		std::map<std::string, LabelLocalizationEntry*> Localization::m_globalLabelLocalizationMap;
+		std::map<uint64, std::shared_ptr<ValueLocalizationEntry> > Localization::m_valueLocalizationMap;
+		std::map<uint8, std::shared_ptr<LabelLocalizationEntry> > Localization::m_commandClassLocalizationMap;
+		std::map<std::string, std::shared_ptr<LabelLocalizationEntry> > Localization::m_globalLabelLocalizationMap;
 		std::string Localization::m_selectedLang = "";
 		uint32 Localization::m_revision = 0;
 
@@ -318,6 +318,7 @@ namespace OpenZWave
 				CCElement = CCElement->NextSiblingElement();
 			}
 			Log::Write(LogLevel_Info, "Loaded %s With Revision %d", pDoc->GetUserData(), m_revision);
+			delete pDoc;
 		}
 
 		void Localization::ReadGlobalXMLLabel(const TiXmlElement *labelElement)
@@ -334,7 +335,7 @@ namespace OpenZWave
 				Language = labelElement->Attribute("lang");
 			if (m_globalLabelLocalizationMap.find(str) == m_globalLabelLocalizationMap.end())
 			{
-				m_globalLabelLocalizationMap[str] = new LabelLocalizationEntry(0);
+				m_globalLabelLocalizationMap[str] = std::shared_ptr<LabelLocalizationEntry>(new LabelLocalizationEntry(0));
 			}
 			else if (m_globalLabelLocalizationMap[str]->HasLabel(Language))
 			{
@@ -362,7 +363,7 @@ namespace OpenZWave
 
 			if (m_commandClassLocalizationMap.find(ccID) == m_commandClassLocalizationMap.end())
 			{
-				m_commandClassLocalizationMap[ccID] = new LabelLocalizationEntry(0);
+				m_commandClassLocalizationMap[ccID] = std::shared_ptr<LabelLocalizationEntry>(new LabelLocalizationEntry(0));
 			}
 			else if (m_commandClassLocalizationMap[ccID]->HasLabel(Language))
 			{
@@ -434,7 +435,7 @@ namespace OpenZWave
 
 			if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end())
 			{
-				m_valueLocalizationMap[key] = new ValueLocalizationEntry(ccID, indexId, pos);
+				m_valueLocalizationMap[key] = std::shared_ptr<ValueLocalizationEntry> (new ValueLocalizationEntry(ccID, indexId, pos));
 			}
 			else if (m_valueLocalizationMap[key]->HasLabel(Language))
 			{
@@ -472,7 +473,7 @@ namespace OpenZWave
 			uint64 key = GetValueKey(node, ccID, indexId, pos);
 			if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end())
 			{
-				m_valueLocalizationMap[key] = new ValueLocalizationEntry(ccID, indexId, pos);
+				m_valueLocalizationMap[key] = std::shared_ptr<ValueLocalizationEntry> (new ValueLocalizationEntry(ccID, indexId, pos));
 			}
 			else if (m_valueLocalizationMap[key]->HasLabel(Language))
 			{
@@ -572,7 +573,7 @@ namespace OpenZWave
 			uint64 key = GetValueKey(_node, ccID, indexId, pos);
 			if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end())
 			{
-				m_valueLocalizationMap[key] = new ValueLocalizationEntry(ccID, indexId, pos);
+				m_valueLocalizationMap[key] = std::shared_ptr<ValueLocalizationEntry> (new ValueLocalizationEntry(ccID, indexId, pos));
 			}
 			else if (m_valueLocalizationMap[key]->HasHelp(lang))
 			{
@@ -594,7 +595,7 @@ namespace OpenZWave
 			uint64 key = GetValueKey(node, ccID, indexId, pos);
 			if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end())
 			{
-				m_valueLocalizationMap[key] = new ValueLocalizationEntry(ccID, indexId, pos);
+				m_valueLocalizationMap[key] = std::shared_ptr<ValueLocalizationEntry> (new ValueLocalizationEntry(ccID, indexId, pos));
 			}
 			else if (m_valueLocalizationMap[key]->HasLabel(lang))
 			{
@@ -661,7 +662,7 @@ namespace OpenZWave
 			uint64 key = GetValueKey(node, ccID, indexId, pos, unique);
 			if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end())
 			{
-				m_valueLocalizationMap[key] = new ValueLocalizationEntry(ccID, indexId, pos);
+				m_valueLocalizationMap[key] = std::shared_ptr<ValueLocalizationEntry> (new ValueLocalizationEntry(ccID, indexId, pos));
 			}
 			else if (m_valueLocalizationMap[key]->HasItemLabel(itemIndex, lang))
 			{
@@ -699,7 +700,7 @@ namespace OpenZWave
 			uint64 key = GetValueKey(node, ccID, indexId, pos, unique);
 			if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end())
 			{
-				m_valueLocalizationMap[key] = new ValueLocalizationEntry(ccID, indexId, pos);
+				m_valueLocalizationMap[key] = std::shared_ptr<ValueLocalizationEntry> (new ValueLocalizationEntry(ccID, indexId, pos));
 			}
 			else if (m_valueLocalizationMap[key]->HasItemHelp(itemIndex, lang))
 			{
@@ -723,7 +724,7 @@ namespace OpenZWave
 		{
 			if (m_globalLabelLocalizationMap.find(index) == m_globalLabelLocalizationMap.end())
 			{
-				m_globalLabelLocalizationMap[index] = new LabelLocalizationEntry(0);
+				m_globalLabelLocalizationMap[index] = std::shared_ptr<LabelLocalizationEntry>(new LabelLocalizationEntry(0));
 			}
 			else if (m_globalLabelLocalizationMap[index]->HasLabel(lang))
 			{

@@ -277,11 +277,22 @@ Driver::~Driver()
 		}
 	}
 
+	list<Notification*>::iterator nit = m_notifications.begin();
+	while (nit != m_notifications.end())
+	{
+		Notification* notification = m_notifications.front();
+		m_notifications.pop_front();
+		delete notification;
+		nit = m_notifications.begin();
+	}
+
 	if (m_controllerReplication)
 		delete m_controllerReplication;
 
 	m_notificationsEvent->Release();
 	m_nodeMutex->Release();
+	m_queueMsgEvent->Release();
+	m_eventMutex->Release();
 	delete this->AuthKey;
 	delete this->EncryptKey;
 	delete this->m_httpClient;
@@ -1184,7 +1195,7 @@ bool Driver::WriteMsg(string const &msg)
 
 	Log::Write(LogLevel_Detail, "");
 
-	if (m_nonceReportSent > 0)
+	if (m_nonceReportSent > 0 && node != NULL)
 	{
 		/* send a new NONCE report */
 		SendNonceKey(m_nonceReportSent, node->GenerateNonceKey());
@@ -5769,6 +5780,7 @@ void Driver::NotifyWatchers()
 					val->Release();
 					continue;
 				}
+				val->Release();
 				break;
 			}
 			default:

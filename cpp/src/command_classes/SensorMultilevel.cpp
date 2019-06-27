@@ -32,7 +32,9 @@
 #include "Msg.h"
 #include "Node.h"
 #include "Driver.h"
+#include "SensorMultiLevelCCTypes.h"
 #include "platform/Log.h"
+
 
 #include "value_classes/ValueDecimal.h"
 
@@ -47,34 +49,12 @@ namespace OpenZWave
 			{
 				SensorMultilevelCmd_SupportedGet = 0x01,
 				SensorMultilevelCmd_SupportedReport = 0x02,
+				SensorMultiLevelCmd_SupportedGetScale = 0x03,
+				SensorMultiLevelCmd_SupportedReportScale = 0x06,
 				SensorMultilevelCmd_Get = 0x04,
 				SensorMultilevelCmd_Report = 0x05
 			};
 
-#define MaxSensorTypes (ValueID_Index_SensorMultiLevel::WaterOxidation +1)
-
-			static char const* c_sensorTypeNames[] =
-			{ "Undefined", "Temperature", "General", "Luminance", "Power", "Relative Humidity", "Velocity", "Direction", "Atmospheric Pressure", "Barometric Pressure", "Solar Radiation", "Dew Point", "Rain Rate", "Tide Level", "Weight", "Voltage", "Current", "CO2 Level", "Air Flow", "Tank Capacity", "Distance", "Angle Position", "Rotation", "Water Temperature", "Soil Temperature", "Seismic Intensity", "Seismic Magnitude", "Ultraviolet", "Electrical Resistivity", "Electrical Conductivity",
-					"Loudness", "Moisture", "Frequency", "Time", "Target Temperature", "Particulate Matter 2.5", "Formaldehyde CH20-level", "Radon Concentration", "Methane (CH4) Density", "Volatile Organic Compound Level", "CO Level", "Soil Humidity", "Soil Reactivity", "Soil Salinity", "Heart Rate", "Blood Pressure", "Muscle Mass", "Fat Mass", "Bone Mass", "Total Body Water", "Basis Metabolic Rate", "Body Mass Index", "Acceleration X-axis", "Acceleration Y-axis", "Acceleration Z-axis",
-					"Smoke Density", "Water Flow", "Water Pressure", "RF Signal Strength", "Particulate Matter 10", "Respiratory Rate", "Relative Mdulation Level", "Boiler Water Temperature", "Domestic Hot Water Temperature", "Outside Temperature", "Exhaust Temperature", "Water Chlorine Level", "Water Acidity", "Water Oxidation" };
-
-			static char const* c_tankCapcityUnits[] =
-			{ "l", "cbm", "gal", "" };
-
-			static char const* c_distanceUnits[] =
-			{ "m", "cm", "ft", "" };
-
-			static char const* c_anglePositionUnits[] =
-			{ "%", "deg N", "deg S", "" };
-
-			static char const* c_seismicIntensityUnits[] =
-			{ "mercalli", "EU macroseismic", "liedu", "shindo", "" };
-
-			static char const* c_seismicMagnitudeUnits[] =
-			{ "local", "moment", "surface wave", "body wave", "" };
-
-			static char const* c_moistureUnits[] =
-			{ "%", "content", "k ohms", "water activity", "" };
 
 //-----------------------------------------------------------------------------
 // <SensorMultilevel::RequestState>
@@ -87,12 +67,32 @@ namespace OpenZWave
 				{
 					if (_requestFlags & RequestFlag_Static)
 					{
+						/* for Versions 5 and Above
+						 * Send a Supported Get. When we get the Reply
+						 * We will send a SupportedScaleGet Message
+						 */
 						Msg* msg = new Msg("SensorMultilevelCmd_SupportedGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
 						msg->SetInstance(this, _instance);
 						msg->Append(GetNodeId());
 						msg->Append(2);
 						msg->Append(GetCommandClassId());
 						msg->Append(SensorMultilevelCmd_SupportedGet);
+						msg->Append(GetDriver()->GetTransmitOptions());
+						GetDriver()->SendMsg(msg, _queue);
+						res = true;
+					}
+				} else {
+					if (_requestFlags & RequestFlag_Static)
+					{
+						/* For Versions 1-4
+						** Set a Get Message - The Reply will create our ValueID
+						*/
+						Msg* msg = new Msg("SensorMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
+						msg->SetInstance(this, _instance);
+						msg->Append(GetNodeId());
+						msg->Append(2);
+						msg->Append(GetCommandClassId());
+						msg->Append(SensorMultilevelCmd_Get);
 						msg->Append(GetDriver()->GetTransmitOptions());
 						GetDriver()->SendMsg(msg, _queue);
 						res = true;
@@ -111,7 +111,7 @@ namespace OpenZWave
 // <SensorMultilevel::RequestValue>
 // Request current value from the device
 //-----------------------------------------------------------------------------
-			bool SensorMultilevel::RequestValue(uint32 const _requestFlags, uint16 const _dummy,		// = 0 (not used)
+			bool SensorMultilevel::RequestValue(uint32 const _requestFlags, uint16 const _index,		// = 0 (not used)
 					uint8 const _instance, Driver::MsgQueue const _queue)
 			{
 				bool res = false;
@@ -120,40 +120,81 @@ namespace OpenZWave
 					Log::Write(LogLevel_Info, GetNodeId(), "SensorMultilevelCmd_Get Not Supported on this node");
 					return false;
 				}
-				if (GetVersion() < 5)
-				{
-					Msg* msg = new Msg("SensorMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
-					msg->SetInstance(this, _instance);
-					msg->Append(GetNodeId());
-					msg->Append(2);
-					msg->Append(GetCommandClassId());
-					msg->Append(SensorMultilevelCmd_Get);
-					msg->Append(GetDriver()->GetTransmitOptions());
-					GetDriver()->SendMsg(msg, _queue);
-					res = true;
-				}
-				else
-				{
-					for (uint8 i = 1; i < MaxSensorTypes; i++)
+				/* if Index is 0, then its a being called from RequestState
+				 * so we just get all possible Sensor Values
+				 */
+				if (_index == 0) {
+					if (GetVersion() < 5)
 					{
-						Internal::VC::Value* value = GetValue(_instance, i);
-						if (value != NULL)
+						Msg* msg = new Msg("SensorMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
+						msg->SetInstance(this, _instance);
+						msg->Append(GetNodeId());
+						msg->Append(2);
+						msg->Append(GetCommandClassId());
+						msg->Append(SensorMultilevelCmd_Get);
+						msg->Append(GetDriver()->GetTransmitOptions());
+						GetDriver()->SendMsg(msg, _queue);
+						res = true;
+					}
+					else
+					{
+						for (uint8 i = 1; i < 255; i++)
 						{
-							value->Release();
-							Msg* msg = new Msg("SensorMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
-							msg->SetInstance(this, _instance);
-							msg->Append(GetNodeId());
-							msg->Append(3);
-							msg->Append(GetCommandClassId());
-							msg->Append(SensorMultilevelCmd_Get);
-							msg->Append(i);
-							msg->Append(GetDriver()->GetTransmitOptions());
-							GetDriver()->SendMsg(msg, _queue);
-							res = true;
+							Internal::VC::Value* value = GetValue(_instance, i);
+							if (value != NULL)
+							{
+								uint8_t scale = 0;
+								/* get the Default Scale they want */
+								Internal::VC::ValueList *requestedScale = static_cast<Internal::VC::ValueList *>(GetValue(_instance, i+255));
+								if (requestedScale) {
+									const Internal::VC::ValueList::Item *item = requestedScale->GetItem();
+									if (item)
+										scale = item->m_value;
+									requestedScale->Release();
+								}
+								value->Release();
+								Msg* msg = new Msg("SensorMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
+								msg->SetInstance(this, _instance);
+								msg->Append(GetNodeId());
+								msg->Append(4);
+								msg->Append(GetCommandClassId());
+								msg->Append(SensorMultilevelCmd_Get);
+								msg->Append(i);
+								msg->Append(scale);
+								msg->Append(GetDriver()->GetTransmitOptions());
+								GetDriver()->SendMsg(msg, _queue);
+								res = true;
+							}
 						}
 					}
+					return res;
+				} else if (_index < 256) {
+					Internal::VC::Value* value = GetValue(_instance, _index);
+					if (value != NULL) {
+						uint8_t scale = 0;
+						/* get the Default Scale they want */
+						Internal::VC::ValueList *requestedScale = static_cast<Internal::VC::ValueList *>(GetValue(_instance, _index+255));
+						if (requestedScale) {
+							const Internal::VC::ValueList::Item *item = requestedScale->GetItem();
+							if (item)
+								scale = item->m_value;
+							requestedScale->Release();
+						}
+						value->Release();
+						Msg* msg = new Msg("SensorMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
+						msg->SetInstance(this, _instance);
+						msg->Append(GetNodeId());
+						msg->Append(4);
+						msg->Append(GetCommandClassId());
+						msg->Append(SensorMultilevelCmd_Get);
+						msg->Append((uint8_t)(_index & 0xFF));
+						msg->Append(scale);
+						msg->Append(GetDriver()->GetTransmitOptions());
+						GetDriver()->SendMsg(msg, _queue);
+						return true;
+					}
 				}
-				return res;
+				return false;
 			}
 
 //-----------------------------------------------------------------------------
@@ -167,7 +208,7 @@ namespace OpenZWave
 				{
 					string msg = "";
 
-					if (Node* node = GetNodeUnsafe())
+					if (GetNodeUnsafe())
 					{
 						for (uint8 i = 1; i <= (_length - 2); i++)
 						{
@@ -175,25 +216,52 @@ namespace OpenZWave
 							{
 								if (_data[i] & (1 << j))
 								{
-									if (msg != "")
-										msg += ", ";
-									uint8 index = ((i - 1) * 8) + j + 1;
-									if (index >= MaxSensorTypes) /* max size for c_sensorTypeNames */
-									{
-										Log::Write(LogLevel_Warning, GetNodeId(), "SensorType Value was greater than range. Dropping");
-										continue;
-									}
-									msg += c_sensorTypeNames[index];
-									Internal::VC::ValueDecimal* value = static_cast<Internal::VC::ValueDecimal*>(GetValue(_instance, index));
-									if (value == NULL)
-									{
-										node->CreateValueDecimal(ValueID::ValueGenre_User, GetCommandClassId(), _instance, index, c_sensorTypeNames[index], "", true, false, "0.0", 0);
-									}
+									uint32_t sensorType = ((i - 1) * 8) + j + 1;
+									Log::Write(LogLevel_Info, GetNodeId(), "Received SensorMultiLevel supported report from node %d: %s (%d)", GetNodeId(), SensorMultiLevelCCTypes::Get()->GetSensorName(sensorType).c_str(), sensorType);
+									Msg* msg = new Msg("SensorMultiLevelCmd_SupportedGetScale", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
+									msg->SetInstance(this, _instance);
+									msg->Append(GetNodeId());
+									msg->Append(3);
+									msg->Append(GetCommandClassId());
+									msg->Append(SensorMultiLevelCmd_SupportedGetScale);
+									msg->Append(sensorType);
+									msg->Append(GetDriver()->GetTransmitOptions());
+									GetDriver()->SendMsg(msg, Driver::MsgQueue::MsgQueue_Send);
 								}
 							}
 						}
 					}
-					Log::Write(LogLevel_Info, GetNodeId(), "Received SensorMultiLevel supported report from node %d: %s", GetNodeId(), msg.c_str());
+					return true;
+				}
+				else if (SensorMultiLevelCmd_SupportedReportScale == (SensorMultilevelCmd) _data[0])
+				{
+					uint32_t sensorType = _data[1];
+					int8_t defaultScale = -1;
+					vector<Internal::VC::ValueList::Item> items;
+					for (int i = 0; i <= 3; i++)
+					{
+						if ((_data[2] & 0x07) & (1 << i)) {
+
+							uint8 sensorScale = i;
+							if (defaultScale == -1)
+								defaultScale = sensorScale;
+							Log::Write(LogLevel_Info, GetNodeId(), "Received SensorMultiLevel supported Scale report from node %d for Sensor %s: %s (%d)", GetNodeId(), SensorMultiLevelCCTypes::Get()->GetSensorName(sensorType).c_str(), SensorMultiLevelCCTypes::Get()->GetSensorUnit(sensorType, sensorScale).c_str(), sensorScale);
+							Internal::VC::ValueList::Item item;
+							item.m_label = SensorMultiLevelCCTypes::Get()->GetSensorUnitName(sensorType, sensorScale);
+							item.m_value = sensorScale;
+							items.push_back(item);
+						}
+					}
+					Log::Write(LogLevel_Info, GetNodeId(), "Setting SensorMultiLevel Default Scale to: %s (%d)",  SensorMultiLevelCCTypes::Get()->GetSensorUnit(sensorType, defaultScale).c_str(), defaultScale);
+
+					if (Node* node = GetNodeUnsafe())
+					{
+						node->CreateValueDecimal(ValueID::ValueGenre_User, GetCommandClassId(), _instance, sensorType, SensorMultiLevelCCTypes::Get()->GetSensorName(sensorType), SensorMultiLevelCCTypes::Get()->GetSensorUnit(sensorType, defaultScale), true, false, "0.0", 0);
+						node->CreateValueList(ValueID::ValueGenre_System, GetCommandClassId(), _instance, sensorType+255, SensorMultiLevelCCTypes::Get()->GetSensorName(sensorType).append(" Units").c_str(), "",  false, false, 1, items, 0, 0);
+						Internal::VC::ValueList *value = static_cast<Internal::VC::ValueList *>(GetValue(_instance, sensorType+255));
+						if (value)
+							value->SetByLabel(SensorMultiLevelCCTypes::Get()->GetSensorUnit(sensorType, defaultScale));
+					}
 					return true;
 				}
 				else if (SensorMultilevelCmd_Report == (SensorMultilevelCmd) _data[0])
@@ -206,294 +274,15 @@ namespace OpenZWave
 					Node* node = GetNodeUnsafe();
 					if (node != NULL)
 					{
-						char const* units = "";
-						switch (sensorType)
-						{
-							case ValueID_Index_SensorMultiLevel::Temperature:
-								units = scale ? "F" : "C";
-								break;
-							case ValueID_Index_SensorMultiLevel::General:
-								units = scale ? "" : "%";
-								break;
-							case ValueID_Index_SensorMultiLevel::Luminance:
-								units = scale ? "lux" : "%";
-								break;
-							case ValueID_Index_SensorMultiLevel::Power:
-								units = scale ? "BTU/h" : "W";
-								break;
-							case ValueID_Index_SensorMultiLevel::RelativeHumidity:
-								units = scale ? "" : "%";
-								break;
-							case ValueID_Index_SensorMultiLevel::Velocity:
-								units = scale ? "mph" : "m/s";
-								break;
-							case ValueID_Index_SensorMultiLevel::Direction:
-								units = "";
-								break;
-							case ValueID_Index_SensorMultiLevel::AtmosphericPressure:
-								units = scale ? "inHg" : "kPa";
-								break;
-							case ValueID_Index_SensorMultiLevel::BarometricPressure:
-								units = scale ? "inHg" : "kPa";
-								break;
-							case ValueID_Index_SensorMultiLevel::SolarRadiation:
-								units = "W/m2";
-								break;
-							case ValueID_Index_SensorMultiLevel::DewPoint:
-								units = scale ? "F" : "C";
-								break;
-							case ValueID_Index_SensorMultiLevel::RainRate:
-								units = scale ? "in/h" : "mm/h";
-								break;
-							case ValueID_Index_SensorMultiLevel::TideLevel:
-								units = scale ? "ft" : "m";
-								break;
-							case ValueID_Index_SensorMultiLevel::Weight:
-								units = scale ? "lb" : "kg";
-								break;
-							case ValueID_Index_SensorMultiLevel::Voltage:
-								units = scale ? "mV" : "V";
-								break;
-							case ValueID_Index_SensorMultiLevel::Current:
-								units = scale ? "mA" : "A";
-								break;
-							case ValueID_Index_SensorMultiLevel::CO2:
-								units = "ppm";
-								break;
-							case ValueID_Index_SensorMultiLevel::AirFlow:
-								units = scale ? "cfm" : "m3/h";
-								break;
-							case ValueID_Index_SensorMultiLevel::TankCapacity:
-							{
-								if (scale > 2) /* size of c_tankCapcityUnits minus invalid */
-								{
-									Log::Write(LogLevel_Warning, GetNodeId(), "Scale Value for c_tankCapcityUnits was greater than range. Setting to empty");
-									units = c_tankCapcityUnits[3]; /* empty entry */
-								}
-								else
-								{
-									units = c_tankCapcityUnits[scale];
-								}
-							}
-								break;
-							case ValueID_Index_SensorMultiLevel::Distance:
-							{
-								if (scale > 2) /* size of c_distanceUnits minus invalid */
-								{
-									Log::Write(LogLevel_Warning, GetNodeId(), "Scale Value for c_distanceUnits was greater than range. Setting to empty");
-									units = c_distanceUnits[3]; /* empty entry */
-								}
-								else
-								{
-									units = c_distanceUnits[scale];
-								}
-							}
-								break;
-							case ValueID_Index_SensorMultiLevel::AnglePosition:
-							{
-								if (scale > 2) /* size of c_anglePositionUnits minus invalid */
-								{
-									Log::Write(LogLevel_Warning, GetNodeId(), "Scale Value for c_anglePositionUnits was greater than range. Setting to empty");
-									units = c_anglePositionUnits[3]; /* empty entry */
-								}
-								else
-								{
-									units = c_anglePositionUnits[scale];
-								}
-							}
-								break;
-							case ValueID_Index_SensorMultiLevel::Rotation:
-								units = scale ? "hz" : "rpm";
-								break;
-							case ValueID_Index_SensorMultiLevel::WaterTemperature:
-								units = scale ? "F" : "C";
-								break;
-							case ValueID_Index_SensorMultiLevel::SoilTemperature:
-								units = scale ? "F" : "C";
-								break;
-							case ValueID_Index_SensorMultiLevel::SeismicIntensity:
-							{
-								if (scale > 3) /* size of c_seismicIntensityUnits minus invalid */
-								{
-									Log::Write(LogLevel_Warning, GetNodeId(), "Scale Value for c_seismicIntensityUnits was greater than range. Setting to empty");
-									units = c_seismicIntensityUnits[4]; /* empty entry */
-								}
-								else
-								{
-									units = c_seismicIntensityUnits[scale];
-								}
-							}
-								break;
-							case ValueID_Index_SensorMultiLevel::SeismicMagnitude:
-							{
-								if (scale > 3) /* size of c_seismicMagnitudeUnits minus invalid */
-								{
-									Log::Write(LogLevel_Warning, GetNodeId(), "Scale Value for c_seismicMagnitudeUnits was greater than range. Setting to empty");
-									units = c_seismicMagnitudeUnits[4]; /* empty entry */
-								}
-								else
-								{
-									units = c_seismicMagnitudeUnits[scale];
-								}
-							}
-								break;
-							case ValueID_Index_SensorMultiLevel::Ultraviolet:
-								units = "";
-								break;
-							case ValueID_Index_SensorMultiLevel::ElectricalResistivity:
-								units = "ohm";
-								break;
-							case ValueID_Index_SensorMultiLevel::ElectricalConductivity:
-								units = "siemens/m";
-								break;
-							case ValueID_Index_SensorMultiLevel::Loudness:
-								units = scale ? "dBA" : "db";
-								break;
-							case ValueID_Index_SensorMultiLevel::Moisture:
-							{
-								if (scale > 3) /* size of c_moistureUnits minus invalid */
-								{
-									Log::Write(LogLevel_Warning, GetNodeId(), "Scale Value for c_moistureUnits was greater than range. Setting to empty");
-									units = c_moistureUnits[4]; /* empty entry */
-								}
-								else
-								{
-									units = c_moistureUnits[scale];
-								}
-							}
-								break;
-							case ValueID_Index_SensorMultiLevel::Frequency:
-								units = scale ? "kHz" : "Hz";
-								break;
-							case ValueID_Index_SensorMultiLevel::Time:
-								units = "s";
-								break;
-							case ValueID_Index_SensorMultiLevel::TargetTemperature:
-								units = scale ? "F" : "C";
-								break;
-							case ValueID_Index_SensorMultiLevel::PM25:
-								units = scale ? "ug/m3" : "mol/m3";
-								break;
-							case ValueID_Index_SensorMultiLevel::CH2O:
-								units = "mol/m3";
-								break;
-							case ValueID_Index_SensorMultiLevel::RadonConcentration:
-								units = scale ? "pCi/l" : "bq/m3";
-								break;
-							case ValueID_Index_SensorMultiLevel::CH4Density:
-								units = "mol/m3";
-								break;
-							case ValueID_Index_SensorMultiLevel::VOC:
-								units = scale ? "ppm" : "mol/m3";
-								break;
-							case ValueID_Index_SensorMultiLevel::CO:
-								units = scale ? "ppm" : "mol/m3";
-								break;
-							case ValueID_Index_SensorMultiLevel::SoilHumidity:
-								units = "%";
-								break;
-							case ValueID_Index_SensorMultiLevel::SoilReactivity:
-								units = "pH";
-								break;
-							case ValueID_Index_SensorMultiLevel::SoilSalinity:
-								units = "mol/m3";
-								break;
-							case ValueID_Index_SensorMultiLevel::HeartRate:
-								units = "bpm";
-								break;
-							case ValueID_Index_SensorMultiLevel::BloodPressure:
-								units = scale ? "mmHg (Diastollic)" : "mmHg (Systollic)";
-								break;
-							case ValueID_Index_SensorMultiLevel::MuscleMass:
-								units = "kg";
-								break;
-							case ValueID_Index_SensorMultiLevel::FatMass:
-								units = "kg";
-								break;
-							case ValueID_Index_SensorMultiLevel::BoneMass:
-								units = "kg";
-								break;
-							case ValueID_Index_SensorMultiLevel::TBW:
-								units = "kg";
-								break;
-							case ValueID_Index_SensorMultiLevel::BMR:
-								units = "J";
-								break;
-							case ValueID_Index_SensorMultiLevel::BMI:
-								units = "";
-								break;
-							case ValueID_Index_SensorMultiLevel::AccelerationX:
-								units = "m/s2";
-								break;
-							case ValueID_Index_SensorMultiLevel::AccelerationY:
-								units = "m/s2";
-								break;
-							case ValueID_Index_SensorMultiLevel::AccelerationZ:
-								units = "m/s2";
-								break;
-							case ValueID_Index_SensorMultiLevel::SmokeDensity:
-								units = "%";
-								break;
-							case ValueID_Index_SensorMultiLevel::WaterFlow:
-								units = "l/h";
-								break;
-							case ValueID_Index_SensorMultiLevel::WaterPressure:
-								units = "kPa";
-								break;
-							case ValueID_Index_SensorMultiLevel::RFSignalStrength:
-								units = scale ? "dBm" : "% (RSSI)";
-								break;
-							case ValueID_Index_SensorMultiLevel::PM10:
-								units = scale ? "ug/m3" : "mol/m3";
-								break;
-							case ValueID_Index_SensorMultiLevel::RespiratoryRate:
-								units = "bpm";
-								break;
-							case ValueID_Index_SensorMultiLevel::RelativeModulationLevel:
-								units = "%";
-								break;
-							case ValueID_Index_SensorMultiLevel::BoilerWaterTemperature:
-								units = "C";
-								break;
-							case ValueID_Index_SensorMultiLevel::DHWTemperature:
-								units = "C";
-								break;
-							case ValueID_Index_SensorMultiLevel::OutsideTemperature:
-								units = "C";
-								break;
-							case ValueID_Index_SensorMultiLevel::ExhaustTemperature:
-								units = "C";
-								break;
-							case ValueID_Index_SensorMultiLevel::WaterChlorineLevel:
-								units = "mg/l";
-								break;
-							case ValueID_Index_SensorMultiLevel::WaterAcidity:
-								units = "pH";
-								break;
-							case ValueID_Index_SensorMultiLevel::WaterOxidation:
-								units = "mV";
-								break;
-							default:
-							{
-								Log::Write(LogLevel_Warning, GetNodeId(), "sensorType Value was greater than range. Dropping");
-								return false;
-							}
-								break;
-
-						}
-
 						Internal::VC::ValueDecimal* value = static_cast<Internal::VC::ValueDecimal*>(GetValue(_instance, sensorType));
 						if (value == NULL)
 						{
-							node->CreateValueDecimal(ValueID::ValueGenre_User, GetCommandClassId(), _instance, sensorType, c_sensorTypeNames[sensorType], units, true, false, "0.0", 0);
+							node->CreateValueDecimal(ValueID::ValueGenre_User, GetCommandClassId(), _instance, sensorType, SensorMultiLevelCCTypes::Get()->GetSensorName(sensorType), "", true, false, "0.0", 0);
 							value = static_cast<Internal::VC::ValueDecimal*>(GetValue(_instance, sensorType));
 						}
-						else
-						{
-							value->SetUnits(units);
-						}
+						value->SetUnits(SensorMultiLevelCCTypes::Get()->GetSensorUnit(sensorType, scale));
 
-						Log::Write(LogLevel_Info, GetNodeId(), "Received SensorMultiLevel report from node %d, instance %d, %s: value=%s%s", GetNodeId(), _instance, c_sensorTypeNames[sensorType], valueStr.c_str(), value->GetUnits().c_str());
+						Log::Write(LogLevel_Info, GetNodeId(), "Received SensorMultiLevel report from node %d, instance %d, %s: value=%s%s", GetNodeId(), _instance, SensorMultiLevelCCTypes::Get()->GetSensorName(sensorType).c_str(), valueStr.c_str(), value->GetUnits().c_str());
 						if (value->GetPrecision() != precision)
 						{
 							value->SetPrecision(precision);

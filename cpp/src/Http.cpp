@@ -65,6 +65,11 @@ namespace OpenZWave
 		HttpClient::~HttpClient()
 		{
 			m_exitEvent->Set();
+			m_exitEvent->Release();
+			m_httpThread->Stop();
+			m_httpThread->Release();
+			m_httpDownloadEvent->Release();
+			m_httpMutex->Release();
 		}
 
 		bool HttpClient::StartDownload(HttpDownload *transfer)

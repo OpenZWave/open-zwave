@@ -41,7 +41,8 @@ namespace OpenZWave
 
 		DNSThread::~DNSThread()
 		{
-
+			m_dnsMutex->Release();
+			m_dnsRequestEvent->Release();
 		}
 
 		void DNSThread::DNSThreadEntryPoint(Internal::Platform::Event* _exitEvent, void* _context)

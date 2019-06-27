@@ -1,10 +1,10 @@
 //-----------------------------------------------------------------------------
 //
-//	ValueIDIndexes.h
+//	ValueID.cpp
 //
-//	List of all Possible ValueID Indexes in OZW
+//	Represents a Device Variable in OZW
 //
-//	Copyright (c) 2010 Mal Lansell <openzwave@lansell.org>
+//	Copyright (c) 2019 Justin Hammond <justin@dynam.ac>
 //
 //	SOFTWARE NOTICE AND LICENSE
 //
@@ -25,25 +25,27 @@
 //
 //-----------------------------------------------------------------------------
 
-/* This file is includes the pre-processed ValueIDIndexesDefines.h to avoid problems
- * with MSVC not supporting enough arguments with Macro's.
- * If you are adding a ValueID, you should add its index ENUM to ValuIDIndexDefines.def and the run
- * 'make updateIndexDefines' to regenerate the the ValueIDIndexDefines.h file
- */
+#include "ValueID.h"
+#include "Value.h"
 
-#include <cstring>
-
-#ifndef _ValueIDIndexes_H
-#define _ValueIDIndexes_H
 namespace OpenZWave
 {
+	//-----------------------------------------------------------------------------
+	// <ValueID::GetGenreAsString>
+	// Get the Genre as a String
+	//-----------------------------------------------------------------------------
+	string ValueID::GetGenreAsString() const
+	{
+		return Internal::VC::Value::GetGenreNameFromEnum(GetGenre());
+	}
 
-#ifdef _MSC_VER
-#define strncpy(x, y, z) strncpy_s(x, sizeof(x), y, sizeof(x)-1)
-#endif
+	//-----------------------------------------------------------------------------
+	// <ValueID::GetTypeAsString>
+	// Get the Type as a String
+	//-----------------------------------------------------------------------------
+	string ValueID::GetTypeAsString() const
+	{
+		return Internal::VC::Value::GetTypeNameFromEnum(GetType());
+	}
 
-#include "ValueIDIndexesDefines.h"
-
-}
-
-#endif
+}// namespace OpenZWave

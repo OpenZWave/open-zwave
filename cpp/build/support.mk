@@ -81,6 +81,9 @@ endif
 ifeq ($(UNAME),Darwin)
 AR     := libtool -static -o 
 RANLIB := ranlib
+CC     := clang
+CXX    := clang++
+LD     := clang++
 else
 AR     := $(CROSS_COMPILE)ar rc
 RANLIB := $(CROSS_COMPILE)ranlib
@@ -147,7 +150,7 @@ FMTCMD = fmt -1
 endif
 
 $(OBJDIR)/%.o : %.cpp
-	@echo "Building $(notdir $@)"
+	@echo "Building $(<:$(top_builddir)/cpp/%=%)"
 	@$(CXX) -MM $(CFLAGS) $(CPPFLAGS) $(INCLUDES) $< > $(DEPDIR)/$*.d
 	@mv -f $(DEPDIR)/$*.d $(DEPDIR)/$*.d.tmp
 	@$(SED) -e 's|.*:|$(OBJDIR)/$*.o: $(DEPDIR)/$*.d|' < $(DEPDIR)/$*.d.tmp > $(DEPDIR)/$*.d;
@@ -158,7 +161,7 @@ $(OBJDIR)/%.o : %.cpp
 
 
 $(OBJDIR)/%.o : %.c
-	@echo "Building $(notdir $@)"	
+	@echo "Building $(<:$(top_builddir)/cpp/src/%=%)"
 	@$(CC) -MM $(CFLAGS) $(INCLUDES) $< > $(DEPDIR)/$*.d
 	@mv -f $(DEPDIR)/$*.d $(DEPDIR)/$*.d.tmp
 	@$(SED) -e 's|.*:|$(OBJDIR)/$*.o: $(DEPDIR)/$*.d|' < $(DEPDIR)/$*.d.tmp > $(DEPDIR)/$*.d;

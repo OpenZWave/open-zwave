@@ -43,7 +43,7 @@ namespace OpenZWave
 
 		ManufacturerSpecificDB *ManufacturerSpecificDB::s_instance = NULL;
 		std::map<uint16, std::string> ManufacturerSpecificDB::s_manufacturerMap;
-		std::map<int64, ProductDescriptor*> ManufacturerSpecificDB::s_productMap;
+		std::map<int64, std::shared_ptr<ProductDescriptor> > ManufacturerSpecificDB::s_productMap;
 		bool ManufacturerSpecificDB::s_bXmlLoaded = false;
 
 		ManufacturerSpecificDB *ManufacturerSpecificDB::Create()
@@ -235,14 +235,14 @@ namespace OpenZWave
 							ProductDescriptor* product = new ProductDescriptor(manufacturerId, productType, productId, productName, s_manufacturerMap[manufacturerId], dconfigPath);
 							if (s_productMap[product->GetKey()] != NULL)
 							{
-								ProductDescriptor *c = s_productMap[product->GetKey()];
+								std::shared_ptr<ProductDescriptor> c = s_productMap[product->GetKey()];
 								Log::Write(LogLevel_Info, "Product name collision: %s type %x id %x manufacturerid %x, collides with %s, type %x id %x manufacturerid %x", productName.c_str(), productType, productId, manufacturerId, c->GetProductName().c_str(), c->GetProductType(), c->GetProductId(), c->GetManufacturerId());
 								delete product;
 							}
 							else
 							{
 								LoadConfigFileRevision(product);
-								s_productMap[product->GetKey()] = product;
+								s_productMap[product->GetKey()] = std::shared_ptr<ProductDescriptor>(product);
 							}
 						}
 
@@ -269,7 +269,7 @@ namespace OpenZWave
 			LockGuard LG(m_MfsMutex);
 			if (s_bXmlLoaded)
 			{
-				map<int64, ProductDescriptor*>::iterator pit = s_productMap.begin();
+				map<int64, std::shared_ptr<ProductDescriptor> >::iterator pit = s_productMap.begin();
 				while (!s_productMap.empty())
 				{
 					pit->second->Release();
@@ -297,10 +297,10 @@ namespace OpenZWave
 			string configPath;
 			Options::Get()->GetOptionAsString("ConfigPath", &configPath);
 
-			map<int64, ProductDescriptor*>::iterator pit;
+			map<int64, std::shared_ptr<ProductDescriptor> >::iterator pit;
 			for (pit = s_productMap.begin(); pit != s_productMap.end(); pit++)
 			{
-				ProductDescriptor *c = pit->second;
+				std::shared_ptr<ProductDescriptor> c = pit->second;
 				if (c->GetConfigPath().size() > 0)
 				{
 					string path = configPath + c->GetConfigPath();
@@ -396,7 +396,7 @@ namespace OpenZWave
 			}
 		}
 
-		ProductDescriptor *ManufacturerSpecificDB::getProduct(uint16 _manufacturerId, uint16 _productType, uint16 _productId)
+		std::shared_ptr<ProductDescriptor> ManufacturerSpecificDB::getProduct(uint16 _manufacturerId, uint16 _productType, uint16 _productId)
 		{
 
 			if (!s_bXmlLoaded)
@@ -407,7 +407,7 @@ namespace OpenZWave
 			if (mit != s_manufacturerMap.end())
 			{
 				// Get the product
-				map<int64, ProductDescriptor*>::iterator pit = s_productMap.find(ProductDescriptor::GetKey(_manufacturerId, _productType, _productId));
+				map<int64, std::shared_ptr<ProductDescriptor> >::iterator pit = s_productMap.find(ProductDescriptor::GetKey(_manufacturerId, _productType, _productId));
 				if (pit != s_productMap.end())
 				{
 					return pit->second;
