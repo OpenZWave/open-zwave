@@ -64,6 +64,7 @@ namespace OpenZWave
 				{
 					return false;
 				}
+
 				uint32 key = _value->GetID().GetValueStoreKey();
 				map<uint32, Value*>::iterator it = m_values.find(key);
 				if (it != m_values.end())
@@ -75,9 +76,19 @@ namespace OpenZWave
 				m_values[key] = _value;
 				_value->AddRef();
 
-				// Notify the watchers of the new value
+				// Notify the watchers of the new value and Check our GetChangeVerified Flag
 				if (Driver* driver = Manager::Get()->GetDriver(_value->GetID().GetHomeId()))
 				{
+					Node *node = driver->GetNodeUnsafe(_value->GetID().GetNodeId());
+					if (node) {
+						Internal::CC::CommandClass *cc = node->GetCommandClass(_value->GetID().GetCommandClassId());
+						if (cc) {
+							if (cc->m_com.GetFlagBool(COMPAT_FLAG_VERIFYCHANGED, _value->GetID().GetIndex())) {
+								Log::Write(LogLevel_Info, _value->GetID().GetNodeId(), "Setting VerifiedChanged Flag on Value %d for CC %s", _value->GetID().GetIndex(), cc->GetCommandClassName().c_str());
+								_value->SetChangeVerified(true);
+							}
+						}
+					}
 					Notification* notification = new Notification(Notification::Type_ValueAdded);
 					notification->SetValueId(_value->GetID());
 					driver->QueueNotification(notification);
