@@ -32,7 +32,6 @@
 #include <vector>
 #include <list>
 #include <map>
-#include <memory>
 #include "Defs.h"
 #include "value_classes/ValueID.h"
 #include "value_classes/ValueList.h"
