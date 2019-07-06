@@ -586,7 +586,7 @@
 			<Label>Outside Handle Control</Label>
 		</Value>
 		<Value index="6">
-			<Help>State of the Exterior Handle Control</Help>
+			<Help>State of the Interior Handle Control</Help>
 			<Label>Inside Handle Control</Label>
 		</Value>
 	</CommandClass>
