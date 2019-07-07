@@ -343,7 +343,7 @@
   </CommandClass>
   <!-- The Association Group Information -->
   <CommandClass id="133">
-    <Associations num_groups="1">
+    <Associations num_groups="5">
       <Group index="1" label="LifeLine" max_associations="1"/>
       <Group index="2" label="On/Off S1" max_associations="5"/>
       <Group index="3" label="Dimmer S1" max_associations="5"/>
