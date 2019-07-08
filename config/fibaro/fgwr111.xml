@@ -1,0 +1,86 @@
+<Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <MetaDataItem name="Name">Walli Roller Shutter</MetaDataItem>
+    <MetaDataItem name="Description">FIBARO Walli Roller Shutter is a smart wall switch designed to control motors of roller blinds, awnings, venetian blinds and other single phase, AC powered devices via Z-Wave network. It measures active power and energy consumed by the controlled load.</MetaDataItem>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/010F:1000:1D01</MetaDataItem>
+    <MetaDataItem name="ProductPage">https://www.fibaro.com/en/products/smart-switches-and-outlets-walli-roller-shutter/</MetaDataItem>
+    <MetaDataItem name="ProductSupport">https://manuals.fibaro.com/walli-roller-shutter/</MetaDataItem>
+    <MetaDataItem name="ProductPic"><!-- path to images/vendor/product.png --></MetaDataItem>
+    <MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&filename=Manuals/3396/FGWREU-111-T-EN-0.19.pdf</MetaDataItem>
+    <MetaDataItem name="WakeupDescription">FIBARO Walli Roller Shutter is powered with mains voltage so it is always awake.</MetaDataItem>
+    <MetaDataItem name="InclusionDescription">To add the device to the Z-Wave network manually:
+1. Power the device.
+2. Set the main controller in (Security/non-Security Mode) add mode (see the controller’s manual).
+3. Quickly, three times click one of the buttons.
+4. If you are adding in Security S2 Authenticated, scan the DSK QR code or input the underlined part of the DSK (label on the bottom of the box).
+5. LED will start blinking yellow, wait for the adding process to end.
+6. Adding result will be confirmed by the Z-Wave controller’s message and the LED frame:
+  • Green – successful (non-secure, S0, S2 non-authenticated),
+  • Magenta – successful (Security S2 Authenticated),
+  • Red – not successful.</MetaDataItem>
+    <MetaDataItem name="ExclusionDescription">To remove the device from the Z-Wave network:
+1. Power the device.
+2. Set the main controller into remove mode (see the controller’s manual).
+3. Quickly, three times click one of the buttons.
+4. LED will start blinking yellow, wait for the removing process to end.
+5. Successful removing will be confirmed by the Z-Wave controller’s message and red LED colour.</MetaDataItem>
+    <MetaDataItem name="ResetDescription">Reset procedure allows to restore the device back to its factory settings, which means all information about the Z-Wave controller and user configuration will be deleted. Resetting to factory defaults does not reset energy consumption memory.
+1. Quickly, three times click, then press and hold one of the buttons to enter the menu.
+2. Release button when the device glows yellow.
+3. Quickly click the button to confirm.
+4. After few seconds the device will be restarted, which is signalled with red LED colour.</MetaDataItem>
+    <MetaDataItem id="1000" name="ZWProductPage" type="1D01">https://products.z-wavealliance.org/products/3396</MetaDataItem>
+    <MetaDataItem id="1000" name="FrequencyName" type="1D01">CEPT (Europe)</MetaDataItem>
+    <MetaDataItem id="1000" name="Identifier" type="1D01">FGWREU-111</MetaDataItem>
+    <ChangeLog>
+      <Entry author="Khashayar Hajian - me@khashayar.me" date="10 July 2019" revision="1">Initial Metadata Import from Z-Wave Alliance Database</Entry>
+    </ChangeLog>
+  </MetaData>
+  <!-- Configuration Command Class - All Configuration Parameters should be entered into the section below -->
+  <CommandClass id="112">
+
+    <!-- Here is a Byte/Int/Short Value Sample -->
+    <Value genre="config" index="1" label="A Label" max="100" min="0" type="byte" units="%" value="50">
+      <Help>
+			Small Description of what this config param does.
+			</Help>
+    </Value>
+    <!-- Here is a List Value Sample -->
+    <Value genre="config" index="64" label="A Label" max="2" min="1" size="1" type="list" value="1">
+      <Help>Short Help Description</Help>
+      <Item label="Option 1" value="1"/>
+      <Item label="Option 2" value="2"/>
+    </Value>
+
+    <!-- Here is a Button Sample -->
+    <Value genre="config" index="100" label="A Button Label" type="button" write_only="true">
+      <Help>Short Help Description</Help>
+    </Value>
+
+    <!-- Here is a BitSet Sample -->
+    <Value genre="config" index="101" label="A Label" size="4" type="bitset" bitmask="241" value="241">
+      <Help>Help text that describes what this Param does over all</Help>
+      <!-- we go LSB to MSB (right to left) in the Bit Fields. We are also index 1 based. So first bit is equal to 1 -->
+      <BitSet id="1">
+        <Label>Bit 1 Label</Label>
+        <Help>What Bit 1 Does</Help>
+      </BitSet>
+      <BitSet id="5">
+        <Label>Bit 5 Label</Label>
+        <Help>What Bit 5 Does</Help>
+      </BitSet>
+    </Value>
+  </CommandClass>
+  <!-- A Example of Setting a Compatibility Flag on a CommandClass - In this case the Device Doesn't support Get for Alarm Class -->
+  <CommandClass id="113">
+    <Compatibility>
+      <GetSupported>false</GetSupported>
+    </Compatibility>
+  </CommandClass>
+  <!-- The Association Group Information -->
+  <CommandClass id="133">
+    <Associations num_groups="1">
+      <Group index="1" label="LifeLine" max_associations="5"/>
+    </Associations>
+  </CommandClass>
+</Product>
