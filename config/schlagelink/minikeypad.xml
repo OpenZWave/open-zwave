@@ -26,6 +26,11 @@
       <GetSupported>false</GetSupported>
     </Compatibility>
   </CommandClass>
+  <CommandClass id="99">
+    <Compatibility>
+      <ExposeRawUserCodes>true</ExposeRawUserCodes>
+    </Compatibility>
+  </CommandClass>
   <!-- Association Groups -->
   <CommandClass id="133">
     <Associations num_groups="1">
