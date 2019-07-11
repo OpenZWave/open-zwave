@@ -1105,6 +1105,7 @@
     <Product id="0001" name="Mini Energy Switch" type="0002"/>
     <!--EU-->
     <Product config="mcohome/mhp210.xml" id="1302" name="MH-P210 Mini Energy Dimmer" type="210a"/>
+    <Product config="mcohome/mhp220.xml" id="5101" name="MH-P220 Micro Dimmer" type="220a"/>
     <Product config="mcohome/mhs311.xml" id="0201" name="MH-S311 One-load" type="3102"/>
     <Product config="mcohome/mhs312.xml" id="0202" name="MH-S312 Two-load" type="3102"/>
     <Product config="mcohome/mhs314.xml" id="0204" name="MH-S314 Four-load" type="3102"/>
