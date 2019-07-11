@@ -383,7 +383,7 @@ namespace OpenZWave
 						value = static_cast<Internal::VC::ValueDecimal*>(GetValue(_instance, index));
 					}
 				} else if (!value) {
-					Log::Write(LogLevel_Warning, GetNodeId(), "Can't Find a ValueID Index for %s with Unit %s (%d) - Index %d", MeterTypes.at(index).Label.c_str(), meterType, MeterTypes.at(index).Unit.c_str(), scale, index);
+					Log::Write(LogLevel_Warning, GetNodeId(), "Can't Find a ValueID Index for %s (%d) with Unit %s (%d) - Index %d", MeterTypes.at(index).Label.c_str(), meterType, MeterTypes.at(index).Unit.c_str(), scale, index);
 					return false;
 				}
 				value->OnValueRefreshed(valueStr);

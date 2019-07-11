@@ -552,6 +552,8 @@ namespace OpenZWave
 
 				msg->Append(GetDriver()->GetTransmitOptions());
 				GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
+				/* get a updated Level Value from the Device */
+				RequestValue(0, ValueID_Index_SwitchMultiLevel::Level, _instance, Driver::MsgQueue_Send);
 				return true;
 			}
 
@@ -570,6 +572,9 @@ namespace OpenZWave
 				msg->Append(SwitchMultilevelCmd_StopLevelChange);
 				msg->Append(GetDriver()->GetTransmitOptions());
 				GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
+
+				/* get a updated Level Value from the Device */
+				RequestValue(0, ValueID_Index_SwitchMultiLevel::Level, _instance, Driver::MsgQueue_Send);
 				return true;
 			}
 

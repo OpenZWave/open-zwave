@@ -58,8 +58,7 @@ char const *OpenZWave::LogLevelString[] =
 };
 
 Log* Log::s_instance = NULL;
-i_LogImpl* Log::m_pImpl = NULL;
-bool Log::s_customLogger = false;
+std::vector<i_LogImpl*> Log::m_pImpls;
 static bool s_dologging;
 
 //-----------------------------------------------------------------------------
@@ -118,12 +117,16 @@ void Log::Destroy()
 //	<Log::SetLoggingClass>
 //	Set log class
 //-----------------------------------------------------------------------------
-bool Log::SetLoggingClass(i_LogImpl *LogClass)
+bool Log::SetLoggingClass(i_LogImpl *LogClass, bool Append)
 {
-	if (!s_customLogger)
-		delete m_pImpl;
-	m_pImpl = LogClass;
-	s_customLogger = true;
+	if (!Append) {
+		for (std::vector<i_LogImpl*>::iterator it = s_instance->m_pImpls.begin(); it != s_instance->m_pImpls.end();) {
+			i_LogImpl *lc = *it;
+			delete lc;
+			it = s_instance->m_pImpls.erase(it);
+		}
+	}
+	s_instance->m_pImpls.push_back(LogClass);
 	return true;
 }
 
@@ -171,10 +174,11 @@ void Log::SetLoggingState(LogLevel _saveLevel, LogLevel _queueLevel, LogLevel _d
 		s_dologging = false;
 	}
 
-	if (s_instance && s_dologging && s_instance->m_pImpl)
+	if (s_instance && s_dologging && (s_instance->m_pImpls.size() > 0))
 	{
 		s_instance->m_logMutex->Lock();
-		s_instance->m_pImpl->SetLoggingState(_saveLevel, _queueLevel, _dumpTrigger);
+		for (std::vector<i_LogImpl*>::iterator it = s_instance->m_pImpls.begin(); it != s_instance->m_pImpls.end(); it++)
+			(*it)->SetLoggingState(_saveLevel, _queueLevel, _dumpTrigger);
 		s_instance->m_logMutex->Unlock();
 	}
 
@@ -197,12 +201,13 @@ bool Log::GetLoggingState()
 //-----------------------------------------------------------------------------
 void Log::Write(LogLevel _level, char const* _format, ...)
 {
-	if (s_instance && s_dologging && s_instance->m_pImpl)
+	if (s_instance && s_dologging && (s_instance->m_pImpls.size() > 0))
 	{
 		s_instance->m_logMutex->Lock(); // double locks if recursive
 		va_list args;
 		va_start(args, _format);
-		s_instance->m_pImpl->Write(_level, 0, _format, args);
+		for (std::vector<i_LogImpl*>::iterator it = s_instance->m_pImpls.begin(); it != s_instance->m_pImpls.end(); it++)
+			(*it)->Write(_level, 0, _format, args);
 		va_end(args);
 		s_instance->m_logMutex->Unlock();
 	}
@@ -214,13 +219,14 @@ void Log::Write(LogLevel _level, char const* _format, ...)
 //-----------------------------------------------------------------------------
 void Log::Write(LogLevel _level, uint8 const _nodeId, char const* _format, ...)
 {
-	if (s_instance && s_dologging && s_instance->m_pImpl)
+	if (s_instance && s_dologging && (s_instance->m_pImpls.size() > 0))
 	{
 		if (_level != LogLevel_Internal)
 			s_instance->m_logMutex->Lock();
 		va_list args;
 		va_start(args, _format);
-		s_instance->m_pImpl->Write(_level, _nodeId, _format, args);
+		for (std::vector<i_LogImpl*>::iterator it = s_instance->m_pImpls.begin(); it != s_instance->m_pImpls.end(); it++)
+			(*it)->Write(_level, _nodeId, _format, args);
 		va_end(args);
 		if (_level != LogLevel_Internal)
 			s_instance->m_logMutex->Unlock();
@@ -233,10 +239,11 @@ void Log::Write(LogLevel _level, uint8 const _nodeId, char const* _format, ...)
 //-----------------------------------------------------------------------------
 void Log::QueueDump()
 {
-	if (s_instance && s_dologging && s_instance->m_pImpl)
+	if (s_instance && s_dologging && (s_instance->m_pImpls.size() > 0))
 	{
 		s_instance->m_logMutex->Lock();
-		s_instance->m_pImpl->QueueDump();
+		for (std::vector<i_LogImpl*>::iterator it = s_instance->m_pImpls.begin(); it !=s_instance->m_pImpls.end(); it++)
+			(*it)->QueueDump();
 		s_instance->m_logMutex->Unlock();
 	}
 }
@@ -247,10 +254,11 @@ void Log::QueueDump()
 //-----------------------------------------------------------------------------
 void Log::QueueClear()
 {
-	if (s_instance && s_dologging && s_instance->m_pImpl)
+	if (s_instance && s_dologging && (s_instance->m_pImpls.size() > 0))
 	{
 		s_instance->m_logMutex->Lock();
-		s_instance->m_pImpl->QueueClear();
+		for (std::vector<i_LogImpl*>::iterator it = s_instance->m_pImpls.begin(); it !=s_instance->m_pImpls.end(); it++)
+			(*it)->QueueClear();
 		s_instance->m_logMutex->Unlock();
 	}
 }
@@ -261,10 +269,11 @@ void Log::QueueClear()
 //-----------------------------------------------------------------------------
 void Log::SetLogFileName(const string &_filename)
 {
-	if (s_instance && s_dologging && s_instance->m_pImpl)
+	if (s_instance && s_dologging && (s_instance->m_pImpls.size() > 0))
 	{
 		s_instance->m_logMutex->Lock();
-		s_instance->m_pImpl->SetLogFileName(_filename);
+		for (std::vector<i_LogImpl*>::iterator it = s_instance->m_pImpls.begin(); it !=s_instance->m_pImpls.end(); it++)
+			(*it)->SetLogFileName(_filename);
 		s_instance->m_logMutex->Unlock();
 	}
 }
@@ -276,10 +285,9 @@ void Log::SetLogFileName(const string &_filename)
 Log::Log(string const& _filename, bool const _bAppend, bool const _bConsoleOutput, LogLevel const _saveLevel, LogLevel const _queueLevel, LogLevel const _dumpTrigger) :
 		m_logMutex(new Internal::Platform::Mutex())
 {
-	if (NULL == m_pImpl)
+	if (m_pImpls.size() == 0)
 	{
-		s_customLogger = false;
-		m_pImpl = new Internal::Platform::LogImpl(_filename, _bAppend, _bConsoleOutput, _saveLevel, _queueLevel, _dumpTrigger);
+		m_pImpls.push_back(new Internal::Platform::LogImpl(_filename, _bAppend, _bConsoleOutput, _saveLevel, _queueLevel, _dumpTrigger));
 	}
 }
 
@@ -290,9 +298,9 @@ Log::Log(string const& _filename, bool const _bAppend, bool const _bConsoleOutpu
 Log::~Log()
 {
 	m_logMutex->Release();
-	if (!s_customLogger)
-	{
-		delete m_pImpl;
-		m_pImpl = NULL;
+	for (std::vector<i_LogImpl*>::iterator it = s_instance->m_pImpls.begin(); it != s_instance->m_pImpls.end();) {
+		i_LogImpl *lc = *it;
+		delete lc;
+		it = s_instance->m_pImpls.erase(it);
 	}
 }
