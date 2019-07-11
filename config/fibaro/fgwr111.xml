@@ -367,7 +367,7 @@
       </Help>
     </Value>
 
-    <Value genre="config" index="156" label="Time of up movement" max="65535" min="1" size="4" type="short" units="0.01 second" value="6000">
+    <Value genre="config" index="156" label="Time of up movement" max="65535" min="1" size="4" type="int" units="0.01 second" value="6000">
       <Help>
         This parameter determines the time needed for roller blinds to reach the top.
         For modes with positioning value is set automatically during calibration, otherwise, it must be set manually.
