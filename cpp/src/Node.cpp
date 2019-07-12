@@ -214,7 +214,7 @@ void Node::AdvanceQueries()
 				}
 				else
 				{
-					// This stage has been done already, so move to the Neighbours stage
+					// This stage has been done already, so move to the Probe stage
 					m_queryStage = QueryStage_Probe;
 					m_queryRetries = 0;
 				}
@@ -808,9 +808,9 @@ void Node::ReadXML(TiXmlElement const* _node)
 	str = _node->Attribute("query_stage");
 	if (str)
 	{
-		// After restoring state from a file, we need to at least refresh the association, session and dynamic values.
-		QueryStage queryStage = QueryStage_Associations;
-		for (uint32 i = 0; i < (uint32) QueryStage_Associations; ++i)
+		// After restoring state from a file, we need to at least refresh the session and dynamic values.
+		QueryStage queryStage = QueryStage_Session;
+		for (uint32 i = 0; i < (uint32) QueryStage_Session; ++i)
 		{
 			if (!strcmp(str, c_queryStageNames[i]))
 			{
@@ -995,7 +995,23 @@ void Node::ReadXML(TiXmlElement const* _node)
 		str = child->Value();
 		if (str)
 		{
-			if (!strcmp(str, "CommandClasses"))
+			if (!strcmp(str, "Neighbors"))
+			{
+				TiXmlNode const *NeighborList = child->FirstChild();
+				char const *neighbors = NeighborList->Value();
+				int i = 0;
+				char* pos = const_cast<char*>(neighbors);
+				while (*pos && i < 29)
+				{
+					m_neighbors[i] = strtol(pos, &pos, 10);
+					if ((*pos) == ',')
+					{
+						++pos;
+						++i;
+					}
+				}
+			}
+			else if (!strcmp(str, "CommandClasses"))
 			{
 				ReadCommandClassesXML(child);
 			}
@@ -1277,6 +1293,20 @@ void Node::WriteXML(TiXmlElement* _driverElement)
 
 	nodeElement->SetAttribute("query_stage", c_queryStageNames[m_queryStage]);
 
+	TiXmlElement* neighborElement = new TiXmlElement("Neighbors");
+	nodeElement->LinkEndChild(neighborElement);
+	{
+		std::string NeighborList;
+		for (int i = 0; i < 29; i++)
+		{
+			if ((i > 0) && (i != 29))
+				NeighborList.append(",");
+			NeighborList.append(Internal::intToString(m_neighbors[i]));
+		}
+		TiXmlText* textElement = new TiXmlText(NeighborList.c_str());
+		neighborElement->LinkEndChild(textElement);
+	}
+
 	// Write the manufacturer and product data in the same format
 	// as used in the ManyfacturerSpecfic.xml file.  This will
 	// allow new devices to be added via a simple cut and paste.
@@ -1394,7 +1424,7 @@ void Node::UpdateProtocolInfo(uint8 const* _data)
 	// NOTE: We stopped using this because not all devices report it properly,
 	// and now just request the optional classes regardless.
 	// bool optional = (( _data[1] & 0x80 ) != 0 );
-	/* dont do any further processing if we have already recieved our Protocol Info, or basicprotocolInfo */
+	/* dont do any further processing if we have already received our Protocol Info, or basicprotocolInfo */
 	if (ProtocolInfoReceived())
 	{
 		// We already have this info
