@@ -67,11 +67,13 @@ namespace OpenZWave
 				m_com.EnableFlag(COMPAT_FLAG_FORCEVERSION, 0);
 				m_com.EnableFlag(COMPAT_FLAG_CREATEVARS, true);
 				m_com.EnableFlag(COMPAT_FLAG_REFRESHONWAKEUP, false);
+				m_com.EnableFlag(COMPAT_FLAG_VERIFYCHANGED, false);
 				m_dom.EnableFlag(STATE_FLAG_CCVERSION, 1);
 				m_dom.EnableFlag(STATE_FLAG_STATIC_REQUESTS, 0);
 				m_dom.EnableFlag(STATE_FLAG_AFTERMARK, false);
 				m_dom.EnableFlag(STATE_FLAG_ENCRYPTED, false);
 				m_dom.EnableFlag(STATE_FLAG_INNIF, false);
+
 			}
 
 //-----------------------------------------------------------------------------

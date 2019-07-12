@@ -136,7 +136,7 @@ void OnNotification
 			// One of the node values has changed
 			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
 			{
-				nodeInfo = nodeInfo;		// placeholder for real action
+				(void)nodeInfo;		// placeholder for real action
 			}
 			break;
 		}
@@ -146,7 +146,7 @@ void OnNotification
 			// One of the node's association groups has changed
 			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
 			{
-				nodeInfo = nodeInfo;		// placeholder for real action
+				(void)nodeInfo;		// placeholder for real action
 			}
 			break;
 		}
@@ -186,7 +186,7 @@ void OnNotification
 			// basic_set or hail message.
 			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
 			{
-				nodeInfo = nodeInfo;		// placeholder for real action
+				(void)nodeInfo;		// placeholder for real action
 			}
 			break;
 		}
@@ -390,13 +390,13 @@ int main( int argc, char* argv[] )
 		// stalling the OpenZWave drivers.
 		// At this point, the program just waits for 3 minutes (to demonstrate polling),
 		// then exits
-		for( int i = 0; i < 60*3; i++ )
-		{
-			pthread_mutex_lock( &g_criticalSection );
+		//for( int i = 0; i < 60*3; i++ )
+		//{
+		//	pthread_mutex_lock( &g_criticalSection );
 			// but NodeInfo list and similar data should be inside critical section
-			pthread_mutex_unlock( &g_criticalSection );
-			sleep(1);
-		}
+		//	pthread_mutex_unlock( &g_criticalSection );
+		//	sleep(1);
+		//}
 
 		Driver::DriverData data;
 		Manager::Get()->GetDriverStatistics( g_homeId, &data );
@@ -418,5 +418,12 @@ int main( int argc, char* argv[] )
 	Manager::Destroy();
 	Options::Destroy();
 	pthread_mutex_destroy( &g_criticalSection );
+	for( list<NodeInfo*>::iterator it = g_nodes.begin(); it != g_nodes.end(); ++it )
+	{
+		NodeInfo* nodeInfo = *it;
+		nodeInfo->m_values.clear();
+		delete nodeInfo;
+	}
+	g_nodes.clear();
 	return 0;
 }

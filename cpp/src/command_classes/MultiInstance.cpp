@@ -78,6 +78,7 @@ namespace OpenZWave
 				m_com.EnableFlag(COMPAT_FLAG_MI_FORCEUNIQUEENDPOINTS, false);
 				m_com.EnableFlag(COMPAT_FLAG_MI_IGNMCCAPREPORTS, false);
 				m_com.EnableFlag(COMPAT_FLAG_MI_ENDPOINTHINT, 0);
+				m_com.EnableFlag(COMPAT_FLAG_MI_REMOVECC, false);
 			}
 
 //-----------------------------------------------------------------------------
@@ -341,6 +342,11 @@ namespace OpenZWave
 							continue;
 						}
 
+						if (m_com.GetFlagBool(COMPAT_FLAG_MI_REMOVECC, commandClassId) == true) {
+							Log::Write(LogLevel_Info, GetNodeId(), "        %s (%d) (Disabled By Config)", CommandClasses::GetName(commandClassId).c_str(), commandClassId);
+							continue;
+						}
+
 						m_endPointCommandClasses.insert(commandClassId);
 
 						// Ensure the node supports this command class
@@ -437,6 +443,7 @@ namespace OpenZWave
 						for (set<uint8>::iterator it = m_endPointCommandClasses.begin(); it != m_endPointCommandClasses.end(); ++it)
 						{
 							uint8 commandClassId = *it;
+
 							CommandClass* cc = node->GetCommandClass(commandClassId);
 							if (cc)
 							{

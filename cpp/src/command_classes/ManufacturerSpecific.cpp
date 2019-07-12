@@ -156,7 +156,7 @@ namespace OpenZWave
 			{
 
 				string configPath = "";
-				Internal::ProductDescriptor *product = GetDriver()->GetManufacturerSpecificDB()->getProduct(manufacturerId, productType, productId);
+				std::shared_ptr<Internal::ProductDescriptor> product = GetDriver()->GetManufacturerSpecificDB()->getProduct(manufacturerId, productType, productId);
 
 				Node *node = GetNodeUnsafe();
 				if (!product)
