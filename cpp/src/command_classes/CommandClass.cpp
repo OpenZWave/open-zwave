@@ -179,10 +179,6 @@ namespace OpenZWave
 				if (!m_instances.IsSet(_endPoint))
 				{
 					m_instances.Set(_endPoint);
-					if (m_com.GetFlagBool(COMPAT_FLAG_CREATEVARS))
-					{
-						CreateVars(_endPoint);
-					}
 				}
 			}
 

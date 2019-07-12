@@ -3,7 +3,7 @@
 %endif
 
 Name:     openzwave
-Version:  1.6.793
+Version:  1.6.835
 Release:  1.0%{?dist}
 Summary:  Sample Executables for OpenZWave
 URL:      http://www.openzwave.net
@@ -135,7 +135,7 @@ getent group zwave >/dev/null || groupadd -f -r zwave
 
 
 %changelog
-* Wed May 08 2019 Justin Hammond <justin@dynam.ac> - 1.6.793
+* Wed May 08 2019 Justin Hammond <justin@dynam.ac> - 1.6.835
 - Update to new release of OpenZwave - 1.6
 
 * Fri Feb 01 2019 Fedora Release Engineering <releng@fedoraproject.org> - 1.5.0-0.20180624git1e36dcc.0

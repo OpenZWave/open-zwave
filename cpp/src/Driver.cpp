@@ -88,8 +88,8 @@ using namespace OpenZWave;
 // 01: 12-31-2010 - Introduced config version numbering due to ValueID format change.
 // 02: 01-12-2011 - Command class m_afterMark sense corrected, and attribute named to match.
 // 03: 08-04-2011 - Changed command class instance handling for non-sequential MultiChannel endpoints.
-//
-uint32 const c_configVersion = 3;
+// 04: 12-07-2019 - Changed Interview Order
+uint32 const c_configVersion = 4;
 
 static char const* c_libraryTypeNames[] =
 { "Unknown",			// library type 0
@@ -611,6 +611,13 @@ bool Driver::ReadCache()
 	}
 	doc.SetUserData((void *) filename.c_str());
 	TiXmlElement const* driverElement = doc.RootElement();
+
+	char const *xmlns = driverElement->Attribute("xmlns");
+	if (strcmp(xmlns, "https://github.com/OpenZWave/open-zwave"))
+	{
+		Log::Write(LogLevel_Warning, "Invalid XML Namespace. Ignoring %s", filename.c_str());
+		return false;
+	}
 
 	// Version
 	if (TIXML_SUCCESS != driverElement->QueryIntAttribute("version", &intVal) || (uint32) intVal != c_configVersion)
@@ -6925,8 +6932,8 @@ bool Driver::refreshNodeConfig(uint8 _nodeId)
 }
 
 //-----------------------------------------------------------------------------
-// <Driver::SendQueryStageComplete>
-// Queue an item on the query queue that indicates a stage is complete
+// <Driver::ReloadNode>
+// Reload a Node - Remove it from ozwcache, and re-initilize the node from scratch (doing a full  interview)
 //-----------------------------------------------------------------------------
 void Driver::ReloadNode(uint8 const _nodeId)
 {

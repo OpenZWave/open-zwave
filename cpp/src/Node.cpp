@@ -113,10 +113,10 @@ Node::Node(uint32 const _homeId, uint8 const _nodeId) :
 	memset(m_rssi_4, 0, sizeof(m_rssi_4));
 	memset(m_rssi_5, 0, sizeof(m_rssi_5));
 	/* Add NoOp Class */
-	AddCommandClass(Internal::CC::NoOperation::StaticGetCommandClassId());
+	AddCommandClass(Internal::CC::NoOperation::StaticGetCommandClassId(), 1);
 
 	/* Add ManufacturerSpecific Class */
-	AddCommandClass(Internal::CC::ManufacturerSpecific::StaticGetCommandClassId());
+	AddCommandClass(Internal::CC::ManufacturerSpecific::StaticGetCommandClassId(), 1);
 }
 
 //-----------------------------------------------------------------------------
@@ -283,7 +283,6 @@ void Node::AdvanceQueries()
 					Internal::CC::ManufacturerSpecific* cc = static_cast<Internal::CC::ManufacturerSpecific*>(GetCommandClass(Internal::CC::ManufacturerSpecific::StaticGetCommandClassId()));
 					if (cc)
 					{
-						cc->SetInstance(1);
 						cc->SetProductDetails(GetDriver()->GetManufacturerId(), GetDriver()->GetProductType(), GetDriver()->GetProductId());
 						cc->LoadConfigXML();
 					}
@@ -302,7 +301,6 @@ void Node::AdvanceQueries()
 					Internal::CC::ManufacturerSpecific* cc = static_cast<Internal::CC::ManufacturerSpecific*>(GetCommandClass(Internal::CC::ManufacturerSpecific::StaticGetCommandClassId()));
 					if (cc)
 					{
-						cc->SetInstance(1);
 						m_queryPending = cc->RequestState(Internal::CC::CommandClass::RequestFlag_Static, 1, Driver::MsgQueue_Query);
 						addQSC = m_queryPending;
 					}
@@ -329,6 +327,43 @@ void Node::AdvanceQueries()
 				else
 				{
 					// This stage has been done already, so move to the Manufacturer Specific stage
+					m_queryStage = QueryStage_Versions;
+					m_queryRetries = 0;
+				}
+				break;
+			}
+			case QueryStage_Versions:
+			{
+				// Get the version information (if the device supports COMMAND_CLASS_VERSION
+				Log::Write(LogLevel_Detail, m_nodeId, "QueryStage_Versions");
+				Internal::CC::Version* vcc = static_cast<Internal::CC::Version*>(GetCommandClass(Internal::CC::Version::StaticGetCommandClassId()));
+				if (vcc)
+				{
+					Log::Write(LogLevel_Info, m_nodeId, "Requesting Versions");
+					for (map<uint8, Internal::CC::CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it)
+					{
+						Internal::CC::CommandClass* cc = it->second;
+						Log::Write(LogLevel_Info, m_nodeId, "Requesting Versions for %s", cc->GetCommandClassName().c_str());
+
+						if (cc->GetMaxVersion() > 1)
+						{
+							// Get the version for each supported command class that
+							// we have implemented at greater than version one.
+							m_queryPending |= vcc->RequestCommandClassVersion(it->second);
+						}
+						else
+						{
+							// set the Version to 1
+							cc->SetVersion(1);
+							/* create our Vars - Its Version 1 so no need to wait */
+							cc->CreateVars(1);
+						}
+					}
+					addQSC = m_queryPending;
+				}
+				// advance to Instances stage when finished
+				if (!m_queryPending)
+				{
 					m_queryStage = QueryStage_NodePlusInfo;
 					m_queryRetries = 0;
 				}
@@ -396,13 +431,12 @@ void Node::AdvanceQueries()
 					/* don't do this if its the Controller Node */
 					if (cc && (GetDriver()->GetControllerNodeId() != m_nodeId))
 					{
-						cc->SetInstance(1);
 						m_queryPending = cc->RequestState(Internal::CC::CommandClass::RequestFlag_Static, 1, Driver::MsgQueue_Query);
 						addQSC = m_queryPending;
 					}
 					if (!m_queryPending)
 					{
-						m_queryStage = QueryStage_Versions;
+						m_queryStage = QueryStage_Instances;
 						m_queryRetries = 0;
 					}
 				}
@@ -411,44 +445,8 @@ void Node::AdvanceQueries()
 					Internal::CC::ManufacturerSpecific* cc = static_cast<Internal::CC::ManufacturerSpecific*>(GetCommandClass(Internal::CC::ManufacturerSpecific::StaticGetCommandClassId()));
 					if (cc)
 					{
-						cc->SetInstance(1);
 						cc->ReLoadConfigXML();
 					}
-					m_queryStage = QueryStage_Versions;
-					m_queryRetries = 0;
-				}
-				break;
-			}
-			case QueryStage_Versions:
-			{
-				// Get the version information (if the device supports COMMAND_CLASS_VERSION
-				Log::Write(LogLevel_Detail, m_nodeId, "QueryStage_Versions");
-				Internal::CC::Version* vcc = static_cast<Internal::CC::Version*>(GetCommandClass(Internal::CC::Version::StaticGetCommandClassId()));
-				if (vcc)
-				{
-					Log::Write(LogLevel_Info, m_nodeId, "Requesting Versions");
-					for (map<uint8, Internal::CC::CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it)
-					{
-						Internal::CC::CommandClass* cc = it->second;
-						Log::Write(LogLevel_Info, m_nodeId, "Requesting Versions for %s", cc->GetCommandClassName().c_str());
-
-						if (cc->GetMaxVersion() > 1)
-						{
-							// Get the version for each supported command class that
-							// we have implemented at greater than version one.
-							m_queryPending |= vcc->RequestCommandClassVersion(it->second);
-						}
-						else
-						{
-							// set the Version to 1 
-							cc->SetVersion(1);
-						}
-					}
-					addQSC = m_queryPending;
-				}
-				// advance to Instances stage when finished
-				if (!m_queryPending)
-				{
 					m_queryStage = QueryStage_Instances;
 					m_queryRetries = 0;
 				}
@@ -511,34 +509,6 @@ void Node::AdvanceQueries()
 				}
 				break;
 			}
-				/* CacheLoad is where we start if we are loading a device from our zwcfg_*.xml file rather than
-				 * a brand new device.
-				 */
-			case QueryStage_CacheLoad:
-			{
-				Log::Write(LogLevel_Detail, m_nodeId, "QueryStage_CacheLoad");
-				Log::Write(LogLevel_Info, GetNodeId(), "Loading Cache for node %d: Manufacturer=%s, Product=%s", GetNodeId(), GetManufacturerName().c_str(), GetProductName().c_str());
-				Log::Write(LogLevel_Info, GetNodeId(), "Node Identity Codes: %.4x:%.4x:%.4x", GetManufacturerId(), GetProductType(), GetProductId());
-				//
-				// Send a NoOperation message to see if the node is awake
-				// and alive. Based on the response or lack of response
-				// will determine next step. Called here when configuration exists.
-				//
-				Internal::CC::NoOperation* noop = static_cast<Internal::CC::NoOperation*>(GetCommandClass(Internal::CC::NoOperation::StaticGetCommandClassId()));
-				/* Don't do this if its to the Controller */
-				if (GetDriver()->GetControllerNodeId() != m_nodeId)
-				{
-					noop->Set(true);
-					m_queryPending = true;
-					addQSC = true;
-				}
-				else
-				{
-					m_queryStage = QueryStage_Associations;
-					m_queryRetries = 0;
-				}
-				break;
-			}
 			case QueryStage_Associations:
 			{
 				// if this device supports COMMAND_CLASS_ASSOCIATION, determine to which groups this node belong
@@ -575,6 +545,35 @@ void Node::AdvanceQueries()
 				GetDriver()->RequestNodeNeighbors(m_nodeId, 0);
 				m_queryPending = true;
 				addQSC = true;
+				break;
+			}
+
+				/* CacheLoad is where we start if we are loading a device from our zwcfg_*.xml file rather than
+				 * a brand new device.
+				 */
+			case QueryStage_CacheLoad:
+			{
+				Log::Write(LogLevel_Detail, m_nodeId, "QueryStage_CacheLoad");
+				Log::Write(LogLevel_Info, GetNodeId(), "Loading Cache for node %d: Manufacturer=%s, Product=%s", GetNodeId(), GetManufacturerName().c_str(), GetProductName().c_str());
+				Log::Write(LogLevel_Info, GetNodeId(), "Node Identity Codes: %.4x:%.4x:%.4x", GetManufacturerId(), GetProductType(), GetProductId());
+				//
+				// Send a NoOperation message to see if the node is awake
+				// and alive. Based on the response or lack of response
+				// will determine next step. Called here when configuration exists.
+				//
+				Internal::CC::NoOperation* noop = static_cast<Internal::CC::NoOperation*>(GetCommandClass(Internal::CC::NoOperation::StaticGetCommandClassId()));
+				/* Don't do this if its to the Controller */
+				if (GetDriver()->GetControllerNodeId() != m_nodeId)
+				{
+					noop->Set(true);
+					m_queryPending = true;
+					addQSC = true;
+				}
+				else
+				{
+					m_queryStage = QueryStage_Session;
+					m_queryRetries = 0;
+				}
 				break;
 			}
 			case QueryStage_Session:
@@ -1180,7 +1179,7 @@ void Node::ReadCommandClassesXML(TiXmlElement const* _ccsElement)
 						}
 
 						// Command class support does not exist yet, so we create it
-						cc = AddCommandClass(id);
+						cc = AddCommandClass(id, 1);
 					}
 
 					if ( NULL != cc)
@@ -1467,10 +1466,7 @@ void Node::UpdateProtocolInfo(uint8 const* _data)
 			// Device does not always listen, so we need the WakeUp handler.  We can't
 			// wait for the command class list because the request for the command
 			// classes may need to go in the wakeup queue itself!
-			if (Internal::CC::CommandClass* pCommandClass = AddCommandClass(Internal::CC::WakeUp::StaticGetCommandClassId()))
-			{
-				pCommandClass->SetInstance(1);
-			}
+			AddCommandClass(Internal::CC::WakeUp::StaticGetCommandClassId(), 1);
 		}
 
 	}
@@ -1529,7 +1525,7 @@ void Node::SetProtocolInfo(uint8 const* _protocolInfo, uint8 const _length)
 			{
 				if (_protocolInfo[i] == Internal::CC::Security::StaticGetCommandClassId())
 				{
-					pCommandClass = static_cast<Internal::CC::Security *>(AddCommandClass(_protocolInfo[i]));
+					pCommandClass = static_cast<Internal::CC::Security *>(AddCommandClass(_protocolInfo[i], 1));
 					if (!GetDriver()->isNetworkKeySet())
 					{
 						Log::Write(LogLevel_Warning, m_nodeId, "Security Command Class Disabled. NetworkKey is not Set");
@@ -1666,7 +1662,7 @@ void Node::SetSecuredClasses(uint8 const* _data, uint8 const _length, uint32 con
 		 * encrypt it regardless */
 		else if (Internal::CC::CommandClasses::IsSupported(_data[i]))
 		{
-			if (Internal::CC::CommandClass* pCommandClass = AddCommandClass(_data[i]))
+			if (Internal::CC::CommandClass* pCommandClass = AddCommandClass(_data[i], _instance))
 			{
 				// If this class came after the COMMAND_CLASS_MARK, then we do not create values.
 				if (afterMark)
@@ -1678,13 +1674,6 @@ void Node::SetSecuredClasses(uint8 const* _data, uint8 const _length, uint32 con
 					pCommandClass->SetSecured();
 					Log::Write(LogLevel_Info, m_nodeId, "    %s (Secured) - %s", pCommandClass->GetCommandClassName().c_str(), pCommandClass->IsInNIF() ? "InNIF" : "NotInNIF");
 				}
-				// Start with an instance count of one.  If the device supports COMMMAND_CLASS_MULTI_INSTANCE
-				// then some command class instance counts will increase once the responses to the RequestState
-				// call at the end of this method have been processed.
-				if (_instance > 1)
-					pCommandClass->SetInstance(_instance);
-				else
-					pCommandClass->SetInstance(1);
 
 				/* set our Static Request Flags */
 				uint8 request = 0;
@@ -1761,7 +1750,8 @@ void Node::UpdateNodeInfo(uint8 const* _data, uint8 const _length)
 					Log::Write(LogLevel_Info, m_nodeId, "    %s (Disabled - Network Key Not Set)", Internal::CC::Security::StaticGetCommandClassName().c_str());
 					continue;
 				}
-				if (Internal::CC::CommandClass* pCommandClass = AddCommandClass(_data[i]))
+				/* instance is always 1 - this is the root device */
+				if (Internal::CC::CommandClass* pCommandClass = AddCommandClass(_data[i], 1))
 				{
 					/* this CC was in the NIF frame */
 					pCommandClass->SetInNIF();
@@ -1771,10 +1761,6 @@ void Node::UpdateNodeInfo(uint8 const* _data, uint8 const _length)
 						pCommandClass->SetAfterMark();
 					}
 
-					// Start with an instance count of one.  If the device supports COMMMAND_CLASS_MULTI_INSTANCE
-					// then some command class instance counts will increase once the responses to the RequestState
-					// call at the end of this method have been processed.
-					pCommandClass->SetInstance(1);
 					newCommandClasses = true;
 					Log::Write(LogLevel_Info, m_nodeId, "    %s", pCommandClass->GetCommandClassName().c_str());
 				}
@@ -1986,8 +1972,10 @@ void Node::ApplicationCommandHandler(uint8 const* _data, bool encrypted
 				return;
 			}
 
+
+			/* XXX TODO this needs a rewrite in the transport branch - We don't have Version/Instance information here etc */
 			Log::Write(LogLevel_Info, m_nodeId, "ApplicationCommandHandler - Received a MultiInstance Message but MulitInstance CC isn't loaded. Loading it... ");
-			if (Internal::CC::CommandClass* pCommandClass = AddCommandClass(Internal::CC::MultiInstance::StaticGetCommandClassId()))
+			if (Internal::CC::CommandClass* pCommandClass = AddCommandClass(Internal::CC::MultiInstance::StaticGetCommandClassId(), 1))
 			{
 				pCommandClass->ReceivedCntIncr();
 				if (!pCommandClass->IsAfterMark())
@@ -2033,7 +2021,7 @@ Internal::CC::CommandClass* Node::GetCommandClass(uint8 const _commandClassId) c
 // <Node::AddCommandClass>
 // Add a command class to the node
 //-----------------------------------------------------------------------------
-Internal::CC::CommandClass* Node::AddCommandClass(uint8 const _commandClassId)
+Internal::CC::CommandClass* Node::AddCommandClass(uint8 const _commandClassId, uint8 _instance)
 {
 	if (GetCommandClass(_commandClassId))
 	{
@@ -2045,6 +2033,7 @@ Internal::CC::CommandClass* Node::AddCommandClass(uint8 const _commandClassId)
 	if (Internal::CC::CommandClass* pCommandClass = Internal::CC::CommandClasses::CreateCommandClass(_commandClassId, m_homeId, m_nodeId))
 	{
 		m_commandClassMap[_commandClassId] = pCommandClass;
+		pCommandClass->SetInstance(_instance);
 		return pCommandClass;
 	}
 	else
@@ -2955,10 +2944,7 @@ bool Node::SetDeviceClasses(uint8 const _basic, uint8 const _generic, uint8 cons
 		// Device does not always listen, so we need the WakeUp handler.  We can't
 		// wait for the command class list because the request for the command
 		// classes may need to go in the wakeup queue itself!
-		if (Internal::CC::CommandClass* pCommandClass = AddCommandClass(Internal::CC::WakeUp::StaticGetCommandClassId()))
-		{
-			pCommandClass->SetInstance(1);
-		}
+		AddCommandClass(Internal::CC::WakeUp::StaticGetCommandClassId(), 1);
 	}
 
 	// Apply any COMMAND_CLASS_BASIC remapping
@@ -3180,17 +3166,13 @@ bool Node::AddMandatoryCommandClasses(uint8 const* _commandClasses)
 				continue;
 			}
 
-			if (Internal::CC::CommandClass* commandClass = AddCommandClass(cc))
+			if (Internal::CC::CommandClass* commandClass = AddCommandClass(cc, 1))
 			{
 				// If this class came after the COMMAND_CLASS_MARK, then we do not create values.
 				if (afterMark)
 				{
 					commandClass->SetAfterMark();
 				}
-
-				// Start with an instance count of one.  If the device supports COMMMAND_CLASS_MULTI_INSTANCE
-				// then some command class instance counts will increase.
-				commandClass->SetInstance(1);
 			}
 		}
 	}
