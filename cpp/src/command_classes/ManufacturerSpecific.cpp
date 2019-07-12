@@ -288,6 +288,16 @@ namespace OpenZWave
 					return false;
 				}
 				doc->SetUserData((void *) filename.c_str());
+				/* make sure it has the right xmlns */
+				TiXmlElement *product = doc->RootElement();
+				char const *xmlns = product->Attribute("xmlns");
+				if (xmlns && strcmp(xmlns, "https://github.com/OpenZWave/open-zwave"))
+				{
+					delete doc;
+					Log::Write(LogLevel_Warning, GetNodeId(), "Invalid XML Namespace in %s - Ignoring", filename.c_str());
+					return false;
+				}
+
 				Node::QueryStage qs = GetNodeUnsafe()->GetCurrentQueryStage();
 				if (qs == Node::QueryStage_ManufacturerSpecific1)
 				{
