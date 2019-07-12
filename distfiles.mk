@@ -264,6 +264,7 @@ DISTFILES =	.gitignore \
 	config/fibaro/fgwpe.xml \
 	config/fibaro/fgwpfzw5.xml \
 	config/fibaro/fgwpg111.xml \
+	config/fibaro/fgwr111.xml \
 	config/firstalert/zcombo.xml \
 	config/followgood/swz-1002.xml \
 	config/forest/fs2z5232000002.xml \
@@ -547,6 +548,7 @@ DISTFILES =	.gitignore \
 	config/images/fibaro/fgwpe.png \
 	config/images/fibaro/fgwpfzw5.png \
 	config/images/fibaro/fgwpg111.png \
+	config/images/fibaro/fgwr111.png \
 	config/images/firstalert/zcombo.png \
 	config/images/followgood/swz-1002.png \
 	config/images/forest/fs2z5232000002.png \
@@ -1591,8 +1593,6 @@ DISTFILES =	.gitignore \
 	debian/watch \
 	dist.mk \
 	dist/libopenzwave.changes \
-	dist/openzwave.spec \
-	dist/openzwave.spec \
 	dist/openzwave.spec \
 	dist/openzwave.spec.in \
 	distfiles.mk \
