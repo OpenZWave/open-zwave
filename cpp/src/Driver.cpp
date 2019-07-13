@@ -5393,7 +5393,7 @@ void Driver::UpdateControllerState(ControllerState const _state, ControllerError
 
 		}
 		Notification* notification = new Notification(Notification::Type_ControllerCommand);
-		otification->SetHomeAndNodeIds(m_homeId, m_currentControllerCommand->m_controllerCommandNode);
+		notification->SetHomeAndNodeIds(m_homeId, m_currentControllerCommand->m_controllerCommandNode);
 		notification->SetCommand(m_currentControllerCommand->m_controllerCommand);
 		notification->SetEvent(_state);
 
