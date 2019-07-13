@@ -1,2 +1,2 @@
 # this is not jquery but some stuff added by doxygen
-libopenzwave-doc: embedded-javascript-library usr/share/doc/openzwave-1.4.0/api/html/jquery.js please use libjs-jquery
+libopenzwave-doc: embedded-javascript-library usr/share/doc/openzwave-1.6.0/api/html/jquery.js please use libjs-jquery

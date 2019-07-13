@@ -14,11 +14,16 @@ There is a example application on how to interface with the library called MinOZ
 If you are using a Application that uses OZW, you should first check with the Application Developers for support. As OZW is a library used by dozens of large opensource home automation applications, we can not support application related issues here. If your application developer indicates the problem may be with OZW, please follow the guidelines below. 
 
 First thing you should do if you are running into troubles is search our [mailing list](https://groups.google.com/forum/#!forum/openzwave). There is a high chance that your problem may have already been discussed on the list. 
-If your still having problems, you should Generate a Log file and upload your Log to the [Log Analyzer on our homepage](http://www.openzwave.com/log-analyzer), which will check for common issues, and provide some basic recommendations. Please follow the instructions on that page to ensure your log file contains the relevant information. 
+If you're still having problems, you should Generate a Log file and upload your Log to the [Log Analyzer on our homepage](http://www.openzwave.com/log-analyzer), which will check for common issues, and provide some basic recommendations. Please follow the instructions on that page to ensure your log file contains the relevant information. 
 
 If you think you have found a bug, please see the next section. 
 
 For General Questions/How Do I etc, please post a message to our [mailing list](https://groups.google.com/forum/#!forum/openzwave)
+
+## Language Wrappers
+A number of members of the community have developed wrappers for OpenZWave for other languages. Those actively maintained wrappers can be found at the OpenZWave Organisation page at https://github.com/OpenZWave
+
+If you have developed a wrapper for another language, and would like to publish it under the OpenZWave organisation (and gain access to things like CI, Distribution Build Servers etc) please contact Fishwaldo on our mailing list. 
 
 ## Opening or Contributing to a Issue on Github
 Z-Wave is a reasonably complex protocol, and thus, it almost always necessary for us to review a OZW Log file to determine what’s going on. As GitHub does not support attachments on Issues, please upload a [LogFile](http://www.openzwave.com/log-analyzer) and then create a issue on [GitHub](https://github.com/OpenZWave/open-zwave/issues). Please include a link to the LogFile Scan results (check the "Public Results" button on the results page and copy the URL it links to). 

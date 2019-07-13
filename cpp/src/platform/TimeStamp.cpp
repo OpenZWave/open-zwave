@@ -37,72 +37,67 @@
 #include "platform/unix/TimeStampImpl.h"	// Platform-specific implementation of a TimeStamp
 #endif
 
-using namespace OpenZWave;
+namespace OpenZWave
+{
+	namespace Internal
+	{
+		namespace Platform
+		{
 
 //-----------------------------------------------------------------------------
 //	<TimeStamp::TimeStamp>
 //	Constructor
 //-----------------------------------------------------------------------------
-TimeStamp::TimeStamp
-(
-):
-	m_pImpl( new TimeStampImpl() )
-{
-}
+			TimeStamp::TimeStamp() :
+					m_pImpl(new TimeStampImpl())
+			{
+			}
 
 //-----------------------------------------------------------------------------
 //	<TimeStamp::~TimeStamp>
 //	Destructor
 //-----------------------------------------------------------------------------
-TimeStamp::~TimeStamp
-(
-)
-{
-	delete m_pImpl;
-}
+			TimeStamp::~TimeStamp()
+			{
+				delete m_pImpl;
+			}
 
 //-----------------------------------------------------------------------------
 //	<TimeStamp::SetTime>
 //	Sets the timestamp to now, plus an offset in milliseconds
 //-----------------------------------------------------------------------------
-void TimeStamp::SetTime
-(
-	int32 _milliseconds	// = 0
-)
-{
-	m_pImpl->SetTime( _milliseconds );
-}
+			void TimeStamp::SetTime(int32 _milliseconds	// = 0
+					)
+			{
+				m_pImpl->SetTime(_milliseconds);
+			}
 
 //-----------------------------------------------------------------------------
 //	<TimeStamp::TimeRemaining>
 //	Gets the difference between now and the timestamp time in milliseconds
 //-----------------------------------------------------------------------------
-int32 TimeStamp::TimeRemaining
-(
-)
-{
-	return m_pImpl->TimeRemaining();
-}
+			int32 TimeStamp::TimeRemaining()
+			{
+				return m_pImpl->TimeRemaining();
+			}
 
 //-----------------------------------------------------------------------------
 //	<TimeStamp::GetAsString>
 //	Return object as a string
 //-----------------------------------------------------------------------------
-string TimeStamp::GetAsString
-(
-)
-{
-	return m_pImpl->GetAsString();
-}
+			std::string TimeStamp::GetAsString()
+			{
+				return m_pImpl->GetAsString();
+			}
 //-----------------------------------------------------------------------------
 //	<TimeStamp::operator->
 //	Overload the subtract operator to get the difference between two
 //	timestamps in milliseconds
 //-----------------------------------------------------------------------------
-int32 TimeStamp::operator-
-(
-	TimeStamp const& _other
-)
-{
-	return (int32)(m_pImpl - _other.m_pImpl);
-}
+			int32 TimeStamp::operator-(TimeStamp const& _other)
+			{
+				return (int32) (m_pImpl - _other.m_pImpl);
+			}
+		} // namespace Platform
+	} // namespace Internal
+} // namespace OpenZWave

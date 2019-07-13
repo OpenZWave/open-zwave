@@ -51,7 +51,7 @@ juLog() {
   ya=""; icase=""
   while [ -z "$ya" ]; do  
     case "$1" in
-  	  -name=*)   name=$asserts-`echo "$1" | sed -e 's/-name=//'`;   shift;;
+  	  -name=*)   name=`echo "$1" | sed -e 's/-name=//'`;   shift;;
       -ierror=*) ereg=`echo "$1" | sed -e 's/-ierror=//'`; icase="-i"; shift;;
       -error=*)  ereg=`echo "$1" | sed -e 's/-error=//'`;  shift;;
       *)         ya=1;;
