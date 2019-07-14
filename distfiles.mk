@@ -891,12 +891,12 @@ DISTFILES =	.gitignore \
 	config/logicsoft/ZHC5010.xml \
 	config/manufacturer_specific.xml \
 	config/manufacturer_specific.xsd \
-	config/mcohome/MHP220.xml \
 	config/mcohome/a8-9.xml \
 	config/mcohome/mh7h.xml \
 	config/mcohome/mh8fceu.xml \
 	config/mcohome/mh9co2.xml \
 	config/mcohome/mhp210.xml \
+	config/mcohome/mhp220.xml \
 	config/mcohome/mhp511.xml \
 	config/mcohome/mhs311.xml \
 	config/mcohome/mhs312.xml \
