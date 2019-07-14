@@ -101,6 +101,7 @@ DISTFILES =	.gitignore \
 	config/aeotec/zw140.xml \
 	config/aeotec/zw141.xml \
 	config/aeotec/zw162.xml \
+	config/aeotec/zw175.xml \
 	config/aeotec/zwa001.xml \
 	config/aeotec/zwa002.xml \
 	config/aeotec/zwa003.xml \
@@ -259,9 +260,11 @@ DISTFILES =	.gitignore \
 	config/fibaro/fgsd002.xml \
 	config/fibaro/fgss101.xml \
 	config/fibaro/fgt001.xml \
+	config/fibaro/fgwds221.xml \
 	config/fibaro/fgwpe.xml \
 	config/fibaro/fgwpfzw5.xml \
 	config/fibaro/fgwpg111.xml \
+	config/fibaro/fgwr111.xml \
 	config/firstalert/zcombo.xml \
 	config/followgood/swz-1002.xml \
 	config/forest/fs2z5232000002.xml \
@@ -430,6 +433,7 @@ DISTFILES =	.gitignore \
 	config/images/aeotec/zw140.png \
 	config/images/aeotec/zw141.png \
 	config/images/aeotec/zw162.png \
+	config/images/aeotec/zw195.png \
 	config/images/aeotec/zwa001.png \
 	config/images/aeotec/zwa002.png \
 	config/images/aeotec/zwa003.png \
@@ -544,6 +548,7 @@ DISTFILES =	.gitignore \
 	config/images/fibaro/fgwpe.png \
 	config/images/fibaro/fgwpfzw5.png \
 	config/images/fibaro/fgwpg111.png \
+	config/images/fibaro/fgwr111.png \
 	config/images/firstalert/zcombo.png \
 	config/images/followgood/swz-1002.png \
 	config/images/forest/fs2z5232000002.png \
@@ -654,6 +659,7 @@ DISTFILES =	.gitignore \
 	config/images/linear/ngd00z.png \
 	config/images/logicsoft/ZHC5010.png \
 	config/images/mcohome/mh7h.png \
+	config/images/mcohome/mhp220.png \
 	config/images/mcohome/mhp511.png \
 	config/images/merten/5044xx.png \
 	config/images/merten/5046xx.png \
@@ -752,7 +758,9 @@ DISTFILES =	.gitignore \
 	config/images/steinel/rs-led-d2.png \
 	config/images/steinel/xled-home-2.png \
 	config/images/stelpro/stzw402.png \
+	config/images/sunricher/srzv9001k8.png \
 	config/images/sunricher/srzv9001t4dimeu.png \
+	config/images/sunricher/srzv9003t4rgbweu.png \
 	config/images/sunricher/srzv9101sachpeu.png \
 	config/images/sunricher/zv9101.png \
 	config/images/swiid/swiidinter.png \
@@ -888,6 +896,7 @@ DISTFILES =	.gitignore \
 	config/mcohome/mh8fceu.xml \
 	config/mcohome/mh9co2.xml \
 	config/mcohome/mhp210.xml \
+	config/mcohome/mhp220.xml \
 	config/mcohome/mhp511.xml \
 	config/mcohome/mhs311.xml \
 	config/mcohome/mhs312.xml \
@@ -969,6 +978,7 @@ DISTFILES =	.gitignore \
 	config/qubino/ZMNHCDx.xml \
 	config/qubino/ZMNHDA2.xml \
 	config/qubino/ZMNHDDx.xml \
+	config/qubino/ZMNHHDx.xml \
 	config/qubino/ZMNHIA2.xml \
 	config/qubino/ZMNHIDxS1.xml \
 	config/qubino/ZMNHIDxS2.xml \
@@ -1036,7 +1046,9 @@ DISTFILES =	.gitignore \
 	config/steinel/rs-led-d2.xml \
 	config/steinel/xled-home-2.xml \
 	config/stelpro/stzw402.xml \
+	config/sunricher/srzv9001k8.xml \
 	config/sunricher/srzv9001t4dimeu.xml \
+	config/sunricher/srzv9003t4rgbweu.xml \
 	config/sunricher/srzv9101sachpeu.xml \
 	config/sunricher/zv9101.xml \
 	config/swiid/swiidinter.xml \

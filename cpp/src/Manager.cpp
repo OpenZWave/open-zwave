@@ -1017,6 +1017,21 @@ uint32 Manager::GetNodeNeighbors(uint32 const _homeId, uint8 const _nodeId, uint
 }
 
 //-----------------------------------------------------------------------------
+// <Manager::SyncronizeNodeNeighbors>
+// Syncronise OZW's copy of the Neighbor List for a Node with the Controller
+//-----------------------------------------------------------------------------
+void Manager::SyncronizeNodeNeighbors(uint32 const _homeId, uint8 const _nodeId)
+{
+	if (Driver* driver = GetDriver(_homeId))
+	{
+		driver->RequestNodeNeighbors(_nodeId, 0);
+	}
+
+	return;
+}
+
+
+//-----------------------------------------------------------------------------
 // <Manager::GetNodeManufacturerName>
 // Get the manufacturer name of a node
 //-----------------------------------------------------------------------------
