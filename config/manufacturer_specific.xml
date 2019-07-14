@@ -695,7 +695,7 @@
     <Product config="fibaro/fgwpg111.xml" id="2000" name="FGWPG111 US Wall Plug" type="1701"/>
     <Product config="fibaro/fgwpg111.xml" id="1000" name="FGWPG111 UK Wall Plug" type="1801"/>
     <Product config="fibaro/fgwds221.xml" id="1000" name="FGWDS221 Walli Double Switch" type="1B01"/>
-	<Product config="fibaro/fgwd111.xml" id="1000" name="FGWD111 Walli Dimmer" type="1C01"/>
+    <Product config="fibaro/fgwd111.xml" id="1000" name="FGWD111 Walli Dimmer" type="1C01"/>
     <Product config="fibaro/fgwr111.xml" id="1000" name="FGWR111 Walli Roller Shutter" type="1d01"/>
   </Manufacturer>
   <Manufacturer id="0295" name="fifthplay nv"></Manufacturer>
