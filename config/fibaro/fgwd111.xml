@@ -6,8 +6,8 @@
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/010f:1000:1C01</MetaDataItem>
     <MetaDataItem name="ProductPage">https://www.fibaro.com/en/products/smart-switches-and-outlets-walli-dimmer/</MetaDataItem>
     <MetaDataItem name="ProductSupport">https://manuals.fibaro.com/walli-dimmer/</MetaDataItem>
-    <MetaDataItem name="ProductPic"><!-- path to images/vendor/product.png --></MetaDataItem>
-    <MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&amp;filename==Manuals/3392/FGWDEU-111-T-EN-0.16.pdf</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/fibaro/fgwd111.png</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://manuals.fibaro.com</MetaDataItem>
     <MetaDataItem name="WakeupDescription">FIBARO Walli Dimmer is powered using DC power supply unit so it is always awake.</MetaDataItem>
     <MetaDataItem name="InclusionDescription">To add the device to the Z-Wave network manually:
 1. Power the device.
