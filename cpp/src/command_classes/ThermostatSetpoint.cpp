@@ -288,10 +288,10 @@ namespace OpenZWave
 			}
 
 //-----------------------------------------------------------------------------
-// <ThermostatSetpoint::CreateSetPoint>
+// <ThermostatSetpoint::CreateVars>
 // Create the values managed by this command class
 //-----------------------------------------------------------------------------
-			void ThermostatSetpoint::CreateSetPoint(uint8 const _instance, uint8 const _index)
+			void ThermostatSetpoint::CreateVars(uint8 const _instance, uint8 const _index)
 			{
 				if (Node* node = GetNodeUnsafe())
 				{
