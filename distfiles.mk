@@ -260,6 +260,7 @@ DISTFILES =	.gitignore \
 	config/fibaro/fgsd002.xml \
 	config/fibaro/fgss101.xml \
 	config/fibaro/fgt001.xml \
+	config/fibaro/fgwd111.xml \
 	config/fibaro/fgwds221.xml \
 	config/fibaro/fgwpe.xml \
 	config/fibaro/fgwpfzw5.xml \
@@ -545,6 +546,7 @@ DISTFILES =	.gitignore \
 	config/images/fibaro/fgs223.png \
 	config/images/fibaro/fgsd002.png \
 	config/images/fibaro/fgt001.png \
+	config/images/fibaro/fgwd111.png \
 	config/images/fibaro/fgwpe.png \
 	config/images/fibaro/fgwpfzw5.png \
 	config/images/fibaro/fgwpg111.png \
