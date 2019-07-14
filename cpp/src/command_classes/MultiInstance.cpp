@@ -339,7 +339,6 @@ namespace OpenZWave
 						{
 							afterMark = true;
 							Log::Write(LogLevel_Info, GetNodeId(), "    Controlled CommandClasses:");
-							continue;
 						}
 
 						if (m_com.GetFlagBool(COMPAT_FLAG_MI_REMOVECC, commandClassId) == true) {
@@ -354,7 +353,7 @@ namespace OpenZWave
 
 						if (!cc)
 						{
-							cc = node->AddCommandClass(commandClassId, endPoint);
+							cc = node->AddCommandClass(commandClassId);
 						}
 						if (cc && afterMark)
 						{
