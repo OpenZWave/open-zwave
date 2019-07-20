@@ -5393,7 +5393,31 @@ void Driver::UpdateControllerState(ControllerState const _state, ControllerError
 
 		}
 		Notification* notification = new Notification(Notification::Type_ControllerCommand);
-		notification->SetHomeAndNodeIds(m_homeId, 0);
+
+        // PR #1879
+        // The change below sets the nodeId in the notifications for controller state changes. These state changes are
+        // caused by controller commands. Below is a list of controller commands with what the nodeId gets set to,
+        // along with the Manager method(s) that use the controller command.
+
+        // Driver::ControllerCommand_RequestNodeNeighborUpdate: supplied nodeId (Manager::HealNetworkNode, Manager::HealNetwork)
+        // Driver::ControllerCommand_AddDevice: nodeId of an added node (Manager::AddNode)
+        // Driver::ControllerCommand_RemoveDevice: nodeId of a removed node (Manager::RemoveNode)
+        // Driver::ControllerCommand_RemoveFailedNode: supplied nodeId (Manager::RemoveFailedNode)
+        // Driver::ControllerCommand_HasNodeFailed supplied nodeId (Manager::HasNodeFailed)
+        // Driver::ControllerCommand_AssignReturnRoute: supplied nodeId (Manager::AssignReturnRoute)
+        // Driver::ControllerCommand_RequestNodeNeighborUpdate: supplied nodeId (Manager::RequestNodeNeighborUpdate)
+        // Driver::ControllerCommand_DeleteAllReturnRoutes supplied nodeId (Manager::DeleteAllReturnRoutes)
+        // Driver::ControllerCommand_SendNodeInformation: supplied nodeId (Manager::SendNodeInformation)
+        // Driver::ControllerCommand_CreateNewPrimary: unknown (Manager::CreateNewPrimary)
+        // Driver::ControllerCommand_ReceiveConfiguration: unknown (Manager::ReceiveConfiguration)
+        // Driver::ControllerCommand_ReplaceFailedNode: could be the supplied nodeId or the nodeId of the node that was added (Manager::ReplaceFailedNode)
+        // Driver::ControllerCommand_TransferPrimaryRole: unknown (Manager::TransferPrimaryRole)
+        // Driver::ControllerCommand_RequestNetworkUpdate: supplied nodeId (Manager::RequestNetworkUpdate)
+        // Driver::ControllerCommand_ReplicationSend: supplied nodeId (Manager::ReplicationSend)
+        // Driver::ControllerCommand_CreateButton: supplied nodeId (Manager::CreateButton)
+        // Driver::ControllerCommand_DeleteButton: supplied nodeId (Manager::DeleteButton)
+		notification->SetHomeAndNodeIds(m_homeId, m_currentControllerCommand->m_controllerCommandNode);
+
 		notification->SetCommand(m_currentControllerCommand->m_controllerCommand);
 		notification->SetEvent(_state);
 
