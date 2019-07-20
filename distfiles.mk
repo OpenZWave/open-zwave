@@ -339,6 +339,7 @@ DISTFILES =	.gitignore \
 	config/heltun/he-zw-therm-fc1.xml \
 	config/heltun/he-zw-therm-fl2.xml \
 	config/homeseer/ezmotionplus.xml \
+	config/homeseer/hs-ds100plus.xml \
 	config/homeseer/hs-fc200plus.xml \
 	config/homeseer/hs-fls100plus.xml \
 	config/homeseer/hs-fs100plus.xml \
@@ -614,6 +615,7 @@ DISTFILES =	.gitignore \
 	config/images/heiman/HS1SA-Z.png \
 	config/images/heiman/HS1WL-Z.png \
 	config/images/heiman/HS2SK-Z.png \
+	config/images/homeseer/hs-ds100plus.png \
 	config/images/homeseer/hs-fc200plus.png \
 	config/images/homeseer/hs-fls100plus.png \
 	config/images/homeseer/hs-ls100plus.png \
