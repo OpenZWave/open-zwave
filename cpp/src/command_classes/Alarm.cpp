@@ -342,7 +342,7 @@ namespace OpenZWave
 												/* some devices (Like BeNext TagReader) don't send a Proper UserCodeCmd_Report Message, Just the Index of the Code that Triggered */
 												if (Internal::VC::ValueByte *value = static_cast<Internal::VC::ValueByte *>(GetValue(_instance, it->first)))
 												{
-													value->OnValueRefreshed(_data[11]);
+													value->OnValueRefreshed(_data[8]);
 													value->Release();
 													m_ParamsSet.push_back(it->first);
 												}
