@@ -3,7 +3,7 @@
 %endif
 
 Name:     openzwave
-Version:  1.6.836
+Version:  1.6.848
 Release:  1.0%{?dist}
 Summary:  Sample Executables for OpenZWave
 URL:      http://www.openzwave.net
