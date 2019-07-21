@@ -390,13 +390,13 @@ namespace OpenZWave
 				return;
 			}
 			char* pStopChar;
-			uint16 indexId = (uint16) strtol(str, &pStopChar, 16);
+			uint16 indexId = (uint16) strtol(str, &pStopChar, 10);
 
 			uint32 pos = -1;
 			str = valueElement->Attribute("pos");
 			if (str)
 			{
-				pos = (uint32) strtol(str, &pStopChar, 16);
+				pos = (uint32) strtol(str, &pStopChar, 10);
 			}
 
 			TiXmlElement const* valueIDElement = valueElement->FirstChildElement();
