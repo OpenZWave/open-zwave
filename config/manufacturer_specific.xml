@@ -817,6 +817,7 @@
 		<Product type="1301" id="1000" name="FGT001 Heat Controller" config="fibaro/fgt001.xml"/>
 		<Product type="1701" id="2000" name="FGWPG111 US Wall Plug" config="fibaro/fgwpg111.xml"/>
 		<Product type="1801" id="1000" name="FGWPG111 UK Wall Plug" config="fibaro/fgwpg111.xml"/>
+		<Product type="1C01" id="1000" name="FGWD111 Walli Dimmer" config="fibaro/fgwd111.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0295" name="fifthplay nv">
 	</Manufacturer>
