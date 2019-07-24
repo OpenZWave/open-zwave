@@ -21,7 +21,7 @@ Aeotec ZW164 Indoor Siren 6
   </MetaData>
 
   <CommandClass id="112">
-    <Value type="list" genre="config" index="1" label="Configure the Light Effect and Tone Play Mode for Endpoint 1 (Browse)." min="16777216" max="‭2147418112‬" size="4" value="16777216">
+    <Value index="1" genre="config" type="list" label="Configure the Light Effect and Tone Play Mode for Endpoint 1 (Browse)." min="16777216" max="‭2147418112‬" size="4" value="16777216">
       <!-- 
         [XX:1][XX:2][00][00]
         1: Light effect, allowed values are 1, 2, 4, 8, 16, 32, 64, 127 (must be converted to HEX)
@@ -83,7 +83,7 @@ Aeotec ZW164 Indoor Siren 6
       <Item label="Last valid configuration - last valid configuration value" value="‭2147418112‬" />
     </Value>
     
-    <Value type="int" genre="config" index="2" label="Configure the Light Effect and Tone Play Mode for Endpoint 2 (Tampering)." min="0" max="‭‭2147483647‬‬" size="4" value="16777217">
+    <Value index="2" genre="config" type="int" label="Configure the Light Effect and Tone Effect for Endpoint 2 (Tampering)." min="0" max="‭‭2147483647‬‬" size="4" value="16777217">
       <!-- 
         [XX:1][XX:2][XX:3][XX:4]
         1: Light effect, allowed values are 1, 2, 4, 8, 16, 32, 64, 127 (must be converted to HEX)
@@ -91,8 +91,17 @@ Aeotec ZW164 Indoor Siren 6
         3: Interval between 2 tones
         4: Tone play count
       -->
-      <Help>Set light effect and tone play mode for endpoint 2 (Tampering). Use a HEX calculator to convert the configuration to a decimal value.</Help>
     </Value>
+    
+    <Value index="3" genre="config" type="int" label="Configure the Light Effect and Tone Effect for Endpoint 3 (Doorbell 1)." min="16777216" max="‭‭2147483647‬‬" size="4" value="33554433">
+    </Value>
+        
+    <Value index="4" genre="config" type="int" label="Configure the Light Effect and Tone Effect for Endpoint 4 (Doorbell 2)." min="16777216" max="‭‭2147483647‬‬" size="4" value="33554433">
+    </Value>
+            
+    <Value index="5" genre="config" type="int" label="Configure the Light Effect and Tone Effect for Endpoint 5 (Doorbell 3)." min="16777216" max="‭‭2147483647‬‬" size="4" value="33554433">
+    </Value>
+    
   </CommandClass>
 
   <!-- the Device Doesn't support Get for Alarm Class -->
