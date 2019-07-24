@@ -21,11 +21,11 @@ Aeotec ZW164 Indoor Siren 6
   </MetaData>
 
   <CommandClass id="112">
-    <Value type="list" genre="config" index="1" label="Configure the Light Effect and Tone Play Mode for Endpoint 1(Browse)." min="16777216" max="‭2147418112‬" size="4" value="16777216">
+    <Value type="list" genre="config" index="1" label="Configure the Light Effect and Tone Play Mode for Endpoint 1 (Browse)." min="16777216" max="‭2147418112‬" size="4" value="16777216">
       <!-- 
         [XX:1][XX:2][00][00]
         1: Light effect, allowed values are 1, 2, 4, 8, 16, 32, 64, 127 (must be converted to HEX)
-        2: Tone pllay mode, allowed values are 0, 1, 2, 3, 255 (must be converted to HEX)
+        2: Tone play mode, allowed values are 0, 1, 2, 3, 255 (must be converted to HEX)
         
         So Light effect #5 + single loop is:
             Decimal: [16][01][00][00]
@@ -81,6 +81,17 @@ Aeotec ZW164 Indoor Siren 6
       <Item label="Last valid configuration - list loop playing" value="‭2130837504‬" />
       <Item label="Last valid configuration - list random playback" value="‭2130903040‬" />
       <Item label="Last valid configuration - last valid configuration value" value="‭2147418112‬" />
+    </Value>
+    
+    <Value type="int" genre="config" index="2" label="Configure the Light Effect and Tone Play Mode for Endpoint 2 (Tampering)." min="0" max="‭‭2147483647‬‬" size="4" value="16777217">
+      <!-- 
+        [XX:1][XX:2][XX:3][XX:4]
+        1: Light effect, allowed values are 1, 2, 4, 8, 16, 32, 64, 127 (must be converted to HEX)
+        2: Intercepting duration of a tone
+        3: Interval between 2 tones
+        4: Tone play count
+      -->
+      <Help>Set light effect and tone play mode for endpoint 2 (Tampering). Use a HEX calculator to convert the configuration to a decimal value.</Help>
     </Value>
   </CommandClass>
 
