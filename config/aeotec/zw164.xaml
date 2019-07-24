@@ -195,6 +195,11 @@ Aeotec ZW164 Indoor Siren 6
       <Item label="When Endpoint 8 starts playing tone, send Basic Set 0xFF. When Endpoint 8 stops playing tone, send Basic Set 0x00" value="3" />
       <Item label="When Endpoint 8 starts playing tone, send Basic Set 0x00. When Endpoint 8 stops playing tone, send Basic Set 0xFF" value="4" />
     </Value>
+    
+    <Value index="96" genre="config" type="list" label="Enable or Disable the ability that click the Action Button to stop a playing tone." min="0" max="1" size="1" value="">
+      <Item label="Disable" value="0‬" />
+      <Item label="Enable" value="1‬" />
+    </Value>
   </CommandClass>
 
   <!-- the Device Doesn't support Get for Alarm Class -->
