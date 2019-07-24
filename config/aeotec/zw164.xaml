@@ -98,10 +98,103 @@ Aeotec ZW164 Indoor Siren 6
         
     <Value index="4" genre="config" type="int" label="Configure the Light Effect and Tone Effect for Endpoint 4 (Doorbell 2)." min="16777216" max="‭‭2147483647‬‬" size="4" value="33554433">
     </Value>
-            
+
     <Value index="5" genre="config" type="int" label="Configure the Light Effect and Tone Effect for Endpoint 5 (Doorbell 3)." min="16777216" max="‭‭2147483647‬‬" size="4" value="33554433">
     </Value>
-    
+
+    <Value index="6" genre="config" type="int" label="Configure the Light Effect and Tone Effect for Endpoint 6 (Environment)." min="16777216" max="‭‭2147483647‬‬" size="4" value="67108864">
+    </Value>
+
+    <Value index="7" genre="config" type="int" label="Configure the Light Effect and Tone Effect for Endpoint 7 (Security)." min="16777216" max="‭‭2147483647‬‬" size="4" value="67108864">
+    </Value>
+
+    <Value index="8" genre="config" type="int" label="Configure the Light Effect and Tone Effect for Endpoint 8 (Emergency)." min="16777216" max="‭‭2147483647‬‬" size="4" value="67108864">
+    </Value>
+
+    <Value index="16" genre="config" type="int" label="Configure #1 Light Effect." min="0" max="‭‭2147483647‬‬" size="4" value="1259934723">
+    </Value>
+
+    <Value index="17" genre="config" type="int" label="Configure #2 Light Effect." min="0" max="‭‭2147483647‬‬" size="4" value="1259934723">
+    </Value>
+
+    <Value index="18" genre="config" type="int" label="Configure #3 Light Effect." min="0" max="‭‭2147483647‬‬" size="4" value="1259934723">
+    </Value>
+
+    <Value index="19" genre="config" type="int" label="Configure #4 Light Effect." min="0" max="‭‭2147483647‬‬" size="4" value="1259934723">
+    </Value>
+
+    <Value index="20" genre="config" type="int" label="Configure #5 Light Effect." min="0" max="‭‭2147483647‬‬" size="4" value="1259934723">
+    </Value>
+
+    <Value index="21" genre="config" type="int" label="Configure #6 Light Effect." min="0" max="‭‭2147483647‬‬" size="4" value="1259934723">
+    </Value>
+
+    <Value index="22" genre="config" type="int" label="Configure #7 Light Effect." min="0" max="‭‭2147483647‬‬" size="4" value="1259934723">
+    </Value>
+
+    <Value index="32" genre="config" type="list" label="Configure how to send Basic Set to nodes in Group 2." min="0" max="‭‭4‬‬" size="1" value="3">
+      <Item label="Don't send Basic Set" value="0‬" />
+      <Item label="When Endpoint 1 starts playing tone, send Basic Set 0xFF. When Endpoint 1 stops playing tone, don't send Basic Set" value="1" />
+      <Item label="When Endpoint 1 starts playing tone, send Basic Set 0x00. When Endpoint 1 stops playing tone, don't send Basic Set" value="2" />
+      <Item label="When Endpoint 1 starts playing tone, send Basic Set 0xFF. When Endpoint 1 stops playing tone, send Basic Set 0x00" value="3" />
+      <Item label="When Endpoint 1 starts playing tone, send Basic Set 0x00. When Endpoint 1 stops playing tone, send Basic Set 0xFF" value="4" />
+    </Value>
+
+    <Value index="33" genre="config" type="list" label="Configure how to send Basic Set to nodes in Group 3." min="0" max="‭‭4‬‬" size="1" value="3">
+      <Item label="Don't send Basic Set" value="0‬" />
+      <Item label="When Endpoint 2 starts playing tone, send Basic Set 0xFF. When Endpoint 2 stops playing tone, don't send Basic Set" value="1" />
+      <Item label="When Endpoint 2 starts playing tone, send Basic Set 0x00. When Endpoint 2 stops playing tone, don't send Basic Set" value="2" />
+      <Item label="When Endpoint 2 starts playing tone, send Basic Set 0xFF. When Endpoint 2 stops playing tone, send Basic Set 0x00" value="3" />
+      <Item label="When Endpoint 2 starts playing tone, send Basic Set 0x00. When Endpoint 2 stops playing tone, send Basic Set 0xFF" value="4" />
+    </Value>
+
+    <Value index="34" genre="config" type="list" label="Configure how to send Basic Set to nodes in Group 4." min="0" max="‭‭4‬‬" size="1" value="3">
+      <Item label="Don't send Basic Set" value="0‬" />
+      <Item label="When Endpoint 3 starts playing tone, send Basic Set 0xFF. When Endpoint 3 stops playing tone, don't send Basic Set" value="1" />
+      <Item label="When Endpoint 3 starts playing tone, send Basic Set 0x00. When Endpoint 3 stops playing tone, don't send Basic Set" value="2" />
+      <Item label="When Endpoint 3 starts playing tone, send Basic Set 0xFF. When Endpoint 3 stops playing tone, send Basic Set 0x00" value="3" />
+      <Item label="When Endpoint 3 starts playing tone, send Basic Set 0x00. When Endpoint 3 stops playing tone, send Basic Set 0xFF" value="4" />
+    </Value>
+
+    <Value index="35" genre="config" type="list" label="Configure how to send Basic Set to nodes in Group 5." min="0" max="‭‭4‬‬" size="1" value="3">
+      <Item label="Don't send Basic Set" value="0‬" />
+      <Item label="When Endpoint 4 starts playing tone, send Basic Set 0xFF. When Endpoint 4 stops playing tone, don't send Basic Set" value="1" />
+      <Item label="When Endpoint 4 starts playing tone, send Basic Set 0x00. When Endpoint 4 stops playing tone, don't send Basic Set" value="2" />
+      <Item label="When Endpoint 4 starts playing tone, send Basic Set 0xFF. When Endpoint 4 stops playing tone, send Basic Set 0x00" value="3" />
+      <Item label="When Endpoint 4 starts playing tone, send Basic Set 0x00. When Endpoint 4 stops playing tone, send Basic Set 0xFF" value="4" />
+    </Value>
+
+    <Value index="36" genre="config" type="list" label="Configure how to send Basic Set to nodes in Group 6." min="0" max="‭‭4‬‬" size="1" value="3">
+      <Item label="Don't send Basic Set" value="0‬" />
+      <Item label="When Endpoint 5 starts playing tone, send Basic Set 0xFF. When Endpoint 5 stops playing tone, don't send Basic Set" value="1" />
+      <Item label="When Endpoint 5 starts playing tone, send Basic Set 0x00. When Endpoint 5 stops playing tone, don't send Basic Set" value="2" />
+      <Item label="When Endpoint 5 starts playing tone, send Basic Set 0xFF. When Endpoint 5 stops playing tone, send Basic Set 0x00" value="3" />
+      <Item label="When Endpoint 5 starts playing tone, send Basic Set 0x00. When Endpoint 5 stops playing tone, send Basic Set 0xFF" value="4" />
+    </Value>
+
+    <Value index="37" genre="config" type="list" label="Configure how to send Basic Set to nodes in Group 7." min="0" max="‭‭4‬‬" size="1" value="3">
+      <Item label="Don't send Basic Set" value="0‬" />
+      <Item label="When Endpoint 6 starts playing tone, send Basic Set 0xFF. When Endpoint 6 stops playing tone, don't send Basic Set" value="1" />
+      <Item label="When Endpoint 6 starts playing tone, send Basic Set 0x00. When Endpoint 6 stops playing tone, don't send Basic Set" value="2" />
+      <Item label="When Endpoint 6 starts playing tone, send Basic Set 0xFF. When Endpoint 6 stops playing tone, send Basic Set 0x00" value="3" />
+      <Item label="When Endpoint 6 starts playing tone, send Basic Set 0x00. When Endpoint 6 stops playing tone, send Basic Set 0xFF" value="4" />
+    </Value>
+
+    <Value index="38" genre="config" type="list" label="Configure how to send Basic Set to nodes in Group 8." min="0" max="‭‭4‬‬" size="1" value="3">
+      <Item label="Don't send Basic Set" value="0‬" />
+      <Item label="When Endpoint 7 starts playing tone, send Basic Set 0xFF. When Endpoint 7 stops playing tone, don't send Basic Set" value="1" />
+      <Item label="When Endpoint 7 starts playing tone, send Basic Set 0x00. When Endpoint 7 stops playing tone, don't send Basic Set" value="2" />
+      <Item label="When Endpoint 7 starts playing tone, send Basic Set 0xFF. When Endpoint 7 stops playing tone, send Basic Set 0x00" value="3" />
+      <Item label="When Endpoint 7 starts playing tone, send Basic Set 0x00. When Endpoint 7 stops playing tone, send Basic Set 0xFF" value="4" />
+    </Value>
+
+    <Value index="39" genre="config" type="list" label="Configure how to send Basic Set to nodes in Group 9." min="0" max="‭‭4‬‬" size="1" value="3">
+      <Item label="Don't send Basic Set" value="0‬" />
+      <Item label="When Endpoint 8 starts playing tone, send Basic Set 0xFF. When Endpoint 8 stops playing tone, don't send Basic Set" value="1" />
+      <Item label="When Endpoint 8 starts playing tone, send Basic Set 0x00. When Endpoint 8 stops playing tone, don't send Basic Set" value="2" />
+      <Item label="When Endpoint 8 starts playing tone, send Basic Set 0xFF. When Endpoint 8 stops playing tone, send Basic Set 0x00" value="3" />
+      <Item label="When Endpoint 8 starts playing tone, send Basic Set 0x00. When Endpoint 8 stops playing tone, send Basic Set 0xFF" value="4" />
+    </Value>
   </CommandClass>
 
   <!-- the Device Doesn't support Get for Alarm Class -->
