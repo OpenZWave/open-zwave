@@ -32,14 +32,14 @@ Aeotec ZW164 Indoor Siren 6
   <CommandClass id="133">
     <Associations num_groups="9">
       <Group index="1" label="LifeLine" max_associations="5"/>
-      <Group index="2" label="Mirror of Endpoint 1, group 2" max_associations="5"/>
-      <Group index="3" label="Mirror of Endpoint 2, group 2" max_associations="5"/>
-      <Group index="4" label="Mirror of Endpoint 3, group 2" max_associations="5"/>
-      <Group index="5" label="Mirror of Endpoint 4, group 2" max_associations="5"/>
-      <Group index="6" label="Mirror of Endpoint 5, group 2" max_associations="5"/>
-      <Group index="7" label="Mirror of Endpoint 6, group 2" max_associations="5"/>
-      <Group index="8" label="Mirror of Endpoint 7, group 2" max_associations="5"/>
-      <Group index="9" label="Mirror of Endpoint 8, group 2" max_associations="5"/>
+      <Group index="2" label="On/Off control (Browse)" max_associations="5"/>
+      <Group index="3" label="On/Off control (Tampering)" max_associations="5"/>
+      <Group index="4" label="On/Off control (Doorbell 1)" max_associations="5"/>
+      <Group index="5" label="On/Off control (Doorbell 2)" max_associations="5"/>
+      <Group index="6" label="On/Off control (Doorbell 3)" max_associations="5"/>
+      <Group index="7" label="On/Off control (Environment)" max_associations="5"/>
+      <Group index="8" label="On/Off control (Security)" max_associations="5"/>
+      <Group index="9" label="On/Off control (Emergency)" max_associations="5"/>
     </Associations>
   </CommandClass>
 </Product>
