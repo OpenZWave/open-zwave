@@ -21,7 +21,7 @@ Aeotec ZW164 Indoor Siren 6
   </MetaData>
 
   <CommandClass id="112">
-    <Value index="1" genre="config" type="list" label="Configure the Light Effect and Tone Play Mode for Endpoint 1 (Browse)." min="16777216" max="‭2147418112‬" size="4" value="16777216">
+    <Value index="1" genre="config" type="int" label="Configure the Light Effect and Tone Play Mode for Endpoint 1 (Browse)." min="16777216" max="‭2147418112‬" size="4" value="16777216">
       <!-- 
         [XX:1][XX:2][00][00]
         1: Light effect, allowed values are 1, 2, 4, 8, 16, 32, 64, 127 (must be converted to HEX)
@@ -33,6 +33,10 @@ Aeotec ZW164 Indoor Siren 6
             
         Finally the HEX number 10010000 results in ‭268500992‬
       -->
+      
+      <!--
+        Looks like it's not allowed to support lists like this, but keeping it here for reference in case it becomes supported
+        
       <Help>Set light effect and tone play mode for endpoint 1 (Browse)</Help>
       <Item label="#1 Light effect - single playback" value="16777216‬" />
       <Item label="#1 Light effect - single loop playback" value="‭16842752‬" />
@@ -81,6 +85,7 @@ Aeotec ZW164 Indoor Siren 6
       <Item label="Last valid configuration - list loop playing" value="‭2130837504‬" />
       <Item label="Last valid configuration - list random playback" value="‭2130903040‬" />
       <Item label="Last valid configuration - last valid configuration value" value="‭2147418112‬" />
+      -->
     </Value>
     
     <Value index="2" genre="config" type="int" label="Configure the Light Effect and Tone Effect for Endpoint 2 (Tampering)." min="0" max="‭‭2147483647‬‬" size="4" value="16777217">
