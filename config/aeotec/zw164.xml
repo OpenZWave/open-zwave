@@ -20,6 +20,17 @@ Aeotec ZW164 Indoor Siren 6
     </ChangeLog>
   </MetaData>
 
+  <CommandClass id="96">
+    <Instance index="1" label="Browse"/>
+    <Instance index="2" label="Tampering"/>
+    <Instance index="3" label="Doorbell 1"/>
+    <Instance index="4" label="Doorbell 2"/>
+    <Instance index="5" label="Doorbell 3"/>
+    <Instance index="6" label="Environment"/>
+    <Instance index="7" label="Security"/>
+    <Instance index="8" label="Emergency"/>
+  </CommandClass>
+
   <CommandClass id="112">
     <Value index="1" genre="config" type="int" label="Configure the Light Effect and Tone Play Mode for Endpoint 1 (Browse)." min="16777216" max="‭2147418112‬" size="4" value="16777216">
       <!-- 
@@ -201,9 +212,70 @@ Aeotec ZW164 Indoor Siren 6
       <Item label="When Endpoint 8 starts playing tone, send Basic Set 0x00. When Endpoint 8 stops playing tone, send Basic Set 0xFF" value="4" />
     </Value>
     
+    <Value index="48" genre="config" type="list" label="Trigger Unpairing Button Mode" size="1" write_only="true">
+      <Help></Help>
+      <Item label="Trigger Unpairing #1 Button Mode" value="1"/>
+      <Item label="Trigger Unpairing #2 Button Mode" value="2"/>
+      <Item label="Trigger Unpairing #2 and #1 Button Mode" value="3"/>
+      <Item label="Trigger Unpairing #3 Button Mode" value="4"/>
+      <Item label="Trigger Unpairing #3 and #1 Button Mode" value="5"/>
+      <Item label="Trigger Unpairing #3 and #2 Button Mode" value="6"/>
+      <Item label="Trigger Unpairing #3, #2 and #1 Button Mode" value="7"/>
+    </Value>
+
+    <Value index="49" genre="config" type="list" label="Trigger pairing Button Mode" size="1" write_only="true">
+      <Help></Help>
+      <Item label="Exit Pairing Button Mode" value="0"/>
+      <Item label="Trigger Pairing #1 Button Mode" value="1"/>
+      <Item label="Trigger Pairing #2 Button Mode" value="2"/>
+      <Item label="Trigger Pairing #3 Button Mode" value="4"/>
+    </Value>
+
+    <Value index="50" genre="config" type="list" label="Report which Pairing Button Mode is triggered" read_only="true" size="1">
+      <Help></Help>
+      <Item label="There is no Pairing Button Mode being triggered" value="0"/>
+      <Item label="Pairing #1 Button Mode is triggered" value="1"/>
+      <Item label="Pairing #1 Button Mode is triggered" value="2"/>
+      <Item label="Pairing #1 Button Mode is triggered" value="4"/>
+    </Value>
+
+    <Value genre="config" index="51" label="Report which Buttons had been paired" read_only="true" size="1" type="list">
+      <Help></Help>
+      <Item label="There is no paired Button" value="0"/>
+      <Item label="#1 Button had been paired" value="1"/>
+      <Item label="#2 Button had been paired" value="2"/>
+      <Item label="#2 and #1 Button had been paired" value="3"/>
+      <Item label="#3 Button had been paired" value="4"/>
+      <Item label="#3 and #1 Button had been paired" value="5"/>
+      <Item label="#3 and #2 Button had been paired" value="6"/>
+      <Item label="#3x #2 and #1 Button had been paired" value="7"/>
+    </Value>
+    
+    <Value index="52" genre="config" type="int" label="Get the information of #1 Button" read_only="true" value="0">
+      <Help>Please Refer to Engineering Specification - Aeotec Indoor Siren 6
+      </Help>
+    </Value>
+    
+    <Value index="53" genre="config" type="int" label="Get the information of #2 Button" read_only="true" value="0">
+      <Help>Please Refer to Engineering Specification - Aeotec Indoor Siren 6
+      </Help>
+    </Value>
+    
+    <Value index="54" genre="config" type="int" label="Get the information of #3 Button" read_only="true" value="0">
+      <Help>Please Refer to Engineering Specification - Aeotec Indoor Siren 6
+      </Help>
+    </Value>
+
     <Value index="96" genre="config" type="list" label="Enable or Disable the ability that click the Action Button to stop a playing tone." min="0" max="1" size="1" value="0">
       <Item label="Disable" value="0‬" />
       <Item label="Enable" value="1‬" />
+    </Value>
+    
+    <Value index="255" genre="config" type="list" label="Reset To Factory Defaults" size="4" value="1" write_only="true">
+      <Help>Reset to factory defaults</Help>
+      <Item label="Reset to factory default setting" value="0"/>
+      <Item label="Normal" value="1"/>
+      <Item label="Reset to factory default setting and removed from the z-wave network" value="1431655765"/>
     </Value>
   </CommandClass>
 
