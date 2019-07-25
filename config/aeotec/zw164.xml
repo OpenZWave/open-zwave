@@ -20,6 +20,13 @@ Aeotec ZW164 Indoor Siren 6
     </ChangeLog>
   </MetaData>
 
+  <!-- Basic set as report -->
+  <CommandClass id="32">
+    <Compatibility>
+      <SetAsReport>true</SetAsReport>
+    </Compatibility>
+  </CommandClass>
+
   <CommandClass id="96">
     <Instance index="1" label="Browse"/>
     <Instance index="2" label="Tampering"/>
