@@ -1,6 +1,6 @@
 <!--
 ZWA005 TriSensor
---><Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
+--><Product Revision="6" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0371:0005:0002</MetaDataItem>
     <MetaDataItem name="ProductPic">images/aeotec/zwa005.png</MetaDataItem>
@@ -28,6 +28,9 @@ If it is the S2 encryption network, please enter the first 5 digits of DSK.
     <MetaDataItem id="0005" name="ZWProductPage" type="0102">https://products.z-wavealliance.org/products/2919/</MetaDataItem>
     <MetaDataItem id="0005" name="Identifier" type="0102">ZWA005-A</MetaDataItem>
     <MetaDataItem id="0005" name="FrequencyName" type="0102">U.S. / Canada / Mexico</MetaDataItem>
+    <MetaDataItem id="0005" name="ZWProductPage" type="0202">https://products.z-wavealliance.org/products/2920/</MetaDataItem>
+    <MetaDataItem id="0005" name="Identifier" type="0202">ZWA005-B</MetaDataItem>
+    <MetaDataItem id="0005" name="FrequencyName" type="0202">Australia / New Zealand</MetaDataItem>
   </MetaData>
   <!-- Configuration Parameters -->
   <CommandClass id="32">
