@@ -205,6 +205,7 @@
     <Product config="aeotec/zwa004.xml" id="0004" name="ZWA004 NanoMote One" type="0102"/>
     <Product config="aeotec/zwa005.xml" id="0005" name="ZWA005 TriSensor" type="0002"/>
     <Product config="aeotec/zwa005.xml" id="0005" name="ZWA005 TriSensor" type="0102"/>
+    <Product config="aeotec/zwa005.xml" id="0005" name="ZWA005 TriSensor" type="0202"/>
     <Product config="aeotec/zw162.xml" id="00a2" name="ZW162 Doorbell 6" type="0003"/>
     <Product config="aeotec/zw162.xml" id="00a2" name="ZW162 Doorbell 6" type="0103"/>
     <Product config="aeotec/zw162.xml" id="00a2" name="ZW162 Doorbell 6" type="0203"/>
