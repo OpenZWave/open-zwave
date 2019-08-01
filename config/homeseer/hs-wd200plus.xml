@@ -46,6 +46,23 @@ To manually reset, tap the ON button twice quickly and then tap the OFF button t
       <Item label="No" value="0"/>
       <Item label="Yes" value="1"/>
     </Value>
+    <Value genre="config" index="5" label="Set min dim level to bulbs" max="14" min="1" size="1" type="list" value="1">
+      <Help>Sets the min power level to bulbs at lowest dim level of switch. from 6.5% to 20% (1-14 values)</Help>
+      <Item label="7%" value="1"/>
+      <Item label="8%" value="2"/>
+      <Item label="9%" value="3"/>
+      <Item label="10%" value="4"/>
+      <Item label="11%" value="5"/>
+      <Item label="12%" value="6"/>
+      <Item label="13%" value="7"/>
+      <Item label="14%" value="8"/>
+      <Item label="15%" value="9"/>
+      <Item label="16%" value="10"/>
+      <Item label="17%" value="11"/>
+      <Item label="18%" value="12"/>
+      <Item label="19%" value="13"/>
+      <Item label="20%" value="14"/>
+    </Value>
     <Value genre="config" index="11" label="Dimmer ramp rate for remote control" max="90" min="0" type="byte" value="3">
       <Help>Ramp rate in seconds. 0 is no delay</Help>
     </Value>
