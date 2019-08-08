@@ -818,6 +818,7 @@
     <Product config="hank/hkzw-so05-smartplug.xml" id="000a" name="HKZW-SO05 Smart Plug" type="0100"/>
     <Product config="hank/hkzw-ms01.xml" id="0006" name="HKZW-MS01 Multisensor" type="0200"/>
     <Product config="hank/hkzw-ms02-200.xml" id="0012" name="HKZW-MS02 Motion Sensor" type="0200"/>
+    <Product config="hank/hkzw-ms02-300.xml" id="0012" name="HKZW-MS02 Motion Sensor" type="0300"/>
     <Product config="hank/hkzw-dws01.xml" id="0008" name="HKZW-DWS01 Door/Window Sensor" type="0200"/>
     <Product config="hank/hkzw-dws01.xml" id="0008" name="HKZW-DWS01 Door/Window Sensor" type="0201"/>
     <Product config="hank/scenecontroller1.xml" id="0009" name="HKZW-SCN01 Scene Controller" type="0200"/>
