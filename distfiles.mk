@@ -101,6 +101,7 @@ DISTFILES =	.gitignore \
 	config/aeotec/zw140.xml \
 	config/aeotec/zw141.xml \
 	config/aeotec/zw162.xml \
+	config/aeotec/zw164.xml \
 	config/aeotec/zw175.xml \
 	config/aeotec/zwa001.xml \
 	config/aeotec/zwa002.xml \
@@ -262,6 +263,7 @@ DISTFILES =	.gitignore \
 	config/fibaro/fgt001.xml \
 	config/fibaro/fgwd111.xml \
 	config/fibaro/fgwds221.xml \
+	config/fibaro/fgwoe.xml \
 	config/fibaro/fgwpe.xml \
 	config/fibaro/fgwpfzw5.xml \
 	config/fibaro/fgwpg111.xml \
@@ -435,6 +437,7 @@ DISTFILES =	.gitignore \
 	config/images/aeotec/zw140.png \
 	config/images/aeotec/zw141.png \
 	config/images/aeotec/zw162.png \
+	config/images/aeotec/zw164.png \
 	config/images/aeotec/zw195.png \
 	config/images/aeotec/zwa001.png \
 	config/images/aeotec/zwa002.png \
@@ -548,6 +551,7 @@ DISTFILES =	.gitignore \
 	config/images/fibaro/fgsd002.png \
 	config/images/fibaro/fgt001.png \
 	config/images/fibaro/fgwd111.png \
+	config/images/fibaro/fgwoe.png \
 	config/images/fibaro/fgwpe.png \
 	config/images/fibaro/fgwpfzw5.png \
 	config/images/fibaro/fgwpg111.png \
