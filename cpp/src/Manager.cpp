@@ -1315,7 +1315,7 @@ bool Manager::IsNodeInfoReceived(uint32 const _homeId, uint8 const _nodeId)
 }
 
 //-----------------------------------------------------------------------------
-// <Manager::GetNodeClassAvailable>
+// <Manager::GetNodeClassInformation>
 // Helper method to return whether a particular class is available in a node
 //-----------------------------------------------------------------------------
 bool Manager::GetNodeClassInformation(uint32 const _homeId, uint8 const _nodeId, uint8 const _commandClassId, string *_className, uint8 *_classVersion)
