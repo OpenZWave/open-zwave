@@ -1315,6 +1315,37 @@ bool Manager::IsNodeInfoReceived(uint32 const _homeId, uint8 const _nodeId)
 }
 
 //-----------------------------------------------------------------------------
+// <Manager::GetNodeClassIds>
+// Helper method to collect all of the command class id's a node supports
+//-----------------------------------------------------------------------------
+bool Manager::GetNodeClassIds(uint32 const _homeId, uint8 const _nodeId, std::vector<uint8> *classIds)
+{
+	bool res = false;
+
+	if (classIds)
+	{
+		if (Driver* driver = GetDriver(_homeId))
+		{
+			Node *node;
+
+			// Need to lock and unlock nodes to check this information
+			Internal::LockGuard LG(driver->m_nodeMutex);
+			if ((node = driver->GetNode(_nodeId)) != NULL)
+			{
+				if (node->NodeInfoReceived())
+				{
+					classIds->clear();
+					node->GetCommandClassIds(classIds);
+					res = true;
+				}
+			}
+		}
+	}
+	return res;
+}
+
+
+//-----------------------------------------------------------------------------
 // <Manager::GetNodeClassInformation>
 // Helper method to return whether a particular class is available in a node
 //-----------------------------------------------------------------------------

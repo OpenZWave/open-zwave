@@ -822,6 +822,16 @@ namespace OpenZWave
 			bool IsNodeInfoReceived(uint32 const _homeId, uint8 const _nodeId);
 
 			/**
+			 * \brief Get all of the command class id's a node supports
+			 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
+			 * \param _nodeId The ID of the node to query.
+			 * \param classIds Pointer to a vector of uint8 that will be filled with
+			 * command class id's. The vector will be cleared before the items are added.
+			 * \return True if the node has been loaded else False
+			 */
+            bool GetNodeClassIds(uint32 const _homeId, uint8 const _nodeId, std::vector<uint8> *classIds);
+
+			/**
 			 * \brief Get whether the node has the defined class available or not
 			 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
 			 * \param _nodeId The ID of the node to query.
@@ -1440,7 +1450,7 @@ namespace OpenZWave
 			bool GetBitMask(ValueID const& _id, int32* o_mask);
 
 			/**
-			 * \brief Gets the size of a BitMask ValueID 
+			 * \brief Gets the size of a BitMask ValueID
 			 * Gets the size of a BitMask ValueID - Either 1, 2 or 4
 			 * \param _id The unique identifier of the integer value.
 			 * \param o_size The Size of the BitSet

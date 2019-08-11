@@ -440,7 +440,7 @@ void Node::AdvanceQueries()
 						}
 						else
 						{
-							// set the Version to 1 
+							// set the Version to 1
 							cc->SetVersion(1);
 						}
 					}
@@ -1086,7 +1086,7 @@ void Node::ReadXML(TiXmlElement const* _node)
 
 //-----------------------------------------------------------------------------
 // <Node::ReadDeviceProtocolXML>
-// Read the device's protocol configuration from a device config file (Not 
+// Read the device's protocol configuration from a device config file (Not
 // cache)
 //-----------------------------------------------------------------------------
 void Node::ReadDeviceProtocolXML(TiXmlElement const* _ccsElement)
@@ -2057,6 +2057,22 @@ Internal::CC::CommandClass* Node::GetCommandClass(uint8 const _commandClassId) c
 
 	// Not found
 	return NULL;
+}
+
+//-----------------------------------------------------------------------------
+// <Node::GetCommandClassIds>
+// Get the the supported command class id's
+//-----------------------------------------------------------------------------
+void Node::GetCommandClassIds(std::vector<uint8> *classIds)
+{
+	map<uint8, Internal::CC::CommandClass*>::const_iterator it = m_commandClassMap.begin();
+
+	while (it != m_commandClassMap.end())
+	{
+		uint8 command_class_id = it->first;
+		classIds->push_back(command_class_id);
+		it++;
+	}
 }
 
 //-----------------------------------------------------------------------------

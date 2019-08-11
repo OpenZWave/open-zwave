@@ -505,6 +505,13 @@ namespace OpenZWave
 			 * \see CommandClass, m_commandClassMap
 			 */
 			Internal::CC::CommandClass* GetCommandClass(uint8 const _commandClassId) const;
+
+			/**
+			 * This function fills a supplied vector of uint8 with the command class id's the node supports.
+			 * \param classIds Pointer to a vector of uint8 to be filled with the id's.
+			 */
+			void GetCommandClassIds(std::vector<uint8> *classIds);
+
 			void ApplicationCommandHandler(uint8 const* _data, bool encrypted);
 
 			/**
