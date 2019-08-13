@@ -1090,6 +1090,7 @@
   <Manufacturer id="0234" name="Logic Soft">
     <Product config="logicsoft/ZHC5010.xml" id="010a" name="ZHC5010 Wall switch" type="0003"/>
     <Product config="logicsoft/ZHC5002.xml" id="010c" name="ZHC5002 Z-Scene Controller" type="0003"/>
+    <Product config="logicsoft/ZDB5100.xml" id="0121" name="ZDB5100 Matrix" type="0003"/>
   </Manufacturer>
   <Manufacturer id="007f" name="Logitech"></Manufacturer>
   <Manufacturer id="0025" name="Loudwater Tech"></Manufacturer>
