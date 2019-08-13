@@ -1,4 +1,5 @@
-<Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
+<?xml version="1.0" encoding="utf-8"?>
+<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="Name">Matrix</MetaDataItem>
     <MetaDataItem name="Description">MATRIX ZDB5100 is a dimmer wall switch module with four backlit pushbuttons. MATRIX is designed to fit into 1-module FUGA® wall boxes (Danish standard).</MetaDataItem>
