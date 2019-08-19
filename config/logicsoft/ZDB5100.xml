@@ -103,16 +103,33 @@
 			</Help>
     </Value>
     <Value genre="config" index="15" label="Associations groups, transmission when included secure" size="2" type="bitset" bitmask="8191" value="8191">
-      <Help>This parameter specifies if commands are transmitted as a secure message for each of the association groups.</Help>
-      <BitSet id="0">
+      <Help>This parameter specifies if commands are transmitted as a secure message for each of the association groups.
+        Bitmask:
+        0: All messages in all groups are sentas insecure.
+        1: Messages in association group 2 aresentas secure.
+        2: Messages in association group 3 aresentas secure.
+        4: Messages in association group 4 aresentas secure.
+        8: Messages in association group 5 aresentas secure.
+        16: Messages in association group 6 aresentas secure.
+        32: Messages in association group 7 aresentas secure.
+        64: Messages in association group 8 aresentas secure.
+        128: Messages in association group 9 aresentas secure.
+        256: Messages in association group 10 aresentas secure.
+        512: Messages in association group 11 aresent as secure.
+        1024: Messages in association group 12 aresent as secure.
+        2048: Messages in association group 13 aresent as secure.
+        4096: Messages in association group 14 aresent as secure.
+        8191: Messages in allassociation groups are sent as secure. (Default)
+      </Help>
+      <BitSet id="1">
         <Label>Bit 0</Label>
         <Help>All messages in all groups are sent as insecure.</Help>
       </BitSet>
-      <BitSet id="1">
+      <BitSet id="2">
         <Label>Bit 1</Label>
         <Help>Messages in association group 2 are sent as secure.</Help>
       </BitSet>
-      <BitSet id="2">
+      <BitSet id="3">
         <Label>Bit 2</Label>
         <Help>Messages in association group 3 are sent as secure.</Help>
       </BitSet>
@@ -120,47 +137,47 @@
         <Label>Bit 4</Label>
         <Help>Messages in association group 4 are sent as secure.</Help>
       </BitSet>
-      <BitSet id="8">
+      <BitSet id="5">
         <Label>Bit 8</Label>
         <Help>Messages in association group 5 are sent as secure.</Help>
       </BitSet>
-      <BitSet id="16">
+      <BitSet id="6">
         <Label>Bit 16</Label>
         <Help>Messages in association group 6 are sent as secure.</Help>
       </BitSet>
-      <BitSet id="32">
+      <BitSet id="7">
         <Label>Bit 32</Label>
         <Help>Messages in association group 7 are sent as secure.</Help>
       </BitSet>
-      <BitSet id="64">
+      <BitSet id="8">
         <Label>Bit 64</Label>
         <Help>Messages in association group 8 are sent as secure.</Help>
       </BitSet>
-      <BitSet id="128">
+      <BitSet id="9">
         <Label>Bit 128</Label>
         <Help>Messages in association group 9 are sent as secure.</Help>
       </BitSet>
-      <BitSet id="256">
+      <BitSet id="10">
         <Label>Bit 256</Label>
         <Help>Messages in association group 10 are sent as secure.</Help>
       </BitSet>
-      <BitSet id="512">
+      <BitSet id="11">
         <Label>Bit 512</Label>
         <Help>Messages in association group 11 are sent as secure.</Help>
       </BitSet>
-      <BitSet id="1024">
+      <BitSet id="12">
         <Label>Bit 1024</Label>
         <Help>Messages in association group 12 are sent as secure.</Help>
       </BitSet>
-      <BitSet id="2048">
+      <BitSet id="13">
         <Label>Bit 2048</Label>
         <Help>Messages in association group 13 are sent as secure.</Help>
       </BitSet>
-      <BitSet id="4096">
+      <BitSet id="14">
         <Label>Bit 4096</Label>
         <Help>Messages in association group 14 are sent as secure.</Help>
       </BitSet>
-      <BitSet id="8191">
+      <BitSet id="15">
         <Label>Bit 8191</Label>
         <Help>Messages in all association groups are sent as secure.</Help>
       </BitSet>
@@ -464,35 +481,23 @@
       <GetSupported>false</GetSupported>
     </Compatibility>
   </CommandClass>
-  <!-- MultiInstance Command Class. Note: If you do not need Dedicated Relay Control instance, change below mapping to "endpoints", then rejoin the node to your network. -->
-  <CommandClass id="96">
-    <Compatibility>
-      <MapRootToEndpoint>true</MapRootToEndpoint>
-    </Compatibility>
-  </CommandClass>
-  <!-- Multi Channel Association Groups -->
-  <CommandClass id="142">
-    <Compatibility>
-      <ForceInstances>true</ForceInstances>
-    </Compatibility>
-  </CommandClass>
   <!-- The Association Group Information -->
   <CommandClass id="133">
     <Associations num_groups="14">
       <Group index="1" label="Lifeline" max_associations="5"/>
-      <Group auto="true" index="2" label="Send Basic Report (On/Off) when button #1 is used" max_associations="5"/>
+      <Group index="2" label="Send Basic Report (On/Off) when button #1 is used" max_associations="5"/>
       <Group index="3" label="Sends Binary Switch Set (On/Off) when button #1 is used" max_associations="5"/>
       <Group index="4" label="Sends Multilevel Switch Set / Multilevel Switch Start Level Change / Multilevel Switch Stop Level Change when button #1 is used" max_associations="5"/>
-      <Group auto="true" index="5" label="Send Basic Report (On/Off) when button #2 is used" max_associations="5"/>
+      <Group index="5" label="Send Basic Report (On/Off) when button #2 is used" max_associations="5"/>
       <Group index="6" label="Sends Binary Switch Set (On/Off) when button #2 is used" max_associations="5"/>
       <Group index="7" label="Sends Multilevel Switch Set / Multilevel Switch Start Level Change / Multilevel Switch Stop Level Change when button #2 is used" max_associations="5"/>
-      <Group auto="true" index="8" label="Send Basic Report (On/Off) when button #3 is used" max_associations="5"/>
+      <Group index="8" label="Send Basic Report (On/Off) when button #3 is used" max_associations="5"/>
       <Group index="9" label="Sends Binary Switch Set (On/Off) when button #3 is used" max_associations="5"/>
       <Group index="10" label="Sends Multilevel Switch Set / Multilevel Switch Start Level Change / Multilevel Switch Stop Level Change when button #3 is used" max_associations="5"/>
-      <Group auto="true" index="11" label="Send Basic Report (On/Off) when button #4 is used" max_associations="5"/>
+      <Group index="11" label="Send Basic Report (On/Off) when button #4 is used" max_associations="5"/>
       <Group index="12" label="Sends Binary Switch Set (On/Off) when button #4 is used" max_associations="5"/>
       <Group index="13" label="Sends Multilevel Switch Set / Multilevel Switch Start Level Change / Multilevel Switch Stop Level Change when button #4 is used" max_associations="5"/>
-      <Group auto="true" index="14" label="Send Basic Report with information about the actual level for the dimmer" max_associations="5"/>
+      <Group index="14" label="Send Basic Report with information about the actual level for the dimmer" max_associations="5"/>
     </Associations>
   </CommandClass>
 </Product>
