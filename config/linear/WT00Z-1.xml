@@ -23,5 +23,11 @@
 			<Help>The Dim Timer (how fast the dim steps happen). It can be set to a value of 1 to 255. This value indicates in 10 millisecond resolution, how often the dim level will change.</Help>
 		</Value>
 	</CommandClass>
+        <!-- Association Groups -->
+        <CommandClass id="133">
+          <Associations num_groups="1">
+            <Group index="1" label="Group 1" max_associations="5"/>
+          </Associations>
+        </CommandClass>
 </Product>
 

@@ -11,4 +11,9 @@
 			<Help>Change the top of the switch to OFF and the bottom of the switch to ON.</Help>
 		</Value>
 	</CommandClass>
+        <CommandClass id="133">
+          <Associations num_groups="1">
+            <Group index="1" label="Group 1" max_associations="5"/>
+          </Associations>
+        </CommandClass>
 </Product>
