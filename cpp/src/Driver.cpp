@@ -3296,6 +3296,7 @@ void Driver::HandleRemoveNodeFromNetworkRequest(uint8* _data)
 			{
 				m_currentControllerCommand->m_controllerCommandNode = _data[4];
 			}
+			WriteCache();
 			Log::Write(LogLevel_Info, "Removing controller ID %d", m_currentControllerCommand->m_controllerCommandNode);
 			break;
 		}
@@ -3324,6 +3325,7 @@ void Driver::HandleRemoveNodeFromNetworkRequest(uint8* _data)
 						delete m_nodes[m_currentControllerCommand->m_controllerCommandNode];
 						m_nodes[m_currentControllerCommand->m_controllerCommandNode] = NULL;
 					}
+					WriteCache();
 					Notification* notification = new Notification(Notification::Type_NodeRemoved);
 					notification->SetHomeAndNodeIds(m_homeId, m_currentControllerCommand->m_controllerCommandNode);
 					QueueNotification(notification);
@@ -3460,6 +3462,7 @@ void Driver::HandleRemoveFailedNodeRequest(uint8* _data)
 				delete m_nodes[m_currentControllerCommand->m_controllerCommandNode];
 				m_nodes[m_currentControllerCommand->m_controllerCommandNode] = NULL;
 			}
+			WriteCache();
 			Notification* notification = new Notification(Notification::Type_NodeRemoved);
 			notification->SetHomeAndNodeIds(m_homeId, m_currentControllerCommand->m_controllerCommandNode);
 			QueueNotification(notification);
@@ -3509,6 +3512,7 @@ void Driver::HandleReplaceFailedNodeRequest(uint8* _data)
 			{
 				InitNode(m_currentControllerCommand->m_controllerCommandNode, true);
 			}
+			WriteCache();
 			break;
 		}
 		case FAILED_NODE_REPLACE_FAILED:
