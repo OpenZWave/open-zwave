@@ -1808,6 +1808,25 @@ bool Manager::IsValuePolled(ValueID const& _id)
 }
 
 //-----------------------------------------------------------------------------
+// <Manager::IsValueValid>
+// Test whether the valueID is Valid
+//-----------------------------------------------------------------------------
+bool Manager::IsValueValid(ValueID const& _id)
+{
+	if (Driver* driver = GetDriver(_id.GetHomeId()))
+	{
+		Internal::LockGuard LG(driver->m_nodeMutex);
+		if (Internal::VC::Value* value = driver->GetValue(_id))
+		{
+			value->Release();
+			return true;
+		}
+	}
+	return false;
+}
+
+
+//-----------------------------------------------------------------------------
 // <Manager::GetValueAsBitSet>
 // Gets a bit from a BitSet as a bool
 //-----------------------------------------------------------------------------
