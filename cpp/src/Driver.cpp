@@ -4401,6 +4401,7 @@ void Driver::InitNode(uint8 const _nodeId, bool newNode, bool secure, uint8 cons
 		{
 			// Remove the original node
 			delete m_nodes[_nodeId];
+			m_nodes[_nodeId] = NULL;
 			WriteCache();
 			Notification* notification = new Notification(Notification::Type_NodeRemoved);
 			notification->SetHomeAndNodeIds(m_homeId, _nodeId);
@@ -5814,7 +5815,6 @@ void Driver::NotifyWatchers()
 					Log::Write(LogLevel_Info, notification->GetNodeId(), "Dropping Notification as ValueID does not exist");
 					nit = m_notifications.begin();
 					delete notification;
-					val->Release();
 					continue;
 				}
 				val->Release();
