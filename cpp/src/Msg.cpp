@@ -294,7 +294,7 @@ namespace OpenZWave
 			Log::Write(LogLevel_Info, m_targetNodeId, "Encrypted Flag is %d", m_encrypted);
 			if (m_encrypted == false)
 				return m_buffer;
-			else if (EncyrptBuffer(m_buffer, m_length, GetDriver(), GetDriver()->GetControllerNodeId(), m_targetNodeId, m_nonce, e_buffer))
+			else if (EncryptBuffer(m_buffer, m_length, GetDriver(), GetDriver()->GetControllerNodeId(), m_targetNodeId, m_nonce, e_buffer))
 			{
 				return e_buffer;
 			}

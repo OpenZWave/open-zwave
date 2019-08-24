@@ -47,7 +47,8 @@ namespace OpenZWave
 		// Generate authentication data from a security-encrypted message
 		//-----------------------------------------------------------------------------
 		bool GenerateAuthentication(uint8 const* _data,				// Starting from the command class command
-				uint32 const _length, Driver *driver, uint8 const _sendingNode, uint8 const _receivingNode, uint8 *iv, uint8* _authentication			// 8-byte buffer that will be filled with the authentication data
+				uint32 const _length, Driver *driver, uint8 const _sendingNode, uint8 const _receivingNode, uint8 *iv,
+				uint8* _authentication			// 8-byte buffer that will be filled with the authentication data
 				)
 		{
 			// Build a buffer containing a 4-byte header and the encrypted
@@ -112,7 +113,7 @@ namespace OpenZWave
 			{
 				for (int i = 0; i < 16; i++)
 				{
-					/* encpck from block to 16 is already gauranteed to be 0
+					/* encpck from block to 16 is already guaranteed to be 0
 					 * so its safe to xor it with out tmpmac */
 					tmpauth[i] = encpck[i] ^ tmpauth[i];
 				}
@@ -132,7 +133,7 @@ namespace OpenZWave
 			return true;
 		}
 
-		bool EncyrptBuffer(uint8 *m_buffer, uint8 m_length, Driver *driver, uint8 const _sendingNode, uint8 const _receivingNode, uint8 const m_nonce[8], uint8* e_buffer)
+		bool EncryptBuffer(uint8 *m_buffer, uint8 m_length, Driver *driver, uint8 const _sendingNode, uint8 const _receivingNode, uint8 const m_nonce[8], uint8* e_buffer)
 		{
 
 #if 0
@@ -180,7 +181,7 @@ namespace OpenZWave
 
 			uint8 plaintextmsg[32];
 			/* add the Sequence Flag
-			 * - Since we dont currently handle multipacket encryption
+			 * - Since we don't currently handle multipacket encryption
 			 * just set this to 0
 			 */
 			plaintextmsg[0] = 0;
@@ -252,9 +253,9 @@ namespace OpenZWave
 
 		/* To Decrypt, we start the packet at the IV (right after the command)
 		 *
-		 * Encrypted Packet Size is Packet Lenght - Device Nonce(8) - Reciever Nonce ID (1) - Mac (8) - CommandClass - Command
+		 * Encrypted Packet Size is Packet Length - Device Nonce(8) - Receiver Nonce ID (1) - Mac (8) - CommandClass - Command
 		 *
-		 * Reciever Nonce is at Position 14 + Encrypted Packet Size
+		 * Receiver Nonce is at Position 14 + Encrypted Packet Size
 		 * Mac is at Position 15 + Encrypted Packet Size
 		 * 0 - Command Class
 		 * 1 - Command
@@ -263,7 +264,7 @@ namespace OpenZWave
 		 * 11 - Command Class (e)
 		 * 12 - Command (e)
 		 * 13 to EncryptedPckSize
-		 * ReciverNonceID (1 Byte)
+		 * ReceiverNonceID (1 Byte)
 		 * Mac (8 Bytes)
 		 */
 
@@ -307,9 +308,9 @@ namespace OpenZWave
 			}
 
 #ifdef DEBUG
-			Log::Write(LogLevel_Debug, _sendingNode, "Encrypted Packet Sizes: %d (Total) %d (Payload)", e_length, encryptedpacketsize);
+			Log::Write(LogLevel_Debug, _sendingNode, "Encrypted Packet Sizes: %u (Total) %u (Payload)", e_length, encryptedpacketsize);
 			Internal::PrintHex("IV", iv, 16);
-			Internal::PrintHex("Encrypted", encyptedpacket, 16);
+			Internal::PrintHex("Encrypted", encyptedpacket, 32);
 			/* Mac Starts after Encrypted Packet. */
 			Internal::PrintHex("Auth", &e_buffer[11+encryptedpacketsize], 8);
 #endif
@@ -346,8 +347,11 @@ namespace OpenZWave
 			/* XXX TODO: Check the Sequence Header Frame to see if this is the first part of a
 			 * message, or 2nd part, or a entire message.
 			 *
-			 * I havn't actually seen a Z-Wave Message thats too big to fit in a encrypted message
+			 * I haven't actually seen a Z-Wave Message thats too big to fit in a encrypted message
 			 * yet, so we will look at this if such a message actually exists!
+			 *
+			 * 2019-08 such a message was found, PST02 produces long multi cmd, see
+			 * https://github.com/OpenZWave/open-zwave/issues/1899
 			 */
 
 			return true;
