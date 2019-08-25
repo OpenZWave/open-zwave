@@ -111,6 +111,7 @@ DISTFILES =	.gitignore \
 	config/aeotec/zwa006.xml \
 	config/aeotec/zwa008.xml \
 	config/airlinemechanical/zds-ud10.xml \
+	config/alfred/DB2.xml \
 	config/assa_abloy/ConexisL1.xml \
 	config/assa_abloy/KeyfreeConnected-plus.xml \
 	config/assa_abloy/KeyfreeConnected.xml \
@@ -446,6 +447,7 @@ DISTFILES =	.gitignore \
 	config/images/aeotec/zwa005.png \
 	config/images/aeotec/zwa006.png \
 	config/images/airlinemechanical/zds-ud10.png \
+	config/images/alfred/DB2.png \
 	config/images/assa_abloy/ConexisL1.png \
 	config/images/assa_abloy/KeyfreeConnected-plus.png \
 	config/images/assa_abloy/KeyfreeConnected.png \

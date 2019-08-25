@@ -1457,7 +1457,7 @@
   <Manufacturer id="021C" name="Shenzhen iSurpass Technology"></Manufacturer>
   <Manufacturer id="037A" name="Shenzhen JBT Smart Lighting"></Manufacturer>
   <Manufacturer id="021D" name="Shenzhen Kaadas Intelligent Technology">
-    <Product config="" id="0001" name="Alfred DB2 Deadbolt" type="0003"/>
+    <Product config="alfred/DB2.xml" id="0001" name="Alfred DB2 Deadbolt" type="0003"/>
   </Manufacturer>
   <Manufacturer id="0211" name="Shenzhen Liao Wang Tong Da Technology"></Manufacturer>
   <Manufacturer id="0406" name="Shenzhen Meian Technology"></Manufacturer>
