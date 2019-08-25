@@ -65,39 +65,32 @@ FACTORY RESET DOOR LOCK FIRMWARE:
       <Help>
         Door Lock Mode
         Autolock Mode, Manual lock mode, Activate Away Mode, Deactivate Away Mode
-        Default Value : 1 ( Disable Away / Auto Lock Mode )
+        Default Value : 1 ( Auto lock, Away off )
       </Help>
-      <Item label="Disable Away, Manual Lock" value="0"/>
-      <Item label="Disable Away, Auto Lock" value="1"/>
-      <Item label="Enable Away, Manual Lock" value="2"/>
-      <Item label="Enable Away, Auto Lock" value="3"/>
+      <Item label="Manual lock, Away off" value="0"/>
+      <Item label="Auto lock, Away off" value="1"/>
+      <Item label="Manual lock, Away on" value="2"/>
+      <Item label="Auto lock, Away on" value="3"/>
     </Value>
-    <Value genre="config" index="2" label="RFID Registration Configuration" max="8" min="1" size="1" type="list" units="" value="5">
+    <Value genre="config" index="2" label="RFID Mode" max="9" min="5" size="1" type="list" units="" value="5">
       <Help>
-        RFID Registration Configuration
-        IDLocks can use up to 50 RFID cards. In order to use a RFID, RFID has to be registered by z-wave configuration command class.
-
-        RFID Configuration with Z-wave is only valid for ID Lock 101.
-
-        Configuration Parameters are as below. Default value is 0x05 (Not in progress).
-        ID Lock 150 will always report 0x05 as this feature is not supported by this door lock model.
-
-        Configuration Set in case of starting to register from gateway
+        RFID Mode
+        RFID activated
+        RFID deactivated
+        Default Value: 5 (RFID activated)
       </Help>
-      <Item label="Begin RFID Registering mode on the door lock" value="1"/>
-      <Item label="Not in progress" value="5"/>
-      <Item label="RFID Database clear" value="7"/>
-      <Item label="RFID Registering mode stop" value="8"/>
+      <Item label="RFID activated" value="5"/>
+      <Item label="RFID deactivated" value="9"/>
     </Value>
-    <Value genre="config" index="3" label="Door Hinge Position" max="3" min="0" size="1" type="list" units="" value="0">
+    <Value genre="config" index="3" label="Door Hinge Direction" max="1" min="0" size="1" type="list" units="" value="0">
       <Help>
         Door Hinge Position
-        Default Value : 0 (Right Handle)
+        Default Value : 0 (Right hinged operation)
       </Help>
-      <Item label="Right Handle" value="0"/>
-      <Item label="Left Handle" value="1"/>
+      <Item label="Right hinged operation" value="0"/>
+      <Item label="Left hinged operation" value="1"/>
     </Value>
-    <Value genre="config" index="4" label="Door Audio Volume Level" max="6" min="0" size="1" type="list" units="" value="5" write_only="true">
+    <Value genre="config" index="4" label="Door Audio Volume" max="6" min="0" size="1" type="list" units="" value="5" write_only="true">
       <Help>
         Door Audio Volume Level
         This parameter is a set only parameter. If the value is changed locally on the door lock, this value will not change.
@@ -123,7 +116,9 @@ FACTORY RESET DOOR LOCK FIRMWARE:
       <Help>
         Service PIN Mode
         A configuration get command on this parameter returns the latest set parameter value (set by Z-wave).
-        This is a set only value, if changed locally on keypad these values are not changed on Z-wave module. Value 5, 6 and 7 are for future use on door lock.
+        This is a set only value, if changed locally on keypad these values are not changed on Z-wave module. Value 5 and 6 are for future use on door lock.
+        Disabled: Disables both PIN and Service PIN menu on door lock
+
         Default Value: 0 (Deactivated)
       </Help>
       <Item label="Deactivated" value="0"/>
@@ -133,9 +128,10 @@ FACTORY RESET DOOR LOCK FIRMWARE:
       <Item label="10 times used" value="4"/>
       <Item label="Not used (for future use)" value="5"/>
       <Item label="Not used (for future use)" value="6"/>
-      <Item label="Not used (for future use)" value="7"/>
+      <Item label="Always valid" value="7"/>
       <Item label="12 Hours used" value="8"/>
       <Item label="24 Hours used" value="9"/>
+      <Item label="Disabled (PIN and Service PIN)" value="" />
     </Value>
     <Value genre="config" index="7" label="Door Lock Model Type" max="150" min="101" read_only="true" type="byte" units="" value="150">
       <Help>
@@ -143,6 +139,25 @@ FACTORY RESET DOOR LOCK FIRMWARE:
         This configuration is only accepted by configuration get command
         It is a read only parameter. Default value depends on the door lock model type.
       </Help>
+    </Value>
+    <Value genre="config" index="8" label="Updater Mode" max="3" min="0" type="list" units="" value="0">
+      <Help>
+        Updater Mode
+
+        Enables use of the Updater app.
+        Default Value: 0 (Off, no sound)
+      </Help>
+      <Item label="Off (no sound)" value="0"/>
+      <Item label="On (no sound)" value="1"/>
+      <Item label="Off" value="2"/>
+      <Item label="On" value="3"/>
+    </Value>
+    <Value genre="config" index="9" label="Master PIN Unlock Mode" max="1" min="0" read_only="true" type="list" units="" value="1">
+      <Help>
+        Master PIN Unlock Mode
+      </Help>
+      <Item label="Disabled" value="0"/>
+      <Item label="Enabled" value="1"/>
     </Value>
     <Value genre="config" index="10" label="Retrieve RFID Information" type="int" units="">
       <Help>
