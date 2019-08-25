@@ -131,7 +131,7 @@ FACTORY RESET DOOR LOCK FIRMWARE:
       <Item label="Always valid" value="7"/>
       <Item label="12 Hours used" value="8"/>
       <Item label="24 Hours used" value="9"/>
-      <Item label="Disabled (PIN and Service PIN)" value="" />
+      <Item label="Disabled (PIN and Service PIN)" value="254" />
     </Value>
     <Value genre="config" index="7" label="Door Lock Model Type" max="150" min="101" read_only="true" type="byte" units="" value="150">
       <Help>
@@ -170,7 +170,6 @@ FACTORY RESET DOOR LOCK FIRMWARE:
     </Value>
   </CommandClass>
   <!-- Association Groups -->
-  <!--COMMAND_CLASS_ASSOCIATION_V2-->
   <CommandClass id="133">
     <Instance index="1"/>
     <Associations num_groups="1">
