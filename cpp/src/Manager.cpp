@@ -1663,6 +1663,7 @@ void Manager::SetValueHelp(ValueID const& _id, string const& _value, int32 _pos)
 	OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to SetValueHelp");
 }
 
+
 //-----------------------------------------------------------------------------
 // <Manager::GetValueMin>
 // Gets the minimum for a value
@@ -1675,7 +1676,7 @@ int32 Manager::GetValueMin(ValueID const& _id)
 		Internal::LockGuard LG(driver->m_nodeMutex);
 		if (Internal::VC::Value* value = driver->GetValue(_id))
 		{
-			limit = value->GetMin();
+			limit = (int32) value->GetMin();
 			value->Release();
 		}
 		else
@@ -1699,7 +1700,7 @@ int32 Manager::GetValueMax(ValueID const& _id)
 		Internal::LockGuard LG(driver->m_nodeMutex);
 		if (Internal::VC::Value* value = driver->GetValue(_id))
 		{
-			limit = value->GetMax();
+			limit = (int32) value->GetMax();
 			value->Release();
 		}
 		else
@@ -1710,6 +1711,8 @@ int32 Manager::GetValueMax(ValueID const& _id)
 
 	return limit;
 }
+
+
 
 //-----------------------------------------------------------------------------
 // <Manager::IsValueReadOnly>

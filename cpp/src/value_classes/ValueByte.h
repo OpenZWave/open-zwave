@@ -67,7 +67,18 @@ namespace OpenZWave
 						return m_value;
 					}
 
+					uint8 GetMin() const
+					{
+						return m_min;
+					}
+					uint8 GetMax() const
+					{
+						return m_max;
+					}
+
 				private:
+					uint8 m_min = 0;
+					uint8 m_max = 255;
 					uint8 m_value;				// the current value
 					uint8 m_valueCheck;			// the previous value (used for double-checking spurious value reads)
 			};

@@ -107,13 +107,16 @@ namespace OpenZWave
 						m_pollIntensity = _intensity;
 					}
 
-					int32 GetMin() const
-					{
-						return m_min;
+					int32 GetMin() {
+						return 0;
 					}
-					int32 GetMax() const
-					{
-						return m_max;
+
+					int32 GetMax() {
+						return 0;
+					}
+
+					int16 GetPrecision() {
+						return 0;
 					}
 
 					void SetChangeVerified(bool _verify)

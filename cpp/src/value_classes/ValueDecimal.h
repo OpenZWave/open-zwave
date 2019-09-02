@@ -85,7 +85,28 @@ namespace OpenZWave
 						m_precision = _precision;
 					}
 
+					float GetMin() const
+					{
+						return m_min;
+					}
+					float GetMax() const
+					{
+						return m_max;
+					}
+
+					void SetMin(float _min)
+					{
+						m_min = _min;
+					}
+
+					void SetMax(float _max)
+					{
+						m_max = _max;
+					}
+
 				private:
+					float m_min = (float)(double)(-3.4e38);
+					float m_max = (float)(double)3.4e38;
 
 					string m_value;				// the current value
 					string m_valueCheck;			// the previous value (used for double-checking spurious value reads)

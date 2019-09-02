@@ -94,6 +94,18 @@ namespace OpenZWave
 				{
 					Log::Write(LogLevel_Info, "Missing default integer value from xml configuration: node %d, class 0x%02x, instance %d, index %d", _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex());
 				}
+
+				int32 iVal;
+
+				if (TIXML_SUCCESS == _valueElement->QueryIntAttribute("min", (int *)&iVal))
+				{
+					m_min = iVal;
+				}
+
+				if (TIXML_SUCCESS == _valueElement->QueryIntAttribute("max", (int *)&iVal))
+				{
+					m_max = iVal;
+				}
 			}
 
 //-----------------------------------------------------------------------------
@@ -107,6 +119,12 @@ namespace OpenZWave
 				char str[16];
 				snprintf(str, sizeof(str), "%d", m_value);
 				_valueElement->SetAttribute("value", str);
+
+				snprintf(str, sizeof(str), "%d", m_min);
+				_valueElement->SetAttribute("min", str);
+
+				snprintf(str, sizeof(str), "%d", m_max);
+				_valueElement->SetAttribute("max", str);
 			}
 
 //-----------------------------------------------------------------------------

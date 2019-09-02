@@ -65,8 +65,19 @@ namespace OpenZWave
 				{
 					Log::Write(LogLevel_Info, "Missing default decimal value from xml configuration: node %d, class 0x%02x, instance %d, index %d", _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex());
 				}
-			}
 
+				float floatVal;
+
+				if (TIXML_SUCCESS == _valueElement->QueryFloatAttribute("min",&floatVal))
+				{
+					m_min = floatVal;
+				}
+
+				if (TIXML_SUCCESS == _valueElement->QueryFloatAttribute("max", &floatVal))
+				{
+					m_max = floatVal;
+				}
+			}
 //-----------------------------------------------------------------------------
 // <ValueDecimal::WriteXML>
 // Write ourselves to an XML document
@@ -75,6 +86,8 @@ namespace OpenZWave
 			{
 				Value::WriteXML(_valueElement);
 				_valueElement->SetAttribute("value", m_value.c_str());
+				_valueElement->SetDoubleAttribute("min", (double)m_min);
+				_valueElement->SetDoubleAttribute("max", (double)m_max);
 			}
 
 //-----------------------------------------------------------------------------

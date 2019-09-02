@@ -36,6 +36,7 @@
 #include <deque>
 
 #include "Defs.h"
+#include "Utils.h"
 #include "Driver.h"
 #include "Group.h"
 #include "value_classes/ValueID.h"
@@ -1020,6 +1021,58 @@ namespace OpenZWave
 			int32 GetValueMin(ValueID const& _id);
 
 			/**
+			 * \brief Gets the minimum for a byte value.
+			 * \param _id The unique identifier of the value.
+			 * \return The value minimum.
+			 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
+			 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
+			 * \see ValueID
+			 */
+			uint8 Manager::GetValueMinByte(ValueID const& _id)
+			{
+				return _GetValueMin<uint8>(_id);
+			}
+
+			/**
+			 * \brief Gets the minimum for a short value.
+			 * \param _id The unique identifier of the value.
+			 * \return The value minimum.
+			 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
+			 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
+			 * \see ValueID
+			 */
+			int16 Manager::GetValueMinShort(ValueID const& _id)
+			{
+				return _GetValueMin<int16>(_id);
+			}
+
+			/**
+			 * \brief Gets the minimum for an int value.
+			 * \param _id The unique identifier of the value.
+			 * \return The value minimum.
+			 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
+			 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
+			 * \see ValueID
+			 */
+			int32 Manager::GetValueMinInt(ValueID const& _id)
+			{
+				return _GetValueMin<int32>(_id);
+			}
+
+			/**
+			 * \brief Gets the minimum for a decimal value.
+			 * \param _id The unique identifier of the value.
+			 * \return The value minimum.
+			 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
+			 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
+			 * \see ValueID
+			 */
+			float Manager::GetValueMinDecimal(ValueID const& _id)
+			{
+				return _GetValueMin<float>(_id);
+			}
+
+			/**
 			 * \brief Gets the maximum that this value may contain.
 			 * \param _id The unique identifier of the value.
 			 * \return The value maximum.
@@ -1028,6 +1081,100 @@ namespace OpenZWave
 			 * \see ValueID
 			 */
 			int32 GetValueMax(ValueID const& _id);
+			/**
+			 * \brief Gets the maximum for a byte value.
+			 * \param _id The unique identifier of the value.
+			 * \return The value maximum.
+			 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
+			 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
+			 * \see ValueID
+			 */
+			uint8 GetValueMaxByte(ValueID const& _id)
+			{
+				return _GetValueMax<uint8>(_id);
+			}
+
+			/**
+			 * \brief Gets the maximum for a short value.
+			 * \param _id The unique identifier of the value.
+			 * \return The value maximum.
+			 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
+			 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
+			 * \see ValueID
+			 */
+			int16 GetValueMaxShort(ValueID const& _id)
+			{
+				return _GetValueMax<int16>(_id);
+			}
+
+			/**
+			 * \brief Gets the maximum for an int value.
+			 * \param _id The unique identifier of the value.
+			 * \return The value maximum.
+			 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
+			 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
+			 * \see ValueID
+			 */
+			int32 GetValueMaxInt(ValueID const& _id)
+			{
+				return _GetValueMax<int32>(_id);
+			}
+
+			/**
+			 * \brief Gets the maximum for a decimal value.
+			 * \param _id The unique identifier of the value.
+			 * \return The value maximum.
+			 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
+			 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
+			 * \see ValueID
+			 */
+			float GetValueMaxDecimal(ValueID const& _id)
+			{
+				return _GetValueMax<float>(_id);
+			}
+
+		private:
+			template <class T>
+			T _GetValueMax(ValueID const& _id)
+			{
+				T limit;
+				if (Driver* driver = GetDriver(_id.GetHomeId()))
+				{
+					Internal::LockGuard LG(driver->m_nodeMutex);
+					if (Internal::VC::Value* value = driver->GetValue(_id))
+					{
+						limit = value->GetMax();
+						value->Release();
+					}
+					else
+					{
+						OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueMax");
+					}
+				}
+				return limit;
+			}
+
+			template <class T>
+			T _GetValueMin(ValueID const& _id)
+			{
+				T limit;
+				if (Driver* driver = GetDriver(_id.GetHomeId()))
+				{
+					Internal::LockGuard LG(driver->m_nodeMutex);
+					if (Internal::VC::Value* value = driver->GetValue(_id))
+					{
+						limit = value->GetMin();
+						value->Release();
+					}
+					else
+					{
+						OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueMin");
+					}
+				}
+				return limit;
+			}
+
+		public:
 
 			/**
 			 * \brief Test whether the value is read-only.
@@ -1449,7 +1596,7 @@ namespace OpenZWave
 			bool GetBitMask(ValueID const& _id, int32* o_mask);
 
 			/**
-			 * \brief Gets the size of a BitMask ValueID 
+			 * \brief Gets the size of a BitMask ValueID
 			 * Gets the size of a BitMask ValueID - Either 1, 2 or 4
 			 * \param _id The unique identifier of the integer value.
 			 * \param o_size The Size of the BitSet

@@ -29,6 +29,7 @@
 #define _ValueShort_H
 
 #include <string>
+#include <limits.h>
 #include "Defs.h"
 #include "value_classes/Value.h"
 
@@ -67,7 +68,18 @@ namespace OpenZWave
 						return m_value;
 					}
 
+					int16 GetMin() const
+					{
+						return m_min;
+					}
+					int16 GetMax() const
+					{
+						return m_max;
+					}
+
 				private:
+					int16 m_min = SHRT_MIN;
+					int16 m_max = SHRT_MAX;
 					int16 m_value;				// the current value
 					int16 m_valueCheck;			// the previous value (used for double-checking spurious value reads)
 			};

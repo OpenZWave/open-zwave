@@ -247,16 +247,37 @@ namespace OpenZWave
 						// Add supported setpoint
 						if (index < ThermostatSetpoint_Count)
 						{
+							if (Internal::VC::ValueDecimal* value = static_cast<Internal::VC::ValueDecimal*>(GetValue(_instance, index)))
+							{
+								float floatMin = stof((const string)minValue, (size_t *)minValue.length());
+								float floatMax = stof((const string)maxValue, (size_t *)maxValue.length());
+
+								value->SetUnits(scale ? "F" : "C");
+
+								if (value->GetPrecision() != precision)
+								{
+									value->SetPrecision(precision);
+								}
+								if (value->GetMin() != floatMin)
+								{
+									value->SetMin(floatMin);
+								}
+								if (value->GetMax() != floatMax)
+								{
+									value->SetMax(floatMax);
+								}
+
+								value->Release();
+							}
+
 							string setpointName = c_setpointName[index];
 
 							node->CreateValueDecimal(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_ThermostatSetpoint::Unused_0_Minimum + index, setpointName + "_minimum", "C", false, false, minValue, 0);
 							node->CreateValueDecimal(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_ThermostatSetpoint::Unused_0_Maximum + index, setpointName + "_maximum", "C", false, false, maxValue, 0);
 							Log::Write(LogLevel_Info, GetNodeId(), "    Added setpoint: %s", setpointName.c_str());
 						}
-
 					}
 				}
-
 				return false;
 			}
 
