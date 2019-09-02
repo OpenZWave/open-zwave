@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ManufacturerSpecificData Revision="48" xmlns="https://github.com/OpenZWave/open-zwave">
+<ManufacturerSpecificData Revision="49" xmlns="https://github.com/OpenZWave/open-zwave">
   <Manufacturer id="0028" name="2B Electronics"></Manufacturer>
   <Manufacturer id="0098" name="2GIG Technologies">
     <Product config="2gig/ct50e.xml" id="015e" name="CT50e Thermostat" type="3200"/>
@@ -1465,14 +1465,15 @@
     <Product config="shenzen_neo/nas-ds01z.xml" id="0082" name="Door/Window Detector" type="0003"/>
     <Product config="shenzen_neo/nas-ds01z.xml" id="1082" name="Door/Window Detector" type="0003"/>
     <Product config="shenzen_neo/nas-ds01z.xml" id="2082" name="Door/Window Detector" type="0003"/>
-    <Product config="shenzen_neo/nas-wr01z.xml" id="0087" name="Power plug 12A" type="0003"/>
-    <Product config="shenzen_neo/nas-wr01z.xml" id="1087" name="Power plug 12A" type="0003"/>
-    <Product config="shenzen_neo/nas-wr01ze.xml" id="1027" name="Power plug 12A" type="0200"/>
-    <Product config="shenzen_neo/nas-wr01z.xml" id="2087" name="Power plug 12A" type="0003"/>
-    <Product config="shenzen_neo/nas-pd01z.xml" id="0083" name="Battery Powered PIR Sensor" type="0003"/>
-    <Product config="shenzen_neo/nas-pd01z.xml" id="1083" name="Battery Powered PIR Sensor" type="0003"/>
-    <Product config="shenzen_neo/nas-pd02z.xml" id="108d" name="Battery Powered PIR Sensor V2" type="0003"/>
-    <!--<Product type="0003" id="108d" name="Battery Powered PIR Sensor with temp" config="shenzen_neo/nas-pd01z.xml"/>-->
+    <Product config="shenzen_neo/nas-wr01z.xml" id="0087" name="NAS-WR01Z Power plug 12A" type="0003"/>
+    <Product config="shenzen_neo/nas-wr01z.xml" id="1087" name="NAS-WR01Z Power plug 12A" type="0003"/>
+    <!-- NAS-WR01ZE and NAS-WR01Z hardware looks identical but are based on different SDK-->
+    <Product config="shenzen_neo/nas-wr01ze.xml" id="1027" name="NAS-WR01ZE Power plug 12A" type="0200"/>
+    <Product config="shenzen_neo/nas-wr01z.xml" id="2087" name="NAS-WR01Z Power plug 12A" type="0003"/>
+    <Product config="shenzen_neo/nas-pd01z.xml" id="0083" name="NAS-PD01Z Battery Powered PIR Sensor" type="0003"/>
+    <Product config="shenzen_neo/nas-pd01z.xml" id="1083" name="NAS-PD01Z Battery Powered PIR Sensor" type="0003"/>
+    <!-- NAS-PD02Z exist with and without temp sensor and different params but same IDs https://github.com/OpenZWave/open-zwave/issues/1866 -->
+    <Product config="shenzen_neo/nas-pd02z.xml" id="108d" name="NAS-PD02Z Battery Powered PIR Sensor V2" type="0003"/>
     <Product config="shenzen_neo/nas-ws02z.xml" id="0085" name="Water Leakage Detector" type="0003"/>
     <Product config="shenzen_neo/nas-ws02z.xml" id="1085" name="Water Leakage Detector" type="0003"/>
     <Product config="shenzen_neo/nas-ws02z.xml" id="6085" name="Water Leakage Detector" type="0003"/>
