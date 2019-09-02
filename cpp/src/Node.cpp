@@ -3601,12 +3601,8 @@ bool Node::IsNodeReset()
 //-----------------------------------------------------------------------------
 void Node::SetProductDetails(std::shared_ptr<Internal::ProductDescriptor> product)
 {
-	/* if there is a ProductDescriptor already assigned, remove the reference */
-	if (m_Product)
-		m_Product->Release();
 	/* add the new ProductDescriptor */
 	m_Product = product;
-	m_Product->AddRef();
 }
 
 //-----------------------------------------------------------------------------

@@ -279,7 +279,6 @@ namespace OpenZWave
 				map<int64, std::shared_ptr<ProductDescriptor> >::iterator pit = s_productMap.begin();
 				while (!s_productMap.empty())
 				{
-					pit->second->Release();
 					s_productMap.erase(pit);
 					pit = s_productMap.begin();
 				}
