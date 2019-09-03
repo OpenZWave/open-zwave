@@ -470,6 +470,7 @@
     <Product config="ecolink/motion.xml" id="0001" name="Motion Detector" type="0004"/>
     <Product config="ecolink/doorwindow.xml" id="0002" name="Door/Window Sensor" type="0004"/>
     <Product config="ecolink/tiltsensor.xml" id="0003" name="Tilt Sensor" type="0004"/>
+    <Product config="ecolink/floodfreeze.xml" id="0010" name="Flood/Freeze Sensor" type="0005"/>
     <Product config="ecolink/firefighter.xml" id="000f" name="FireFighter" type="0005"/>
   </Manufacturer>
   <Manufacturer id="0157" name="EcoNet Controls"></Manufacturer>
