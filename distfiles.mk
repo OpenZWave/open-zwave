@@ -182,6 +182,7 @@ DISTFILES =	.gitignore \
 	config/duwi/zwws.xml \
 	config/ecolink/doorwindow.xml \
 	config/ecolink/firefighter.xml \
+	config/ecolink/floodfreeze.xml \
 	config/ecolink/motion.xml \
 	config/ecolink/sensor.xml \
 	config/ecolink/tiltsensor.xml \
@@ -492,6 +493,7 @@ DISTFILES =	.gitignore \
 	config/images/duwi/zwws.png \
 	config/images/ecolink/doorwindow.png \
 	config/images/ecolink/firefighter.png \
+	config/images/ecolink/floodfreeze.png \
 	config/images/ecolink/motion.png \
 	config/images/ecolink/sensor.png \
 	config/images/ecolink/tiltsensor.png \
@@ -715,6 +717,7 @@ DISTFILES =	.gitignore \
 	config/images/popp/700045.png \
 	config/images/popp/700168.png \
 	config/images/popp/700397.png \
+	config/images/popp/dwt.png \
 	config/images/popp/smoke-detector.png \
 	config/images/popp/solar-siren.png \
 	config/images/popp/zweather.png \
@@ -726,6 +729,7 @@ DISTFILES =	.gitignore \
 	config/images/qubino/ZMNHCDx.png \
 	config/images/qubino/ZMNHDA2.png \
 	config/images/qubino/ZMNHDDx.png \
+	config/images/qubino/ZMNHIDx.png \
 	config/images/qubino/ZMNHNDx.png \
 	config/images/qubino/ZMNHODx.png \
 	config/images/qubino/ZMNHSDx.png \
@@ -974,6 +978,7 @@ DISTFILES =	.gitignore \
 	config/popp/700168.xml \
 	config/popp/700397.xml \
 	config/popp/700793.xml \
+	config/popp/dwt.xml \
 	config/popp/smoke-detector.xml \
 	config/popp/solar-siren.xml \
 	config/popp/zweather.xml \
