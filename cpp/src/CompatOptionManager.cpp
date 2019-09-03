@@ -57,6 +57,8 @@ namespace OpenZWave
 		{ "DelayNoMoreInfo", COMPAT_FLAG_WAKEUP_DELAYNMI, COMPAT_FLAG_TYPE_INT },
 		{ "RemoveCC", COMPAT_FLAG_MI_REMOVECC, COMPAT_FLAG_TYPE_BOOL_ARRAY },
 		{ "VerifyChanged", COMPAT_FLAG_VERIFYCHANGED, COMPAT_FLAG_TYPE_BOOL_ARRAY },
+		{ "EnableNotificationClear", COMPAT_FLAG_NOT_ENABLECLEAR, COMPAT_FLAG_TYPE_BOOL },
+		{ "EnableV1AlarmTypes", COMPAT_FLAG_NOT_V1ALARMTYPES_ENABLED, COMPAT_FLAG_TYPE_BOOL },
 		};
 
 		uint16_t availableCompatFlagsCount = sizeof(availableCompatFlags) / sizeof(availableCompatFlags[0]);

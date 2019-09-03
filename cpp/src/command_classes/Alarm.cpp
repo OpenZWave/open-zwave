@@ -74,6 +74,8 @@ namespace OpenZWave
 					CommandClass(_homeId, _nodeId), m_v1Params(false), m_ClearTimeout(5000)
 			{
 				Timer::SetDriver(GetDriver());
+				m_com.EnableFlag(COMPAT_FLAG_NOT_ENABLECLEAR, true);
+				m_com.EnableFlag(COMPAT_FLAG_NOT_V1ALARMTYPES_ENABLED, false);
 				SetStaticRequest(StaticRequest_Values);
 			}
 
@@ -97,7 +99,7 @@ namespace OpenZWave
 						msg->Append(GetDriver()->GetTransmitOptions());
 						GetDriver()->SendMsg(msg, _queue);
 					}
-					else
+					if (GetVersion() == 1 || m_com.GetFlagBool(COMPAT_FLAG_NOT_V1ALARMTYPES_ENABLED))
 					{
 						/* create version 1 ValueID's */
 						if (Node* node = GetNodeUnsafe())
@@ -107,7 +109,7 @@ namespace OpenZWave
 							node->CreateValueByte(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_Alarm::Level_v1, "Alarm Level", "", true, false, 0, 0);
 						}
 					}
-					if (GetVersion() < 4)
+					if (GetVersion() < 4 && m_com.GetFlagBool(COMPAT_FLAG_NOT_ENABLECLEAR) == true)
 					{
 						if (Node* node = GetNodeUnsafe())
 						{
@@ -145,7 +147,7 @@ namespace OpenZWave
 			{
 				if (m_com.GetFlagBool(COMPAT_FLAG_GETSUPPORTED))
 				{
-					if (GetVersion() == 1)
+					if (GetVersion() <= 2)
 					{
 						Msg* msg = new Msg("AlarmCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
 						msg->SetInstance(this, _instance);
@@ -433,7 +435,7 @@ namespace OpenZWave
 						}
 
 						/* Any Version below 4 doesn't have a Clear Event, so we trigger a timer to manually clear it */
-						if ((NotificationEvent != 0) && (GetVersion() < 4))
+						if ((NotificationEvent != 0) && (GetVersion() < 4) && (m_ClearTimeout > 0) && (m_com.GetFlagBool(COMPAT_FLAG_NOT_ENABLECLEAR) == true))
 						{
 							Log::Write(LogLevel_Info, GetNodeId(), "Automatically Clearing Alarm in %dms", m_ClearTimeout);
 							m_TimersToInstances.insert(std::pair<uint32, uint32>(NotificationType, _instance));
@@ -690,6 +692,19 @@ namespace OpenZWave
 				else
 				{
 					Log::Write(LogLevel_Warning, GetNodeId(), "Couldn't Find a ValueList to ClearAlarm for Notification Type %d (%d)", type, _instance);
+				}
+				if (m_v1Params)
+				{
+					if (Internal::VC::ValueByte *value = static_cast<Internal::VC::ValueByte*>(GetValue(_instance, ValueID_Index_Alarm::Type_v1)))
+					{
+						value->OnValueRefreshed(0);
+						value->Release();
+					}
+					if (Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>(GetValue(_instance, ValueID_Index_Alarm::Level_v1)))
+					{
+						value->OnValueRefreshed(0);
+						value->Release();
+					}
 				}
 			}
 		} // namespace CC
