@@ -1273,6 +1273,7 @@
     <Product config="popp/700045.xml" id="0002" name="700045 Universal Keypad" type="0005"/>
     <Product config="popp/009303.xml" id="0101" name="009303 Battery Wall Controller" type="0100"/>
     <Product config="zwave.me/ZME_KFOB-S.xml" id="0103" name="Popp KFOB-C Remote Control" type="0100"/>
+    <Product config="popp/dwt.xml" id="0007" name="Window/Door Sensor with Tilt Detection" type="0004"/>
     <Product config="popp/smoke-detector.xml" id="0201" name="Smoke Detector and Siren" type="0100"/>
     <Product config="popp/zweather.xml" id="0400" name="ZWeather" type="0100"/>
     <Product config="popp/123601.xml" id="0001" name="123601 Plug-in Switch" type="1100"/>
