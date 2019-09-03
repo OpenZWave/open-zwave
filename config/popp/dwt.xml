@@ -85,19 +85,19 @@
         Value Range: 0 - 99 and 255
       </Help>
     </Value>
-    <Value type="byte" index="9" genre="config" label="Time Delay command frame Off" units="seconds" min="0" max="32400" value="0" size="2">
+    <Value type="short" index="9" genre="config" label="Time Delay command frame Off" units="seconds" min="0" max="32400" value="0" size="1">
       <Help>
         Off command is sent after a delay in seconds
         Default Value: 0
       </Help>
     </Value>
-    <Value type="byte" index="10" genre="config" label="Time Delay command frame Off" units="seconds" min="0" max="32400" value="0" size="2">
+    <Value type="short" index="10" genre="config" label="Time Delay command frame Off" units="seconds" min="0" max="32400" value="0" size="1">
       <Help>
         Off command is sent after a delay in seconds
         Default Value: 0
       </Help>
     </Value>
-    <Value type="byte" index="11" genre="config" label="Delay of Tamper Alarm Cancellation" units="seconds" min="0" max="32400" value="0" size="2">
+    <Value type="short" index="11" genre="config" label="Delay of Tamper Alarm Cancellation" units="seconds" min="0" max="32400" value="0" size="1">
       <Help>
         Time a tamper alarm is delayed in seconds.
         Default Value: 0
