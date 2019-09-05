@@ -160,7 +160,7 @@ namespace OpenZWave
 						for (unsigned int i = 1; i <= m_toneCount; i++)
 						{
 							Internal::VC::ValueList::Item item;
-							char str[32];
+							char str[268]; // name is max 255, duration can be max 65535 so this should be enough space
 							snprintf(str, sizeof(str), "%s (%d sec)", m_toneInfo[i].name.c_str(), m_toneInfo[i].duration);
 							item.m_label = str;
 							item.m_value = i;
