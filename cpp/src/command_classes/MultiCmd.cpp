@@ -49,18 +49,49 @@ namespace OpenZWave
 			{
 				if (MultiCmdCmd_Encap == (MultiCmdCmd) _data[0])
 				{
-					Log::Write(LogLevel_Info, GetNodeId(), "Received encapsulated multi-command from node %d", GetNodeId());
+					int commands;
 
-					if (Node const* node = GetNodeUnsafe())
+					if (_length < 3)
+					{
+						Log::Write(LogLevel_Error, GetNodeId(), "Multi-command frame received is invalid, _length is < 3");
+						return false;
+					}
+					else
+					{
+						commands = _data[1];
+						Log::Write(LogLevel_Info, GetNodeId(), "Multi-command frame received, encapsulates %d command(s)", commands);
+					}
+
+					if (Node const *node = GetNodeUnsafe())
 					{
 						// Iterate over commands
-						uint8 base = 2;
-						for (uint8 i = 0; i < _data[1]; ++i)
+						int base = 2;
+						// Highest possible index is _length minus two because
+						// array is zero-based and _data starts at second byte of command frame
+						int highest_index = _length - 2;
+						for (uint8 i = 1; i <= commands; ++i)
 						{
+							if (base > highest_index)
+							{
+								Log::Write(LogLevel_Error, GetNodeId(),
+										   "Multi-command command part %d is invalid, frame is too short: base > highest_index (%d > %d)",
+										   i, base, highest_index);
+								return false;
+							}
+
 							uint8 length = _data[base];
+							int end = base + length;
+							if (end > highest_index)
+							{
+								Log::Write(LogLevel_Error, GetNodeId(),
+										   "Multi-command command part %d with base %d is invalid, end > highest_index (%d > %d)",
+										   i, base, end, highest_index);
+								return false;
+							}
+
 							uint8 commandClassId = _data[base + 1];
 
-							if (CommandClass* pCommandClass = node->GetCommandClass(commandClassId))
+							if (CommandClass *pCommandClass = node->GetCommandClass(commandClassId))
 							{
 								if (!pCommandClass->IsAfterMark())
 									pCommandClass->HandleMsg(&_data[base + 2], length - 1);
@@ -72,7 +103,7 @@ namespace OpenZWave
 						}
 					}
 
-					Log::Write(LogLevel_Info, GetNodeId(), "End of encapsulated multi-command from node %d", GetNodeId());
+					Log::Write(LogLevel_Info, GetNodeId(), "Multi-command, all %d command(s) processed", commands);
 					return true;
 				}
 				return false;
