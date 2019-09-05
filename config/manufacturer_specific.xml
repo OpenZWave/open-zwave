@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ManufacturerSpecificData Revision="49" xmlns="https://github.com/OpenZWave/open-zwave">
+<ManufacturerSpecificData Revision="51" xmlns="https://github.com/OpenZWave/open-zwave">
   <Manufacturer id="0028" name="2B Electronics"></Manufacturer>
   <Manufacturer id="0098" name="2GIG Technologies">
     <Product config="2gig/ct50e.xml" id="015e" name="CT50e Thermostat" type="3200"/>
@@ -470,6 +470,7 @@
     <Product config="ecolink/motion.xml" id="0001" name="Motion Detector" type="0004"/>
     <Product config="ecolink/doorwindow.xml" id="0002" name="Door/Window Sensor" type="0004"/>
     <Product config="ecolink/tiltsensor.xml" id="0003" name="Tilt Sensor" type="0004"/>
+    <Product config="ecolink/floodfreeze.xml" id="0010" name="Flood/Freeze Sensor" type="0005"/>
     <Product config="ecolink/firefighter.xml" id="000f" name="FireFighter" type="0005"/>
   </Manufacturer>
   <Manufacturer id="0157" name="EcoNet Controls"></Manufacturer>
@@ -1273,6 +1274,7 @@
     <Product config="popp/700045.xml" id="0002" name="700045 Universal Keypad" type="0005"/>
     <Product config="popp/009303.xml" id="0101" name="009303 Battery Wall Controller" type="0100"/>
     <Product config="zwave.me/ZME_KFOB-S.xml" id="0103" name="Popp KFOB-C Remote Control" type="0100"/>
+    <Product config="popp/dwt.xml" id="0007" name="Window/Door Sensor with Tilt Detection" type="0004"/>
     <Product config="popp/smoke-detector.xml" id="0201" name="Smoke Detector and Siren" type="0100"/>
     <Product config="popp/zweather.xml" id="0400" name="ZWeather" type="0100"/>
     <Product config="popp/123601.xml" id="0001" name="123601 Plug-in Switch" type="1100"/>
