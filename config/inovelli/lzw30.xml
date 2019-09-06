@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Product xmlns="http://code.google.com/p/open-zwave/">
+<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
   <!-- Configuration Parameters -->
   <CommandClass id="112">
     <Value genre="config" type="list" size="1" index="1" label="Power On State" min="0" max="2" value="0">
@@ -7,19 +6,19 @@
       When Power is restored
       Range: 0-2
       Default: 0
+      </Help>
       <Item value="0" label="Previous"/>
       <Item value="1" label="On"/>
       <Item value="2" label="Off"/>
-      </Help>
     </Value>
     <Value genre="config" type="list" size="1" index="2" label="Invert Switch" min="0" max="1" value="0">
       <Help>
       Inverts the orientation of the switch. Useful when the switch is installed upside down. Essentially up becomes down and down becomes up.
       Range: 0-1
       Default: 0
+      </Help>
       <Item value="0" label="Disabled"/>
       <Item value="1" label="Enabled"/>
-      </Help>
     </Value>
     <Value genre="config" type="short" size="2" index="3" label="Auto Off Timer" min="0" max="32767" value="0">
       <Help>
@@ -30,7 +29,7 @@
     </Value>
     <Value genre="config" type="byte" size="1" index="4" label="Association Behavior" min="0" max="15" value="15">
       <Help>
-      When should the switch send commands to associated devices?\n\n01 - local\n02 - 3way\n03 - 3way & local\n04 - z-wave hub\n05 - z-wave hub & local\n06 - z-wave hub & 3-way\n07 - z-wave hub & local & 3way\n08 - timer\n09 - timer & local\n10 - timer & 3-way\n11 - timer & 3-way & local\n12 - timer & z-wave hub\n13 - timer & z-wave hub & local\n14 - timer & z-wave hub & 3-way\n15 - all
+      When should the switch send commands to associated devices?\n\n01 - local\n02 - 3way\n03 - 3way &amp; local\n04 - z-wave hub\n05 - z-wave hub &amp; local\n06 - z-wave hub &amp; 3-way\n07 - z-wave hub &amp; local &amp; 3way\n08 - timer\n09 - timer &amp; local\n10 - timer &amp; 3-way\n11 - timer &amp; 3-way &amp; local\n12 - timer &amp; z-wave hub\n13 - timer &amp; z-wave hub &amp; local\n14 - timer &amp; z-wave hub &amp; 3-way\n15 - all
       Range: 0-15
       Default: 15
       </Help>
