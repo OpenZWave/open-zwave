@@ -963,7 +963,10 @@
     <Product config="inovelli/nzw96.xml" id="6000" name="NZW96 1-Channel Outdoor Smart Plug" type="6000"/>
     <Product config="inovelli/nzw97.xml" id="6100" name="NZW97 2-Channel Outdoor Smart Plug" type="6100"/>
   </Manufacturer>
-  <Manufacturer id="031E" name="Inovelli"></Manufacturer>
+  <Manufacturer id="031E" name="Inovelli">
+    <Product type="0002" id="0001" name="LZW30-SN Switch Red Series" config="inovelli/lzw30-sn.xml"/>
+    <Product type="0004" id="0001" name="LZW30 Switch" config="inovelli/lzw30.xml"/>
+  </Manufacturer>
   <Manufacturer id="0100" name="Insignia"></Manufacturer>
   <Manufacturer id="0006" name="Intel"></Manufacturer>
   <Manufacturer id="001c" name="IntelliCon"></Manufacturer>
