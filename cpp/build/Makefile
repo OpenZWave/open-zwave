@@ -13,11 +13,18 @@
 
 
 # what flags we will use for compiling in debug mode
-DEBUG_CFLAGS    := -Wall -Wno-unknown-pragmas -Wno-inline -Wno-format -Werror -Wno-error=sequence-point -Wno-sequence-point -ggdb -DDEBUG -fPIC  -DSYSCONFDIR="\"$(PREFIX)/etc/openzwave/\""
+DEBUG_CFLAGS    := -Wformat -Wall -Wno-unknown-pragmas -Wno-inline -Werror -Wno-error=sequence-point -Wno-sequence-point -ggdb -DDEBUG -fPIC  -DSYSCONFDIR="\"$(PREFIX)/etc/openzwave/\""
+DEBUG_CPPFLAGS  := -std=c++11 
 # what flags we will use for compiling in release mode
-RELEASE_CFLAGS  := -Wall -Wno-unknown-pragmas -Werror -Wno-format -Wno-error=sequence-point -Wno-sequence-point -O3 -DNDEBUG -fPIC  -DSYSCONFDIR="\"$(PREFIX)/etc/openzwave/\""
+RELEASE_CFLAGS  := -Wall -Wno-unknown-pragmas -Werror -Wno-error=sequence-point -Wno-sequence-point -O3 -DNDEBUG -fPIC  -DSYSCONFDIR="\"$(PREFIX)/etc/openzwave/\""
+RELEASE_CPPFLAGS := -std=c++11
 #what flags we will use for linking in debug mode
 DEBUG_LDFLAGS	:= -g
+
+#default Libraries we should link with
+ifneq ($(UNAME),FreeBSD)
+LIBS += -lresolv
+endif
 
 top_srcdir := $(abspath $(dir $(lastword $(MAKEFILE_LIST)))../../)
 
@@ -35,9 +42,15 @@ endif
 #if we are on a Mac, add these flags and libs to the compile and link phases 
 ifeq ($(UNAME),Darwin)
 CFLAGS	+= -c -DDARWIN
-TARCH	+= -arch i386 -arch x86_64
+ifeq ($(DARWIN_MOJAVE_UP),1)
+# Newer macOS releases don't support i386 so only build 64-bit
+DARWIN_BUILD_TARGET = -arch x86_64
+else
+DARWIN_BUILD_TARGET = -arch i386 -arch x86_64
+endif
+TARCH	+= $(DARWIN_BUILD_TARGET)
 LDFLAGS += -dynamiclib -install_name "$(DESTDIR)/$(instlibdir)/$(SHARED_LIB_NAME)"
-LIBS	+= -framework IOKit -framework CoreFoundation -arch i386 -arch x86_64
+LIBS	+= -framework IOKit -framework CoreFoundation $(DARWIN_BUILD_TARGET)
 else ifeq ($(UNAME),FreeBSD)
 LDFLAGS+= -shared -lusb -Wl,-soname,$(SHARED_LIB_NAME)
 
@@ -66,12 +79,24 @@ LDFLAGS+= -shared -lusb-1.0 -liconv
 else
 LDFLAGS += -shared -Wl,-soname,$(SHARED_LIB_NAME)
 endif
-CFLAGS  += $(CPPFLAGS)
+#CFLAGS  += $(CPPFLAGS)
 
 #where to put the temporary library
 LIBDIR	?= $(top_builddir)
 
-INCLUDES	:= -I $(top_srcdir)/cpp/src -I $(top_srcdir)/cpp/tinyxml/
+INCLUDES	:= -I $(top_srcdir)/cpp/src
+
+
+ifeq ($(USE_BI_TXML), 1)
+INCLUDES += -I $(top_srcdir)/cpp/tinyxml/
+SOURCES_TXML =$(top_srcdir)/cpp/tinyxml/
+tinyxml := $(notdir $(wildcard $(top_srcdir)/cpp/tinyxml/*.cpp))
+else
+LIBS+= -ltinyxml
+endif
+
+
+
 
 
 ifeq ($(USE_HID),1)
@@ -92,12 +117,11 @@ LIBS += -ludev
 endif
 endif # USE_HID
 
-SOURCES		:= $(top_srcdir)/cpp/src $(top_srcdir)/cpp/src/command_classes $(top_srcdir)/cpp/tinyxml \
+SOURCES		:= $(top_srcdir)/cpp/src $(top_srcdir)/cpp/src/command_classes $(SOURCES_TXML) \
 	$(top_srcdir)/cpp/src/value_classes $(top_srcdir)/cpp/src/platform $(top_srcdir)/cpp/src/platform/unix $(SOURCES_HIDAPI) $(top_srcdir)/cpp/src/aes/
-VPATH = $(top_srcdir)/cpp/src:$(top_srcdir)/cpp/src/command_classes:$(top_srcdir)/cpp/tinyxml:\
+VPATH = $(top_srcdir)/cpp/src:$(top_srcdir)/cpp/src/command_classes:$(SOURCES_TXML):\
 	$(top_srcdir)/cpp/src/value_classes:$(top_srcdir)/cpp/src/platform:$(top_srcdir)/cpp/src/platform/unix:$(SOURCES_HIDAPI):$(top_srcdir)/cpp/src/aes/
 
-tinyxml := $(notdir $(wildcard $(top_srcdir)/cpp/tinyxml/*.cpp))
 
 ifeq ($(USE_HID),1)
 ifeq ($(UNAME),Darwin)
@@ -150,6 +174,13 @@ $(top_srcdir)/cpp/src/vers.cpp:
 	@echo 'uint16_t ozw_vers_minor = $(VERSION_MIN);' >> $(top_srcdir)/cpp/src/vers.cpp
 	@echo 'uint16_t ozw_vers_revision = $(VERSION_REV);' >> $(top_srcdir)/cpp/src/vers.cpp
 	@echo 'char ozw_version_string[] = "$(GITVERSION)";' >> $(top_srcdir)/cpp/src/vers.cpp
+	@$(SED) \
+		-e 's|[@]VERSION@|$(VERSION).$(VERSION_REV)|g' \
+		< "$(top_srcdir)/dist/openzwave.spec.in" > "$(top_srcdir)/dist/openzwave.spec"
+
+#create a vers.cpp file that contains our version and subversion revisions
+updateIndexDefines: $(top_srcdir)/cpp/src/ValueIDIndexesDefines.def
+	@$(CXX) -E -P -o $(top_srcdir)/cpp/src/ValueIDIndexesDefines.h -x c++ $<	
 
 
 #$(OBJDIR)/vers.o:	$(top_builddir)/vers.cpp

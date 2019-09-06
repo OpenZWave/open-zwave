@@ -1,0 +1,6 @@
+#due to arch- and optimisation-dependent symbols the symbols-file is not
+#maintainable and FTBSs occur on lots of architectures
+libopenzwave1.6: no-symbols-control-file
+# this is a false positive
+libopenzwave1.6: spelling-error-in-binary # usr/lib/x86_64-linux-gnu/libopenzwave.so.1.6 LengH Length
+

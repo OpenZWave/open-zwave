@@ -33,44 +33,45 @@
 #include "Driver.h"
 #include "platform/Log.h"
 
-using namespace OpenZWave;
+namespace OpenZWave
+{
+	namespace Internal
+	{
+		namespace CC
+		{
 
 //-----------------------------------------------------------------------------
 // <NoOperation::HandleMsg>
 // Handle a message from the Z-Wave network
 //-----------------------------------------------------------------------------
-bool NoOperation::HandleMsg
-(
-	uint8 const* _data,
-	uint32 const _length,
-	uint32 const _instance	// = 1
-)
-{
-	// We have received a no operation from the Z-Wave device.
-	Log::Write( LogLevel_Info, GetNodeId(), "Received NoOperation command from node %d", GetNodeId() );
-	return true;
-}
+			bool NoOperation::HandleMsg(uint8 const* _data, uint32 const _length, uint32 const _instance	// = 1
+					)
+			{
+				// We have received a no operation from the Z-Wave device.
+				Log::Write(LogLevel_Info, GetNodeId(), "Received NoOperation command from node %d", GetNodeId());
+				return true;
+			}
 
 //-----------------------------------------------------------------------------
 // <NoOperation::Set>
 // Send a No Operation message class.
 //-----------------------------------------------------------------------------
-void NoOperation::Set
-(
-	bool const _route,
-	Driver::MsgQueue _queue		// = Driver::MsgQueue_NoOp
-)
-{
-	Log::Write( LogLevel_Info, GetNodeId(), "NoOperation::Set - Routing=%s", _route ? "true" : "false" );
+			void NoOperation::Set(bool const _route, Driver::MsgQueue _queue		// = Driver::MsgQueue_NoOp
+					)
+			{
+				Log::Write(LogLevel_Info, GetNodeId(), "NoOperation::Set - Routing=%s", _route ? "true" : "false");
 
-	Msg* msg = new Msg( "NoOperation_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-	msg->Append( GetNodeId() );
-	msg->Append( 2 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( 0 );
-	if( _route )
-		msg->Append( GetDriver()->GetTransmitOptions() );
-	else
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_NO_ROUTE );
-	GetDriver()->SendMsg( msg, _queue );
-}
+				Msg* msg = new Msg("NoOperation_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
+				msg->Append(GetNodeId());
+				msg->Append(2);
+				msg->Append(GetCommandClassId());
+				msg->Append(0);
+				if (_route)
+					msg->Append(GetDriver()->GetTransmitOptions());
+				else
+					msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_NO_ROUTE);
+				GetDriver()->SendMsg(msg, _queue);
+			}
+		} // namespace CC
+	} // namespace Internal
+} // namespace OpenZWave

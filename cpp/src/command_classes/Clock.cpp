@@ -36,222 +36,200 @@
 #include "value_classes/ValueByte.h"
 #include "value_classes/ValueList.h"
 
-using namespace OpenZWave;
-
-enum ClockCmd
+namespace OpenZWave
 {
-	ClockCmd_Set	= 0x04,
-	ClockCmd_Get	= 0x05,
-	ClockCmd_Report	= 0x06
-};
+	namespace Internal
+	{
+		namespace CC
+		{
 
-enum
-{
-	ClockIndex_Day = 0,
-	ClockIndex_Hour,
-	ClockIndex_Minute
-};
+			enum ClockCmd
+			{
+				ClockCmd_Set = 0x04,
+				ClockCmd_Get = 0x05,
+				ClockCmd_Report = 0x06
+			};
 
-static char const* c_dayNames[] =
-{
-	"Invalid",
-	"Monday",
-	"Tuesday",
-	"Wednesday",
-	"Thursday",
-	"Friday",
-	"Saturday",
-	"Sunday"
-};
+			static char const* c_dayNames[] =
+			{ "Invalid", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
 
 //-----------------------------------------------------------------------------
 // <Clock::RequestState>
 // Request current state from the device
 //-----------------------------------------------------------------------------
-bool Clock::RequestState
-(
-	uint32 const _requestFlags,
-	uint8 const _instance,
-	Driver::MsgQueue const _queue
-)
-{
-	if( _requestFlags & RequestFlag_Dynamic )
-	{
-		return RequestValue( _requestFlags, 0, _instance, _queue );
-	}
+			bool Clock::RequestState(uint32 const _requestFlags, uint8 const _instance, Driver::MsgQueue const _queue)
+			{
+				if (_requestFlags & RequestFlag_Dynamic)
+				{
+					return RequestValue(_requestFlags, 0, _instance, _queue);
+				}
 
-	return false;
-}
+				return false;
+			}
 
 //-----------------------------------------------------------------------------
 // <Clock::RequestValue>
 // Request current value from the device
 //-----------------------------------------------------------------------------
-bool Clock::RequestValue
-(
-	uint32 const _requestFlags,
-	uint8 const _dummy1,	// = 0 (not used)
-	uint8 const _instance,
-	Driver::MsgQueue const _queue
-)
-{
-	if ( IsGetSupported() )
-	{
-		Msg* msg = new Msg( "ClockCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-		msg->SetInstance( this, _instance );
-		msg->Append( GetNodeId() );
-		msg->Append( 2 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( ClockCmd_Get );
-		msg->Append( GetDriver()->GetTransmitOptions() );
-		GetDriver()->SendMsg( msg, _queue );
-		return true;
-	} else {
-		Log::Write(  LogLevel_Info, GetNodeId(), "ClockCmd_Get Not Supported on this node");
-	}
-	return false;
-}
+			bool Clock::RequestValue(uint32 const _requestFlags, uint16 const _dummy1,	// = 0 (not used)
+					uint8 const _instance, Driver::MsgQueue const _queue)
+			{
+				if (m_com.GetFlagBool(COMPAT_FLAG_GETSUPPORTED))
+				{
+					Msg* msg = new Msg("ClockCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
+					msg->SetInstance(this, _instance);
+					msg->Append(GetNodeId());
+					msg->Append(2);
+					msg->Append(GetCommandClassId());
+					msg->Append(ClockCmd_Get);
+					msg->Append(GetDriver()->GetTransmitOptions());
+					GetDriver()->SendMsg(msg, _queue);
+					return true;
+				}
+				else
+				{
+					Log::Write(LogLevel_Info, GetNodeId(), "ClockCmd_Get Not Supported on this node");
+				}
+				return false;
+			}
 
 //-----------------------------------------------------------------------------
 // <Clock::HandleMsg>
 // Handle a message from the Z-Wave network
 //-----------------------------------------------------------------------------
-bool Clock::HandleMsg
-(
-	uint8 const* _data,
-	uint32 const _length,
-	uint32 const _instance	// = 1
-)
-{
-	if (ClockCmd_Report == (ClockCmd)_data[0])
-	{
-		uint8 day = _data[1] >> 5;
-		uint8 hour = _data[1] & 0x1f;
-		uint8 minute = _data[2];
+			bool Clock::HandleMsg(uint8 const* _data, uint32 const _length, uint32 const _instance	// = 1
+					)
+			{
+				if (ClockCmd_Report == (ClockCmd) _data[0])
+				{
+					uint8 day = _data[1] >> 5;
+					uint8 hour = _data[1] & 0x1f;
+					uint8 minute = _data[2];
 
-		if (day > 7) /* size of c_dayNames */
-		{
-			Log::Write (LogLevel_Warning, GetNodeId(), "Day Value was greater than range. Setting to Invalid");
-			day = 0;
-		}
+					if (day > 7) /* size of c_dayNames */
+					{
+						Log::Write(LogLevel_Warning, GetNodeId(), "Day Value was greater than range. Setting to Invalid");
+						day = 0;
+					}
 
-		Log::Write( LogLevel_Info, GetNodeId(), "Received Clock report: %s %.2d:%.2d", c_dayNames[day], hour, minute );
+					Log::Write(LogLevel_Info, GetNodeId(), "Received Clock report: %s %.2d:%.2d", c_dayNames[day], hour, minute);
 
+					if (Internal::VC::ValueList* dayValue = static_cast<Internal::VC::ValueList*>(GetValue(_instance, ValueID_Index_Clock::Day)))
+					{
+						dayValue->OnValueRefreshed(day);
+						dayValue->Release();
+					}
+					if (Internal::VC::ValueByte* hourValue = static_cast<Internal::VC::ValueByte*>(GetValue(_instance, ValueID_Index_Clock::Hour)))
+					{
+						hourValue->OnValueRefreshed(hour);
+						hourValue->Release();
+					}
+					if (Internal::VC::ValueByte* minuteValue = static_cast<Internal::VC::ValueByte*>(GetValue(_instance, ValueID_Index_Clock::Minute)))
+					{
+						minuteValue->OnValueRefreshed(minute);
+						minuteValue->Release();
+					}
+					return true;
+				}
 
-		if( ValueList* dayValue = static_cast<ValueList*>( GetValue( _instance, ClockIndex_Day ) ) )
-		{
-			dayValue->OnValueRefreshed( day );
-			dayValue->Release();
-		}
-		if( ValueByte* hourValue = static_cast<ValueByte*>( GetValue( _instance, ClockIndex_Hour ) ) )
-		{
-			hourValue->OnValueRefreshed( hour );
-			hourValue->Release();
-		}
-		if( ValueByte* minuteValue = static_cast<ValueByte*>( GetValue( _instance, ClockIndex_Minute ) ) )
-		{
-			minuteValue->OnValueRefreshed( minute );
-			minuteValue->Release();
-		}
-		return true;
-	}
-
-	return false;
-}
+				return false;
+			}
 
 //-----------------------------------------------------------------------------
 // <Clock::SetValue>
 // Set a value in the Z-Wave device
 //-----------------------------------------------------------------------------
-bool Clock::SetValue
-(
-	Value const& _value
-)
-{
-	bool ret = false;
+			bool Clock::SetValue(Internal::VC::Value const& _value)
+			{
+				bool ret = false;
 
-	uint8 instance = _value.GetID().GetInstance();
+				uint8 instance = _value.GetID().GetInstance();
 
-	ValueList* dayValue = static_cast<ValueList*>( GetValue( instance, ClockIndex_Day ) );
-	ValueByte* hourValue = static_cast<ValueByte*>( GetValue( instance, ClockIndex_Hour ) );
-	ValueByte* minuteValue = static_cast<ValueByte*>( GetValue( instance, ClockIndex_Minute ) );
+				Internal::VC::ValueList* dayValue = static_cast<Internal::VC::ValueList*>(GetValue(instance, ValueID_Index_Clock::Day));
+				Internal::VC::ValueByte* hourValue = static_cast<Internal::VC::ValueByte*>(GetValue(instance, ValueID_Index_Clock::Hour));
+				Internal::VC::ValueByte* minuteValue = static_cast<Internal::VC::ValueByte*>(GetValue(instance, ValueID_Index_Clock::Minute));
 
-	if( dayValue && hourValue && minuteValue )
-	{
-		if (dayValue->GetItem() == NULL) {
-			ret = false;
-		} else {
-			uint8 day = dayValue->GetItem()->m_value;
-			if (_value.GetID() == dayValue->GetID()) {
-				ValueList const * dayvaluetmp = static_cast<ValueList const*>(&_value);
-				day = dayvaluetmp->GetItem()->m_value;
-				dayValue->OnValueRefreshed(day);
+				if (dayValue && hourValue && minuteValue)
+				{
+					if (dayValue->GetItem() == NULL)
+					{
+						ret = false;
+					}
+					else
+					{
+						uint8 day = dayValue->GetItem()->m_value;
+						if (_value.GetID() == dayValue->GetID())
+						{
+							Internal::VC::ValueList const * dayvaluetmp = static_cast<Internal::VC::ValueList const*>(&_value);
+							day = dayvaluetmp->GetItem()->m_value;
+							dayValue->OnValueRefreshed(day);
+						}
+						uint8 hour = hourValue->GetValue();
+						if (_value.GetID() == hourValue->GetID())
+						{
+							Internal::VC::ValueByte const * hourvaluetmp = static_cast<Internal::VC::ValueByte const*>(&_value);
+							hour = hourvaluetmp->GetValue();
+							hourValue->OnValueRefreshed(hour);
+						}
+						uint8 minute = minuteValue->GetValue();
+						if (_value.GetID() == minuteValue->GetID())
+						{
+							Internal::VC::ValueByte const * minuteValuetmp = static_cast<Internal::VC::ValueByte const*>(&_value);
+							minute = minuteValuetmp->GetValue();
+							minuteValue->OnValueRefreshed(minute);
+						}
+
+						Msg* msg = new Msg("ClockCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
+						msg->SetInstance(this, instance);
+						msg->Append(GetNodeId());
+						msg->Append(4);
+						msg->Append(GetCommandClassId());
+						msg->Append(ClockCmd_Set);
+						msg->Append((day << 5) | hour);
+						msg->Append(minute);
+						msg->Append(GetDriver()->GetTransmitOptions());
+						GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
+						ret = true;
+					}
+				}
+
+				if (dayValue != NULL)
+				{
+					dayValue->Release();
+				}
+				if (hourValue != NULL)
+				{
+					hourValue->Release();
+				}
+				if (minuteValue != NULL)
+				{
+					minuteValue->Release();
+				}
+				return ret;
 			}
-			uint8 hour = hourValue->GetValue();
-			if (_value.GetID() == hourValue->GetID()) {
-				ValueByte const * hourvaluetmp = static_cast<ValueByte const*>(&_value);
-				hour = hourvaluetmp->GetValue();
-				hourValue->OnValueRefreshed(hour);
-			}
-			uint8 minute = minuteValue->GetValue();
-			if (_value.GetID() == minuteValue->GetID()) {
-				ValueByte const * minuteValuetmp = static_cast<ValueByte const*>(&_value);
-				minute = minuteValuetmp->GetValue();
-				minuteValue->OnValueRefreshed(minute);
-			}
-
-
-			Msg* msg = new Msg( "ClockCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-			msg->SetInstance( this, instance );
-			msg->Append( GetNodeId() );
-			msg->Append( 4 );
-			msg->Append( GetCommandClassId() );
-			msg->Append( ClockCmd_Set );
-			msg->Append( ( day << 5 ) | hour );
-			msg->Append( minute );
-			msg->Append( GetDriver()->GetTransmitOptions() );
-			GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
-			ret = true;
-		}
-	}
-
-	if( dayValue != NULL )
-	{
-		dayValue->Release();
-	}
-	if( hourValue != NULL )
-	{
-		hourValue->Release();
-	}
-	if( minuteValue != NULL )
-	{
-		minuteValue->Release();
-	}
-	return ret;
-}
 
 //-----------------------------------------------------------------------------
 // <Clock::CreateVars>
 // Create the values managed by this command class
 //-----------------------------------------------------------------------------
-void Clock::CreateVars
-(
-	uint8 const _instance
-)
-{
-	if( Node* node = GetNodeUnsafe() )
-	{
-		vector<ValueList::Item> items;
-		for( int i=1; i<=7; ++i )
-		{
-			ValueList::Item item;
-			item.m_label = c_dayNames[i];
-			item.m_value = i;
-			items.push_back( item );
-		}
+			void Clock::CreateVars(uint8 const _instance)
+			{
+				if (Node* node = GetNodeUnsafe())
+				{
+					vector<Internal::VC::ValueList::Item> items;
+					for (int i = 1; i <= 7; ++i)
+					{
+						Internal::VC::ValueList::Item item;
+						item.m_label = c_dayNames[i];
+						item.m_value = i;
+						items.push_back(item);
+					}
 
-		node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ClockIndex_Day, "Day", "", false, false, 1, items, 0, 0 );
-		node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ClockIndex_Hour, "Hour", "", false, false, 12, 0 );
-		node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ClockIndex_Minute, "Minute", "", false, false, 0, 0 );
-	}
-}
+					node->CreateValueList(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_Clock::Day, "Day", "", false, false, 1, items, 0, 0);
+					node->CreateValueByte(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_Clock::Hour, "Hour", "", false, false, 12, 0);
+					node->CreateValueByte(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_Clock::Minute, "Minute", "", false, false, 0, 0);
+				}
+			}
+		} // namespace CC
+	} // namespace Internal
+} // namespace OpenZWave
