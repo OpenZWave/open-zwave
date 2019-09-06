@@ -1,4 +1,4 @@
-<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
   <!-- Configuration Parameters -->
   <CommandClass id="112">
     <Value genre="config" type="list" size="1" index="1" label="Power On State" min="0" max="2" value="0">
@@ -29,7 +29,7 @@
     </Value>
     <Value genre="config" type="byte" size="1" index="4" label="Association Behavior" min="0" max="15" value="15">
       <Help>
-      When should the switch send commands to associated devices?\n\n01 - local\n02 - 3way\n03 - 3way &amp; local\n04 - z-wave hub\n05 - z-wave hub &amp; local\n06 - z-wave hub &amp; 3-way\n07 - z-wave hub &amp; local &amp; 3way\n08 - timer\n09 - timer &amp; local\n10 - timer &amp; 3-way\n11 - timer &amp; 3-way &amp; local\n12 - timer &amp; z-wave hub\n13 - timer &amp; z-wave hub &amp; local\n14 - timer &amp; z-wave hub &amp; 3-way\n15 - all
+      When should the switch send commands to associated devices?  01 - local 02 - 3way 03 - 3way &amp; local 04 - z-wave hub 05 - z-wave hub &amp; local 06 - z-wave hub &amp; 3-way 07 - z-wave hub &amp; local &amp; 3way 08 - timer 09 - timer &amp; local 10 - timer &amp; 3-way 11 - timer &amp; 3-way &amp; local 12 - timer &amp; z-wave hub 13 - timer &amp; z-wave hub &amp; local 14 - timer &amp; z-wave hub &amp; 3-way 15 - all
       Range: 0-15
       Default: 15
       </Help>
