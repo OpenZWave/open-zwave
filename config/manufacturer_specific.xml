@@ -763,6 +763,7 @@
     <Product config="ge/26931-motion-switch.xml" id="3032" name="26931 Smart Motion Switch" type="494d"/>
     <Product config="ge/26933-motion-dimmer.xml" id="3034" name="26933 Smart Motion Dimmer" type="494d"/>
     <Product config="ge/14291-switch.xml" id="3036" name="14291 In-Wall Smart Switch" type="4952"/>
+    <Product config="ge/46201-switch.xml" id="3135" name="46201 In-Wall Smart Switch" type="4952"/>
     <Product config="ge/14292-toggle-switch.xml" id="3037" name="14292 In-Wall Smart Toggle Switch" type="4952"/>
     <Product config="ge/14292-toggle-switch.xml" id="3038" name="14293 In-Wall Smart Toggle Switch" type="4952"/>
     <Product config="ge/45604.xml" id="3030" name="45603 Plugin Appliance Module" type="5250"/>
