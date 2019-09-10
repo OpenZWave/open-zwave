@@ -1,4 +1,30 @@
-<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/031E:0001:0004</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/inovelli/lzw30.png</MetaDataItem>
+    <MetaDataItem id="0001" name="ZWProductPage" type="0004">https://products.z-wavealliance.org/products/3452</MetaDataItem>
+    <MetaDataItem name="ProductPage">https://inovelli.com/shop/smart-light-switches/zwave-smart-switches-gen2/pre-order-z-wave-on-off-switch-base-model/</MetaDataItem>
+    <MetaDataItem name="ProductSupport">https://inovelli.com/shop/smart-light-switches/zwave-smart-switches-gen2/pre-order-z-wave-on-off-switch-base-model</MetaDataItem>
+    <MetaDataItem name="ExclusionDescription">To Exclude your switch, put your HUB in exclusion mode and press the Configuration Button three (3) times.</MetaDataItem>
+    <MetaDataItem id="0001" name="FrequencyName" type="0004">U.S. / Canada / Mexico</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&amp;filename=MarketCertificationFiles/3452/LZW30%20Manual.pdf</MetaDataItem>
+    <MetaDataItem name="ResetDescription">You may factory reset the switch by holding down the Config Button for twenty (20) or more seconds. The LED Bar will turn Red and blink three (3) times to confirm. 
+
+However, we recommend using a certified Z-Wave controller to remove the device from your network for factory resetting the switch. 
+
+Only use either of these procedures in the event that the network primary controller is missing or otherwise inoperable.
+    </MetaDataItem>
+    <MetaDataItem name="Description">The Inovelli On/Off switch is a Z-Wave device that controls attached LED, CFL, &amp; Incandescent lighting which can be highly customized to your liking at the switch itself with our unique config button and advanced firmware.</MetaDataItem>
+    <MetaDataItem name="Name">LZW30 Switch</MetaDataItem>
+    <MetaDataItem id="0001" name="Identifier" type="0004">LZW30</MetaDataItem>
+    <MetaDataItem name="InclusionDescription">To include your switch, start the inclusion process on your HUB and tap the Configuration Button three (3) times.
+
+Please Note: If this doesn't work, you can check to see if your switch is within Z-Wave Range by holding down the Configuration Button for 5-10 seconds (if it's not within range, the LED Bar will indicate Red and if it is within Range, the LED Bar will indicate Green). If your switch indicates Red, please move the switch closer to the HUB. If your switch indicates Green, please try running an Exclusion to reset your switch.
+    </MetaDataItem>
+    <ChangeLog>
+      <Entry author="Eric Maycock - ericm@inovelli.com" date="10 Sep 2019" revision="5">Adding Metadata</Entry>
+    </ChangeLog>
+  </MetaData>
   <!-- Configuration Parameters -->
   <CommandClass id="112">
     <Value genre="config" type="list" size="1" index="1" label="Power On State" min="0" max="2" value="0">
