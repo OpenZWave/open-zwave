@@ -1601,6 +1601,7 @@
     <Product config="wenzhou/tz57.xml" id="0203" name="TZ57 Two channel switch" type="0311"/>
     <Product config="wenzhou/tz79.xml" id="0305" name="TZ79 Power meter Relay Switch" type="0311"/>
     <Product config="wenzhou/tz74.xml" id="0304" name="TZ74 Dual Switch" type="0311"/>
+    <Product config="wenzhou/tze93.xml" id="0505" name="TZE93.716 Z-WAVE Plus Weekly Programming Heating Thermostat with LCD Touch Screen" type="0311"/>
   </Manufacturer>
   <Manufacturer id="011C" name="TKH Group / Eminent"></Manufacturer>
   <Manufacturer id="0327" name="TMC Technology"></Manufacturer>
