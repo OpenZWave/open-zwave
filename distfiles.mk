@@ -381,6 +381,7 @@ DISTFILES =	.gitignore \
 	config/philio/pad02.xml \
 	config/philio/pan03.xml \
 	config/philio/pan04.xml \
+	config/philio/pan05.xml \
 	config/philio/pan06.xml \
 	config/philio/pan07.xml \
 	config/philio/pan08.xml \
@@ -412,6 +413,7 @@ DISTFILES =	.gitignore \
 	config/popp/123658.xml \
 	config/popp/700045.xml \
 	config/popp/700168.xml \
+	config/popp/700397.xml \
 	config/popp/smoke-detector.xml \
 	config/popp/solar-siren.xml \
 	config/popp/zweather.xml \
@@ -492,6 +494,7 @@ DISTFILES =	.gitignore \
 	config/trane/TZEMT400BB32MAA.xml \
 	config/trane/TZEMT524AA21MA.xml \
 	config/tronika/zsc01d.xml \
+	config/tronika/zv9040.xml \
 	config/tronika/zv9101.xml \
 	config/vision/zd2102.xml \
 	config/vision/zd2105us5.xml \
@@ -688,6 +691,8 @@ DISTFILES =	.gitignore \
 	cpp/src/command_classes/Association.h \
 	cpp/src/command_classes/AssociationCommandConfiguration.cpp \
 	cpp/src/command_classes/AssociationCommandConfiguration.h \
+	cpp/src/command_classes/BarrierOperator.cpp \
+	cpp/src/command_classes/BarrierOperator.h \
 	cpp/src/command_classes/Basic.cpp \
 	cpp/src/command_classes/Basic.h \
 	cpp/src/command_classes/BasicWindowCovering.cpp \
@@ -728,6 +733,8 @@ DISTFILES =	.gitignore \
 	cpp/src/command_classes/Language.h \
 	cpp/src/command_classes/Lock.cpp \
 	cpp/src/command_classes/Lock.h \
+	cpp/src/command_classes/ManufacturerProprietary.cpp \
+	cpp/src/command_classes/ManufacturerProprietary.h \
 	cpp/src/command_classes/ManufacturerSpecific.cpp \
 	cpp/src/command_classes/ManufacturerSpecific.h \
 	cpp/src/command_classes/Meter.cpp \
