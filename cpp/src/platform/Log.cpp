@@ -279,6 +279,21 @@ void Log::SetLogFileName(const string &_filename)
 }
 
 //-----------------------------------------------------------------------------
+//	<Log::ReopenLogFile>
+//	Reopens currently open log file. (So for example logrotate can do its job)
+//-----------------------------------------------------------------------------
+void Log::ReopenLogFile()
+{
+  if (s_instance && s_dologging && (s_instance->m_pImpls.size() > 0))
+	{
+		s_instance->m_logMutex->Lock();
+		for (std::vector<i_LogImpl*>::iterator it = s_instance->m_pImpls.begin(); it !=s_instance->m_pImpls.end(); it++)
+			(*it)->ReopenLogFile();
+		s_instance->m_logMutex->Unlock();
+	}
+}
+
+//-----------------------------------------------------------------------------
 //	<Log::Log>
 //	Constructor
 //-----------------------------------------------------------------------------
