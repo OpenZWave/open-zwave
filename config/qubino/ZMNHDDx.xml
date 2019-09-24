@@ -51,7 +51,7 @@ http://qubino.com/download/990/
   <CommandClass id="112">
     <Value genre="config" index="1" instance="1" label="Input 1 switch type" max="1" min="0" size="1" type="list" value="0">
       <Help/>
-      <Item label="Mono-stable(push button)" value="0"/>
+      <Item label="Mono-stable (push button)" value="0"/>
       <Item label="Bi-stable" value="1"/>
     </Value>
     <Value genre="config" index="2" instance="1" label="Input 2 switch type" max="1" min="0" size="1" type="list" value="0">
