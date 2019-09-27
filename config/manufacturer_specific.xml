@@ -811,7 +811,9 @@
   <Manufacturer id="016D" name="Guangzhou Ruixiang M&amp;E Co. Ltd"></Manufacturer>
   <Manufacturer id="0158" name="GuangZhou Zeewave Information Technology Co. Ltd"></Manufacturer>
   <Manufacturer id="0395" name="Guangzhou_SIMT Limited"></Manufacturer>
-  <Manufacturer id="037B" name="Guardtec Inc"></Manufacturer>
+  <Manufacturer id="037B" name="Guardtec Inc">
+    <Product type="0002" id="0001" name="GKW-2000D Door Lock" config="guardtec/gkw2000d.xml"/>
+  </Manufacturer>
   <Manufacturer id="0287" name="HAB Home Intelligence LLC"></Manufacturer>
   <Manufacturer id="030D" name="Hampoo"></Manufacturer>
   <Manufacturer id="040A" name="Hangzhou Hikvision Digital Technology Co. Ltd"></Manufacturer>
