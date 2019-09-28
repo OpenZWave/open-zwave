@@ -53,9 +53,8 @@ namespace OpenZWave
 			bool ApplicationStatus::HandleMsg(uint8 const* _data, uint32 const _length, uint32 const _instance	// = 1
 					)
 			{
-				Notification* notification = new Notification(Notification::Type_Notification);
+				Notification* notification = new Notification(Notification::Type_UserAlerts);
 				notification->SetHomeAndNodeIds(GetHomeId(), GetNodeId());
-				notification->SetNotification(Notification::Type_UserAlerts);
 				if (ApplicationStatusCmd_Busy == (ApplicationStatusCmd) _data[0])
 				{
 					switch (_data[1])
