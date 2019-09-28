@@ -1,4 +1,4 @@
-<Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="Name">GKW-2000D</MetaDataItem>
     <MetaDataItem name="Description">The GKW-2000D is a secure electronic door lock</MetaDataItem>
@@ -29,9 +29,19 @@
     <MetaDataItem id="0001" name="FrequencyName" type="0002">Australia / New Zealand</MetaDataItem>
     <MetaDataItem id="0001" name="FrequencyName" type="0002">CEPT (Europe)</MetaDataItem>
     <ChangeLog>
+      <Entry author="Brian Veltman - brian@brianveltman.com" date="28 September 2019" revision="2">Refresh lock status when alarm message received</Entry>
       <Entry author="Brian Veltman - brian@brianveltman.com" date="27 September 2019" revision="1">Initial Metadata import</Entry>
     </ChangeLog>
   </MetaData>
+  <CommandClass id="113">
+    <!-- These Door Locks don't send a DoorLockReport when the
+		Lock Status is Changed, but instead send a Alarm Message -
+		So we trigger a Refresh of the DoorLock Command Class when
+		we recieve a Alarm Message Instead -->
+    <TriggerRefreshValue Genre="user" Index="0" Instance="1">
+      <RefreshClassValue CommandClass="98" Index="1" Instance="1" RequestFlags="0"/>
+    </TriggerRefreshValue>
+  </CommandClass>
   <!-- The Association Group Information -->
   <CommandClass id="133">
     <Associations num_groups="2">
