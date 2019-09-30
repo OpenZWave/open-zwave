@@ -757,6 +757,7 @@
     <Product config="ge/12724-dimmer.xml" id="3033" name="12729 3-Way Dimmer Switch" type="4944"/>
     <Product config="ge/12724-dimmer.xml" id="3034" name="12730 Fan Control Switch" type="4944"/>
     <Product config="ge/12724-dimmer.xml" id="3131" name="14287 Fan Control Switch" type="4944"/>
+    <Product config="ge/12724-dimmer.xml" id="3032" name="12725 In-Wall 1000W Dimmer" type="4944"/>
     <Product config="ge/14288-outlet.xml" id="3134" name="14288 In-Wall Tamper Resistant Smart Outlet" type="4952"/>
     <Product config="ge/14294-dimmer.xml" id="3038" name="14294 In-Wall Smart Dimmer" type="4944"/>
     <Product config="ge/14294-dimmer.xml" id="3039" name="14299 In-Wall 1000W Smart Dimmer" type="4944"/>
