@@ -299,6 +299,7 @@ DISTFILES =	.gitignore \
 	config/ge/28167-plugin-dimmer.xml \
 	config/ge/28169-plugin-switch.xml \
 	config/ge/45604.xml \
+	config/ge/46201-switch.xml \
 	config/ge/dimmer.xml \
 	config/ge/dimmer_module.xml \
 	config/ge/hinge-pin.xml \
@@ -588,6 +589,7 @@ DISTFILES =	.gitignore \
 	config/images/ge/28167-plugin-dimmer.png \
 	config/images/ge/28169-plugin-switch.png \
 	config/images/ge/45604.png \
+	config/images/ge/46201-switch.png \
 	config/images/ge/dimmer.png \
 	config/images/ge/dimmer_module.png \
 	config/images/ge/hinge-pin.png \
