@@ -929,7 +929,7 @@
   <Manufacturer id="0011" name="iCOM Technology b.v."></Manufacturer>
   <Manufacturer id="0106" name="Icontrol Networks"></Manufacturer>
   <Manufacturer id="0373" name="ID Lock AS">
-    <Product config="idlock/idlock150.xml" id="0001" name="150" type="0003"/>
+    <Product config="idlock/idlock150.xml" id="0001" name="ID-150 Z-Wave Module" type="0003"/>
   </Manufacturer>
   <Manufacturer id="019E" name="iEXERGY GmbH"></Manufacturer>
   <Manufacturer id="031C" name="Ilevia srl"></Manufacturer>
