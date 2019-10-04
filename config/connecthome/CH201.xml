@@ -1,0 +1,94 @@
+<Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
+  <!-- Configuration Parameters -->
+  <CommandClass id="112">
+    <Value genre="config" instance="1" index="1" value="0" label="Relay mode" units="" size="1" min="0" max="1" type="list">
+      <Help></Help>
+      <Item value="0" label="Normal"/>
+      <Item value="1" label="Reverse"/>
+    </Value>
+    <Value genre="config" instance="1" index="2" value="1" label="Temperature threshold" units="Δ°С" size="1" min="1" max="7" type="byte">
+      <Help>Set temperature threshold</Help>
+    </Value>
+    <Value genre="config" instance="1" index="3" value="2" label="Point mode" units="" size="1" min="0" max="2" type="list">
+      <Help>Set point mode</Help>
+      <Item value="0" label="Mode 0"/>
+      <Item value="1" label="Mode 1"/>
+      <Item value="2" label="Mode 2"/>
+    </Value>
+    <Value genre="config" instance="1" index="4" value="1" label="Thermostat status at failure" units="" size="1" min="0" max="1" type="list">
+      <Help>Operating mode in case a thermostat doesn't receive data from a temp sensor</Help>
+      <Item value="0" label="Off"/>
+      <Item value="1" label="On"/>
+    </Value>
+    <Value genre="config" instance="1" index="5" value="30000" label="Max waiting time from temp sensor" units="sec" size="2" min="100" max="30000" type="short">
+      <Help>Max time of data expectation from room temperature sensor</Help>
+    </Value>
+    <Value genre="config" instance="1" index="6" value="4" label="Minimum allowable temperature" units="°С" size="2" min="-127" max="127" type="short">
+      <Help>Set minimum allowable temperature</Help>
+    </Value>
+    <Value genre="config" instance="1" index="6" value="4" label="Minimum allowable temperature" units="°С" size="2" min="-127" max="127" type="short">
+      <Help>Set minimum allowable temperature</Help>
+    </Value>
+    <Value genre="config" instance="1" index="7" value="30" label="Maximum alowable temperature" units="°С" size="2" min="-127" max="127" type="short">
+      <Help>Set maximum alowable temperature</Help>
+    </Value>
+    <Value genre="config" instance="1" index="8" value="120" label="Time turbo mode" units="sec" size="2" min="100" max="1200" type="short">
+      <Help>Set time turbo mode</Help>
+    </Value>
+    <Value genre="config" instance="1" index="9" value="0" label="Power on turbo mode" units="sec" size="1" min="0" max="1" type="byte">
+      <Help>Set power on turbo mode</Help>
+    </Value>
+    <Value genre="config" instance="1" index="10" value="0" label="Temperature sensor mode" units="" size="1" min="0" max="2" type="list">
+      <Help>Set temperature sensor mode</Help>
+      <Item value="0" label="Standard temperature sensor"/>
+      <Item value="1" label="Polling the room temperature sensor"/>
+      <Item value="2" label="Waiting for data from the room temperature sensor"/>
+    </Value>
+    <Value genre="config" instance="1" index="11" value="300" label="Polling period of the room sensor" units="sec" size="2" min="15" max="600" type="short">
+      <Help>Set polling period of the room sensor</Help>
+    </Value>
+    <Value genre="config" instance="1" index="12" value="1" label="Temprature threshold to send data" units="Δ°С" size="1" min="1" max="16" type="byte">
+      <Help>The value that temprature should be changed to send data</Help>
+    </Value>
+    <Value genre="config" instance="1" index="13" value="300" label="Interval for forced sending data" units="" size="2" min="100" max="600" type="short">
+      <Help>Set Interval for forced sending data</Help>
+    </Value>
+    <Value genre="config" instance="1" index="15" value="0" label="Type of switch 1" units="" size="1" min="0" max="3" type="list">
+      <Help>Set Type of switch 1 (thermostat operating mode)</Help>
+      <Item value="0" label="Monostable"/>
+      <Item value="1" label="Bistable, fixed position 1"/>
+      <Item value="2" label="Bistable, fixed position 2"/>
+      <Item value="3" label="Bistable"/>
+    </Value>
+    <Value genre="config" instance="1" index="16" value="0" label="Type of switch 2" units="" size="1" min="0" max="3" type="list">
+      <Help>Set type of switch 2 (turbo mode)</Help>
+      <Item value="0" label="Monostable"/>
+      <Item value="1" label="Bistable, fixed position 1"/>
+      <Item value="2" label="Bistable, fixed position 2"/>
+      <Item value="3" label="Bistable"/>
+    </Value>
+    <Value genre="config" instance="1" index="40" value="0" label="Adjusment of a temperature sensor" units="" size="1" min="0" max="10" type="list">
+      <Help>Adjust temperature sensor if required.</Help>
+      <Item value="0" label="Send the actual temperature (further t);"/>
+      <Item value="1" label=" t +1°С"/>
+      <Item value="2" label=" t +2°С"/>
+      <Item value="3" label=" t +3°С"/>
+      <Item value="4" label=" t +4°С"/>
+      <Item value="5" label=" t +5°С"/>
+      <Item value="6" label=" t -1°С"/>
+      <Item value="7" label=" t -2°С;"/>
+      <Item value="8" label=" t -3°С;"/>
+      <Item value="9" label=" t -4°С"/>
+      <Item value="10" label=" t -5°С;"/>
+    </Value>
+  </CommandClass>
+
+  <!-- Association Groups -->
+  <CommandClass id="133">
+    <Associations num_groups="2">
+      <Group index="1" label="Target for temperature and alarm reports" max_associations="10" />
+      <Group index="2" label="Room temperature sensor" max_associations="1" />
+    </Associations>
+  </CommandClass>
+
+</Product>

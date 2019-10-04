@@ -122,6 +122,7 @@ DISTFILES =	.gitignore \
 	config/buffalo/hw-100v15a-zw.xml \
 	config/comfort/ucm.xml \
 	config/config-template.xml \
+	config/connecthome/CH201.xml \
 	config/cooper/RF9501.xml \
 	config/cooper/RF9505-T.xml \
 	config/cooper/RF9505-T.xml.zip \
@@ -1591,8 +1592,6 @@ DISTFILES =	.gitignore \
 	debian/watch \
 	dist.mk \
 	dist/libopenzwave.changes \
-	dist/openzwave.spec \
-	dist/openzwave.spec \
 	dist/openzwave.spec \
 	dist/openzwave.spec.in \
 	distfiles.mk \
