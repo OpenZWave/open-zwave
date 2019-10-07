@@ -320,6 +320,7 @@ DISTFILES =	.gitignore \
 	config/greenwave/gs1110-1-gr-1.xml \
 	config/greenwave/powernode1.xml \
 	config/greenwave/powernode6.xml \
+	config/guardtec/gkw2000d.xml \
 	config/hank/hkzw-dws01.xml \
 	config/hank/hkzw-fld01.xml \
 	config/hank/hkzw-ms01.xml \
@@ -607,6 +608,7 @@ DISTFILES =	.gitignore \
 	config/images/greenwave/gs1110-1-gr-1.png \
 	config/images/greenwave/powernode1.png \
 	config/images/greenwave/powernode6.png \
+	config/images/guardtec/gkw2000d.png \
 	config/images/hank/hkzw-dws01.png \
 	config/images/hank/hkzw-fld01.png \
 	config/images/hank/hkzw-ms01.png \
@@ -654,6 +656,8 @@ DISTFILES =	.gitignore \
 	config/images/idlock/idlock101.png \
 	config/images/idlock/idlock150.png \
 	config/images/ingersoll/dwzwave1.png \
+	config/images/inovelli/lzw30-sn.png \
+	config/images/inovelli/lzw30.png \
 	config/images/inovelli/simple_module.png \
 	config/images/iwatsu/ne-4ct-2p.png \
 	config/images/iwatsu/ne-4ct.png \
@@ -861,6 +865,8 @@ DISTFILES =	.gitignore \
 	config/images/zwave.me/zweather.png \
 	config/images/zwp/WD-100.png \
 	config/ingersoll/dwzwave1.xml \
+	config/inovelli/lzw30-sn.xml \
+	config/inovelli/lzw30.xml \
 	config/inovelli/nzw1201.xml \
 	config/inovelli/nzw30.xml \
 	config/inovelli/nzw31.xml \
