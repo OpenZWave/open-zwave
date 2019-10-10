@@ -127,12 +127,12 @@ namespace OpenZWave
 // <MultiChannelAssociation::RequestState>
 // Nothing to do for Association
 //-----------------------------------------------------------------------------
-			bool MultiChannelAssociation::RequestState(uint32 const _requestFlags, uint8 const _instance, Driver::MsgQueue const _queue)
+			bool MultiChannelAssociation::RequestState(uint32 const _requestFlags, uint8 const _endPoint, Driver::MsgQueue const _queue)
 			{
 				if ((_requestFlags & RequestFlag_Static) && HasStaticRequest(StaticRequest_Values))
 				{
 					// Request the supported group info
-					return RequestValue(_requestFlags, 0, _instance, _queue);
+					return RequestValue(_requestFlags, 0, _endPoint, _queue);
 				}
 
 				return false;
@@ -143,11 +143,11 @@ namespace OpenZWave
 // Nothing to do for Association
 //-----------------------------------------------------------------------------
 			bool MultiChannelAssociation::RequestValue(uint32 const _requestFlags, uint16 const _dummy1,	// = 0 (not used)
-					uint8 const _instance, Driver::MsgQueue const _queue)
+					uint8 const _endPoint, Driver::MsgQueue const _queue)
 			{
-				if (_instance != 1)
+				if (_endPoint != 1)
 				{
-					// This command class doesn't work with multiple instances
+					// This command class doesn't work with multiple End Points
 					return false;
 				}
 				// Request the supported group info
@@ -188,7 +188,7 @@ namespace OpenZWave
 // <MultiChannelAssociation::HandleMsg>
 // Handle a message from the Z-Wave network
 //-----------------------------------------------------------------------------
-			bool MultiChannelAssociation::HandleMsg(uint8 const* _data, uint32 const _length, uint32 const _instance	// = 1
+			bool MultiChannelAssociation::HandleMsg(uint8 const* _data, uint32 const _length, uint32 const _endPoint	// = 1
 					)
 			{
 				bool handled = false;
@@ -201,7 +201,7 @@ namespace OpenZWave
 						// Retrieve the number of groups this device supports.
 						// The groups will be queried with the session data.
 						m_numGroups = _data[1];
-						Log::Write(LogLevel_Info, GetNodeId(), "Received Multi Instance Association Groupings report from node %d. Number of groups is %d", GetNodeId(), m_numGroups);
+						Log::Write(LogLevel_Info, GetNodeId(), "Received MULTI_CHANNEL_ASSOCIATION_GROUPINGS_REPORT from node %d. Number of groups is %d", GetNodeId(), m_numGroups);
 						ClearStaticRequest(StaticRequest_Values);
 						handled = true;
 					}
@@ -221,10 +221,10 @@ namespace OpenZWave
 								//   node B
 								//   0x00 Marker
 								//   node C 
-								//   instance #
+								//   End Point #
 								//   node D
-								//   instance #
-								Log::Write(LogLevel_Info, GetNodeId(), "Received Multi Instance Association report from node %d, group %d", GetNodeId(), groupIdx);
+								//   End Point #
+								Log::Write(LogLevel_Info, GetNodeId(), "Received MULTI_CHANNEL_ASSOCIATION_REPORT from node %d, group %d", GetNodeId(), groupIdx);
 								Log::Write(LogLevel_Info, GetNodeId(), "  The group contains:");
 								bool pastMarker = false;
 								for (i = 0; i < _length - 5; ++i)
@@ -245,7 +245,7 @@ namespace OpenZWave
 										}
 										else
 										{
-											Log::Write(LogLevel_Info, GetNodeId(), "    Node %d instance %d", _data[i + 4], _data[i + 5]);
+											Log::Write(LogLevel_Info, GetNodeId(), "    Node %d End Point %d", _data[i + 4], _data[i + 5]);
 											InstanceAssociation association;
 											association.m_nodeId = _data[i + 4];
 											association.m_instance = _data[i + 5];
@@ -348,18 +348,18 @@ namespace OpenZWave
 // <MultiChannelAssociation::Set>
 // Add an association between devices
 //-----------------------------------------------------------------------------
-			void MultiChannelAssociation::Set(uint8 _groupIdx, uint8 _targetNodeId, uint8 _instance)
+			void MultiChannelAssociation::Set(uint8 _groupIdx, uint8 _targetNodeId, uint8 _endPoint)
 			{
 
-				/* for Qubino devices, we should always set a Instance if its the ControllerNode, so MultChannelEncap works.  - See Bug #857 */
-				if ((m_com.GetFlagBool(COMPAT_FLAG_MCA_FORCEINSTANCES) == true) && (_instance == 0) && (GetDriver()->GetControllerNodeId() == _targetNodeId))
+				/* for Qubino devices, we should always set a End Point if its the ControllerNode, so MultChannelEncap works.  - See Bug #857 */
+				if ((m_com.GetFlagBool(COMPAT_FLAG_MCA_FORCEINSTANCES) == true) && (_endPoint == 0) && (GetDriver()->GetControllerNodeId() == _targetNodeId))
 				{
-					_instance = 0x01;
+					_endPoint = 0x01;
 				}
 
-				Log::Write(LogLevel_Info, GetNodeId(), "MultiChannelAssociation::Set - Adding instance %d on node %d to group %d of node %d", _instance, _targetNodeId, _groupIdx, GetNodeId());
+				Log::Write(LogLevel_Info, GetNodeId(), "MultiChannelAssociation::Set - Adding End Point %d on node %d to group %d of node %d", _endPoint, _targetNodeId, _groupIdx, GetNodeId());
 
-				if (_instance == 0x00)
+				if (_endPoint == 0x00)
 				{
 					Msg* msg = new Msg("MultiChannelAssociationCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
 					msg->Append(GetNodeId());
@@ -381,7 +381,7 @@ namespace OpenZWave
 					msg->Append(_groupIdx);
 					msg->Append(0x00); // marker
 					msg->Append(_targetNodeId);
-					msg->Append(_instance);
+					msg->Append(_endPoint);
 					msg->Append(GetDriver()->GetTransmitOptions());
 					GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
 				}
@@ -391,11 +391,11 @@ namespace OpenZWave
 // <MultiChannelAssociation::Remove>
 // Remove an association between devices
 //-----------------------------------------------------------------------------
-			void MultiChannelAssociation::Remove(uint8 _groupIdx, uint8 _targetNodeId, uint8 _instance)
+			void MultiChannelAssociation::Remove(uint8 _groupIdx, uint8 _targetNodeId, uint8 _endPoint)
 			{
-				Log::Write(LogLevel_Info, GetNodeId(), "MultiChannelAssociation::Remove - Removing instance %d on node %d from group %d of node %d", _instance, _targetNodeId, _groupIdx, GetNodeId());
+				Log::Write(LogLevel_Info, GetNodeId(), "MultiChannelAssociation::Remove - Removing End Point %d on node %d from group %d of node %d", _endPoint, _targetNodeId, _groupIdx, GetNodeId());
 
-				if (_instance == 0x00)
+				if (_endPoint == 0x00)
 				{
 					Msg* msg = new Msg("MultiChannelAssociationCmd_Remove", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
 					msg->Append(GetNodeId());
@@ -417,7 +417,7 @@ namespace OpenZWave
 					msg->Append(_groupIdx);
 					msg->Append(0x00); // marker
 					msg->Append(_targetNodeId);
-					msg->Append(_instance);
+					msg->Append(_endPoint);
 					msg->Append(GetDriver()->GetTransmitOptions());
 					GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
 				}
