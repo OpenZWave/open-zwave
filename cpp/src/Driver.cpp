@@ -1775,7 +1775,7 @@ void Driver::ProcessMsg(uint8* _data, uint8 _length)
 	bool wasencrypted = false;
 	//uint8 nodeId = GetNodeNumber( m_currentMsg );
 
-	if ((REQUEST == _data[0]) && (Internal::CC::Security::StaticGetCommandClassId() == _data[5]))
+	if ((REQUEST == _data[0]) && FUNC_ID_APPLICATION_COMMAND_HANDLER == _data[1] && (Internal::CC::Security::StaticGetCommandClassId() == _data[5]))
 	{
 		/* if this message is a NONCE Report - Then just Trigger the Encrypted Send */
 		if (Internal::CC::SecurityCmd_NonceReport == _data[6])
