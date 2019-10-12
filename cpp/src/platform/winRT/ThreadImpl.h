@@ -35,38 +35,43 @@
 
 namespace OpenZWave
 {
-	class Thread;
-	class Event;
-
-	/** \brief Windows-specific implementation of the Thread class.
-	 */
-	class ThreadImpl
+	namespace Internal
 	{
-	private:
-		friend class Thread;
+		namespace Platform
+		{
 
-		ThreadImpl( Thread* _owner, string const& _name );
-		~ThreadImpl();
+			class Thread;
+			class Event;
 
-		bool Start( Thread::pfnThreadProc_t _pfnThreadProc, Event* _exitEvent, void* _context );
-		void Sleep( uint32 _milliseconds );
-		bool Terminate();
+			/** \brief Windows-specific implementation of the Thread class.
+			 */
+			class ThreadImpl
+			{
+				private:
+					friend class Thread;
 
-		bool IsSignalled();
+					ThreadImpl(Thread* _owner, string const& _name);
+					~ThreadImpl();
 
-		void Run();
-		static DWORD WINAPI ThreadProc( void* _pArg );
+					bool Start(Thread::pfnThreadProc_t _pfnThreadProc, Event* _exitEvent, void* _context);
+					void Sleep(uint32 _milliseconds);
+					bool Terminate();
 
-		Thread*					m_owner;
-		Event*					m_exitEvent;
-		Thread::pfnThreadProc_t	m_pfnThreadProc;
-		void*					m_context;
-		bool					m_bIsRunning;
-		string					m_name;
+					bool IsSignalled();
 
-		static int32			s_threadTerminateTimeout;
-	};
+					void Run();static DWORD WINAPI ThreadProc( void* _pArg );
 
+					Thread* m_owner;
+					Event* m_exitEvent;
+					Thread::pfnThreadProc_t m_pfnThreadProc;
+					void* m_context;
+					bool m_bIsRunning;
+					string m_name;
+
+					static int32 s_threadTerminateTimeout;
+			};
+		} // namespace Platform
+	} // namespace Internal
 } // namespace OpenZWave
 
 #endif //_ThreadImpl_H

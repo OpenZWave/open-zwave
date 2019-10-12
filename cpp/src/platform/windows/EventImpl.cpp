@@ -30,73 +30,67 @@
 #include "Defs.h"
 #include "EventImpl.h"
 
-using namespace OpenZWave;
-
+namespace OpenZWave
+{
+	namespace Internal
+	{
+		namespace Platform
+		{
 
 //-----------------------------------------------------------------------------
 //	<EventImpl::EventImpl>
 //	Constructor
 //-----------------------------------------------------------------------------
-EventImpl::EventImpl
-(
-)
-{
-	// Create a manual reset event
-	m_hEvent = ::CreateEvent( NULL, TRUE, FALSE, NULL );
-}
+			EventImpl::EventImpl()
+			{
+				// Create a manual reset event
+				m_hEvent = ::CreateEvent( NULL, TRUE, FALSE, NULL);
+			}
 
 //-----------------------------------------------------------------------------
 //	<EventImpl::~EventImpl>
 //	Destructor
 //-----------------------------------------------------------------------------
-EventImpl::~EventImpl
-(
-)
-{
-	::CloseHandle( m_hEvent );
-}
+			EventImpl::~EventImpl()
+			{
+				::CloseHandle(m_hEvent);
+			}
 
 //-----------------------------------------------------------------------------
 //	<EventImpl::Set>
 //	Set the event to signalled
 //-----------------------------------------------------------------------------
-void EventImpl::Set
-(
-)
-{
-	::SetEvent( m_hEvent );
-}
+			void EventImpl::Set()
+			{
+				::SetEvent(m_hEvent);
+			}
 
 //-----------------------------------------------------------------------------
 //	<EventImpl::Reset>
 //	Set the event to not signalled
 //-----------------------------------------------------------------------------
-void EventImpl::Reset
-(
-)
-{
-	::ResetEvent( m_hEvent );
-}
+			void EventImpl::Reset()
+			{
+				::ResetEvent(m_hEvent);
+			}
 
 //-----------------------------------------------------------------------------
 //	<EventImpl::IsSignalled>
 //	Test whether the event is set
 //-----------------------------------------------------------------------------
-bool EventImpl::IsSignalled
-(
-)
-{
-	return( WAIT_OBJECT_0 == WaitForSingleObject( m_hEvent, 0 ) );
-}
+			bool EventImpl::IsSignalled()
+			{
+				return (WAIT_OBJECT_0 == WaitForSingleObject(m_hEvent, 0));
+			}
 
 //-----------------------------------------------------------------------------
 //	<EventImpl::Wait>
 //	Wait for the event to become signalled
 //-----------------------------------------------------------------------------
-bool EventImpl::Wait
-(
-	int32 const _timeout
-)
-{
-	return( WAIT_TIMEOUT != ::WaitForSingleObject( m_hEvent, (DWORD)_timeout ) );
-}
+			bool EventImpl::Wait(int32 const _timeout)
+			{
+				return (WAIT_TIMEOUT != ::WaitForSingleObject(m_hEvent, (DWORD) _timeout));
+			}
+		} // namespace Platform
+	} // namespace Internal
+} // namespace OpenZWave

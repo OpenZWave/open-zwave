@@ -192,6 +192,9 @@
     <ClInclude Include="..\..\..\src\value_classes\Value.h">
       <Filter>Value Classes</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\value_classes\ValueBitSet.h">
+      <Filter>Value Classes</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\value_classes\ValueBool.h">
       <Filter>Value Classes</Filter>
     </ClInclude>
@@ -351,6 +354,42 @@
     <ClInclude Include="..\..\..\src\command_classes\DoorLockLogging.h">
       <Filter>Command Classes</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\DNS.h">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\windows\DNSImpl.h">
+      <Filter>Platform\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\DNSThread.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Http.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\HttpClient.h">
+      <Filter>Platform\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\windows\FileOpsImpl.h">
+      <Filter>Platform\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\FileOps.h">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ManufacturerSpecificDB.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\command_classes\BarrierOperator.h">
+      <Filter>Command Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\command_classes\ManufacturerProprietary.h">
+      <Filter>Command Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\command_classes\SimpleAV.h">
+      <Filter>Command Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\command_classes\SimpleAVCommandItem.h">
+      <Filter>Command Classes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\Driver.cpp">
@@ -414,6 +453,9 @@
       <Filter>TinyXML</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\value_classes\Value.cpp">
+      <Filter>Value Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\value_classes\ValueBitSet.cpp">
       <Filter>Value Classes</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\value_classes\ValueBool.cpp">
@@ -672,6 +714,39 @@
       <Filter>Command Classes</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\command_classes\TimeParameters.cpp">
+      <Filter>Command Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\DNS.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\windows\DNSImpl.cpp">
+      <Filter>Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\DNSThread.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Http.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\HttpClient.cpp">
+      <Filter>Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\ManufacturerSpecificDB.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\command_classes\BarrierOperator.cpp">
+      <Filter>Command Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\command_classes\ManufacturerProprietary.cpp">
+      <Filter>Command Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Bitfield.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\command_classes\SimpleAV.cpp">
+      <Filter>Command Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\command_classes\SimpleAVCommandItem.cpp">
       <Filter>Command Classes</Filter>
     </ClCompile>
   </ItemGroup>

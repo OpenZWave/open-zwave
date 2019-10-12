@@ -33,36 +33,39 @@
 #include "Driver.h"
 #include "platform/Log.h"
 
-using namespace OpenZWave;
-
-enum HailCmdEnum
+namespace OpenZWave
 {
-	HailCmd_Hail = 1
-};
+	namespace Internal
+	{
+		namespace CC
+		{
 
+			enum HailCmdEnum
+			{
+				HailCmd_Hail = 1
+			};
 
 //-----------------------------------------------------------------------------
 // <Hail::HandleMsg>
 // Handle a message from the Z-Wave network
 //-----------------------------------------------------------------------------
-bool Hail::HandleMsg
-(
-	uint8 const* _data,
-	uint32 const _length,
-	uint32 const _instance	// = 1
-)
-{
-	if( HailCmd_Hail == _data[0] )
-	{
-		// We have received a hail from the Z-Wave device.
-		// Request an update of the dynamic values.
-		Log::Write( LogLevel_Info, GetNodeId(), "Received Hail command from node %d", GetNodeId() );
-		if( Node* node = GetNodeUnsafe() )
-		{
-			node->RequestDynamicValues();
-		}
-		return true;
-	}
-	return false;
-}
+			bool Hail::HandleMsg(uint8 const* _data, uint32 const _length, uint32 const _instance	// = 1
+					)
+			{
+				if (HailCmd_Hail == _data[0])
+				{
+					// We have received a hail from the Z-Wave device.
+					// Request an update of the dynamic values.
+					Log::Write(LogLevel_Info, GetNodeId(), "Received Hail command from node %d", GetNodeId());
+					if (Node* node = GetNodeUnsafe())
+					{
+						node->RequestDynamicValues();
+					}
+					return true;
+				}
+				return false;
+			}
+		} // namespace CC
+	} // namespace Internal
+} // namespace OpenZWave
 

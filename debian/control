@@ -1,32 +1,41 @@
 Source: openzwave
-Maintainer: Lucas Nussbaum <lucas@debian.org>
+Maintainer: Debian IoT Maintainers <debian-iot-maintainers@lists.alioth.debian.org>
+Uploaders: Thorsten Alteholz <debian@alteholz.de>
 Section: devel
 Priority: optional
-Build-Depends: debhelper (>=9), dh-exec (>=0.2), g++ (>= 4.4), libudev-dev, libxml2-utils
-Standards-Version: 3.9.6
+Build-Depends: debhelper (>= 10)
+	, dh-exec (>=0.2)
+	, g++ (>= 4.4)
+	, quilt
+	, libxml2-utils
+	, libtinyxml-dev
+Standards-Version: 4.1.5
 Homepage: http://www.openzwave.com/
+Vcs-Browser: https://salsa.debian.org/debian-iot-team/openzwave
+Vcs-Git: https://salsa.debian.org/debian-iot-team/openzwave.git
 
-Package: libopenzwave1.3
+Package: libopenzwave1.6
 Section: libs
 Architecture: any
 Pre-Depends: ${misc:Pre-Depends}
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}, libtinyxml2.6.2v5
 Description: API to use a Z-Wave controller
- OpenZWave is an open-source, cross-platform library designed to enable 
- anyone to add support for Z-Wave home-automation devices to their 
- applications, without requiring any in depth knowledge of the Z-Wave 
+ OpenZWave is an open-source, cross-platform library designed to enable
+ anyone to add support for Z-Wave home-automation devices to their
+ applications, without requiring any in depth knowledge of the Z-Wave
  protocol.
  .
  This package contains the library.
 
-Package: libopenzwave1.3-dev
+Package: libopenzwave1.6-dev
 Section: libdevel
-Depends: ${misc:Depends}, libopenzwave1.3 (= ${binary:Version})
+Depends: ${misc:Depends}, libopenzwave1.6 (= ${binary:Version})
+Suggests: libopenzwave-doc
 Architecture: any
 Description: header files for the openzwave library
- OpenZWave is an open-source, cross-platform library designed to enable 
- anyone to add support for Z-Wave home-automation devices to their 
- applications, without requiring any in depth knowledge of the Z-Wave 
+ OpenZWave is an open-source, cross-platform library designed to enable
+ anyone to add support for Z-Wave home-automation devices to their
+ applications, without requiring any in depth knowledge of the Z-Wave
  protocol.
  .
  This package contains files for developing.
@@ -36,9 +45,9 @@ Section: doc
 Depends: ${misc:Depends}, libjs-jquery
 Architecture: all
 Description: documentation for the openzwave library
- OpenZWave is an open-source, cross-platform library designed to enable 
- anyone to add support for Z-Wave home-automation devices to their 
- applications, without requiring any in depth knowledge of the Z-Wave 
+ OpenZWave is an open-source, cross-platform library designed to enable
+ anyone to add support for Z-Wave home-automation devices to their
+ applications, without requiring any in depth knowledge of the Z-Wave
  protocol.
  .
  This package contains documentation.
@@ -46,9 +55,9 @@ Description: documentation for the openzwave library
 Package: openzwave
 Section: misc
 Architecture: any
-Depends: libopenzwave1.3 (>= ${binary:Version}), ${misc:Depends}, ${shlibs:Depends} 
-Description: Sample Program for libopenzwave 
- OpenZWave is an open-source, cross-platform library designed to enable 
- anyone to add support for Z-Wave home-automation devices to their 
- applications, without requiring any in depth knowledge of the Z-Wave 
+Depends: libopenzwave1.6 (>= ${binary:Version}), ${misc:Depends}, ${shlibs:Depends}
+Description: Sample Program for libopenzwave
+ OpenZWave is an open-source, cross-platform library designed to enable
+ anyone to add support for Z-Wave home-automation devices to their
+ applications, without requiring any in depth knowledge of the Z-Wave
  protocol.

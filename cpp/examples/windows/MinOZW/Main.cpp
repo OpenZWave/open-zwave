@@ -265,7 +265,7 @@ int main( int argc, char* argv[] )
 	// Add a Z-Wave Driver
 	// Modify this line to set the correct serial port for your PC interface.
 
-	string port = "\\\\.\\COM6";
+	string port = "\\\\.\\COM4";
 
 	Manager::Get()->AddDriver( ( argc > 1 ) ? argv[1] : port );
 	//Manager::Get()->AddDriver( "HID Controller", Driver::ControllerInterface_Hid );

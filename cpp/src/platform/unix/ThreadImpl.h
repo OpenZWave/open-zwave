@@ -35,33 +35,40 @@
 
 namespace OpenZWave
 {
-    class Thread;
-    class Event;
-    
-    class ThreadImpl
-    {
-    private:
-        friend class Thread;
+	namespace Internal
+	{
+		namespace Platform
+		{
 
-        ThreadImpl( Thread* _owner, string const& _tname );
-        ~ThreadImpl();
+			class Thread;
+			class Event;
 
-        bool Start( Thread::pfnThreadProc_t _pfnThreadProc, Event* _exitEvent, void* _context );
-        void Sleep( uint32 _millisecs );
-        bool IsSignalled();
-        bool Terminate();
+			class ThreadImpl
+			{
+				private:
+					friend class Thread;
 
-        void Run();
-        static void* ThreadProc( void *parg);
+					ThreadImpl(Thread* _owner, string const& _tname);
+					~ThreadImpl();
 
-        Thread*                 m_owner;
-        Event*                  m_exitEvent;
-        pthread_t               m_hThread;
-        Thread::pfnThreadProc_t	m_pfnThreadProc;
-        void*                   m_pContext;
-        bool                    m_bIsRunning;
-        string                  m_name;
-    };
+					bool Start(Thread::pfnThreadProc_t _pfnThreadProc, Event* _exitEvent, void* _context);
+					void Sleep(uint32 _millisecs);
+					bool IsSignalled();
+					bool Terminate();
+
+					void Run();
+					static void* ThreadProc(void *parg);
+
+					Thread* m_owner;
+					Event* m_exitEvent;
+					pthread_t m_hThread;
+					Thread::pfnThreadProc_t m_pfnThreadProc;
+					void* m_pContext;
+					bool m_bIsRunning;
+					string m_name;
+			};
+		} // namespace Platform
+	} // namespace Internal
 } // namespace OpenZWave
 
 #endif //_ThreadImpl_H
