@@ -1,4 +1,4 @@
-<!-- GE(Jasco) 26933 Z-Wave Plus Smart Motion Dimmer --><Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+<!-- GE(Jasco) 26933 Z-Wave Plus Smart Motion Dimmer --><Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0063:3034:494D</MetaDataItem>
     <MetaDataItem name="ProductPic">images/ge/26933-motion-dimmer.png</MetaDataItem>
@@ -31,6 +31,7 @@ network.</MetaDataItem>
     <MetaDataItem name="Name">In-Wall Smart Motion Dimmer</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2108/xml</Entry>
+      <Entry author="Peter Gebruers - peter.gebruers@gmail.com on behalf of tech165" date="12 Oct 2019" revision="4">Fix paraleter size as per https://github.com/OpenZWave/open-zwave/pull/1968</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration Parameters - per http://products.z-wavealliance.org/products/2108 -->
