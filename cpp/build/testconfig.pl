@@ -417,8 +417,9 @@ sub CheckSensorMultiLevelCCTypes {
 
 
 sub PrettyPrintErrors() {
-	if (length(%errors) > 0) {
-		print "\n\nErrors: (Please Correct before Submitting to OZW)\n";
+	my $number_of_errors = keys %errors;
+	if ($number_of_errors > 0) {
+		print "\n\nErrors: ", $number_of_errors, ". (Please Correct before Submitting to OZW)\n";
 		while ((my $key, my $value) = each %errors) 
 		{
 			foreach my $detail (@{$value}) 
