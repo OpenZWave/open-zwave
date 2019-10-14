@@ -86,7 +86,7 @@ namespace OpenZWave
 
 			unsigned int LogImpl::toEscapeCode(LogLevel _level)
 			{
-				unsigned int code;
+				unsigned int code = 39;
 
 				switch (_level)
 				{
