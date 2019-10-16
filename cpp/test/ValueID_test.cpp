@@ -28,9 +28,21 @@
 #include "gtest/gtest.h"
 
 #include "value_classes/ValueID.h"
+
 using namespace OpenZWave;
 
-TEST(ValueID, Constructor) {
+extern uint16_t ozw_vers_major;
+extern uint16_t ozw_vers_minor;
+extern uint16_t ozw_vers_revision;
+
+TEST(OpenZWave, Version)
+{
+	EXPECT_EQ(ozw_vers_major, 1);
+	EXPECT_EQ(ozw_vers_minor, 6);
+	EXPECT_GE(ozw_vers_revision, 900);
+}
+TEST(ValueID, Constructor)
+{
 	ValueID *vid = new ValueID(0xFFFF, 0x1, ValueID::ValueGenre_Basic, 0xCC, 0x02, 0x04, ValueID::ValueType_BitSet);
 	EXPECT_EQ(vid->GetCommandClassId(), 0xCC);
 	EXPECT_EQ(vid->GetGenre(), ValueID::ValueGenre_Basic);
@@ -42,7 +54,8 @@ TEST(ValueID, Constructor) {
 	EXPECT_EQ(vid->GetId(), 0x400000133002A);
 	delete vid;
 }
-TEST(ValueID, KeyConstructor) {
+TEST(ValueID, KeyConstructor)
+{
 	ValueID *vid = new ValueID(0xFFFF, (uint64)0x400000133002A);
 	EXPECT_EQ(vid->GetCommandClassId(), 0xCC);
 	EXPECT_EQ(vid->GetGenre(), ValueID::ValueGenre_Basic);
@@ -53,18 +66,12 @@ TEST(ValueID, KeyConstructor) {
 	EXPECT_EQ(vid->GetType(), ValueID::ValueType_BitSet);
 	delete vid;
 }
-TEST(ValueID, Comparision) {
-	ValueID *vid1 = new ValueID(0xFFFF, (uint64)0x400000133002A);
-	ValueID *vid2 = new ValueID(0xFFFF, 0x1, ValueID::ValueGenre_Basic, 0xCC, 0x02, 0x04, ValueID::ValueType_BitSet);
-	ValueID *vid3 = new ValueID(0xFFFF, (uint64)0x01);
-//	EXPECT_TRUE(vid1 == vid2);
-//	EXPECT_TRUE(vid1 != vid3);
-//	EXPECT_FALSE(vid1 == vid3);
-	delete vid1;
-	delete vid2;
-	delete vid3;
+TEST(ValueID, Comparision)
+{
+	EXPECT_EQ(
+		ValueID(0xFFFF, (uint64)0x400000133002A),
+		ValueID(0xFFFF, 0x1, ValueID::ValueGenre_Basic, 0xCC, 0x02, 0x04, ValueID::ValueType_BitSet));
+	EXPECT_NE(
+		ValueID(0xFFFF, (uint64)0x01),
+		ValueID(0xFFFF, 0x1, ValueID::ValueGenre_Basic, 0xCC, 0x02, 0x04, ValueID::ValueType_BitSet));
 }
-
-
-
-
