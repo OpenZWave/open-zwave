@@ -203,11 +203,11 @@ void Group::WriteXML(TiXmlElement* _groupElement)
 // <Group::Contains>
 // Whether a group contains a particular node
 //-----------------------------------------------------------------------------
-bool Group::Contains(uint8 const _nodeId, uint8 const _instance)
+bool Group::Contains(uint8 const _nodeId, uint8 const _endPoint)
 {
 	for (map<InstanceAssociation, AssociationCommandVec, classcomp>::iterator it = m_associations.begin(); it != m_associations.end(); ++it)
 	{
-		if ((it->first.m_nodeId == _nodeId) && (it->first.m_instance == _instance))
+		if ((it->first.m_nodeId == _nodeId) && (it->first.m_instance == _endPoint))
 		{
 			return true;
 		}
@@ -219,7 +219,7 @@ bool Group::Contains(uint8 const _nodeId, uint8 const _instance)
 // <Group::AddAssociation>
 // Associate a node with this group
 //-----------------------------------------------------------------------------
-void Group::AddAssociation(uint8 const _nodeId, uint8 const _instance)
+void Group::AddAssociation(uint8 const _nodeId, uint8 const _endPoint)
 {
 	if (Driver* driver = Manager::Get()->GetDriver(m_homeId))
 	{
@@ -228,7 +228,7 @@ void Group::AddAssociation(uint8 const _nodeId, uint8 const _instance)
 			Internal::CC::MultiChannelAssociation* cc = static_cast<Internal::CC::MultiChannelAssociation*>(node->GetCommandClass(Internal::CC::MultiChannelAssociation::StaticGetCommandClassId()));
 			if (cc && IsMultiInstance())
 			{
-				cc->Set(m_groupIdx, _nodeId, _instance);
+				cc->Set(m_groupIdx, _nodeId, _endPoint);
 				cc->QueryGroup(m_groupIdx, 0);
 			}
 			else if (Internal::CC::Association* cc = static_cast<Internal::CC::Association*>(node->GetCommandClass(Internal::CC::Association::StaticGetCommandClassId())))
@@ -248,7 +248,7 @@ void Group::AddAssociation(uint8 const _nodeId, uint8 const _instance)
 // <Group:RemoveAssociation>
 // Remove a node from this group
 //-----------------------------------------------------------------------------
-void Group::RemoveAssociation(uint8 const _nodeId, uint8 const _instance)
+void Group::RemoveAssociation(uint8 const _nodeId, uint8 const _endPoint)
 {
 	if (Driver* driver = Manager::Get()->GetDriver(m_homeId))
 	{
@@ -257,7 +257,7 @@ void Group::RemoveAssociation(uint8 const _nodeId, uint8 const _instance)
 			Internal::CC::MultiChannelAssociation* cc = static_cast<Internal::CC::MultiChannelAssociation*>(node->GetCommandClass(Internal::CC::MultiChannelAssociation::StaticGetCommandClassId()));
 			if (cc && IsMultiInstance())
 			{
-				cc->Remove(m_groupIdx, _nodeId, _instance);
+				cc->Remove(m_groupIdx, _nodeId, _endPoint);
 				cc->QueryGroup(m_groupIdx, 0);
 			}
 			else if (Internal::CC::Association* cc = static_cast<Internal::CC::Association*>(node->GetCommandClass(Internal::CC::Association::StaticGetCommandClassId())))
@@ -432,11 +432,11 @@ uint32 Group::GetAssociations(InstanceAssociation** o_associations)
 // <Group::ClearCommands>
 // Clear all the commands for the specified node
 //-----------------------------------------------------------------------------
-bool Group::ClearCommands(uint8 const _nodeId, uint8 const _instance)
+bool Group::ClearCommands(uint8 const _nodeId, uint8 const _endPoint)
 {
 	for (map<InstanceAssociation, AssociationCommandVec, classcomp>::iterator it = m_associations.begin(); it != m_associations.end(); ++it)
 	{
-		if ((it->first.m_nodeId == _nodeId) && (it->first.m_instance == _instance))
+		if ((it->first.m_nodeId == _nodeId) && (it->first.m_instance == _endPoint))
 		{
 			it->second.clear();
 			return true;
@@ -450,11 +450,11 @@ bool Group::ClearCommands(uint8 const _nodeId, uint8 const _instance)
 // <Group::AddCommand>
 // Add a command to the list for the specified node
 //-----------------------------------------------------------------------------
-bool Group::AddCommand(uint8 const _nodeId, uint8 const _length, uint8 const* _data, uint8 const _instance)
+bool Group::AddCommand(uint8 const _nodeId, uint8 const _length, uint8 const* _data, uint8 const _endPoint)
 {
 	for (map<InstanceAssociation, AssociationCommandVec, classcomp>::iterator it = m_associations.begin(); it != m_associations.end(); ++it)
 	{
-		if ((it->first.m_nodeId == _nodeId) && (it->first.m_instance == _instance))
+		if ((it->first.m_nodeId == _nodeId) && (it->first.m_instance == _endPoint))
 		{
 			it->second.push_back(AssociationCommand(_length, _data));
 			return true;
