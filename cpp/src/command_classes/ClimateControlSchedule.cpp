@@ -310,27 +310,30 @@ namespace OpenZWave
 				else
 				{
 					// Set an override
-					Internal::VC::ValueList* state = static_cast<Internal::VC::ValueList*>(GetValue(instance, ValueID_Index_ClimateControlSchedule::OverrideState));
-					Internal::VC::ValueByte* setback = static_cast<Internal::VC::ValueByte*>(GetValue(instance, ValueID_Index_ClimateControlSchedule::OverrideSetback));
-
-					if (state && setback)
+					if (Internal::VC::ValueList* state = static_cast<Internal::VC::ValueList*>(GetValue(instance, ValueID_Index_ClimateControlSchedule::OverrideState)))
 					{
-						Internal::VC::ValueList::Item const *item = state->GetItem();
-						if (item == NULL)
+						if (Internal::VC::ValueList::Item const* item = state->GetItem())
 						{
-							return false;
+							if (Internal::VC::ValueByte* setback = static_cast<Internal::VC::ValueByte*>(GetValue(instance, ValueID_Index_ClimateControlSchedule::OverrideSetback)))
+							{
+								Internal::VC::ValueList::Item const* item = state->GetItem();
+								Msg* msg = new Msg("ClimateControlScheduleCmd_OverrideSet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
+								if (msg != nullptr)
+								{
+									msg->SetInstance(this, instance);
+									msg->Append(GetNodeId());
+									msg->Append(4);
+									msg->Append(GetCommandClassId());
+									msg->Append(ClimateControlScheduleCmd_OverrideSet);
+									msg->Append((uint8)item->m_value);
+									msg->Append(setback->GetValue());
+									msg->Append(GetDriver()->GetTransmitOptions());
+									GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
+								}
+								setback->Release();
+							}
 						}
-
-						Msg* msg = new Msg("ClimateControlScheduleCmd_OverrideSet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
-						msg->SetInstance(this, instance);
-						msg->Append(GetNodeId());
-						msg->Append(4);
-						msg->Append(GetCommandClassId());
-						msg->Append(ClimateControlScheduleCmd_OverrideSet);
-						msg->Append((uint8) item->m_value);
-						msg->Append(setback->GetValue());
-						msg->Append(GetDriver()->GetTransmitOptions());
-						GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
+						state->Release();
 					}
 				}
 
