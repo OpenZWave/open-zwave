@@ -223,7 +223,7 @@ namespace OpenZWave
 					Internal::VC::ValueByte* durationValue = static_cast<Internal::VC::ValueByte*>(GetValue(_instance, ValueID_Index_SwitchBinary::Duration));
 					if (durationValue != nullptr)
 					{
-						uint8 duration = durationValue->GetValue();
+						duration = durationValue->GetValue();
 						durationValue->Release();
 					}
 					if (duration == 0xff)
