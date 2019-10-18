@@ -218,9 +218,14 @@ namespace OpenZWave
 
 				if (GetVersion() >= 2)
 				{
+					uint8 duration = 0xff;
+					
 					Internal::VC::ValueByte* durationValue = static_cast<Internal::VC::ValueByte*>(GetValue(_instance, ValueID_Index_SwitchBinary::Duration));
-					uint8 duration = durationValue->GetValue();
-					durationValue->Release();
+					if (durationValue != nullptr)
+					{
+						uint8 duration = durationValue->GetValue();
+						durationValue->Release();
+					}
 					if (duration == 0xff)
 					{
 						Log::Write(LogLevel_Info, GetNodeId(), "  Duration: Default");
