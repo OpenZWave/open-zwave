@@ -1012,6 +1012,7 @@ DISTFILES =	.gitignore \
 	config/qubino/ZMNHLDx.xml \
 	config/qubino/ZMNHNDx.xml \
 	config/qubino/ZMNHODx.xml \
+	config/qubino/ZMNHQDx.xml \
 	config/qubino/ZMNHSDx.xml \
 	config/qubino/ZMNHTDx.xml \
 	config/qubino/ZMNHTDxS3.xml \
