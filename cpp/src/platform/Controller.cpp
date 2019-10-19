@@ -28,41 +28,41 @@
 #include "Driver.h"
 #include "platform/Controller.h"
 
-using namespace OpenZWave;
+namespace OpenZWave
+{
+	namespace Internal
+	{
+		namespace Platform
+		{
 
 //-----------------------------------------------------------------------------
 // <Controller::PlayInitSequence>
 //  Queues up the controller's initialization commands.
 //-----------------------------------------------------------------------------
-void Controller::PlayInitSequence
-(
-	Driver* _driver
-)
-{
-	_driver->SendMsg( new Msg( "FUNC_ID_ZW_GET_VERSION", 0xff, REQUEST, FUNC_ID_ZW_GET_VERSION, false ), Driver::MsgQueue_Command );
-	_driver->SendMsg( new Msg( "FUNC_ID_ZW_MEMORY_GET_ID", 0xff, REQUEST, FUNC_ID_ZW_MEMORY_GET_ID, false ), Driver::MsgQueue_Command );
-	_driver->SendMsg( new Msg( "FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES", 0xff, REQUEST, FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES, false ), Driver::MsgQueue_Command );
-	_driver->SendMsg( new Msg( "FUNC_ID_SERIAL_API_GET_CAPABILITIES", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_CAPABILITIES, false ), Driver::MsgQueue_Command );
-	_driver->SendMsg( new Msg( "FUNC_ID_ZW_GET_SUC_NODE_ID", 0xff, REQUEST, FUNC_ID_ZW_GET_SUC_NODE_ID, false ), Driver::MsgQueue_Command );
-	// FUNC_ID_ZW_GET_VIRTUAL_NODES & FUNC_ID_SERIAL_API_GET_INIT_DATA has moved into the handler for FUNC_ID_SERIAL_API_GET_CAPABILITIES
-}
+			void Controller::PlayInitSequence(Driver* _driver)
+			{
+				_driver->SendMsg(new Msg("FUNC_ID_ZW_GET_VERSION", 0xff, REQUEST, FUNC_ID_ZW_GET_VERSION, false), Driver::MsgQueue_Command);
+				_driver->SendMsg(new Msg("FUNC_ID_ZW_MEMORY_GET_ID", 0xff, REQUEST, FUNC_ID_ZW_MEMORY_GET_ID, false), Driver::MsgQueue_Command);
+				_driver->SendMsg(new Msg("FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES", 0xff, REQUEST, FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES, false), Driver::MsgQueue_Command);
+				_driver->SendMsg(new Msg("FUNC_ID_SERIAL_API_GET_CAPABILITIES", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_CAPABILITIES, false), Driver::MsgQueue_Command);
+				_driver->SendMsg(new Msg("FUNC_ID_ZW_GET_SUC_NODE_ID", 0xff, REQUEST, FUNC_ID_ZW_GET_SUC_NODE_ID, false), Driver::MsgQueue_Command);
+				// FUNC_ID_ZW_GET_VIRTUAL_NODES & FUNC_ID_SERIAL_API_GET_INIT_DATA has moved into the handler for FUNC_ID_SERIAL_API_GET_CAPABILITIES
+			}
 
 //-----------------------------------------------------------------------------
 //	<Controller::Read>
 //	Read from a controller
 //-----------------------------------------------------------------------------
-uint32 Controller::Read
-(
-	uint8* _buffer,
-	uint32 _length
-)
-{
-	// Fetch the data from the ring buffer (which is an all or nothing read)
-	if( Get( _buffer, _length ) )
-	{
-		return _length;
-	}
+			uint32 Controller::Read(uint8* _buffer, uint32 _length)
+			{
+				// Fetch the data from the ring buffer (which is an all or nothing read)
+				if (Get(_buffer, _length))
+				{
+					return _length;
+				}
 
-	return 0;
-}
-
+				return 0;
+			}
+		} // namespace Platform
+	} // namespace Internal
+} // namespace OpenZWave

@@ -35,120 +35,97 @@
 
 #include "value_classes/ValueString.h"
 
-using namespace OpenZWave;
-
-enum ThermostatOperatingStateCmd
+namespace OpenZWave
 {
-	ThermostatOperatingStateCmd_Get				= 0x02,
-	ThermostatOperatingStateCmd_Report			= 0x03
-};
+	namespace Internal
+	{
+		namespace CC
+		{
 
-static char const* c_stateName[] =
-{
-	"Idle",
-	"Heating",
-	"Cooling",
-	"Fan Only",
-	"Pending Heat",
-	"Pending Cool",
-	"Vent / Economizer",
-	"State 07",				// Undefined states.  May be used in the future.
-	"State 08",
-	"State 09",
-	"State 10",
-	"State 11",
-	"State 12",
-	"State 13",
-	"State 14",
-	"State 15"
-};
+			enum ThermostatOperatingStateCmd
+			{
+				ThermostatOperatingStateCmd_Get = 0x02,
+				ThermostatOperatingStateCmd_Report = 0x03
+			};
+
+			static char const* c_stateName[] =
+			{ "Idle", "Heating", "Cooling", "Fan Only", "Pending Heat", "Pending Cool", "Vent / Economizer", "State 07",				// Undefined states.  May be used in the future.
+					"State 08", "State 09", "State 10", "State 11", "State 12", "State 13", "State 14", "State 15" };
 
 //-----------------------------------------------------------------------------
 // <ThermostatOperatingState::RequestState>
 // Get the static thermostat mode details from the device
 //-----------------------------------------------------------------------------
-bool ThermostatOperatingState::RequestState
-(
-	uint32 const _requestFlags,
-	uint8 const _instance,
-	Driver::MsgQueue const _queue
-)
-{
-	if( _requestFlags & RequestFlag_Dynamic )
-	{
-		return RequestValue( _requestFlags, 0, _instance, _queue );
-	}
-	return false;
-}
+			bool ThermostatOperatingState::RequestState(uint32 const _requestFlags, uint8 const _instance, Driver::MsgQueue const _queue)
+			{
+				if (_requestFlags & RequestFlag_Dynamic)
+				{
+					return RequestValue(_requestFlags, 0, _instance, _queue);
+				}
+				return false;
+			}
 
 //-----------------------------------------------------------------------------
 // <ThermostatOperatingState::RequestValue>
 // Get a thermostat mode value from the device
 //-----------------------------------------------------------------------------
-bool ThermostatOperatingState::RequestValue
-(
-	uint32 const _requestFlags,
-	uint8 const _dummy1,	// = 0 (not used)
-	uint8 const _instance,
-	Driver::MsgQueue const _queue
-)
-{
-	if ( IsGetSupported() )
-	{
-		Msg* msg = new Msg( "ThermostatOperatingStateCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-		msg->SetInstance( this, _instance );
-		msg->Append( GetNodeId() );
-		msg->Append( 2 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( ThermostatOperatingStateCmd_Get );
-		msg->Append( GetDriver()->GetTransmitOptions() );
-		GetDriver()->SendMsg( msg, _queue );
-		return true;
-	} else {
-		Log::Write(  LogLevel_Info, GetNodeId(), "ThermostatOperatingStateCmd_Get Not Supported on this node");
-	}
-	return false;
-}
+			bool ThermostatOperatingState::RequestValue(uint32 const _requestFlags, uint16 const _dummy1,	// = 0 (not used)
+					uint8 const _instance, Driver::MsgQueue const _queue)
+			{
+				if (m_com.GetFlagBool(COMPAT_FLAG_GETSUPPORTED))
+				{
+					Msg* msg = new Msg("ThermostatOperatingStateCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
+					msg->SetInstance(this, _instance);
+					msg->Append(GetNodeId());
+					msg->Append(2);
+					msg->Append(GetCommandClassId());
+					msg->Append(ThermostatOperatingStateCmd_Get);
+					msg->Append(GetDriver()->GetTransmitOptions());
+					GetDriver()->SendMsg(msg, _queue);
+					return true;
+				}
+				else
+				{
+					Log::Write(LogLevel_Info, GetNodeId(), "ThermostatOperatingStateCmd_Get Not Supported on this node");
+				}
+				return false;
+			}
 
 //-----------------------------------------------------------------------------
 // <ThermostatOperatingState::HandleMsg>
 // Handle a message from the Z-Wave network
 //-----------------------------------------------------------------------------
-bool ThermostatOperatingState::HandleMsg
-(
-	uint8 const* _data,
-	uint32 const _length,
-	uint32 const _instance	// = 1
-)
-{
-	if( ThermostatOperatingStateCmd_Report == (ThermostatOperatingStateCmd)_data[0] )
-	{
-		// We have received the thermostat operating state from the Z-Wave device
-		if( ValueString* valueString = static_cast<ValueString*>( GetValue( _instance, 0 ) ) )
-		{
-			/* no need bounds checking on c_stateName here, as it can only be 1 Byte anyway */
-			valueString->OnValueRefreshed( c_stateName[_data[1]&0x0f] );
-			valueString->Release();
-			Log::Write( LogLevel_Info, GetNodeId(), "Received thermostat operating state: %s", valueString->GetValue().c_str() );
-		}
-		return true;
-	}
+			bool ThermostatOperatingState::HandleMsg(uint8 const* _data, uint32 const _length, uint32 const _instance	// = 1
+					)
+			{
+				if (ThermostatOperatingStateCmd_Report == (ThermostatOperatingStateCmd) _data[0])
+				{
+					// We have received the thermostat operating state from the Z-Wave device
+					if (Internal::VC::ValueString* valueString = static_cast<Internal::VC::ValueString*>(GetValue(_instance, ValueID_Index_ThermostatOperatingState::OperatingState)))
+					{
+						/* no need bounds checking on c_stateName here, as it can only be 1 Byte anyway */
+						valueString->OnValueRefreshed(c_stateName[_data[1] & 0x0f]);
+						valueString->Release();
+						Log::Write(LogLevel_Info, GetNodeId(), "Received thermostat operating state: %s", valueString->GetValue().c_str());
+					}
+					return true;
+				}
 
-	return false;
-}
+				return false;
+			}
 
 //-----------------------------------------------------------------------------
 // <ThermostatOperatingState::CreateVars>
 // Create the values managed by this command class
 //-----------------------------------------------------------------------------
-void ThermostatOperatingState::CreateVars
-(
-	uint8 const _instance
-)
-{
-	if( Node* node = GetNodeUnsafe() )
-	{
-	  	node->CreateValueString( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Operating State", "", true, false, c_stateName[0], 0 );
-	}
-}
+			void ThermostatOperatingState::CreateVars(uint8 const _instance)
+			{
+				if (Node* node = GetNodeUnsafe())
+				{
+					node->CreateValueString(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_ThermostatOperatingState::OperatingState, "Operating State", "", true, false, c_stateName[0], 0);
+				}
+			}
+		} // namespace CC
+	} // namespace Internal
+} // namespace OpenZWave
 

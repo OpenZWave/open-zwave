@@ -35,123 +35,112 @@
 
 #include "value_classes/ValueBool.h"
 
-using namespace OpenZWave;
-
-enum SwitchToggleBinaryCmd
+namespace OpenZWave
 {
-	SwitchToggleBinaryCmd_Set		= 0x01,
-	SwitchToggleBinaryCmd_Get		= 0x02,
-	SwitchToggleBinaryCmd_Report	= 0x03
-};
+	namespace Internal
+	{
+		namespace CC
+		{
+
+			enum SwitchToggleBinaryCmd
+			{
+				SwitchToggleBinaryCmd_Set = 0x01,
+				SwitchToggleBinaryCmd_Get = 0x02,
+				SwitchToggleBinaryCmd_Report = 0x03
+			};
 
 //-----------------------------------------------------------------------------
 // <SwitchToggleBinary::RequestState>
 // Request current state from the device
 //-----------------------------------------------------------------------------
-bool SwitchToggleBinary::RequestState
-(
-	uint32 const _requestFlags,
-	uint8 const _instance,
-	Driver::MsgQueue const _queue
-)
-{
-	if( _requestFlags & RequestFlag_Dynamic )
-	{
-		return RequestValue( _requestFlags, 0, _instance, _queue );
-	}
+			bool SwitchToggleBinary::RequestState(uint32 const _requestFlags, uint8 const _instance, Driver::MsgQueue const _queue)
+			{
+				if (_requestFlags & RequestFlag_Dynamic)
+				{
+					return RequestValue(_requestFlags, 0, _instance, _queue);
+				}
 
-	return false;
-}
+				return false;
+			}
 
 //-----------------------------------------------------------------------------
 // <SwitchToggleBinary::RequestValue>
 // Request current value from the device
 //-----------------------------------------------------------------------------
-bool SwitchToggleBinary::RequestValue
-(
-	uint32 const _requestFlags,
-	uint8 const _dummy1,	// = 0 (not used)
-	uint8 const _instance,
-	Driver::MsgQueue const _queue
-)
-{
-	if ( IsGetSupported() )
-	{
-		Msg* msg = new Msg( "SwitchToggleBinaryCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-		msg->SetInstance( this, _instance );
-		msg->Append( GetNodeId() );
-		msg->Append( 2 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( SwitchToggleBinaryCmd_Get );
-		msg->Append( GetDriver()->GetTransmitOptions() );
-		GetDriver()->SendMsg( msg, _queue );
-		return true;
-	} else {
-		Log::Write(  LogLevel_Info, GetNodeId(), "SwitchToggleBinaryCmd_Get Not Supported on this node");
-	}
-	return false;
-}
+			bool SwitchToggleBinary::RequestValue(uint32 const _requestFlags, uint16 const _dummy1,	// = 0 (not used)
+					uint8 const _instance, Driver::MsgQueue const _queue)
+			{
+				if (m_com.GetFlagBool(COMPAT_FLAG_GETSUPPORTED))
+				{
+					Msg* msg = new Msg("SwitchToggleBinaryCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
+					msg->SetInstance(this, _instance);
+					msg->Append(GetNodeId());
+					msg->Append(2);
+					msg->Append(GetCommandClassId());
+					msg->Append(SwitchToggleBinaryCmd_Get);
+					msg->Append(GetDriver()->GetTransmitOptions());
+					GetDriver()->SendMsg(msg, _queue);
+					return true;
+				}
+				else
+				{
+					Log::Write(LogLevel_Info, GetNodeId(), "SwitchToggleBinaryCmd_Get Not Supported on this node");
+				}
+				return false;
+			}
 
 //-----------------------------------------------------------------------------
 // <SwitchToggleBinary::HandleMsg>
 // Handle a message from the Z-Wave network
 //-----------------------------------------------------------------------------
-bool SwitchToggleBinary::HandleMsg
-(
-	uint8 const* _data,
-	uint32 const _length,
-	uint32 const _instance	// = 1
-)
-{
-	if( SwitchToggleBinaryCmd_Report == (SwitchToggleBinaryCmd)_data[0] )
-	{
-		Log::Write( LogLevel_Info, GetNodeId(), "Received SwitchToggleBinary report: %s", _data[1] ? "On" : "Off" );
+			bool SwitchToggleBinary::HandleMsg(uint8 const* _data, uint32 const _length, uint32 const _instance	// = 1
+					)
+			{
+				if (SwitchToggleBinaryCmd_Report == (SwitchToggleBinaryCmd) _data[0])
+				{
+					Log::Write(LogLevel_Info, GetNodeId(), "Received SwitchToggleBinary report: %s", _data[1] ? "On" : "Off");
 
-		if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, 0 ) ) )
-		{
-			value->OnValueRefreshed( _data[1] != 0 );
-			value->Release();
-		}
-		return true;
-	}
+					if (Internal::VC::ValueBool* value = static_cast<Internal::VC::ValueBool*>(GetValue(_instance, ValueID_Index_SwitchToggleBinary::ToggleSwitch)))
+					{
+						value->OnValueRefreshed(_data[1] != 0);
+						value->Release();
+					}
+					return true;
+				}
 
-	return false;
-}
+				return false;
+			}
 
 //-----------------------------------------------------------------------------
 // <SwitchToggleBinary::SetValue>
 // Toggle the state of the switch
 //-----------------------------------------------------------------------------
-bool SwitchToggleBinary::SetValue
-(
-	Value const& _value
-)
-{
-	Log::Write( LogLevel_Info, GetNodeId(), "SwitchToggleBinary::Set - Toggling the state" );
-	Msg* msg = new Msg( "SwitchToggleBinaryCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-	msg->SetInstance( this, _value.GetID().GetInstance() );
-	msg->Append( GetNodeId() );
-	msg->Append( 2 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( SwitchToggleBinaryCmd_Set );
-	msg->Append( GetDriver()->GetTransmitOptions() );
-	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
-	return true;
-}
+			bool SwitchToggleBinary::SetValue(Internal::VC::Value const& _value)
+			{
+				Log::Write(LogLevel_Info, GetNodeId(), "SwitchToggleBinary::Set - Toggling the state");
+				Msg* msg = new Msg("SwitchToggleBinaryCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
+				msg->SetInstance(this, _value.GetID().GetInstance());
+				msg->Append(GetNodeId());
+				msg->Append(2);
+				msg->Append(GetCommandClassId());
+				msg->Append(SwitchToggleBinaryCmd_Set);
+				msg->Append(GetDriver()->GetTransmitOptions());
+				GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
+				return true;
+			}
 
 //-----------------------------------------------------------------------------
 // <SwitchToggleBinary::CreateVars>
 // Create the values managed by this command class
 //-----------------------------------------------------------------------------
-void SwitchToggleBinary::CreateVars
-(
-	uint8 const _instance
-)
-{
-	if( Node* node = GetNodeUnsafe() )
-	{
-	  	node->CreateValueBool( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Toggle Switch", "", false, false, false, 0 );
-	}
-}
-
+			void SwitchToggleBinary::CreateVars(uint8 const _instance)
+			{
+				if (Node* node = GetNodeUnsafe())
+				{
+					node->CreateValueBool(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_SwitchToggleBinary::ToggleSwitch, "Toggle Switch", "", false, false, false, 0);
+				}
+			}
+		} // namespace CC
+	} // namespace Internal
+} // namespace OpenZWave
 

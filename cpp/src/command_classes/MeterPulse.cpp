@@ -35,109 +35,100 @@
 
 #include "value_classes/ValueInt.h"
 
-using namespace OpenZWave;
-
-enum MeterPulseCmd
+namespace OpenZWave
 {
-	MeterPulseCmd_Get		= 0x04,
-	MeterPulseCmd_Report	= 0x05
-};
+	namespace Internal
+	{
+		namespace CC
+		{
+
+			enum MeterPulseCmd
+			{
+				MeterPulseCmd_Get = 0x04,
+				MeterPulseCmd_Report = 0x05
+			};
 
 //-----------------------------------------------------------------------------
 // <MeterPulse::RequestState>
 // Request current state from the device
 //-----------------------------------------------------------------------------
-bool MeterPulse::RequestState
-(
-	uint32 const _requestFlags,
-	uint8 const _instance,
-	Driver::MsgQueue const _queue
-)
-{
-	if( _requestFlags & RequestFlag_Dynamic )
-	{
-		return RequestValue( _requestFlags, 0, _instance, _queue );
-	}
+			bool MeterPulse::RequestState(uint32 const _requestFlags, uint8 const _instance, Driver::MsgQueue const _queue)
+			{
+				if (_requestFlags & RequestFlag_Dynamic)
+				{
+					return RequestValue(_requestFlags, 0, _instance, _queue);
+				}
 
-	return false;
-}
+				return false;
+			}
 
 //-----------------------------------------------------------------------------
 // <MeterPulse::RequestValue>
 // Request current value from the device
 //-----------------------------------------------------------------------------
-bool MeterPulse::RequestValue
-(
-	uint32 const _requestFlags,
-	uint8 const _dummy1,	// = 0 (not used)
-	uint8 const _instance,
-	Driver::MsgQueue const _queue
-)
-{
-	if ( IsGetSupported() )
-	{
-		Msg* msg = new Msg( "MeterPulseCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-		msg->SetInstance( this, _instance );
-		msg->Append( GetNodeId() );
-		msg->Append( 2 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( MeterPulseCmd_Get );
-		msg->Append( GetDriver()->GetTransmitOptions() );
-		GetDriver()->SendMsg( msg, _queue );
-		return true;
-	} else {
-		Log::Write(  LogLevel_Info, GetNodeId(), "MeterPulseCmd_Get Not Supported on this node");
-	}
-	return false;
-}
+			bool MeterPulse::RequestValue(uint32 const _requestFlags, uint16 const _dummy1,	// = 0 (not used)
+					uint8 const _instance, Driver::MsgQueue const _queue)
+			{
+				if (m_com.GetFlagBool(COMPAT_FLAG_GETSUPPORTED))
+				{
+					Msg* msg = new Msg("MeterPulseCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
+					msg->SetInstance(this, _instance);
+					msg->Append(GetNodeId());
+					msg->Append(2);
+					msg->Append(GetCommandClassId());
+					msg->Append(MeterPulseCmd_Get);
+					msg->Append(GetDriver()->GetTransmitOptions());
+					GetDriver()->SendMsg(msg, _queue);
+					return true;
+				}
+				else
+				{
+					Log::Write(LogLevel_Info, GetNodeId(), "MeterPulseCmd_Get Not Supported on this node");
+				}
+				return false;
+			}
 
 //-----------------------------------------------------------------------------
 // <MeterPulse::HandleMsg>
 // Handle a message from the Z-Wave network
 //-----------------------------------------------------------------------------
-bool MeterPulse::HandleMsg
-(
-	uint8 const* _data,
-	uint32 const _length,
-	uint32 const _instance	// = 1
-)
-{
-	if( MeterPulseCmd_Report == (MeterPulseCmd)_data[0] )
-	{
-		int32 count = 0;
-		for( uint8 i=0; i<4; ++i )
-		{
-			count <<= 8;
-			count |= (uint32)_data[i+1];
-		}
+			bool MeterPulse::HandleMsg(uint8 const* _data, uint32 const _length, uint32 const _instance	// = 1
+					)
+			{
+				if (MeterPulseCmd_Report == (MeterPulseCmd) _data[0])
+				{
+					int32 count = 0;
+					for (uint8 i = 0; i < 4; ++i)
+					{
+						count <<= 8;
+						count |= (uint32) _data[i + 1];
+					}
 
-		Log::Write( LogLevel_Info, GetNodeId(), "Received a meter pulse count: Count=%d", count );
-		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, 0 ) ) )
-		{
-			value->OnValueRefreshed( count );
-			value->Release();
-		}
+					Log::Write(LogLevel_Info, GetNodeId(), "Received a meter pulse count: Count=%d", count);
+					if (Internal::VC::ValueInt* value = static_cast<Internal::VC::ValueInt*>(GetValue(_instance, ValueID_Index_MeterPulse::Count)))
+					{
+						value->OnValueRefreshed(count);
+						value->Release();
+					}
 
-		return true;
-	}
+					return true;
+				}
 
-	return false;
-}
+				return false;
+			}
 
 //-----------------------------------------------------------------------------
 // <MeterPulse::CreateVars>
 // Create the values managed by this command class
 //-----------------------------------------------------------------------------
-void MeterPulse::CreateVars
-(
-	uint8 const _instance
-)
-{
-	if( Node* node = GetNodeUnsafe() )
-	{
-	  	node->CreateValueInt( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Count", "", true, false, 0, 0 );
-	}
-}
-
-
+			void MeterPulse::CreateVars(uint8 const _instance)
+			{
+				if (Node* node = GetNodeUnsafe())
+				{
+					node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_MeterPulse::Count, "Count", "", true, false, 0, 0);
+				}
+			}
+		} // namespace CC
+	} // namespace Internal
+} // namespace OpenZWave
 

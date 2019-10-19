@@ -35,132 +35,120 @@
 
 #include "value_classes/ValueBool.h"
 
-using namespace OpenZWave;
-
-enum LockCmd
+namespace OpenZWave
 {
-	LockCmd_Set		= 0x01,
-	LockCmd_Get		= 0x02,
-	LockCmd_Report	= 0x03
-};
+	namespace Internal
+	{
+		namespace CC
+		{
+
+			enum LockCmd
+			{
+				LockCmd_Set = 0x01,
+				LockCmd_Get = 0x02,
+				LockCmd_Report = 0x03
+			};
 
 //-----------------------------------------------------------------------------
 // <Lock::RequestState>
 // Request current state from the device
 //-----------------------------------------------------------------------------
-bool Lock::RequestState
-(
-	uint32 const _requestFlags,
-	uint8 const _instance,
-	Driver::MsgQueue const _queue
-)
-{
-	if( _requestFlags & RequestFlag_Dynamic )
-	{
-		return RequestValue( _requestFlags, 0, _instance, _queue );
-	}
+			bool Lock::RequestState(uint32 const _requestFlags, uint8 const _instance, Driver::MsgQueue const _queue)
+			{
+				if (_requestFlags & RequestFlag_Dynamic)
+				{
+					return RequestValue(_requestFlags, 0, _instance, _queue);
+				}
 
-	return false;
-}
+				return false;
+			}
 
 //-----------------------------------------------------------------------------
 // <Lock::RequestValue>
 // Request current value from the device
 //-----------------------------------------------------------------------------
-bool Lock::RequestValue
-(
-	uint32 const _requestFlags,
-	uint8 const _dummy1,	// = 0 (not used)
-	uint8 const _instance,
-	Driver::MsgQueue const _queue
-)
-{
-	if ( IsGetSupported() )
-	{
-		Msg* msg = new Msg( "LockCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-		msg->SetInstance( this, _instance );
-		msg->Append( GetNodeId() );
-		msg->Append( 2 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( LockCmd_Get );
-		msg->Append( GetDriver()->GetTransmitOptions() );
-		GetDriver()->SendMsg( msg, _queue );
-		return true;
-	} else {
-		Log::Write(  LogLevel_Info, GetNodeId(), "LockCmd_Get Not Supported on this node");
-	}
-	return false;
-}
-
+			bool Lock::RequestValue(uint32 const _requestFlags, uint16 const _dummy1,	// = 0 (not used)
+					uint8 const _instance, Driver::MsgQueue const _queue)
+			{
+				if (m_com.GetFlagBool(COMPAT_FLAG_GETSUPPORTED))
+				{
+					Msg* msg = new Msg("LockCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
+					msg->SetInstance(this, _instance);
+					msg->Append(GetNodeId());
+					msg->Append(2);
+					msg->Append(GetCommandClassId());
+					msg->Append(LockCmd_Get);
+					msg->Append(GetDriver()->GetTransmitOptions());
+					GetDriver()->SendMsg(msg, _queue);
+					return true;
+				}
+				else
+				{
+					Log::Write(LogLevel_Info, GetNodeId(), "LockCmd_Get Not Supported on this node");
+				}
+				return false;
+			}
 
 //-----------------------------------------------------------------------------
 // <Lock::HandleMsg>
 // Handle a message from the Z-Wave network
 //-----------------------------------------------------------------------------
-bool Lock::HandleMsg
-(
-	uint8 const* _data,
-	uint32 const _length,
-	uint32 const _instance	// = 1
-)
-{
-	if( LockCmd_Report == (LockCmd)_data[0] )
-	{
-		Log::Write( LogLevel_Info, GetNodeId(), "Received Lock report: Lock is %s", _data[1] ? "Locked" : "Unlocked" );
+			bool Lock::HandleMsg(uint8 const* _data, uint32 const _length, uint32 const _instance	// = 1
+					)
+			{
+				if (LockCmd_Report == (LockCmd) _data[0])
+				{
+					Log::Write(LogLevel_Info, GetNodeId(), "Received Lock report: Lock is %s", _data[1] ? "Locked" : "Unlocked");
 
-		if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, 0 ) ) )
-		{
-			value->OnValueRefreshed( _data[1] != 0 );
-			value->Release();
-		}
-		return true;
-	}
+					if (Internal::VC::ValueBool* value = static_cast<Internal::VC::ValueBool*>(GetValue(_instance, ValueID_Index_Lock::Locked)))
+					{
+						value->OnValueRefreshed(_data[1] != 0);
+						value->Release();
+					}
+					return true;
+				}
 
-	return false;
-}
+				return false;
+			}
 
 //-----------------------------------------------------------------------------
 // <Lock::SetValue>
 // Set the lock's state
 //-----------------------------------------------------------------------------
-bool Lock::SetValue
-(
-	Value const& _value
-)
-{
-	if( ValueID::ValueType_Bool == _value.GetID().GetType() )
-	{
-		ValueBool const* value = static_cast<ValueBool const*>(&_value);
+			bool Lock::SetValue(Internal::VC::Value const& _value)
+			{
+				if (ValueID::ValueType_Bool == _value.GetID().GetType())
+				{
+					Internal::VC::ValueBool const* value = static_cast<Internal::VC::ValueBool const*>(&_value);
 
-		Log::Write( LogLevel_Info, GetNodeId(), "Lock::Set - Requesting lock to be %s", value->GetValue() ? "Locked" : "Unlocked" );
-		Msg* msg = new Msg( "LockCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-		msg->SetInstance( this, _value.GetID().GetInstance() );
-		msg->Append( GetNodeId() );
-		msg->Append( 3 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( LockCmd_Set );
-		msg->Append( value->GetValue() ? 0x01:0x00 );
-		msg->Append( GetDriver()->GetTransmitOptions() );
-		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
-		return true;
-	}
+					Log::Write(LogLevel_Info, GetNodeId(), "Lock::Set - Requesting lock to be %s", value->GetValue() ? "Locked" : "Unlocked");
+					Msg* msg = new Msg("LockCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
+					msg->SetInstance(this, _value.GetID().GetInstance());
+					msg->Append(GetNodeId());
+					msg->Append(3);
+					msg->Append(GetCommandClassId());
+					msg->Append(LockCmd_Set);
+					msg->Append(value->GetValue() ? 0x01 : 0x00);
+					msg->Append(GetDriver()->GetTransmitOptions());
+					GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
+					return true;
+				}
 
-	return false;
-}
+				return false;
+			}
 
 //-----------------------------------------------------------------------------
 // <Lock::CreateVars>
 // Create the values managed by this command class
 //-----------------------------------------------------------------------------
-void Lock::CreateVars
-(
-	uint8 const _instance
-)
-{
-	if( Node* node = GetNodeUnsafe() )
-	{
-	  	node->CreateValueBool( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Locked", "", false, false, false, 0 );
-	}
-}
-
+			void Lock::CreateVars(uint8 const _instance)
+			{
+				if (Node* node = GetNodeUnsafe())
+				{
+					node->CreateValueBool(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_Lock::Locked, "Locked", "", false, false, false, 0);
+				}
+			}
+		} // namespace CC
+	} // namespace Internal
+} // namespace OpenZWave
 

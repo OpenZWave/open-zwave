@@ -1,15 +1,18 @@
 #The Major Version Number
 VERSION_MAJ	?= 1
 #The Minor Version Number
-VERSION_MIN ?= 4
+VERSION_MIN ?= 6
 
 #the build type we are making (release or debug)
 BUILD	?= release
 #the prefix to install the library into
 PREFIX	?= /usr/local
 
-# build HID support by default
-USE_HID ?= 1
+# dont build HID support by default
+USE_HID ?= 0
+
+# use builtin tinyXML by default 
+USE_BI_TXML ?= 1
 
 #the System we are building on
 UNAME  := $(shell uname -s)
@@ -78,6 +81,9 @@ endif
 ifeq ($(UNAME),Darwin)
 AR     := libtool -static -o 
 RANLIB := ranlib
+CC     := clang
+CXX    := clang++
+LD     := clang++
 else
 AR     := $(CROSS_COMPILE)ar rc
 RANLIB := $(CROSS_COMPILE)ranlib
@@ -90,9 +96,11 @@ SED    := sed
 #determine if we are release or debug Build and set appropriate flags
 ifeq ($(BUILD), release)
 CFLAGS	+= -c $(RELEASE_CFLAGS)
+CPPFLAGS += $(RELEASE_CPPFLAGS)
 LDFLAGS	+= $(RELEASE_LDFLAGS)
 else
 CFLAGS	+= -c $(DEBUG_CFLAGS)
+CPPFLAGS += $(DEBUG_CPPFLAGS)
 LDFLAGS	+= $(DEBUG_LDFLAGS)
 endif
 
@@ -142,18 +150,18 @@ FMTCMD = fmt -1
 endif
 
 $(OBJDIR)/%.o : %.cpp
-	@echo "Building $(notdir $@)"
-	@$(CXX) -MM $(CFLAGS) $(INCLUDES) $< > $(DEPDIR)/$*.d
+	@echo "Building $(<:$(top_builddir)/cpp/%=%)"
+	@$(CXX) -MM $(CFLAGS) $(CPPFLAGS) $(INCLUDES) $< > $(DEPDIR)/$*.d
 	@mv -f $(DEPDIR)/$*.d $(DEPDIR)/$*.d.tmp
 	@$(SED) -e 's|.*:|$(OBJDIR)/$*.o: $(DEPDIR)/$*.d|' < $(DEPDIR)/$*.d.tmp > $(DEPDIR)/$*.d;
 	@$(SED) -e 's/.*://' -e 's/\\$$//' < $(DEPDIR)/$*.d.tmp | $(FMTCMD) | \
 	  $(SED) -e 's/^ *//' -e 's/$$/:/' >> $(DEPDIR)/.$*.d;
 	@rm -f $(DEPDIR)/$*.d.tmp
-	@$(CXX) $(CFLAGS) $(TARCH) $(INCLUDES) -o $@ $<
+	@$(CXX) $(CFLAGS) $(CPPFLAGS) $(TARCH) $(INCLUDES) -o $@ $<
 
 
 $(OBJDIR)/%.o : %.c
-	@echo "Building $(notdir $@)"	
+	@echo "Building $(<:$(top_builddir)/cpp/src/%=%)"
 	@$(CC) -MM $(CFLAGS) $(INCLUDES) $< > $(DEPDIR)/$*.d
 	@mv -f $(DEPDIR)/$*.d $(DEPDIR)/$*.d.tmp
 	@$(SED) -e 's|.*:|$(OBJDIR)/$*.o: $(DEPDIR)/$*.d|' < $(DEPDIR)/$*.d.tmp > $(DEPDIR)/$*.d;

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Resource Files">
@@ -29,12 +29,12 @@
     <Filter Include="config">
       <UniqueIdentifier>{d141dfa6-424a-465c-b339-38ca596a6c12}</UniqueIdentifier>
     </Filter>
+    <Filter Include="HIDAPI">
+      <UniqueIdentifier>{58419e2c-1381-4c50-9d31-b6b4a416a7b5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\aes\aes.h">
-      <Filter>AES</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\aes\aescpp.h">
       <Filter>AES</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\aes\aesopt.h">
@@ -211,9 +211,6 @@
     <ClInclude Include="..\..\..\src\Defs.h">
       <Filter>Main</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\DoxygenMain.h">
-      <Filter>Main</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\Driver.h">
       <Filter>Main</Filter>
     </ClInclude>
@@ -235,9 +232,6 @@
     <ClInclude Include="..\..\..\src\Options.h">
       <Filter>Main</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\OZWException.h">
-      <Filter>Main</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\Scene.h">
       <Filter>Main</Filter>
     </ClInclude>
@@ -247,31 +241,7 @@
     <ClInclude Include="..\..\..\src\ZWSecurity.h">
       <Filter>Main</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\platform\winRT\EventImpl.h">
-      <Filter>Platform\WinRT</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\platform\winRT\FileOpsImpl.h">
-      <Filter>Platform\WinRT</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\platform\winRT\HidControllerWinRT.h">
-      <Filter>Platform\WinRT</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\platform\winRT\LogImpl.h">
-      <Filter>Platform\WinRT</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\platform\winRT\MutexImpl.h">
-      <Filter>Platform\WinRT</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\platform\winRT\SerialControllerImpl.h">
-      <Filter>Platform\WinRT</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\platform\winRT\ThreadImpl.h">
-      <Filter>Platform\WinRT</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\platform\winRT\TimeStampImpl.h">
-      <Filter>Platform\WinRT</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\platform\winRT\WaitImpl.h">
       <Filter>Platform\WinRT</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\platform\Controller.h">
@@ -316,6 +286,9 @@
     <ClInclude Include="..\..\..\src\value_classes\Value.h">
       <Filter>Value Classes</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\value_classes\ValueBitSet.h">
+      <Filter>Value Classes</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\value_classes\ValueBool.h">
       <Filter>Value Classes</Filter>
     </ClInclude>
@@ -351,6 +324,51 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\value_classes\ValueString.h">
       <Filter>Value Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\DNSThread.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\DNS.h">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\command_classes\BarrierOperator.h">
+      <Filter>Command Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\command_classes\Color.h">
+      <Filter>Command Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\command_classes\ZWavePlusInfo.h">
+      <Filter>Command Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ManufacturerSpecificDB.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\command_classes\DeviceResetLocally.h">
+      <Filter>Command Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Http.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\HttpClient.h">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\command_classes\ManufacturerProprietary.h">
+      <Filter>Command Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\TimerThread.h" />
+    <ClInclude Include="..\..\..\src\Localization.h" />
+    <ClInclude Include="..\..\..\src\command_classes\SoundSwitch.h" />
+    <ClInclude Include="..\..\..\src\command_classes\SimpleAVCommandItem.h">
+      <Filter>Command Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\command_classes\SimpleAV.h">
+      <Filter>Command Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\HidController.h">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\winRT\FileOpsImpl.h">
+      <Filter>Platform\WinRT</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -552,36 +570,6 @@
     <ClCompile Include="..\..\..\src\ZWSecurity.cpp">
       <Filter>Main</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\windows\winversion.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\platform\winRT\EventImpl.cpp">
-      <Filter>Platform\WinRT</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\platform\winRT\FileOpsImpl.cpp">
-      <Filter>Platform\WinRT</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\platform\winRT\HidControllerWinRT.cpp">
-      <Filter>Platform\WinRT</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\platform\winRT\LogImpl.cpp">
-      <Filter>Platform\WinRT</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\platform\winRT\MutexImpl.cpp">
-      <Filter>Platform\WinRT</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\platform\winRT\SerialControllerImpl.cpp">
-      <Filter>Platform\WinRT</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\platform\winRT\ThreadImpl.cpp">
-      <Filter>Platform\WinRT</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\platform\winRT\TimeStampImpl.cpp">
-      <Filter>Platform\WinRT</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\platform\winRT\WaitImpl.cpp">
-      <Filter>Platform\WinRT</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\platform\Controller.cpp">
       <Filter>Platform</Filter>
     </ClCompile>
@@ -627,6 +615,9 @@
     <ClCompile Include="..\..\..\src\value_classes\Value.cpp">
       <Filter>Value Classes</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\value_classes\ValueBitSet.cpp">
+      <Filter>Value Classes</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\value_classes\ValueBool.cpp">
       <Filter>Value Classes</Filter>
     </ClCompile>
@@ -660,19 +651,85 @@
     <ClCompile Include="..\..\..\src\value_classes\ValueString.cpp">
       <Filter>Value Classes</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\..\..\src\aes\aes.txt">
-      <Filter>AES</Filter>
-    </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <Xsd Include="config\zwscene.xsd" />
-    <Xsd Include="config\device_classes.xsd" />
-    <Xsd Include="config\device_configuration.xsd" />
-    <Xsd Include="config\manufacturer_specific.xsd" />
-    <Xsd Include="config\options.xsd" />
-    <Xsd Include="config\zwcfg.xsd" />
+    <ClCompile Include="..\..\..\src\DNSThread.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\DNS.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\command_classes\BarrierOperator.cpp">
+      <Filter>Command Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\command_classes\Color.cpp">
+      <Filter>Command Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\command_classes\ZWavePlusInfo.cpp">
+      <Filter>Command Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\ManufacturerSpecificDB.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\command_classes\DeviceResetLocally.cpp">
+      <Filter>Command Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Http.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\HttpClient.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\command_classes\ManufacturerProprietary.cpp">
+      <Filter>Command Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Bitfield.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\TimerThread.cpp" />
+    <ClCompile Include="..\..\..\src\Localization.cpp" />
+    <ClCompile Include="..\..\..\src\NotificationCCTypes.cpp" />
+    <ClCompile Include="..\..\..\src\command_classes\SoundSwitch.cpp" />
+    <ClCompile Include="..\..\..\src\command_classes\SimpleAV.cpp">
+      <Filter>Command Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\command_classes\SimpleAVCommandItem.cpp">
+      <Filter>Command Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\HidController.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\winRT\DNSImpl.cpp">
+      <Filter>Platform\WinRT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\winRT\EventImpl.cpp">
+      <Filter>Platform\WinRT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\winRT\FileOpsImpl.cpp">
+      <Filter>Platform\WinRT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\winRT\HidControllerWinRT.cpp">
+      <Filter>Platform\WinRT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\winRT\LogImpl.cpp">
+      <Filter>Platform\WinRT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\winRT\MutexImpl.cpp">
+      <Filter>Platform\WinRT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\winRT\SerialControllerImpl.cpp">
+      <Filter>Platform\WinRT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\winRT\ThreadImpl.cpp">
+      <Filter>Platform\WinRT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\winRT\TimeStampImpl.cpp">
+      <Filter>Platform\WinRT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\winRT\WaitImpl.cpp">
+      <Filter>Platform\WinRT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\windows\winversion.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="config\BeNext\1poleswitch.xml">

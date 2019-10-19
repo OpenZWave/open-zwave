@@ -9,7 +9,7 @@ function getValue {
 	IFS="=: "
 	while read -r name value 
 	do
-		if [ "--"$name == $1 ]
+		if [ "--"$name = $1 ]
 		then
 			echo "${value//\"/}" | tr -d '\r\n'
 		fi
@@ -18,7 +18,7 @@ function getValue {
 
 pcfile=@pkgconfigfile@
 key=$1
-if [ "$key" == "--with-pc" ]
+if [ "$key" = "--with-pc" ]
 then
 	pcfile=$2
 	key=$3
@@ -30,12 +30,12 @@ then
 fi
 
 inputfile=`cat $pcfile | grep -vE '^(\s*$|#)'`
-if [ ! -z $key ] || [ "$key" == "--help" ] 
+if [ ! -z $key ] || [ "$key" = "--help" ] 
 then
-	if [ "$key" == "--Libs" ]
+	if [ "$key" = "--Libs" ]
 	then
 		value="-L$(getValue "--libdir") -lopenzwave"
-	elif [ "$key" == "--Cflags" ]
+	elif [ "$key" = "--Cflags" ]
 	then
 		value="-I$(getValue "--includedir")"
 	else

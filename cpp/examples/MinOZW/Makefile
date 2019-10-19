@@ -10,8 +10,8 @@
 .PHONY:	default clean
 
 
-DEBUG_CFLAGS    := -Wall -Wno-format -ggdb -DDEBUG $(CPPFLAGS)
-RELEASE_CFLAGS  := -Wall -Wno-unknown-pragmas -Wno-format -O3 $(CPPFLAGS)
+DEBUG_CFLAGS    := -Wall -Wno-format -ggdb -DDEBUG $(CPPFLAGS) -std=c++11 
+RELEASE_CFLAGS  := -Wall -Wno-unknown-pragmas -Wno-format -O3 $(CPPFLAGS) -std=c++11 
 
 DEBUG_LDFLAGS	:= -g
 
@@ -66,8 +66,8 @@ LDFLAGS+= -lusb-1.0
 endif
 
 $(OBJDIR)/MinOZW:	$(patsubst %.cpp,$(OBJDIR)/%.o,$(minozwsrc))
-	@echo "Linking $(OBJDIR)/MinOZW"
-	$(LD) $(LDFLAGS) $(TARCH) -o $@ $< $(LIBS) -pthread
+	@echo "Linking MinOZW"
+	@$(LD) $(LDFLAGS) $(TARCH) -o $@ $< $(LIBS) -pthread
 
 $(top_builddir)/MinOZW: $(top_srcdir)/cpp/examples/MinOZW/MinOZW.in $(OBJDIR)/MinOZW
 	@echo "Creating Temporary Shell Launch Script"

@@ -2,8 +2,9 @@
 # Any Edits on this file will be lost next time dist-update is run
 
 DISTFILES =	.gitignore \
-	ChangeLog \
+	BSDmakefile \
 	INSTALL \
+	LICENSE \
 	Makefile \
 	README.md \
 	config/2gig/ct100.xml \
@@ -27,19 +28,32 @@ DISTFILES =	.gitignore \
 	config/BeNext/SceneController.xml \
 	config/BeNext/TagReader.xml \
 	config/BeNext/TagReader500.xml \
+	config/BeNext/mydisplay.xml \
+	config/BeNext/mygate.xml \
+	config/Localization.xml \
+	config/Localization.xsd \
+	config/NotificationCCTypes.xml \
+	config/NotificationCCTypes.xsd \
+	config/SensorMultiLevelCCTypes.xml \
+	config/SensorMultiLevelCCTypes.xsd \
 	config/act/lfm20.xml \
 	config/act/zdm230.xml \
+	config/act/zdp100.xml \
 	config/act/zdw103.xml \
 	config/act/zdw232.xml \
 	config/act/zir010.xml \
+	config/act/zrm230.xml \
+	config/act/zrp100.xml \
 	config/act/zrp110.xml \
 	config/act/zrw103.xml \
+	config/act/zrw230.xml \
 	config/aeotec/dsa03202.xml \
 	config/aeotec/dsa22.xml \
 	config/aeotec/dsa38.xml \
 	config/aeotec/dsb04100.xml \
 	config/aeotec/dsb05.xml \
 	config/aeotec/dsb09104.xml \
+	config/aeotec/dsb28-zweu.xml \
 	config/aeotec/dsb28.xml \
 	config/aeotec/dsb29.xml \
 	config/aeotec/dsb45.xml \
@@ -87,6 +101,8 @@ DISTFILES =	.gitignore \
 	config/aeotec/zw140.xml \
 	config/aeotec/zw141.xml \
 	config/aeotec/zw162.xml \
+	config/aeotec/zw164.xml \
+	config/aeotec/zw175.xml \
 	config/aeotec/zwa001.xml \
 	config/aeotec/zwa002.xml \
 	config/aeotec/zwa003.xml \
@@ -94,6 +110,8 @@ DISTFILES =	.gitignore \
 	config/aeotec/zwa005.xml \
 	config/aeotec/zwa006.xml \
 	config/aeotec/zwa008.xml \
+	config/airlinemechanical/zds-ud10.xml \
+	config/alfred/DB2.xml \
 	config/assa_abloy/ConexisL1.xml \
 	config/assa_abloy/KeyfreeConnected-plus.xml \
 	config/assa_abloy/KeyfreeConnected.xml \
@@ -103,12 +121,17 @@ DISTFILES =	.gitignore \
 	config/assa_abloy/TouchLever.xml \
 	config/assa_abloy/nexTouch.xml \
 	config/august/asl-03.xml \
+	config/buffalo/hw-100v15a-zw.xml \
+	config/comfort/ucm.xml \
+	config/config-template.xml \
 	config/cooper/RF9501.xml \
 	config/cooper/RF9505-T.xml \
+	config/cooper/RF9505-T.xml.zip \
 	config/cooper/RF9517.xml \
 	config/cooper/RF9540-N.xml \
 	config/cooper/RF9542-Z.xml \
 	config/cooper/RFWC5.xml \
+	config/cooper/rf9534.xml \
 	config/danfoss/living.xml \
 	config/danfoss/rsroom.xml \
 	config/danfoss/z.xml \
@@ -127,6 +150,7 @@ DISTFILES =	.gitignore \
 	config/devolo/mt2653.xml \
 	config/devolo/mt2756.xml \
 	config/devolo/rs014G0159.xml \
+	config/diehlcontrols/766366.xml \
 	config/dlink/dch-z110.xml \
 	config/dlink/dch-z120.xml \
 	config/dlink/dch-z510.xml \
@@ -152,12 +176,18 @@ DISTFILES =	.gitignore \
 	config/duwi/05458.xml \
 	config/duwi/ZWES1000.xml \
 	config/duwi/ZWESJ300.xml \
+	config/duwi/zw-edan-300.xml \
+	config/duwi/zw-zdan-300.xml \
 	config/duwi/zwfb.xml \
+	config/duwi/zwws.xml \
 	config/ecolink/doorwindow.xml \
 	config/ecolink/firefighter.xml \
+	config/ecolink/floodfreeze.xml \
 	config/ecolink/motion.xml \
 	config/ecolink/sensor.xml \
+	config/ecolink/tiltsensor.xml \
 	config/electronicsolutions/dbmz.xml \
+	config/enblink/ss201-us-w_1308.xml \
 	config/enerwave/zw15rmplus.xml \
 	config/enerwave/zw15s.xml \
 	config/enerwave/zw20r.xml \
@@ -173,13 +203,17 @@ DISTFILES =	.gitignore \
 	config/everspring/ad146.xml \
 	config/everspring/ad147.xml \
 	config/everspring/an145.xml \
+	config/everspring/an157.xml \
 	config/everspring/an158.xml \
 	config/everspring/an163.xml \
 	config/everspring/an179.xml \
 	config/everspring/an180.xml \
 	config/everspring/an181.xml \
 	config/everspring/hac01.xml \
+	config/everspring/han01.xml \
+	config/everspring/han02-1.xml \
 	config/everspring/hsp02.xml \
+	config/everspring/lptdm1u.xml \
 	config/everspring/se812.xml \
 	config/everspring/sf812.xml \
 	config/everspring/sm103.xml \
@@ -192,9 +226,11 @@ DISTFILES =	.gitignore \
 	config/everspring/st815.xml \
 	config/everspring/tse03.xml \
 	config/everspringct/hsm02.xml \
+	config/evolve/lfm-20.xml \
 	config/evolve/lrm-as.xml \
 	config/evolve/lsm-15.xml \
 	config/evolve/ltm-5.xml \
+	config/fakro/arz.xml \
 	config/fakro/zwp10.xml \
 	config/fakro/zwrs.xml \
 	config/fakro/zws12.xml \
@@ -227,22 +263,32 @@ DISTFILES =	.gitignore \
 	config/fibaro/fgsd002.xml \
 	config/fibaro/fgss101.xml \
 	config/fibaro/fgt001.xml \
+	config/fibaro/fgwd111.xml \
+	config/fibaro/fgwds221.xml \
+	config/fibaro/fgwoe.xml \
 	config/fibaro/fgwpe.xml \
 	config/fibaro/fgwpfzw5.xml \
 	config/fibaro/fgwpg111.xml \
+	config/fibaro/fgwr111.xml \
 	config/firstalert/zcombo.xml \
+	config/followgood/swz-1002.xml \
 	config/forest/fs2z5232000002.xml \
 	config/fortrezz/fmi.xml \
+	config/fortrezz/gdc1_fortrezz_1501.xml \
 	config/fortrezz/mimo2plus.xml \
 	config/fortrezz/mimolite.xml \
 	config/fortrezz/ssa2.xml \
 	config/fortrezz/ssa3.xml \
 	config/fortrezz/wv01.xml \
+	config/fortrezz/wwa-01aa.xml \
 	config/fortrezz/wwa02.xml \
+	config/frostdale/fdn2311.xml \
 	config/frostdale/fdn2nxx.xml \
 	config/ge/12719-plugin-switch.xml \
 	config/ge/12724-dimmer.xml \
+	config/ge/12727.xml \
 	config/ge/14282-plugin-switch.xml \
+	config/ge/14284.xml \
 	config/ge/14288-outlet.xml \
 	config/ge/14291-switch.xml \
 	config/ge/14292-toggle-switch.xml \
@@ -252,6 +298,8 @@ DISTFILES =	.gitignore \
 	config/ge/26933-motion-dimmer.xml \
 	config/ge/28167-plugin-dimmer.xml \
 	config/ge/28169-plugin-switch.xml \
+	config/ge/45604.xml \
+	config/ge/46201-switch.xml \
 	config/ge/dimmer.xml \
 	config/ge/dimmer_module.xml \
 	config/ge/hinge-pin.xml \
@@ -261,16 +309,23 @@ DISTFILES =	.gitignore \
 	config/ge/zw4001-switch.xml \
 	config/ge/zw6302.xml \
 	config/gocontrol/GC-TBZ48L.xml \
+	config/gr/gr-302n.xml \
 	config/gr/gr105.xml \
 	config/gr/gr105n.xml \
+	config/gr/grb3.xml \
 	config/graber/brz1.xml \
+	config/graber/csz1.xml \
+	config/graber/rsz1.xml \
 	config/graber/vcz1.xml \
+	config/greenwave/gs1110-1-gr-1.xml \
 	config/greenwave/powernode1.xml \
 	config/greenwave/powernode6.xml \
+	config/guardtec/gkw2000d.xml \
 	config/hank/hkzw-dws01.xml \
 	config/hank/hkzw-fld01.xml \
 	config/hank/hkzw-ms01.xml \
-	config/hank/hkzw-ms02.xml \
+	config/hank/hkzw-ms02-200.xml \
+	config/hank/hkzw-ms02-300.xml \
 	config/hank/hkzw-rgb01.xml \
 	config/hank/hkzw-so01-smartplug.xml \
 	config/hank/hkzw-so03.xml \
@@ -285,10 +340,15 @@ DISTFILES =	.gitignore \
 	config/heiman/HS1SA-Z.xml \
 	config/heiman/HS1WL-Z.xml \
 	config/heiman/HS2SK-Z.xml \
+	config/heiman/HS2WD-Z.xml \
+	config/heltun/he-zw-sw-5a-1.xml \
+	config/heltun/he-zw-therm-fc1.xml \
 	config/heltun/he-zw-therm-fl2.xml \
 	config/homeseer/ezmotionplus.xml \
+	config/homeseer/hs-ds100plus.xml \
 	config/homeseer/hs-fc200plus.xml \
 	config/homeseer/hs-fls100plus.xml \
+	config/homeseer/hs-fs100plus.xml \
 	config/homeseer/hs-ls100plus.xml \
 	config/homeseer/hs-ms100plus.xml \
 	config/homeseer/hs-wd100plus.xml \
@@ -305,6 +365,7 @@ DISTFILES =	.gitignore \
 	config/horstmann/asrzw.xml \
 	config/horstmann/hrt4zw.xml \
 	config/horstmann/scsc17.xml \
+	config/horstmann/ses301.xml \
 	config/horstmann/ses302.xml \
 	config/horstmann/ses303.xml \
 	config/horstmann/sir321.xml \
@@ -312,9 +373,500 @@ DISTFILES =	.gitignore \
 	config/horstmann/srt323.xml \
 	config/horstmann/ssr302.xml \
 	config/horstmann/ssr303.xml \
+	config/icare/zw-66.xml \
 	config/idlock/idlock101.xml \
 	config/idlock/idlock150.xml \
+	config/images/2gig/ct100.png \
+	config/images/2gig/ct32.png \
+	config/images/BeNext/AlarmSound.png \
+	config/images/BeNext/DoorSensor.png \
+	config/images/BeNext/Molite.png \
+	config/images/BeNext/TagReader.png \
+	config/images/BeNext/TagReader500.png \
+	config/images/BeNext/mydisplay.png \
+	config/images/BeNext/mygate.png \
+	config/images/act/lfm20.png \
+	config/images/act/zdm230.png \
+	config/images/act/zdp100.png \
+	config/images/act/zir010.png \
+	config/images/act/zrm230.png \
+	config/images/act/zrp100.png \
+	config/images/act/zrw103.png \
+	config/images/act/zrw230.png \
+	config/images/aeotec/dsa03202.png \
+	config/images/aeotec/dsa38.png \
+	config/images/aeotec/dsb04100.png \
+	config/images/aeotec/dsb05.png \
+	config/images/aeotec/dsb09104.png \
+	config/images/aeotec/dsb28-zweu.png \
+	config/images/aeotec/dsb28.png \
+	config/images/aeotec/dsb29.png \
+	config/images/aeotec/dsc06106.png \
+	config/images/aeotec/dsc10.png \
+	config/images/aeotec/dsc11.png \
+	config/images/aeotec/dsc14104.png \
+	config/images/aeotec/dsc18103.png \
+	config/images/aeotec/dsc19103.png \
+	config/images/aeotec/dsc24.png \
+	config/images/aeotec/dsc26103.png \
+	config/images/aeotec/dsc27103.png \
+	config/images/aeotec/dsc35103.png \
+	config/images/aeotec/dsd37.png \
+	config/images/aeotec/zw056.png \
+	config/images/aeotec/zw062.png \
+	config/images/aeotec/zw074.png \
+	config/images/aeotec/zw075.png \
+	config/images/aeotec/zw078.png \
+	config/images/aeotec/zw080.png \
+	config/images/aeotec/zw088.png \
+	config/images/aeotec/zw089.png \
+	config/images/aeotec/zw090.png \
+	config/images/aeotec/zw095.png \
+	config/images/aeotec/zw096.png \
+	config/images/aeotec/zw097.png \
+	config/images/aeotec/zw098.png \
+	config/images/aeotec/zw099.png \
+	config/images/aeotec/zw100.png \
+	config/images/aeotec/zw111.png \
+	config/images/aeotec/zw112.png \
+	config/images/aeotec/zw116.png \
+	config/images/aeotec/zw117.png \
+	config/images/aeotec/zw120.png \
+	config/images/aeotec/zw121.png \
+	config/images/aeotec/zw122.png \
+	config/images/aeotec/zw129.png \
+	config/images/aeotec/zw130.png \
+	config/images/aeotec/zw132.png \
+	config/images/aeotec/zw139.png \
+	config/images/aeotec/zw140.png \
+	config/images/aeotec/zw141.png \
+	config/images/aeotec/zw162.png \
+	config/images/aeotec/zw164.png \
+	config/images/aeotec/zw195.png \
+	config/images/aeotec/zwa001.png \
+	config/images/aeotec/zwa002.png \
+	config/images/aeotec/zwa003.png \
+	config/images/aeotec/zwa004.png \
+	config/images/aeotec/zwa005.png \
+	config/images/aeotec/zwa006.png \
+	config/images/airlinemechanical/zds-ud10.png \
+	config/images/alfred/DB2.png \
+	config/images/assa_abloy/ConexisL1.png \
+	config/images/assa_abloy/KeyfreeConnected-plus.png \
+	config/images/assa_abloy/KeyfreeConnected.png \
+	config/images/assa_abloy/PushButtonDeadbolt.png \
+	config/images/assa_abloy/TouchDeadbolt.png \
+	config/images/assa_abloy/TouchLever.png \
+	config/images/assa_abloy/nexTouch.png \
+	config/images/august/asl-03.png \
+	config/images/buffalo/hw-100v15a-zw.png \
+	config/images/comfort/ucm.png \
+	config/images/cooper/RF9501.png \
+	config/images/cooper/RF9505-T.png \
+	config/images/cooper/RF9517.png \
+	config/images/cooper/RF9540-N.png \
+	config/images/cooper/RF9542-Z.png \
+	config/images/cooper/rf9534.png \
+	config/images/danfoss/living.png \
+	config/images/danfoss/rsroom.png \
+	config/images/danfoss/z.png \
+	config/images/devolo/mt02648.png \
+	config/images/devolo/mt02755.png \
+	config/images/devolo/mt02758.png \
+	config/images/devolo/mt2646.png \
+	config/images/devolo/mt2647.png \
+	config/images/devolo/mt2652.png \
+	config/images/devolo/mt2756.png \
+	config/images/diehlcontrols/766366.png \
+	config/images/dlink/dch-z110.png \
+	config/images/dlink/dch-z120.png \
+	config/images/dlink/dch-z510.png \
+	config/images/dome/0002.png \
+	config/images/dome/0085.png \
+	config/images/dome/0086.png \
+	config/images/dome/0088.png \
+	config/images/dome/0201.png \
+	config/images/domitech/zb22uk.png \
+	config/images/domitech/ze27eu.png \
+	config/images/dragontech/wd-100.png \
+	config/images/duwi/ZWES1000.png \
+	config/images/duwi/zw-edan-300.png \
+	config/images/duwi/zw-zdan-300.png \
+	config/images/duwi/zwws.png \
+	config/images/ecolink/doorwindow.png \
+	config/images/ecolink/firefighter.png \
+	config/images/ecolink/floodfreeze.png \
+	config/images/ecolink/motion.png \
+	config/images/ecolink/sensor.png \
+	config/images/ecolink/tiltsensor.png \
+	config/images/electronicsolutions/dbmz.png \
+	config/images/enblink/ss201-us-w_1308.png \
+	config/images/enerwave/zw15rmplus.png \
+	config/images/enerwave/zw20r.png \
+	config/images/enerwave/zw20rm.png \
+	config/images/enerwave/zwn-bpc.png \
+	config/images/enerwave/zwnrsm1plus.png \
+	config/images/eurotronic/eur_cometz.png \
+	config/images/eurotronic/eur_spiritz.png \
+	config/images/eurotronic/eur_stellaz.png \
+	config/images/everspring/ad146.png \
+	config/images/everspring/ad147.png \
+	config/images/everspring/an157.png \
+	config/images/everspring/an158.png \
+	config/images/everspring/an163.png \
+	config/images/everspring/an179.png \
+	config/images/everspring/an180.png \
+	config/images/everspring/an181.png \
+	config/images/everspring/hac01.png \
+	config/images/everspring/han01.png \
+	config/images/everspring/han02-1.png \
+	config/images/everspring/hsm02.png \
+	config/images/everspring/hsp02.png \
+	config/images/everspring/lptdm1u.png \
+	config/images/everspring/se812.png \
+	config/images/everspring/sf812.png \
+	config/images/everspring/sm103.png \
+	config/images/everspring/sp103.png \
+	config/images/everspring/sp814.png \
+	config/images/everspring/sp815.png \
+	config/images/everspring/sp816.png \
+	config/images/everspring/st812.png \
+	config/images/everspring/st814.png \
+	config/images/everspring/st815.png \
+	config/images/everspring/tse03.png \
+	config/images/evolve/lfm-20.png \
+	config/images/evolve/ltm-5.png \
+	config/images/fakro/arz.png \
+	config/images/fakro/zws12.png \
+	config/images/fibaro/fgbs222.png \
+	config/images/fibaro/fgcd001.png \
+	config/images/fibaro/fgd212.png \
+	config/images/fibaro/fgdw2.png \
+	config/images/fibaro/fgfs101zw5.png \
+	config/images/fibaro/fggc001.png \
+	config/images/fibaro/fgk001.png \
+	config/images/fibaro/fgk10x.png \
+	config/images/fibaro/fgkf601.png \
+	config/images/fibaro/fgms.png \
+	config/images/fibaro/fgmszw5.png \
+	config/images/fibaro/fgpb101.png \
+	config/images/fibaro/fgr223.png \
+	config/images/fibaro/fgrgbwm441.png \
+	config/images/fibaro/fgs213.png \
+	config/images/fibaro/fgs223.png \
+	config/images/fibaro/fgsd002.png \
+	config/images/fibaro/fgt001.png \
+	config/images/fibaro/fgwd111.png \
+	config/images/fibaro/fgwoe.png \
+	config/images/fibaro/fgwpe.png \
+	config/images/fibaro/fgwpfzw5.png \
+	config/images/fibaro/fgwpg111.png \
+	config/images/fibaro/fgwr111.png \
+	config/images/firstalert/zcombo.png \
+	config/images/followgood/swz-1002.png \
+	config/images/forest/fs2z5232000002.png \
+	config/images/fortrezz/fmi.png \
+	config/images/fortrezz/gdc1_fortrezz_1501.png \
+	config/images/fortrezz/mimo2plus.png \
+	config/images/fortrezz/mimolite.png \
+	config/images/fortrezz/ssa2.png \
+	config/images/fortrezz/ssa3.png \
+	config/images/fortrezz/wv01.png \
+	config/images/fortrezz/wwa-01aa.png \
+	config/images/fortrezz/wwa02.png \
+	config/images/frostdale/fdn2311.png \
+	config/images/ge/12719-plugin-switch.png \
+	config/images/ge/12724-dimmer.png \
+	config/images/ge/12727.png \
+	config/images/ge/14282-plugin-switch.png \
+	config/images/ge/14284.png \
+	config/images/ge/14288-outlet.png \
+	config/images/ge/14291-switch.png \
+	config/images/ge/14292-toggle-switch.png \
+	config/images/ge/14294-dimmer.png \
+	config/images/ge/14295-dimmer-toggle.png \
+	config/images/ge/26931-motion-switch.png \
+	config/images/ge/26933-motion-dimmer.png \
+	config/images/ge/28167-plugin-dimmer.png \
+	config/images/ge/28169-plugin-switch.png \
+	config/images/ge/45604.png \
+	config/images/ge/46201-switch.png \
+	config/images/ge/dimmer.png \
+	config/images/ge/dimmer_module.png \
+	config/images/ge/hinge-pin.png \
+	config/images/ge/receptacle.png \
+	config/images/ge/relay.png \
+	config/images/ge/ze26i.png \
+	config/images/ge/zw6302.png \
+	config/images/gr/gr-302n.png \
+	config/images/gr/gr105.png \
+	config/images/gr/gr105n.png \
+	config/images/graber/brz1.png \
+	config/images/graber/csz1.png \
+	config/images/graber/rsz1.png \
+	config/images/graber/vcz1.png \
+	config/images/greenwave/gs1110-1-gr-1.png \
+	config/images/greenwave/powernode1.png \
+	config/images/greenwave/powernode6.png \
+	config/images/guardtec/gkw2000d.png \
+	config/images/hank/hkzw-dws01.png \
+	config/images/hank/hkzw-fld01.png \
+	config/images/hank/hkzw-ms01.png \
+	config/images/hank/hkzw-ms02-200.png \
+	config/images/hank/hkzw-rgb01.png \
+	config/images/hank/hkzw-so01-smartplug.png \
+	config/images/hank/hkzw-so03.png \
+	config/images/hank/hkzw-so05-smartplug.png \
+	config/images/hank/scenecontroller1.png \
+	config/images/hank/scenecontroller4.png \
+	config/images/heiman/HS1CA-Z.png \
+	config/images/heiman/HS1CG-Z.png \
+	config/images/heiman/HS1DS-Z.png \
+	config/images/heiman/HS1HT-Z.png \
+	config/images/heiman/HS1MS-Z.png \
+	config/images/heiman/HS1SA-Z.png \
+	config/images/heiman/HS1WL-Z.png \
+	config/images/heiman/HS2SK-Z.png \
+	config/images/homeseer/hs-ds100plus.png \
+	config/images/homeseer/hs-fc200plus.png \
+	config/images/homeseer/hs-fls100plus.png \
+	config/images/homeseer/hs-ls100plus.png \
+	config/images/homeseer/hs-ms100plus.png \
+	config/images/homeseer/hs-wd100plus.png \
+	config/images/homeseer/hs-wd200plus.png \
+	config/images/homeseer/hs-ws100plus.png \
+	config/images/homeseer/hs-ws200plus.png \
+	config/images/homeseer/hsm200.png \
+	config/images/honeywell/39351-ZW3005.png \
+	config/images/honeywell/lynx-touch-l5100.png \
+	config/images/honeywell/th6320zw2003.png \
+	config/images/honeywell/th8320zw1000.png \
+	config/images/horstmann/asrzw.png \
+	config/images/horstmann/hrt4zw.png \
+	config/images/horstmann/scsc17.png \
+	config/images/horstmann/ses301.png \
+	config/images/horstmann/ses302.png \
+	config/images/horstmann/ses303.png \
+	config/images/horstmann/sir321.png \
+	config/images/horstmann/srt321.png \
+	config/images/horstmann/srt323.png \
+	config/images/horstmann/ssr302.png \
+	config/images/horstmann/ssr303.png \
+	config/images/icare/zw-66.png \
+	config/images/idlock/idlock101.png \
+	config/images/idlock/idlock150.png \
+	config/images/ingersoll/dwzwave1.png \
+	config/images/inovelli/lzw30-sn.png \
+	config/images/inovelli/lzw30.png \
+	config/images/inovelli/simple_module.png \
+	config/images/iwatsu/ne-4ct-2p.png \
+	config/images/iwatsu/ne-4ct.png \
+	config/images/jasco/45601.png \
+	config/images/kaipule/im20.png \
+	config/images/kwikset/smartcode.png \
+	config/images/leviton/dz15s.png \
+	config/images/leviton/dz6hd.png \
+	config/images/leviton/dzpd3.png \
+	config/images/leviton/vrcs2.png \
+	config/images/leviton/vrf01.png \
+	config/images/leviton/vri10.png \
+	config/images/leviton/vrs15.png \
+	config/images/linear/LB60Z-1.png \
+	config/images/linear/WD500Z5-1.png \
+	config/images/linear/gd00z-7.png \
+	config/images/linear/ngd00z.png \
+	config/images/logicsoft/ZHC5010.png \
+	config/images/mcohome/mh7h.png \
+	config/images/mcohome/mhp220.png \
+	config/images/mcohome/mhp511.png \
+	config/images/merten/5044xx.png \
+	config/images/merten/5046xx.png \
+	config/images/merten/506004.png \
+	config/images/merten/508244.png \
+	config/images/miyakawaelectric/me-d101.png \
+	config/images/nexia/db100z.png \
+	config/images/nodon/asp3100SmartPlug.png \
+	config/images/nodon/crc3100OctanRemote.png \
+	config/images/nodon/crc360xSofremote.png \
+	config/images/nodon/cws3101wallswitch.png \
+	config/images/nodon/msp31xxMicroSmartPlug.png \
+	config/images/northq/nq92021.png \
+	config/images/oomi/ft100.png \
+	config/images/oomi/ft111.png \
+	config/images/permundo/psc132zw.png \
+	config/images/permundo/psc234zw.png \
+	config/images/philio/pad02.png \
+	config/images/philio/pan04.png \
+	config/images/philio/pan05.png \
+	config/images/philio/pan06.png \
+	config/images/philio/pan08.png \
+	config/images/philio/pan11-1.png \
+	config/images/philio/pan11.png \
+	config/images/philio/pan16.png \
+	config/images/philio/phpab01.png \
+	config/images/philio/phpat02.png \
+	config/images/philio/phpsg01.png \
+	config/images/philio/pse02.png \
+	config/images/philio/psm02.png \
+	config/images/philio/psp05.png \
+	config/images/philio/psr03-1b.png \
+	config/images/philio/psr04.png \
+	config/images/philio/pst02-1c.png \
+	config/images/philio/pst02-b.png \
+	config/images/philio/pst02.png \
+	config/images/polycontrol/doorlock.png \
+	config/images/polycontrol/doorlockv3.png \
+	config/images/popp/004407.png \
+	config/images/popp/009303.png \
+	config/images/popp/009402.png \
+	config/images/popp/012501.png \
+	config/images/popp/700045.png \
+	config/images/popp/700168.png \
+	config/images/popp/700397.png \
+	config/images/popp/dwt.png \
+	config/images/popp/smoke-detector.png \
+	config/images/popp/solar-siren.png \
+	config/images/popp/zweather.png \
+	config/images/prowell/zw-702.png \
+	config/images/qees/reto-dimmer-plus.png \
+	config/images/qees/reto-plugin-switch.png \
+	config/images/qubino/ZMNHADx.png \
+	config/images/qubino/ZMNHBDx.png \
+	config/images/qubino/ZMNHCDx.png \
+	config/images/qubino/ZMNHDA2.png \
+	config/images/qubino/ZMNHDDx.png \
+	config/images/qubino/ZMNHIDx.png \
+	config/images/qubino/ZMNHNDx.png \
+	config/images/qubino/ZMNHODx.png \
+	config/images/qubino/ZMNHSDx.png \
+	config/images/qubino/ZMNHTDx.png \
+	config/images/qubino/ZMNHVDx.png \
+	config/images/qubino/ZMNHWD1.png \
+	config/images/qubino/ZMNHYDx.png \
+	config/images/qubino/zmnhxdx.png \
+	config/images/quby/qb2.png \
+	config/images/rcs/em52-zw.png \
+	config/images/rcs/therm0009.png \
+	config/images/remotec/bw8120eu.png \
+	config/images/remotec/zfm-80.png \
+	config/images/remotec/zrc-100eu.png \
+	config/images/remotec/zrc-90.png \
+	config/images/remotec/zts-110.png \
+	config/images/remotec/zts-500.png \
+	config/images/remotec/zurc.png \
+	config/images/remotec/zxt-120.png \
+	config/images/remotec/zxt-310.png \
+	config/images/remotec/zxt-600.png \
+	config/images/schlage/BE468ZP.png \
+	config/images/schlage/BE469.png \
+	config/images/schlage/BE469ZP.png \
+	config/images/schlage/fe599.png \
+	config/images/schlagelink/41.png \
+	config/images/sensative/strips.png \
+	config/images/sensative/stripscomfort.png \
+	config/images/sercomm/sw-clp01-eu.png \
+	config/images/shenzen_neo/nas-ab01z.png \
+	config/images/shenzen_neo/nas-ds01z.png \
+	config/images/shenzen_neo/nas-pd01z.png \
+	config/images/shenzen_neo/nas-wr01z.png \
+	config/images/shenzen_neo/nas-ws02z.png \
+	config/images/simon/10002034-13X.png \
+	config/images/smartthings/pgc401m.png \
+	config/images/smartthings/sth-eth200.png \
+	config/images/steinel/is140-2.png \
+	config/images/steinel/l810-led-ihf.png \
+	config/images/steinel/rs-led-d2.png \
+	config/images/steinel/xled-home-2.png \
+	config/images/stelpro/stzw402.png \
+	config/images/sunricher/srzv9001k8.png \
+	config/images/sunricher/srzv9001t4dimeu.png \
+	config/images/sunricher/srzv9003t4rgbweu.png \
+	config/images/sunricher/srzv9101sachpeu.png \
+	config/images/sunricher/zv9101.png \
+	config/images/swiid/swiidinter.png \
+	config/images/telldus/tzdw100.png \
+	config/images/telldus/tzwp100.png \
+	config/images/telldus/tzwp102.png \
+	config/images/there/800z.png \
+	config/images/thermofloor/heatit021.png \
+	config/images/thermofloor/heatit056.png \
+	config/images/trane/TZEMT400AB32MAA.png \
+	config/images/trane/TZEMT400BB32MAA.png \
+	config/images/trane/TZEMT524AA21MA.png \
+	config/images/vera/vera2.png \
+	config/images/vision/1701.png \
+	config/images/vision/brg1-433.png \
+	config/images/vision/zd2102.png \
+	config/images/vision/zd2105us5.png \
+	config/images/vision/zd2201.png \
+	config/images/vision/zd2301.png \
+	config/images/vision/zl7101us.png \
+	config/images/vision/zl7201us.png \
+	config/images/vision/zl7431.png \
+	config/images/vision/zl7432us.png \
+	config/images/vision/zm1601eu.png \
+	config/images/vision/zm1601eu5.png \
+	config/images/vision/zm1602eu5.png \
+	config/images/vision/zp3102.png \
+	config/images/vision/zp3111.png \
+	config/images/vision/zr1202us.png \
+	config/images/vision/zs610eu.png \
+	config/images/vision/zu1401jp.png \
+	config/images/vitrum/vitrumI-Dimmer.png \
+	config/images/vitrum/vitrumI-Switch.png \
+	config/images/vitrum/vitrumII-Blind.png \
+	config/images/vitrum/vitrumII-Dimmer.png \
+	config/images/vitrum/vitrumII-Switch.png \
+	config/images/wenzhou/tsp01.png \
+	config/images/wenzhou/tz55.png \
+	config/images/wenzhou/tz56.png \
+	config/images/wenzhou/tz65d.png \
+	config/images/wenzhou/tz66d.png \
+	config/images/wenzhou/tz67.png \
+	config/images/wenzhou/tz68.png \
+	config/images/wenzhou/tz69.png \
+	config/images/wenzhou/tz88.png \
+	config/images/widom/UBS104.png \
+	config/images/widom/UME304C_S.png \
+	config/images/widom/WDS.png \
+	config/images/zipato/HS1CA-Z.png \
+	config/images/zipato/HS1CG-Z.png \
+	config/images/zipato/HS1SA-Z.png \
+	config/images/zipato/HS1WL-Z.png \
+	config/images/zipato/RGBBulb.png \
+	config/images/zipato/pan04.png \
+	config/images/zipato/phpab01.png \
+	config/images/zipato/pse02.png \
+	config/images/zipato/pst02.png \
+	config/images/zipato/vszd2102.png \
+	config/images/zipato/zd2301.png \
+	config/images/zipato/zp3102.png \
+	config/images/zooz/zen06.png \
+	config/images/zooz/zen15.png \
+	config/images/zooz/zen20.png \
+	config/images/zooz/zen20v2.png \
+	config/images/zooz/zen21.png \
+	config/images/zooz/zen22.png \
+	config/images/zooz/zen26.png \
+	config/images/zooz/zse09.png \
+	config/images/zooz/zse19.png \
+	config/images/zooz/zse29.png \
+	config/images/zooz/zse30.png \
+	config/images/zooz/zse33.png \
+	config/images/zooz/zse40.png \
+	config/images/zwave.me/004001.png \
+	config/images/zwave.me/ZME_05431.png \
+	config/images/zwave.me/ZME_06433.png \
+	config/images/zwave.me/ZME_06436.png \
+	config/images/zwave.me/ZUno.png \
+	config/images/zwave.me/kfob.png \
+	config/images/zwave.me/popp_kfob-c.png \
+	config/images/zwave.me/zme_raz5.png \
+	config/images/zwave.me/zweather.png \
+	config/images/zwp/WD-100.png \
 	config/ingersoll/dwzwave1.xml \
+	config/inovelli/lzw30-sn.xml \
+	config/inovelli/lzw30.xml \
 	config/inovelli/nzw1201.xml \
 	config/inovelli/nzw30.xml \
 	config/inovelli/nzw31.xml \
@@ -326,6 +878,9 @@ DISTFILES =	.gitignore \
 	config/inovelli/simple_module.xml \
 	config/intermatic/ca8900.xml \
 	config/iris/rangeextender.xml \
+	config/iwatsu/ne-4ct-2p.xml \
+	config/iwatsu/ne-4ct.xml \
+	config/jasco/45601.xml \
 	config/kaipule/im20.xml \
 	config/kaipule/ix32.xml \
 	config/kwikset/smartcode.xml \
@@ -334,11 +889,13 @@ DISTFILES =	.gitignore \
 	config/leviton/dzpd3.xml \
 	config/leviton/rzi10.xml \
 	config/leviton/vrcpg.xml \
+	config/leviton/vrcs2.xml \
 	config/leviton/vrcz4.xml \
 	config/leviton/vre06.xml \
 	config/leviton/vrf01.xml \
 	config/leviton/vri06.xml \
 	config/leviton/vri10.xml \
+	config/leviton/vrs15.xml \
 	config/linear/GC-TBZ48.xml \
 	config/linear/LB60Z-1.xml \
 	config/linear/PD300Z-2.xml \
@@ -350,6 +907,8 @@ DISTFILES =	.gitignore \
 	config/linear/WD500Z5-1.xml \
 	config/linear/WS15Z-1.xml \
 	config/linear/WT00Z-1.xml \
+	config/linear/gd00z-7.xml \
+	config/linear/ngd00z.xml \
 	config/logicsoft/ZHC5002.xml \
 	config/logicsoft/ZHC5010.xml \
 	config/manufacturer_specific.xml \
@@ -359,14 +918,21 @@ DISTFILES =	.gitignore \
 	config/mcohome/mh8fceu.xml \
 	config/mcohome/mh9co2.xml \
 	config/mcohome/mhp210.xml \
+	config/mcohome/mhp220.xml \
+	config/mcohome/mhp511.xml \
 	config/mcohome/mhs311.xml \
 	config/mcohome/mhs312.xml \
 	config/mcohome/mhs314.xml \
 	config/mcohome/mhs411.xml \
 	config/mcohome/mhs412.xml \
 	config/mcohome/mhs513.xml \
+	config/merten/5044xx.xml \
+	config/merten/5046xx.xml \
+	config/merten/506004.xml \
 	config/merten/507801.xml \
+	config/merten/508244.xml \
 	config/merten/50x5xx.xml \
+	config/miyakawaelectric/me-d101.xml \
 	config/nexia/db100z.xml \
 	config/nodon/asp3100SmartPlug.xml \
 	config/nodon/crc3100OctanRemote.xml \
@@ -380,6 +946,8 @@ DISTFILES =	.gitignore \
 	config/oomi/ft111.xml \
 	config/options.xml \
 	config/options.xsd \
+	config/permundo/psc132zw.xml \
+	config/permundo/psc234zw.xml \
 	config/philio/pad02.xml \
 	config/philio/pan03.xml \
 	config/philio/pan04.xml \
@@ -387,6 +955,7 @@ DISTFILES =	.gitignore \
 	config/philio/pan06.xml \
 	config/philio/pan07.xml \
 	config/philio/pan08.xml \
+	config/philio/pan11-1.xml \
 	config/philio/pan11.xml \
 	config/philio/pan16.xml \
 	config/philio/phpab01.xml \
@@ -416,9 +985,12 @@ DISTFILES =	.gitignore \
 	config/popp/700045.xml \
 	config/popp/700168.xml \
 	config/popp/700397.xml \
+	config/popp/700793.xml \
+	config/popp/dwt.xml \
 	config/popp/smoke-detector.xml \
 	config/popp/solar-siren.xml \
 	config/popp/zweather.xml \
+	config/prowell/zw-702.xml \
 	config/qees/reto-dimmer-plus.xml \
 	config/qees/reto-plugin-switch.xml \
 	config/qubino/ZMNHAA2.xml \
@@ -429,6 +1001,7 @@ DISTFILES =	.gitignore \
 	config/qubino/ZMNHCDx.xml \
 	config/qubino/ZMNHDA2.xml \
 	config/qubino/ZMNHDDx.xml \
+	config/qubino/ZMNHHDx.xml \
 	config/qubino/ZMNHIA2.xml \
 	config/qubino/ZMNHIDxS1.xml \
 	config/qubino/ZMNHIDxS2.xml \
@@ -448,25 +1021,34 @@ DISTFILES =	.gitignore \
 	config/qubino/ZMNHXDx.xml \
 	config/qubino/ZMNHYDx.xml \
 	config/qubino/ZMNHZDx.xml \
+	config/qubino/ZMNKIDx.xml \
+	config/quby/qb2.xml \
 	config/rcs/em52-zw.xml \
 	config/rcs/pm12-zw.xml \
 	config/rcs/therm0005.xml \
 	config/rcs/therm0007.xml \
 	config/rcs/therm0009.xml \
+	config/remotec/bw8120eu.xml \
 	config/remotec/zfm-80.xml \
+	config/remotec/zrc-100eu.xml \
 	config/remotec/zrc-90.xml \
 	config/remotec/zts-110.xml \
 	config/remotec/zts-500.xml \
 	config/remotec/zurc.xml \
 	config/remotec/zxt-120.xml \
+	config/remotec/zxt-310.xml \
 	config/remotec/zxt-600.xml \
 	config/schlage/BE468.xml \
+	config/schlage/BE468ZP.xml \
 	config/schlage/BE469.xml \
 	config/schlage/BE469ZP.xml \
+	config/schlage/fe599.xml \
+	config/schlagelink/41.xml \
 	config/schlagelink/itemp.xml \
 	config/schlagelink/minikeypad.xml \
 	config/sensative/strips.xml \
 	config/sensative/stripscomfort.xml \
+	config/sercomm/sw-clp01-eu.xml \
 	config/shenzen_neo/ls01ch.xml \
 	config/shenzen_neo/ls02ch.xml \
 	config/shenzen_neo/nas-ab01z.xml \
@@ -479,12 +1061,17 @@ DISTFILES =	.gitignore \
 	config/shenzen_neo/nas-ws02z.xml \
 	config/simon/10002034-13X.xml \
 	config/simon/10002041-13X.xml \
+	config/smartthings/pgc401m.xml \
+	config/smartthings/sth-eth200.xml \
+	config/somfy/1811265_ZRTSI.xml \
 	config/steinel/is140-2.xml \
 	config/steinel/l810-led-ihf.xml \
 	config/steinel/rs-led-d2.xml \
 	config/steinel/xled-home-2.xml \
 	config/stelpro/stzw402.xml \
+	config/sunricher/srzv9001k8.xml \
 	config/sunricher/srzv9001t4dimeu.xml \
+	config/sunricher/srzv9003t4rgbweu.xml \
 	config/sunricher/srzv9101sachpeu.xml \
 	config/sunricher/zv9101.xml \
 	config/swiid/swiidinter.xml \
@@ -492,28 +1079,45 @@ DISTFILES =	.gitignore \
 	config/telldus/tzdw100.xml \
 	config/telldus/tzwp100.xml \
 	config/telldus/tzwp102.xml \
+	config/there/800z.xml \
 	config/thermofloor/heatit021.xml \
-	config/thermofloor/heatit033.xml \
 	config/thermofloor/heatit056.xml \
 	config/trane/TZEMT400AB32MAA.xml \
 	config/trane/TZEMT400BB32MAA.xml \
 	config/trane/TZEMT524AA21MA.xml \
+	config/vera/vera2.xml \
+	config/vision/1701.xml \
+	config/vision/brg1-433.xml \
 	config/vision/zd2102.xml \
 	config/vision/zd2105us5.xml \
 	config/vision/zd2201.xml \
 	config/vision/zd2301.xml \
 	config/vision/zf5201.xml \
 	config/vision/zg8101.xml \
+	config/vision/zl7101us.xml \
+	config/vision/zl7201us.xml \
 	config/vision/zl7261.xml \
 	config/vision/zl7431.xml \
+	config/vision/zl7432us.xml \
 	config/vision/zm1601eu.xml \
 	config/vision/zm1601eu5.xml \
 	config/vision/zm1602eu.xml \
 	config/vision/zm1602eu5.xml \
 	config/vision/zp3102.xml \
 	config/vision/zp3111.xml \
+	config/vision/zr1202us.xml \
 	config/vision/zs5101eu.xml \
-	config/vitrum/vitrumBS.xml \
+	config/vision/zs610eu.xml \
+	config/vision/zu1401jp.xml \
+	config/vitrum/vitrumI-Dimmer.xml \
+	config/vitrum/vitrumI-Switch.xml \
+	config/vitrum/vitrumII-Dimmer.xml \
+	config/vitrum/vitrumII-RollerBlind.xml \
+	config/vitrum/vitrumII-Switch.xml \
+	config/vitrum/vitrumIII-Dimmer.xml \
+	config/vitrum/vitrumIII-Switch.xml \
+	config/vitrum/vitrumIV-Switch.xml \
+	config/vitrum/vitrumVI-Switch.xml \
 	config/waynedalton/WDTC-20.xml \
 	config/wenzhou/sm103.xml \
 	config/wenzhou/tsp01.xml \
@@ -544,19 +1148,23 @@ DISTFILES =	.gitignore \
 	config/zooz/zen20.xml \
 	config/zooz/zen20v2.xml \
 	config/zooz/zen21.xml \
+	config/zooz/zen21v2.xml \
 	config/zooz/zen22.xml \
 	config/zooz/zen22v2.xml \
 	config/zooz/zen23.xml \
 	config/zooz/zen24.xml \
+	config/zooz/zen25.xml \
 	config/zooz/zen26.xml \
 	config/zooz/zen27.xml \
 	config/zooz/zse08.xml \
 	config/zooz/zse09.xml \
 	config/zooz/zse18.xml \
 	config/zooz/zse19.xml \
+	config/zooz/zse29.xml \
 	config/zooz/zse30.xml \
 	config/zooz/zse33.xml \
 	config/zooz/zse40.xml \
+	config/zwave.me/004001.xml \
 	config/zwave.me/ZME_05431.xml \
 	config/zwave.me/ZME_05461.xml \
 	config/zwave.me/ZME_06433.xml \
@@ -571,10 +1179,13 @@ DISTFILES =	.gitignore \
 	config/zwave.me/iTemp.xml \
 	config/zwave.me/kfob.xml \
 	config/zwave.me/popp_kfob-c.xml \
+	config/zwave.me/zme_raz5.xml \
 	config/zwave.me/zweather.xml \
 	config/zwcfg.xsd \
+	config/zwp/PA-100.xml \
 	config/zwp/WD-100.xml \
 	config/zwscene.xsd \
+	cpp/build/LeakSanitizer-Suppressions.txt \
 	cpp/build/Makefile \
 	cpp/build/OZW_RunTests.sh \
 	cpp/build/libopenzwave.pc.in \
@@ -583,6 +1194,7 @@ DISTFILES =	.gitignore \
 	cpp/build/support.mk \
 	cpp/build/testconfig.pl \
 	cpp/build/testconfigsuppressions.cfg \
+	cpp/build/testconfigversions.cfg \
 	cpp/build/winRT/vs2015/OpenZWave.sln \
 	cpp/build/winRT/vs2015/OpenZWave.vcxproj \
 	cpp/build/winRT/vs2015/OpenZWave.vcxproj.filters \
@@ -591,8 +1203,6 @@ DISTFILES =	.gitignore \
 	cpp/build/windows/installer/openzwave.nsi \
 	cpp/build/windows/mingw-w64/Makefile \
 	cpp/build/windows/mingw32/Makefile \
-	cpp/build/windows/vs2008/OpenZWave.sln \
-	cpp/build/windows/vs2008/OpenZWave.vcproj \
 	cpp/build/windows/vs2010/OpenZWave.sln \
 	cpp/build/windows/vs2010/OpenZWave.vcxproj \
 	cpp/build/windows/vs2010/OpenZWave.vcxproj.filters \
@@ -601,8 +1211,6 @@ DISTFILES =	.gitignore \
 	cpp/examples/MinOZW/Makefile \
 	cpp/examples/MinOZW/MinOZW.in \
 	cpp/examples/windows/MinOZW/Main.cpp \
-	cpp/examples/windows/MinOZW/vs2008/MinOZW.sln \
-	cpp/examples/windows/MinOZW/vs2008/MinOZW.vcproj \
 	cpp/examples/windows/MinOZW/vs2010/MinOZW.sln \
 	cpp/examples/windows/MinOZW/vs2010/MinOZW.vcxproj \
 	cpp/examples/windows/MinOZW/vs2010/MinOZW.vcxproj.filters \
@@ -650,28 +1258,48 @@ DISTFILES =	.gitignore \
 	cpp/hidapi/windows/hidapi.sln \
 	cpp/hidapi/windows/hidapi.vcproj \
 	cpp/hidapi/windows/hidtest.vcproj \
+	cpp/src/Bitfield.cpp \
 	cpp/src/Bitfield.h \
+	cpp/src/CompatOptionManager.cpp \
+	cpp/src/CompatOptionManager.h \
+	cpp/src/DNSThread.cpp \
+	cpp/src/DNSThread.h \
 	cpp/src/Defs.h \
 	cpp/src/DoxygenMain.h \
 	cpp/src/Driver.cpp \
 	cpp/src/Driver.h \
 	cpp/src/Group.cpp \
 	cpp/src/Group.h \
+	cpp/src/Http.cpp \
+	cpp/src/Http.h \
+	cpp/src/Localization.cpp \
+	cpp/src/Localization.h \
 	cpp/src/Manager.cpp \
 	cpp/src/Manager.h \
+	cpp/src/ManufacturerSpecificDB.cpp \
+	cpp/src/ManufacturerSpecificDB.h \
 	cpp/src/Msg.cpp \
 	cpp/src/Msg.h \
 	cpp/src/Node.cpp \
 	cpp/src/Node.h \
 	cpp/src/Notification.cpp \
 	cpp/src/Notification.h \
+	cpp/src/NotificationCCTypes.cpp \
+	cpp/src/NotificationCCTypes.h \
 	cpp/src/OZWException.h \
 	cpp/src/Options.cpp \
 	cpp/src/Options.h \
 	cpp/src/Scene.cpp \
 	cpp/src/Scene.h \
+	cpp/src/SensorMultiLevelCCTypes.cpp \
+	cpp/src/SensorMultiLevelCCTypes.h \
+	cpp/src/TimerThread.cpp \
+	cpp/src/TimerThread.h \
 	cpp/src/Utils.cpp \
 	cpp/src/Utils.h \
+	cpp/src/ValueIDIndexes.h \
+	cpp/src/ValueIDIndexesDefines.def \
+	cpp/src/ValueIDIndexesDefines.h \
 	cpp/src/ZWSecurity.cpp \
 	cpp/src/ZWSecurity.h \
 	cpp/src/aes/aes.h \
@@ -693,6 +1321,8 @@ DISTFILES =	.gitignore \
 	cpp/src/command_classes/Association.h \
 	cpp/src/command_classes/AssociationCommandConfiguration.cpp \
 	cpp/src/command_classes/AssociationCommandConfiguration.h \
+	cpp/src/command_classes/BarrierOperator.cpp \
+	cpp/src/command_classes/BarrierOperator.h \
 	cpp/src/command_classes/Basic.cpp \
 	cpp/src/command_classes/Basic.h \
 	cpp/src/command_classes/BasicWindowCovering.cpp \
@@ -733,6 +1363,8 @@ DISTFILES =	.gitignore \
 	cpp/src/command_classes/Language.h \
 	cpp/src/command_classes/Lock.cpp \
 	cpp/src/command_classes/Lock.h \
+	cpp/src/command_classes/ManufacturerProprietary.cpp \
+	cpp/src/command_classes/ManufacturerProprietary.h \
 	cpp/src/command_classes/ManufacturerSpecific.cpp \
 	cpp/src/command_classes/ManufacturerSpecific.h \
 	cpp/src/command_classes/Meter.cpp \
@@ -765,6 +1397,12 @@ DISTFILES =	.gitignore \
 	cpp/src/command_classes/SensorBinary.h \
 	cpp/src/command_classes/SensorMultilevel.cpp \
 	cpp/src/command_classes/SensorMultilevel.h \
+	cpp/src/command_classes/SimpleAV.cpp \
+	cpp/src/command_classes/SimpleAV.h \
+	cpp/src/command_classes/SimpleAVCommandItem.cpp \
+	cpp/src/command_classes/SimpleAVCommandItem.h \
+	cpp/src/command_classes/SoundSwitch.cpp \
+	cpp/src/command_classes/SoundSwitch.h \
 	cpp/src/command_classes/SwitchAll.cpp \
 	cpp/src/command_classes/SwitchAll.h \
 	cpp/src/command_classes/SwitchBinary.cpp \
@@ -797,12 +1435,16 @@ DISTFILES =	.gitignore \
 	cpp/src/command_classes/ZWavePlusInfo.h \
 	cpp/src/platform/Controller.cpp \
 	cpp/src/platform/Controller.h \
+	cpp/src/platform/DNS.cpp \
+	cpp/src/platform/DNS.h \
 	cpp/src/platform/Event.cpp \
 	cpp/src/platform/Event.h \
 	cpp/src/platform/FileOps.cpp \
 	cpp/src/platform/FileOps.h \
 	cpp/src/platform/HidController.cpp \
 	cpp/src/platform/HidController.h \
+	cpp/src/platform/HttpClient.cpp \
+	cpp/src/platform/HttpClient.h \
 	cpp/src/platform/Log.cpp \
 	cpp/src/platform/Log.h \
 	cpp/src/platform/Mutex.cpp \
@@ -818,6 +1460,8 @@ DISTFILES =	.gitignore \
 	cpp/src/platform/TimeStamp.h \
 	cpp/src/platform/Wait.cpp \
 	cpp/src/platform/Wait.h \
+	cpp/src/platform/unix/DNSImpl.cpp \
+	cpp/src/platform/unix/DNSImpl.h \
 	cpp/src/platform/unix/EventImpl.cpp \
 	cpp/src/platform/unix/EventImpl.h \
 	cpp/src/platform/unix/FileOpsImpl.cpp \
@@ -834,6 +1478,8 @@ DISTFILES =	.gitignore \
 	cpp/src/platform/unix/TimeStampImpl.h \
 	cpp/src/platform/unix/WaitImpl.cpp \
 	cpp/src/platform/unix/WaitImpl.h \
+	cpp/src/platform/winRT/DNSImpl.cpp \
+	cpp/src/platform/winRT/DNSImpl.h \
 	cpp/src/platform/winRT/EventImpl.cpp \
 	cpp/src/platform/winRT/EventImpl.h \
 	cpp/src/platform/winRT/FileOpsImpl.cpp \
@@ -852,6 +1498,8 @@ DISTFILES =	.gitignore \
 	cpp/src/platform/winRT/TimeStampImpl.h \
 	cpp/src/platform/winRT/WaitImpl.cpp \
 	cpp/src/platform/winRT/WaitImpl.h \
+	cpp/src/platform/windows/DNSImpl.cpp \
+	cpp/src/platform/windows/DNSImpl.h \
 	cpp/src/platform/windows/EventImpl.cpp \
 	cpp/src/platform/windows/EventImpl.h \
 	cpp/src/platform/windows/FileOpsImpl.cpp \
@@ -870,6 +1518,8 @@ DISTFILES =	.gitignore \
 	cpp/src/platform/windows/WaitImpl.h \
 	cpp/src/value_classes/Value.cpp \
 	cpp/src/value_classes/Value.h \
+	cpp/src/value_classes/ValueBitSet.cpp \
+	cpp/src/value_classes/ValueBitSet.h \
 	cpp/src/value_classes/ValueBool.cpp \
 	cpp/src/value_classes/ValueBool.h \
 	cpp/src/value_classes/ValueButton.cpp \
@@ -878,6 +1528,7 @@ DISTFILES =	.gitignore \
 	cpp/src/value_classes/ValueByte.h \
 	cpp/src/value_classes/ValueDecimal.cpp \
 	cpp/src/value_classes/ValueDecimal.h \
+	cpp/src/value_classes/ValueID.cpp \
 	cpp/src/value_classes/ValueID.h \
 	cpp/src/value_classes/ValueInt.cpp \
 	cpp/src/value_classes/ValueInt.h \
@@ -893,6 +1544,45 @@ DISTFILES =	.gitignore \
 	cpp/src/value_classes/ValueStore.h \
 	cpp/src/value_classes/ValueString.cpp \
 	cpp/src/value_classes/ValueString.h \
+	cpp/test/Makefile \
+	cpp/test/ValueID_test.cpp \
+	cpp/test/include/gtest/gtest-death-test.h \
+	cpp/test/include/gtest/gtest-message.h \
+	cpp/test/include/gtest/gtest-param-test.h \
+	cpp/test/include/gtest/gtest-param-test.h.pump \
+	cpp/test/include/gtest/gtest-printers.h \
+	cpp/test/include/gtest/gtest-spi.h \
+	cpp/test/include/gtest/gtest-test-part.h \
+	cpp/test/include/gtest/gtest-typed-test.h \
+	cpp/test/include/gtest/gtest.h \
+	cpp/test/include/gtest/gtest_pred_impl.h \
+	cpp/test/include/gtest/gtest_prod.h \
+	cpp/test/include/gtest/internal/custom/gtest-port.h \
+	cpp/test/include/gtest/internal/custom/gtest-printers.h \
+	cpp/test/include/gtest/internal/custom/gtest.h \
+	cpp/test/include/gtest/internal/gtest-death-test-internal.h \
+	cpp/test/include/gtest/internal/gtest-filepath.h \
+	cpp/test/include/gtest/internal/gtest-internal.h \
+	cpp/test/include/gtest/internal/gtest-linked_ptr.h \
+	cpp/test/include/gtest/internal/gtest-param-util-generated.h \
+	cpp/test/include/gtest/internal/gtest-param-util-generated.h.pump \
+	cpp/test/include/gtest/internal/gtest-param-util.h \
+	cpp/test/include/gtest/internal/gtest-port-arch.h \
+	cpp/test/include/gtest/internal/gtest-port.h \
+	cpp/test/include/gtest/internal/gtest-string.h \
+	cpp/test/include/gtest/internal/gtest-tuple.h \
+	cpp/test/include/gtest/internal/gtest-tuple.h.pump \
+	cpp/test/include/gtest/internal/gtest-type-util.h \
+	cpp/test/include/gtest/internal/gtest-type-util.h.pump \
+	cpp/test/src/gtest-death-test.cc \
+	cpp/test/src/gtest-filepath.cc \
+	cpp/test/src/gtest-internal-inl.h \
+	cpp/test/src/gtest-port.cc \
+	cpp/test/src/gtest-printers.cc \
+	cpp/test/src/gtest-test-part.cc \
+	cpp/test/src/gtest-typed-test.cc \
+	cpp/test/src/gtest.cc \
+	cpp/test/src/gtest_main.cc \
 	cpp/tinyxml/Makefile \
 	cpp/tinyxml/tinystr.cpp \
 	cpp/tinyxml/tinystr.h \
@@ -909,26 +1599,27 @@ DISTFILES =	.gitignore \
 	debian/libopenzwave-doc.doc-base \
 	debian/libopenzwave-doc.install \
 	debian/libopenzwave-doc.lintian-overrides-not-needed \
-	debian/libopenzwave1.4-dev.install \
-	debian/libopenzwave1.4.install \
-	debian/libopenzwave1.4.lintian-overrides \
+	debian/libopenzwave1.6-dev.install \
+	debian/libopenzwave1.6.install \
+	debian/libopenzwave1.6.lintian-overrides \
+	debian/libopenzwave1.6.postinst \
 	debian/openzwave.dsc \
 	debian/openzwave.install \
 	debian/openzwave.manpages \
-	debian/patches/cppflags.patch \
-	debian/patches/gcc8.patch \
 	debian/patches/hardening.patch \
 	debian/patches/series \
 	debian/patches/spelling.patch \
 	debian/rules \
-	debian/shlibs.libopenzwave1.4 \
+	debian/shlibs.libopenzwave1.6 \
 	debian/source/format \
 	debian/version-increment.sh \
 	debian/watch \
 	dist.mk \
 	dist/libopenzwave.changes \
-	dist/libopenzwave.spec \
+	dist/openzwave.spec \
+	dist/openzwave.spec.in \
 	distfiles.mk \
+	docs/ChangeLog.old \
 	docs/Doxyfile.in \
 	docs/default.htm \
 	docs/general/DoxygenStepByStep.html \
@@ -944,70 +1635,10 @@ DISTFILES =	.gitignore \
 	docs/images+css/OpenZWave.css \
 	docs/images+css/image003.gif \
 	docs/images+css/zwalliance_250x100.jpg \
-	dotnet/build/vs2008/OpenZWaveDotNet.sln \
-	dotnet/build/vs2008/OpenZWaveDotNet.vcproj \
-	dotnet/build/vs2010/OpenZWaveDotNet.sln \
-	dotnet/build/vs2010/OpenZWaveDotNet.vcxproj \
-	dotnet/build/vs2010/OpenZWaveDotNet.vcxproj.filters \
-	dotnet/examples/OZWForm/CopyFilesVS2008.cmd \
-	dotnet/examples/OZWForm/CopyFilesVS2010.cmd \
-	dotnet/examples/OZWForm/README.TXT \
-	dotnet/examples/OZWForm/build/vs2008/OZWForm.csproj \
-	dotnet/examples/OZWForm/build/vs2008/OZWForm.sln \
-	dotnet/examples/OZWForm/build/vs2010/OZWForm.csproj \
-	dotnet/examples/OZWForm/build/vs2010/OZWForm.sln \
-	dotnet/examples/OZWForm/src/ConfigurationWakeUpDlg.Designer.cs \
-	dotnet/examples/OZWForm/src/ConfigurationWakeUpDlg.cs \
-	dotnet/examples/OZWForm/src/ConfigurationWakeUpDlg.resx \
-	dotnet/examples/OZWForm/src/ControllerCommandDlg.Designer.cs \
-	dotnet/examples/OZWForm/src/ControllerCommandDlg.cs \
-	dotnet/examples/OZWForm/src/ControllerCommandDlg.resx \
-	dotnet/examples/OZWForm/src/MainForm.Designer.cs \
-	dotnet/examples/OZWForm/src/MainForm.cs \
-	dotnet/examples/OZWForm/src/MainForm.resx \
-	dotnet/examples/OZWForm/src/Node.cs \
-	dotnet/examples/OZWForm/src/NodeForm.Designer.cs \
-	dotnet/examples/OZWForm/src/NodeForm.cs \
-	dotnet/examples/OZWForm/src/NodeForm.resx \
-	dotnet/examples/OZWForm/src/Program.cs \
-	dotnet/examples/OZWForm/src/Properties/AssemblyInfo.cs \
-	dotnet/examples/OZWForm/src/Properties/Resources.Designer.cs \
-	dotnet/examples/OZWForm/src/Properties/Resources.resx \
-	dotnet/examples/OZWForm/src/Properties/Settings.Designer.cs \
-	dotnet/examples/OZWForm/src/Properties/Settings.settings \
-	dotnet/examples/OZWForm/src/ValuePanel.Designer.cs \
-	dotnet/examples/OZWForm/src/ValuePanel.cs \
-	dotnet/examples/OZWForm/src/ValuePanel.resx \
-	dotnet/examples/OZWForm/src/ValuePanelBool.cs \
-	dotnet/examples/OZWForm/src/ValuePanelBool.resx \
-	dotnet/examples/OZWForm/src/ValuePanelButton.cs \
-	dotnet/examples/OZWForm/src/ValuePanelButton.resx \
-	dotnet/examples/OZWForm/src/ValuePanelByte.cs \
-	dotnet/examples/OZWForm/src/ValuePanelByte.resx \
-	dotnet/examples/OZWForm/src/ValuePanelDecimal.cs \
-	dotnet/examples/OZWForm/src/ValuePanelDecimal.resx \
-	dotnet/examples/OZWForm/src/ValuePanelInt.cs \
-	dotnet/examples/OZWForm/src/ValuePanelInt.resx \
-	dotnet/examples/OZWForm/src/ValuePanelList.cs \
-	dotnet/examples/OZWForm/src/ValuePanelList.resx \
-	dotnet/examples/OZWForm/src/ValuePanelShort.cs \
-	dotnet/examples/OZWForm/src/ValuePanelShort.resx \
-	dotnet/examples/OZWForm/src/ValuePanelString.cs \
-	dotnet/examples/OZWForm/src/ValuePanelString.resx \
-	dotnet/examples/OZWForm/src/app.config \
-	dotnet/src/AssemblyInfo.cpp \
-	dotnet/src/ZWManager.cpp \
-	dotnet/src/ZWManager.h \
-	dotnet/src/ZWNotification.h \
-	dotnet/src/ZWOptions.cpp \
-	dotnet/src/ZWOptions.h \
-	dotnet/src/ZWValueID.h \
-	dotnet/src/app.ico \
-	dotnet/src/app.rc \
-	dotnet/src/resource.h \
-	license/Apache-License-2.0.txt \
-	license/gpl.txt \
-	license/lgpl.txt \
-	license/license.txt \
+	licenses/Apache-License-2.0.txt \
+	licenses/gpl.txt \
+	licenses/lgpl.txt \
+	licenses/license.txt \
 	makedist \
+	tools/imagedownload.pl \
 	cpp/src/vers.cpp
