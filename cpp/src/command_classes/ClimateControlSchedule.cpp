@@ -316,7 +316,6 @@ namespace OpenZWave
 						{
 							if (Internal::VC::ValueByte* setback = static_cast<Internal::VC::ValueByte*>(GetValue(instance, ValueID_Index_ClimateControlSchedule::OverrideSetback)))
 							{
-								Internal::VC::ValueList::Item const* item = state->GetItem();
 								Msg* msg = new Msg("ClimateControlScheduleCmd_OverrideSet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
 								if (msg != nullptr)
 								{
