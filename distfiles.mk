@@ -848,6 +848,7 @@ DISTFILES =	.gitignore \
 	config/images/zooz/zen21.png \
 	config/images/zooz/zen22.png \
 	config/images/zooz/zen26.png \
+	config/images/zooz/zen27.png \
 	config/images/zooz/zse09.png \
 	config/images/zooz/zse19.png \
 	config/images/zooz/zse29.png \
