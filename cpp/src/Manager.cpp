@@ -2518,6 +2518,49 @@ bool Manager::GetValueListValues(ValueID const& _id, vector<int32>* o_value)
 	return res;
 }
 
+uint8 Manager::GetValueEndPoint(ValueID const &_id)
+{
+	if (Driver *driver = GetDriver(_id.GetHomeId()))
+	{
+		// Need to lock and unlock nodes before calling driver->GetValue
+		Internal::LockGuard LG(driver->m_nodeMutex);
+
+		// We don't actually need the Value, everything we need is in _id
+		// But we call GetValue to check if it is valid.
+		if (auto v = driver->GetValue(_id))
+		{
+			// Because GetValue worked, the Node ID and CC have to be valid
+			// So theoretically GetNode and GetCommandClass cannot fail.
+			// Unless... there is some multithread issue somewhere else.
+			if (auto node = driver->GetNode(_id.GetNodeId()))
+			{
+				auto cc = node->GetCommandClass(_id.GetCommandClassId());
+				if (cc)
+				{
+					return cc->GetEndPoint(_id.GetInstance());
+				}
+				else
+				{
+					OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueEndPoint: node does not have CommandClass");
+				}
+			}
+			else
+			{
+				OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueEndPoint: node does exist");
+			}
+		}
+		else
+		{
+			OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueEndPoint");
+		}
+	}
+	else
+	{
+		// There is no real "else" part because either we get a driver or GetDriver throws an exception
+		return 0;
+	}
+}
+
 //-----------------------------------------------------------------------------
 // <Manager::GetValueFloatPrecision>
 // Gets a value's scale as a uint8
