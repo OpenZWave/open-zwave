@@ -103,6 +103,8 @@ DISTFILES =	.gitignore \
 	config/aeotec/zw162.xml \
 	config/aeotec/zw164.xml \
 	config/aeotec/zw175.xml \
+	config/aeotec/zw187.xml \
+	config/aeotec/zw189.xml \
 	config/aeotec/zwa001.xml \
 	config/aeotec/zwa002.xml \
 	config/aeotec/zwa003.xml \
@@ -442,6 +444,8 @@ DISTFILES =	.gitignore \
 	config/images/aeotec/zw141.png \
 	config/images/aeotec/zw162.png \
 	config/images/aeotec/zw164.png \
+	config/images/aeotec/zw187.png \
+	config/images/aeotec/zw189.png \
 	config/images/aeotec/zw195.png \
 	config/images/aeotec/zwa001.png \
 	config/images/aeotec/zwa002.png \
