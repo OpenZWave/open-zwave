@@ -274,6 +274,8 @@ Manager::~Manager()
 	}
 	Node::s_nodeTypes.clear();
 
+	Node::s_deviceClassesLoaded = false;
+	
 	Log::Destroy();
 }
 
