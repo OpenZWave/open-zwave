@@ -3266,27 +3266,47 @@ void Node::ReadDeviceClasses()
 
 				if (!strcmp(str, "Generic"))
 				{
-					s_genericDeviceClasses[(uint8_t) (key & 0xFF)] = new GenericDeviceClass(child);
+					if (s_genericDeviceClasses.find((uint8_t)(key & 0xFF)) == s_genericDeviceClasses.end()) {
+						s_genericDeviceClasses[(uint8_t) (key & 0xFF)] = new GenericDeviceClass(child);
+					} else {
+						Log::Write(LogLevel_Warning, "Duplicate Entry for Generic Device Class %d", key);
+					}
 				}
 				else if (!strcmp(str, "Basic"))
 				{
-					char const* label = child->Attribute("label");
-					if (label)
-					{
-						s_basicDeviceClasses[(uint8_t) (key & 0xFF)] = label;
+					if (s_basicDeviceClasses.find((uint8_t)(key & 0xFF)) == s_basicDeviceClasses.end()) { 
+						char const* label = child->Attribute("label");
+						if (label)
+						{
+							s_basicDeviceClasses[(uint8_t) (key & 0xFF)] = label;
+						}
+					} else {
+						Log::Write(LogLevel_Warning, "Duplicate Entry for Basic Device Class %d", key);
 					}
 				}
 				else if (!strcmp(str, "Role"))
 				{
-					s_roleDeviceClasses[(uint8_t) (key & 0xFF)] = new DeviceClass(child);
+					if (s_roleDeviceClasses.find((uint8_t)(key & 0xFF)) == s_roleDeviceClasses.end()) { 
+						s_roleDeviceClasses[(uint8_t) (key & 0xFF)] = new DeviceClass(child);
+					} else {
+						Log::Write(LogLevel_Warning, "Duplicate Entry for Role Device Classes %d", key);
+					}
 				}
 				else if (!strcmp(str, "DeviceType"))
 				{
-					s_deviceTypeClasses[key] = new DeviceClass(child);
+					if (s_deviceTypeClasses.find(key) == s_deviceTypeClasses.end()) { 
+						s_deviceTypeClasses[key] = new DeviceClass(child);
+					} else {
+						Log::Write(LogLevel_Warning, "Duplicate Entry for Device Type Class %d", key);
+					}
 				}
 				else if (!strcmp(str, "NodeType"))
 				{
-					s_nodeTypes[(uint8_t) (key & 0xFF)] = new DeviceClass(child);
+					if (s_nodeTypes.find((uint8_t)(key & 0xFF)) == s_nodeTypes.end()) {
+						s_nodeTypes[(uint8_t) (key & 0xFF)] = new DeviceClass(child);
+					} else {
+						Log::Write(LogLevel_Warning, "Duplicate Entry for Node Type %d", key);
+					}
 				}
 			}
 		}
