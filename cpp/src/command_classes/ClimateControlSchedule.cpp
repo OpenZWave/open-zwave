@@ -317,6 +317,8 @@ namespace OpenZWave
 							if (Internal::VC::ValueByte* setback = static_cast<Internal::VC::ValueByte*>(GetValue(instance, ValueID_Index_ClimateControlSchedule::OverrideSetback)))
 							{
 								Msg* msg = new Msg("ClimateControlScheduleCmd_OverrideSet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
+								// nullptr check after "new" is kind of placebo, but it makes for consistent code
+								// discussion: https://github.com/OpenZWave/open-zwave/pull/1985
 								if (msg != nullptr)
 								{
 									msg->SetInstance(this, instance);
@@ -331,8 +333,20 @@ namespace OpenZWave
 								}
 								setback->Release();
 							}
+							else
+							{
+								Log::Write(LogLevel_Warning, GetNodeId(), "ClimateControlSchedule::SetValue couldn't Find ValueID_Index_ClimateControlSchedule::OverrideSetback");
+							}
+						}
+						else
+						{
+							Log::Write(LogLevel_Warning, GetNodeId(), "ClimateControlSchedule::SetValue state->GetItem() returned nullptr");
 						}
 						state->Release();
+					}
+					else
+					{
+						Log::Write(LogLevel_Warning, GetNodeId(), "ClimateControlSchedule::SetValue couldn't Find ValueID_Index_ClimateControlSchedule::OverrideState");
 					}
 				}
 
