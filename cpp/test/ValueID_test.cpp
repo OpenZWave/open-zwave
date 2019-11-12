@@ -26,15 +26,16 @@
 //-----------------------------------------------------------------------------
 
 #include "gtest/gtest.h"
-
 #include "value_classes/ValueID.h"
-
-using namespace OpenZWave;
 
 extern uint16_t ozw_vers_major;
 extern uint16_t ozw_vers_minor;
 extern uint16_t ozw_vers_revision;
+namespace OpenZWave
+{
 
+namespace Testing
+{
 TEST(OpenZWave, Version)
 {
 	EXPECT_EQ(ozw_vers_major, 1);
@@ -82,3 +83,42 @@ TEST(ValueID, Comparision)
 		ValueID(0xFFFF, (uint64)0x01),
 		ValueID(0xFFFF, 0x1, ValueID::ValueGenre_Basic, 0xCC, 0x02, 0x04, ValueID::ValueType_BitSet));
 }
+TEST(ValueID, GetStoreKey)
+{
+	ValueID *vid1 = new ValueID(0xFFFFu, 0x1, ValueID::ValueGenre_Basic, 0xCC, 0x02, 0x04, ValueID::ValueType_BitSet);
+	ValueID *vid2 = new ValueID(0xFFFFu, 0x1, ValueID::ValueGenre_Basic, 0x01, 0x01, 0x01, ValueID::ValueType_BitSet);
+	ValueID *vid3 = new ValueID(0xFFFFu, 0x1, ValueID::ValueGenre_Basic, 0x80, 0x80, 0x80, ValueID::ValueType_BitSet);
+
+	EXPECT_EQ(vid1->GetValueStoreKey(), ValueID::GetValueStoreKey(0xCC, 0x02, 0x04));
+	EXPECT_EQ(vid2->GetValueStoreKey(), ValueID::GetValueStoreKey(0x01, 0x01, 0x01));
+	EXPECT_EQ(vid3->GetValueStoreKey(), ValueID::GetValueStoreKey(0x80, 0x80, 0x80));
+	EXPECT_NE(vid1->GetValueStoreKey(), vid2->GetValueStoreKey());
+	EXPECT_NE(vid1->GetValueStoreKey(), vid3->GetValueStoreKey());
+	EXPECT_NE(vid2->GetValueStoreKey(), vid3->GetValueStoreKey());
+
+	// See if we've all three contributing parts (CC, instance and index) in the mix.
+
+	EXPECT_NE(ValueID::GetValueStoreKey(0x80, 0x80, 0x80), ValueID::GetValueStoreKey(0x81, 0x80, 0x80));
+	EXPECT_NE(ValueID::GetValueStoreKey(0x80, 0x80, 0x80), ValueID::GetValueStoreKey(0x80, 0x81, 0x80));
+	EXPECT_NE(ValueID::GetValueStoreKey(0x80, 0x80, 0x80), ValueID::GetValueStoreKey(0x80, 0x80, 0x81));
+
+	ValueID *vid4 = new ValueID(0xFFFFu, 0x1, ValueID::ValueGenre_Basic, 0x81, 0x80, 0x80, ValueID::ValueType_BitSet);
+	ValueID *vid5 = new ValueID(0xFFFFu, 0x1, ValueID::ValueGenre_Basic, 0x80, 0x81, 0x80, ValueID::ValueType_BitSet);
+	ValueID *vid6 = new ValueID(0xFFFFu, 0x1, ValueID::ValueGenre_Basic, 0x80, 0x80, 0x81, ValueID::ValueType_BitSet);
+
+	EXPECT_NE(vid3->GetValueStoreKey(), vid4->GetValueStoreKey());
+	EXPECT_NE(vid3->GetValueStoreKey(), vid5->GetValueStoreKey());
+	EXPECT_NE(vid3->GetValueStoreKey(), vid6->GetValueStoreKey());
+	EXPECT_NE(vid4->GetValueStoreKey(), vid5->GetValueStoreKey());
+	EXPECT_NE(vid4->GetValueStoreKey(), vid6->GetValueStoreKey());
+	EXPECT_NE(vid5->GetValueStoreKey(), vid6->GetValueStoreKey());
+
+	delete vid1;
+	delete vid2;
+	delete vid3;
+	delete vid4;
+	delete vid5;
+	delete vid6;
+}
+} // namespace Testing
+} // namespace OpenZWave
