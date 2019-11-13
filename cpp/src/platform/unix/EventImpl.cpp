@@ -30,7 +30,9 @@
 
 #include <stdio.h>
 #include <sys/time.h>
-
+#ifdef __ANDROID__
+#include "android.h"
+#endif
 namespace OpenZWave
 {
 	namespace Internal

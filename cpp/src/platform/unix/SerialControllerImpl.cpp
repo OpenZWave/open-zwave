@@ -34,6 +34,10 @@
 #include "SerialControllerImpl.h"
 #include "platform/Log.h"
 
+#ifdef __ANDROID__
+#include "android.h"
+#endif
+
 #ifdef __sun
 // SunOS doesn't have the cfsetspeed convenience function.
 int
