@@ -1764,6 +1764,7 @@
     <Product config="widom/UBS104.xml" id="0104" name="UBS104 Universal Relay Switch" type="0012"/>
     <Product config="widom/UME304C_S.xml" id="0304" name="UME304 Energy Driven Switch" type="1214"/>
     <Product config="widom/WDS.xml" id="0504" name="WDS Universal Double Switch" type="1214"/>
+    <Product config="widom/DRY.xml" id="0900" name="DRY Smart Dry Contact Switch" type="1214"/>
   </Manufacturer>
   <Manufacturer id="012D" name="Wilshine Holding"></Manufacturer>
   <Manufacturer id="017F" name="Wink"></Manufacturer>
