@@ -1,0 +1,16 @@
+name: CI
+
+on: [pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Trigger Bamboo Build
+      uses: joelwmale/webhook-action@1.0.0
+      env:
+        WEBHOOK_URL: http://bamboo.my-ho.st/bamboo/rest/api/latest/plan/OZW-PRTST/branch/1982.json?vcsBranch=refs/pull/1982/head
+        data: "{'vscBranch': 'refs/heads/1982/head', 'os_authType': 'basic'}"      
+
