@@ -11,6 +11,6 @@ jobs:
     - name: Trigger Bamboo Build
       uses: Fishwaldo/webhook-action@1.0.2
       env:
-        WEBHOOK_URL: http://bamboo.my-ho.st/bamboo/rest/api/latest/plan/OZW-PRTST/branch/1982.json?vcsBranch=refs/pull/1982/head
+        WEBHOOK_URL: http://${{ secrets.bamboouser }}:${{ secrets.bamboopass }}@bamboo.my-ho.st/bamboo/rest/api/latest/plan/OZW-PRTST/branch/1982.json?vcsBranch=refs/pull/1982/head
         data: "{'vscBranch': 'refs/heads/1982/head', 'os_authType': 'basic'}"      
 
