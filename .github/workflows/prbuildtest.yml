@@ -9,13 +9,13 @@ jobs:
 
     steps:
     - name: Get Pr Number
-    - uses: jwalton/gh-find-current-pr@v1
+      uses: jwalton/gh-find-current-pr@v1
       id: findPr
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Trigger Build
-    - uses: Fishwaldo/webhook-action@master  
+      uses: Fishwaldo/webhook-action@master  
       env:
         BBSERVER: bamboo.my-ho.st
         BBUSER: ${{ secrets.bamboouser }}
