@@ -1,6 +1,8 @@
 name: PR Test
 
-on: [pull_request]
+on: 
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
 
 jobs:
   build:
@@ -8,12 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Get Pr Number
-      uses: jwalton/gh-find-current-pr@v1
-      id: findPr
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-
     - name: Trigger Build
       uses: Fishwaldo/webhook-action@master  
       env:
