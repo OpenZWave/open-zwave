@@ -21,4 +21,4 @@ jobs:
         BBUSER: ${{ secrets.bamboouser }}
         BBPASS: ${{ secrets.bamboopass }}
         BBPRJ: OZW-PRTST
-        PPPR: ${{ steps.findPr.outputs.pr }}
+        BBPR: ${{ steps.findPr.outputs.pr }}
