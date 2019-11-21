@@ -21,6 +21,3 @@ jobs:
         BBPASS: ${{ secrets.bamboopass }
         BBPRJ: OZW-PRTST
         PPPR: ${{ steps.findPr.outputs.pr }}
-        WEBHOOK_URL: http://${{ secrets.bamboouser }}:${{ secrets.bamboopass }}@bamboo.my-ho.st/bamboo/rest/api/latest/plan/OZW-PRTST/branch/1982.json?vcsBranch=refs/pull/1982/head
-        data: "{'vscBranch': 'refs/heads/1982/head', 'os_authType': 'basic'}"      
-
