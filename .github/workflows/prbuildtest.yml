@@ -11,7 +11,7 @@ jobs:
 
     steps:
     - name: Trigger Build
-      uses: Fishwaldo/webhook-action@master  
+      uses: Fishwaldo/Bamboo-PR-Trigger@master  
       env:
         BBSERVER: bamboo.my-ho.st
         BBUSER: ${{ secrets.bamboouser }}
