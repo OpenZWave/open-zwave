@@ -3,7 +3,7 @@
 %endif
 
 Name:     openzwave
-Version:  1.6.46
+Version:  1.6.954
 Release:  1.0%{?dist}
 Summary:  Sample Executables for OpenZWave
 URL:      http://www.openzwave.net
@@ -74,7 +74,7 @@ applications using openzwave
 major_ver=$(echo %{version} | awk -F \. {'print $1'})
 minor_ver=$(echo %{version} | awk -F \. {'print $2'})
 revision=$(echo %{version} | awk -F \. {'print $3'})
-CPPFLAGS="%{optflags} -Wformat -DOPENZWAVE_ENABLE_EXCEPTIONS" LDFLAGS="%{__global_ldflags}" USE_HID=0 USE_BI_TXML=0 VERSION_MAJ=$major_ver VERSION_MIN=$minor_ver VERSION_REV=$revision PREFIX=/usr sysconfdir=%{_sysconfdir}/openzwave/ includedir=%{_includedir} docdir=%{_defaultdocdir}/openzwave-%{version} instlibdir=%{_libdir} make %{?_smp_mflags}
+CPPFLAGS="%{optflags} -Wformat" LDFLAGS="%{__global_ldflags}" USE_HID=0 USE_BI_TXML=0 VERSION_MAJ=$major_ver VERSION_MIN=$minor_ver VERSION_REV=$revision PREFIX=/usr sysconfdir=%{_sysconfdir}/openzwave/ includedir=%{_includedir} docdir=%{_defaultdocdir}/openzwave-%{version} instlibdir=%{_libdir} make %{?_smp_mflags}
 
 
 %install
@@ -89,6 +89,7 @@ mkdir -p %{buildroot}/%{_sysconfdir}/
 mkdir -p %{buildroot}/%{_includedir}/openzwave/
 DESTDIR=%{buildroot} USE_HID=0 USE_BI_TXML=0 VERSION_MAJ=$major_ver VERSION_MIN=$minor_ver VERSION_REV=$revision PREFIX=/usr sysconfdir=%{_sysconfdir}/openzwave/ includedir=%{_includedir}/openzwave/ docdir=%{_defaultdocdir}/openzwave-%{version} instlibdir=%{_libdir} make install
 rm %{buildroot}%{_defaultdocdir}/openzwave-%{version}/Doxyfile.in
+rm -rf %{buildroot}%{_defaultdocdir}/openzwave-%{version}/ChangeLog.old
 rm -rf %{buildroot}%{_defaultdocdir}/openzwave-%{version}/html/
 rm -rf %{buildroot}%{_defaultdocdir}/openzwave-%{version}/default.htm
 rm -rf %{buildroot}%{_defaultdocdir}/openzwave-%{version}/general/
@@ -101,7 +102,7 @@ rm -rf %{buildroot}%{_defaultdocdir}/openzwave-%{version}/api/
 
 
 %files -n libopenzwave
-%license license/*.txt
+%license LICENSE
 %doc docs/default.htm docs/general/ docs/images+css/
 %{_libdir}/libopenzwave.so.*
 %defattr(664, root, zwave, 775)
@@ -134,7 +135,7 @@ getent group zwave >/dev/null || groupadd -f -r zwave
 
 
 %changelog
-* Wed May 08 2019 Justin Hammond <justin@dynam.ac> - 1.6.46
+* Wed May 08 2019 Justin Hammond <justin@dynam.ac> - 1.6.954
 - Update to new release of OpenZwave - 1.6
 
 * Fri Feb 01 2019 Fedora Release Engineering <releng@fedoraproject.org> - 1.5.0-0.20180624git1e36dcc.0

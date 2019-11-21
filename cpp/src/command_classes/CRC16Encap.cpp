@@ -33,69 +33,77 @@
 #include "Driver.h"
 #include "platform/Log.h"
 
-using namespace OpenZWave;
+namespace OpenZWave
+{
+	namespace Internal
+	{
+		namespace CC
+		{
 
 //
 // CRC-CCITT (0x1D0F)
 //
-uint16 crc16(uint8 const * data_p, uint32 const _length){
-    uint8 x;
-    uint16 crc = 0xF6AF; // 0x1D0F with first byte 0x56;
-	uint32 length = _length;
+			uint16 crc16(uint8 const * data_p, uint32 const _length)
+			{
+				uint8 x;
+				uint16 crc = 0xF6AF; // 0x1D0F with first byte 0x56;
+				uint32 length = _length;
 
-    while (length--){
-        x = crc >> 8 ^ *data_p++;
-        x ^= x>>4;
-        crc = (crc << 8) ^ ((uint16)(x << 12)) ^ ((uint16)(x <<5)) ^ ((uint16)x);
-    }
-    return crc;
-}
+				while (length--)
+				{
+					x = crc >> 8 ^ *data_p++;
+					x ^= x >> 4;
+					crc = (crc << 8) ^ ((uint16) (x << 12)) ^ ((uint16) (x << 5)) ^ ((uint16) x);
+				}
+				return crc;
+			}
 
-enum CRC16EncapCmd
-{
-	CRC16EncapCmd_Encap = 0x01
-};
-
+			enum CRC16EncapCmd
+			{
+				CRC16EncapCmd_Encap = 0x01
+			};
 
 //-----------------------------------------------------------------------------
 // <CRC16Encap::HandleMsg>
 // Handle a message from the Z-Wave network
 //-----------------------------------------------------------------------------
-bool CRC16Encap::HandleMsg
-(
-	uint8 const* _data,
-	uint32 const _length,
-	uint32 const _instance	// = 1
-)
-{
-	if( CRC16EncapCmd_Encap == (CRC16EncapCmd)_data[0] )
-	{
-		Log::Write( LogLevel_Info, GetNodeId(), "Received CRC16-command from node %d", GetNodeId());
-
-		uint16 crcM = (_data[_length - 3] << 8) + _data[_length - 2] ; // crc as reported in msg
-		uint16 crcC = crc16(&_data[0], _length - 3 );				   // crc calculated
-
-		if ( crcM != crcC )
-		{
-			Log::Write( LogLevel_Info, GetNodeId(), "CRC check failed, message contains 0x%.4x but should be 0x%.4x", crcM, crcC);
-			return false;
-		}
-
-		if( Node const* node = GetNodeUnsafe() )
-		{
-			uint8 commandClassId = _data[1];
-
-			if( CommandClass* pCommandClass = node->GetCommandClass( commandClassId, false ) )
+			bool CRC16Encap::HandleMsg(uint8 const* _data, uint32 const _length, uint32 const _instance	// = 1
+					)
 			{
-				pCommandClass->HandleMsg( &_data[2], _length - 4 );
-			}
-			if( CommandClass* pCommandClass = node->GetCommandClass( commandClassId, true ) )
-			{
-				pCommandClass->HandleIncomingMsg( &_data[2], _length - 4 );
-			}
-		}
+				if (CRC16EncapCmd_Encap == (CRC16EncapCmd) _data[0])
+				{
+					Log::Write(LogLevel_Info, GetNodeId(), "Received CRC16-command from node %d", GetNodeId());
 
-		return true;
-	}
-	return false;
-}
+					uint16 crcM = (_data[_length - 3] << 8) + _data[_length - 2]; // crc as reported in msg
+					uint16 crcC = crc16(&_data[0], _length - 3);				   // crc calculated
+
+					if (crcM != crcC)
+					{
+						Log::Write(LogLevel_Info, GetNodeId(), "CRC check failed, message contains 0x%.4x but should be 0x%.4x", crcM, crcC);
+						return false;
+					}
+
+					if (Node const* node = GetNodeUnsafe())
+					{
+						uint8 commandClassId = _data[1];
+
+						if (CommandClass* pCommandClass = node->GetCommandClass(commandClassId))
+						{
+							if (!pCommandClass->IsAfterMark())
+							{
+								pCommandClass->HandleMsg(&_data[2], _length - 4);
+							}
+							else
+							{
+								pCommandClass->HandleIncomingMsg(&_data[2], _length - 4);
+							}
+						}
+					}
+
+					return true;
+				}
+				return false;
+			}
+		} // namespace CC
+	} // namespace Internal
+} // namespace OpenZWave

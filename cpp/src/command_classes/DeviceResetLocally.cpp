@@ -32,45 +32,48 @@
 #include "Manager.h"
 #include "platform/Log.h"
 
-using namespace OpenZWave;
-
-enum DeviceResetLocallyCmd
+namespace OpenZWave
 {
-	DeviceResetLocallyCmd_Notification = 1
-};
+	namespace Internal
+	{
+		namespace CC
+		{
 
+			enum DeviceResetLocallyCmd
+			{
+				DeviceResetLocallyCmd_Notification = 1
+			};
 
 //-----------------------------------------------------------------------------
 // <DeviceResetLocally::HandleMsg>
 // Handle a message from the Z-Wave network
 //-----------------------------------------------------------------------------
-bool DeviceResetLocally::HandleMsg
-(
-	uint8 const* _data,
-	uint32 const _length,
-	uint32 const _instance	// = 1
-)
-{
-	if( DeviceResetLocallyCmd_Notification == _data[0] )
-	{
-		// device has been reset
-		Log::Write( LogLevel_Info, GetNodeId(), "Received Device Reset Locally from node %d", GetNodeId() );
-
-		// send a NoOperation message to the node, this will fail since the node is no longer included in the network
-		// we must do this because the Controller will only remove failed nodes
-		if( Node* node = GetNodeUnsafe() )
-		{
-			if( NoOperation* noop = static_cast<NoOperation*>( node->GetCommandClass( NoOperation::StaticGetCommandClassId(), false ) ) )
+			bool DeviceResetLocally::HandleMsg(uint8 const* _data, uint32 const _length, uint32 const _instance	// = 1
+					)
 			{
-				noop->Set( true );
-			}
-		}
-		// the Controller now knows the node has failed
-		Manager::Get()->HasNodeFailed( GetHomeId(), GetNodeId() );
-		m_deviceReset = true;
+				if (DeviceResetLocallyCmd_Notification == _data[0])
+				{
+					// device has been reset
+					Log::Write(LogLevel_Info, GetNodeId(), "Received Device Reset Locally from node %d", GetNodeId());
 
-		return true;
-	}
-	return false;
-}
+					// send a NoOperation message to the node, this will fail since the node is no longer included in the network
+					// we must do this because the Controller will only remove failed nodes
+					if (Node* node = GetNodeUnsafe())
+					{
+						if (NoOperation* noop = static_cast<NoOperation*>(node->GetCommandClass(NoOperation::StaticGetCommandClassId())))
+						{
+							noop->Set(true);
+						}
+					}
+					// the Controller now knows the node has failed
+					Manager::Get()->HasNodeFailed(GetHomeId(), GetNodeId());
+					m_deviceReset = true;
+
+					return true;
+				}
+				return false;
+			}
+		} // namespace CC
+	} // namespace Internal
+} // namespace OpenZWave
 

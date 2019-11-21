@@ -36,68 +36,64 @@
 #include "platform/unix/MutexImpl.h"	// Platform-specific implementation of a mutex
 #endif
 
-
-using namespace OpenZWave;
+namespace OpenZWave
+{
+	namespace Internal
+	{
+		namespace Platform
+		{
 
 //-----------------------------------------------------------------------------
 //	<Mutex::Mutex>
 //	Constructor
 //-----------------------------------------------------------------------------
-Mutex::Mutex
-(
-):
-	m_pImpl( new MutexImpl() )
-{
-}
+			Mutex::Mutex() :
+					m_pImpl(new MutexImpl())
+			{
+			}
 
 //-----------------------------------------------------------------------------
 //	<Mutex::~Mutex>
 //	Destructor
 //-----------------------------------------------------------------------------
-Mutex::~Mutex
-(
-)
-{
-	delete m_pImpl;
-}
+			Mutex::~Mutex()
+			{
+				delete m_pImpl;
+			}
 
 //-----------------------------------------------------------------------------
 //	<Mutex::Lock>
 //	Lock the mutex
 //-----------------------------------------------------------------------------
-bool Mutex::Lock
-(
-	bool const _bWait // = true;
-)
-{
-	return m_pImpl->Lock( _bWait );
-}
+			bool Mutex::Lock(bool const _bWait // = true;
+					)
+			{
+				return m_pImpl->Lock(_bWait);
+			}
 
 //-----------------------------------------------------------------------------
 //	<Mutex::Unlock>
 //	Release our lock on the mutex
 //-----------------------------------------------------------------------------
-void Mutex::Unlock
-(
-)
-{
-	m_pImpl->Unlock();
+			void Mutex::Unlock()
+			{
+				m_pImpl->Unlock();
 
-	if( IsSignalled() )
-	{
-		// The mutex has no owners, so notify the watchers
-		Notify();
-	}
-}
+				if (IsSignalled())
+				{
+					// The mutex has no owners, so notify the watchers
+					Notify();
+				}
+			}
 
 //-----------------------------------------------------------------------------
 //	<Mutex::IsSignalled>
 //	Test whether the event is set
 //-----------------------------------------------------------------------------
-bool Mutex::IsSignalled
-(
-)
-{
-	return m_pImpl->IsSignalled();
-}
-
+			bool Mutex::IsSignalled()
+			{
+				return m_pImpl->IsSignalled();
+			}
+		} // namespace Platform
+	} // namespace Internal
+} // namespace OpenZWave

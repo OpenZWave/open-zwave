@@ -32,334 +32,296 @@
 #include "Msg.h"
 #include "platform/Log.h"
 
-using namespace OpenZWave;
+namespace OpenZWave
+{
+	namespace Internal
+	{
+		namespace VC
+		{
 
 //-----------------------------------------------------------------------------
 // <ValueSchedule::ValueSchedule>
 // Constructor
 //-----------------------------------------------------------------------------
-ValueSchedule::ValueSchedule
-(
-	uint32 const _homeId,
-	uint8 const _nodeId,
-	ValueID::ValueGenre const _genre,
-	uint8 const _commandClassId,
-	uint8 const _instance,
-	uint16 const _index,
-	string const& _label,
-	string const& _units,
-	bool const _readOnly,
-	bool const _writeOnly,
-	uint8 const _pollIntensity
-):
-	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Schedule, _label, _units, _readOnly, _writeOnly, false, _pollIntensity ),
-	m_numSwitchPoints( 0 )
+			ValueSchedule::ValueSchedule(uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint16 const _index, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, uint8 const _pollIntensity) :
+					Value(_homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Schedule, _label, _units, _readOnly, _writeOnly, false, _pollIntensity), m_numSwitchPoints(0)
 
-{
-}
+			{
+			}
 
 //-----------------------------------------------------------------------------
 // <ValueSchedule::ValueSchedule>
 // Constructor
 //-----------------------------------------------------------------------------
-ValueSchedule::ValueSchedule
-(
-):
-	Value(),
-	m_numSwitchPoints( 0 )
+			ValueSchedule::ValueSchedule() :
+					Value(), m_numSwitchPoints(0)
 
-{
-}
+			{
+			}
 
 //-----------------------------------------------------------------------------
 // <ValueSchedule::ReadXML>
 // Apply settings from XML
 //-----------------------------------------------------------------------------
-void ValueSchedule::ReadXML
-(
-	uint32 const _homeId,
-	uint8 const _nodeId,
-	uint8 const _commandClassId,
-	TiXmlElement const* _valueElement
-)
-{
-	Value::ReadXML( _homeId, _nodeId, _commandClassId, _valueElement );
-
-	// Read in the switch points
-	TiXmlElement const* child = _valueElement->FirstChildElement();
-	while( child )
-	{
-		char const* str = child->Value();
-		if( str )
-		{
-			if( !strcmp( str, "SwitchPoint" ) )
+			void ValueSchedule::ReadXML(uint32 const _homeId, uint8 const _nodeId, uint8 const _commandClassId, TiXmlElement const* _valueElement)
 			{
-				int intVal;
+				Value::ReadXML(_homeId, _nodeId, _commandClassId, _valueElement);
 
-				uint8 hours = 0;
-				if( TIXML_SUCCESS == child->QueryIntAttribute( "hours", &intVal ) )
+				// Read in the switch points
+				TiXmlElement const* child = _valueElement->FirstChildElement();
+				while (child)
 				{
-					hours = (uint8)intVal;
-				}
+					char const* str = child->Value();
+					if (str)
+					{
+						if (!strcmp(str, "SwitchPoint"))
+						{
+							int intVal;
 
-				uint8 minutes = 0;
-				if( TIXML_SUCCESS == child->QueryIntAttribute( "minutes", &intVal ) )
-				{
-					minutes = (uint8)intVal;
-				}
+							uint8 hours = 0;
+							if (TIXML_SUCCESS == child->QueryIntAttribute("hours", &intVal))
+							{
+								hours = (uint8) intVal;
+							}
 
-				int8 setback = 0;
-				if( TIXML_SUCCESS == child->QueryIntAttribute( "setback", &intVal ) )
-				{
-					setback = (int8)intVal;
-				}
+							uint8 minutes = 0;
+							if (TIXML_SUCCESS == child->QueryIntAttribute("minutes", &intVal))
+							{
+								minutes = (uint8) intVal;
+							}
 
-				SetSwitchPoint( hours, minutes, setback );
+							int8 setback = 0;
+							if (TIXML_SUCCESS == child->QueryIntAttribute("setback", &intVal))
+							{
+								setback = (int8) intVal;
+							}
+
+							SetSwitchPoint(hours, minutes, setback);
+						}
+					}
+
+					child = child->NextSiblingElement();
+				}
 			}
-		}
-
-		child = child->NextSiblingElement();
-	}
-}
 
 //-----------------------------------------------------------------------------
 // <ValueSchedule::WriteXML>
 // Write ourselves to an XML document
 //-----------------------------------------------------------------------------
-void ValueSchedule::WriteXML
-(
-	TiXmlElement* _valueElement
-)
-{
-	Value::WriteXML( _valueElement );
+			void ValueSchedule::WriteXML(TiXmlElement* _valueElement)
+			{
+				Value::WriteXML(_valueElement);
 
-	for( uint8 i=0; i<GetNumSwitchPoints(); ++i )
-	{
-		uint8 hours;
-		uint8 minutes;
-		int8 setback;
-		if( GetSwitchPoint( i, &hours, &minutes, &setback ) )
-		{
-			char str[8];
+				for (uint8 i = 0; i < GetNumSwitchPoints(); ++i)
+				{
+					uint8 hours;
+					uint8 minutes;
+					int8 setback;
+					if (GetSwitchPoint(i, &hours, &minutes, &setback))
+					{
+						char str[8];
 
-			TiXmlElement* switchPointElement = new TiXmlElement( "SwitchPoint" );
-			_valueElement->LinkEndChild( switchPointElement );
+						TiXmlElement* switchPointElement = new TiXmlElement("SwitchPoint");
+						_valueElement->LinkEndChild(switchPointElement);
 
-			snprintf( str, sizeof(str), "%d", hours );
-			switchPointElement->SetAttribute( "hours", str );
+						snprintf(str, sizeof(str), "%d", hours);
+						switchPointElement->SetAttribute("hours", str);
 
-			snprintf( str, sizeof(str), "%d", minutes );
-			switchPointElement->SetAttribute( "minutes", str );
+						snprintf(str, sizeof(str), "%d", minutes);
+						switchPointElement->SetAttribute("minutes", str);
 
-			snprintf( str, sizeof(str), "%d", setback );
-			switchPointElement->SetAttribute( "setback", str );
-		}
-	}
-}
+						snprintf(str, sizeof(str), "%d", setback);
+						switchPointElement->SetAttribute("setback", str);
+					}
+				}
+			}
 
 //-----------------------------------------------------------------------------
 // <ValueSchedule::Set>
 // Set a new value in the device
 //-----------------------------------------------------------------------------
-bool ValueSchedule::Set
-(
-)
-{
-	// Set the value in the device.
-	// TODO this needs to be checked to make sure it works as intended
-	return Value::Set();
-}
+			bool ValueSchedule::Set()
+			{
+				// Set the value in the device.
+				// TODO this needs to be checked to make sure it works as intended
+				return Value::Set();
+			}
 
 //-----------------------------------------------------------------------------
 // <ValueSchedule::OnValueRefreshed>
 // A value in a device has been refreshed
 //-----------------------------------------------------------------------------
-void ValueSchedule::OnValueRefreshed
-(
-)
-{
-	/* Value::VerifyRefreshedValue doesn't handle Schedule Properly yet, but still do this so we can do it eventually */
+			void ValueSchedule::OnValueRefreshed()
+			{
+				/* Value::VerifyRefreshedValue doesn't handle Schedule Properly yet, but still do this so we can do it eventually */
 
-	switch( VerifyRefreshedValue( (void*) "Schedule", (void*) "Schedule", (void*) "Schedule", ValueID::ValueType_Schedule) )
-	{
-	case 0:		// value hasn't changed, nothing to do
-		break;
-	case 1:		// value has changed (not confirmed yet), save _value in m_valueCheck
-		break;
-	case 2:		// value has changed (confirmed), save _value in m_value
-		break;
-	case 3:		// all three values are different, so wait for next refresh to try again
-		break;
-	}
-}
+				switch (VerifyRefreshedValue((void*) "Schedule", (void*) "Schedule", (void*) "Schedule", ValueID::ValueType_Schedule))
+				{
+					case 0:		// value hasn't changed, nothing to do
+						break;
+					case 1:		// value has changed (not confirmed yet), save _value in m_valueCheck
+						break;
+					case 2:		// value has changed (confirmed), save _value in m_value
+						break;
+					case 3:		// all three values are different, so wait for next refresh to try again
+						break;
+				}
+			}
 
 //-----------------------------------------------------------------------------
 // <ValueSchedule::SetSwitchPoint>
 // A value in a device has changed
 //-----------------------------------------------------------------------------
-bool ValueSchedule::SetSwitchPoint
-(
-	uint8 const _hours, uint8 const _minutes, int8 const _setback
-)
-{
-	// Find where to insert this switch point.  They must be sorted by ascending time value.
-	uint8 i;
-	uint8 insertAt = 0;
-
-	for( i=0; i<m_numSwitchPoints; ++i )
-	{
-		if( m_switchPoints[i].m_hours == _hours )
-		{
-			if( m_switchPoints[i].m_minutes == _minutes )
+			bool ValueSchedule::SetSwitchPoint(uint8 const _hours, uint8 const _minutes, int8 const _setback)
 			{
-				// There is already a switch point with this time, so we
-				// just update its setback value
-				m_switchPoints[i].m_setback = _setback;
+				// Find where to insert this switch point.  They must be sorted by ascending time value.
+				uint8 i;
+				uint8 insertAt = 0;
+
+				for (i = 0; i < m_numSwitchPoints; ++i)
+				{
+					if (m_switchPoints[i].m_hours == _hours)
+					{
+						if (m_switchPoints[i].m_minutes == _minutes)
+						{
+							// There is already a switch point with this time, so we
+							// just update its setback value
+							m_switchPoints[i].m_setback = _setback;
+							return true;
+						}
+
+						if (m_switchPoints[i].m_minutes > _minutes)
+						{
+							break;
+						}
+					}
+					else if (m_switchPoints[i].m_hours > _hours)
+					{
+						break;
+					}
+
+					++insertAt;
+				}
+
+				if (m_numSwitchPoints >= 9)
+				{
+					// The schedule is full
+					return false;
+				}
+
+				// Shuffle any later switch points out of the way
+				for (i = m_numSwitchPoints; i > insertAt; --i)
+				{
+					m_switchPoints[i].m_hours = m_switchPoints[i - 1].m_hours;
+					m_switchPoints[i].m_minutes = m_switchPoints[i - 1].m_minutes;
+					m_switchPoints[i].m_setback = m_switchPoints[i - 1].m_setback;
+				}
+
+				// Insert the new switch point
+				m_switchPoints[insertAt].m_hours = _hours;
+				m_switchPoints[insertAt].m_minutes = _minutes;
+				m_switchPoints[insertAt].m_setback = _setback;
+
+				++m_numSwitchPoints;
 				return true;
 			}
-
-			if( m_switchPoints[i].m_minutes > _minutes )
-			{
-				break;
-			}
-		}
-		else if( m_switchPoints[i].m_hours > _hours )
-		{
-			break;
-		}
-
-		++insertAt;
-	}
-
-	if( m_numSwitchPoints >= 9 )
-	{
-		// The schedule is full
-		return false;
-	}
-
-	// Shuffle any later switch points out of the way
-	for( i=m_numSwitchPoints; i>insertAt; --i )
-	{
-		m_switchPoints[i].m_hours   = m_switchPoints[i-1].m_hours;
-		m_switchPoints[i].m_minutes = m_switchPoints[i-1].m_minutes;
-		m_switchPoints[i].m_setback = m_switchPoints[i-1].m_setback;
-	}
-
-	// Insert the new switch point
-	m_switchPoints[insertAt].m_hours   = _hours;
-	m_switchPoints[insertAt].m_minutes = _minutes;
-	m_switchPoints[insertAt].m_setback = _setback;
-
-	++m_numSwitchPoints;
-	return true;
-}
 
 //-----------------------------------------------------------------------------
 // <ValueSchedule::RemoveSwitchPoint>
 // A value in a device has changed
 //-----------------------------------------------------------------------------
-bool ValueSchedule::RemoveSwitchPoint
-(
-	uint8 const _idx
-)
-{
-	if( _idx >= m_numSwitchPoints )
-	{
-		// _idx is out of range
-		return false;
-	}
+			bool ValueSchedule::RemoveSwitchPoint(uint8 const _idx)
+			{
+				if (_idx >= m_numSwitchPoints)
+				{
+					// _idx is out of range
+					return false;
+				}
 
-	// Shuffle any later switch points down to fill the gap
-	for( uint8 i=_idx; i<(m_numSwitchPoints-1); ++i )
-	{
-		m_switchPoints[i].m_hours   = m_switchPoints[i+1].m_hours;
-		m_switchPoints[i].m_minutes = m_switchPoints[i+1].m_minutes;
-		m_switchPoints[i].m_setback = m_switchPoints[i+1].m_setback;
-	}
+				// Shuffle any later switch points down to fill the gap
+				for (uint8 i = _idx; i < (m_numSwitchPoints - 1); ++i)
+				{
+					m_switchPoints[i].m_hours = m_switchPoints[i + 1].m_hours;
+					m_switchPoints[i].m_minutes = m_switchPoints[i + 1].m_minutes;
+					m_switchPoints[i].m_setback = m_switchPoints[i + 1].m_setback;
+				}
 
-	--m_numSwitchPoints;
-	return true;
-}
+				--m_numSwitchPoints;
+				return true;
+			}
 
 //-----------------------------------------------------------------------------
 // <ValueSchedule::GetSwitchPoint>
 // Get the values of a switch point
 //-----------------------------------------------------------------------------
-bool ValueSchedule::GetSwitchPoint
-(
-	uint8 const _idx,
-	uint8* o_hours,
-	uint8* o_minutes,
-	int8* o_setback
-)const
-{
-	if( _idx >= m_numSwitchPoints )
-	{
-		// _idx is out of range
-		return false;
-	}
+			bool ValueSchedule::GetSwitchPoint(uint8 const _idx, uint8* o_hours, uint8* o_minutes, int8* o_setback) const
+			{
+				if (_idx >= m_numSwitchPoints)
+				{
+					// _idx is out of range
+					return false;
+				}
 
-	if( o_hours )
-	{
-		*o_hours   = m_switchPoints[_idx].m_hours;
-	}
+				if (o_hours)
+				{
+					*o_hours = m_switchPoints[_idx].m_hours;
+				}
 
-	if( o_minutes )
-	{
-		*o_minutes = m_switchPoints[_idx].m_minutes;
-	}
+				if (o_minutes)
+				{
+					*o_minutes = m_switchPoints[_idx].m_minutes;
+				}
 
-	if( o_setback )
-	{
-		*o_setback = m_switchPoints[_idx].m_setback;
-	}
+				if (o_setback)
+				{
+					*o_setback = m_switchPoints[_idx].m_setback;
+				}
 
-	return true;
-}
+				return true;
+			}
 
 //-----------------------------------------------------------------------------
 // <ValueSchedule::FindSwitchPoint>
 // Get the index of the switch point at the specified time
 //-----------------------------------------------------------------------------
-bool ValueSchedule::FindSwitchPoint
-(
-	uint8 const _hours,
-	uint8 const _minutes,
-	uint8* o_idx
-)const
-{
-	for( uint8 i=0; i<m_numSwitchPoints; ++i )
-	{
-		if( m_switchPoints[i].m_hours == _hours )
-		{
-			if( m_switchPoints[i].m_minutes == _minutes )
+			bool ValueSchedule::FindSwitchPoint(uint8 const _hours, uint8 const _minutes, uint8* o_idx) const
 			{
-				// Found a match
-				if( o_idx )
+				for (uint8 i = 0; i < m_numSwitchPoints; ++i)
 				{
-					*o_idx = i;
-				}
-				return true;
-			}
+					if (m_switchPoints[i].m_hours == _hours)
+					{
+						if (m_switchPoints[i].m_minutes == _minutes)
+						{
+							// Found a match
+							if (o_idx)
+							{
+								*o_idx = i;
+							}
+							return true;
+						}
 
-			if( m_switchPoints[i].m_minutes > _minutes )
-			{
-				// Gone past any possible match
+						if (m_switchPoints[i].m_minutes > _minutes)
+						{
+							// Gone past any possible match
+							return false;
+						}
+					}
+					else if (m_switchPoints[i].m_hours > _hours)
+					{
+						// Gone past any possible match
+						return false;
+					}
+				}
+
+				// No match found
 				return false;
 			}
-		}
-		else if( m_switchPoints[i].m_hours > _hours )
-		{
-			// Gone past any possible match
-			return false;
-		}
-	}
 
-	// No match found
-	return false;
-}
-
-string const ValueSchedule::GetAsString() const {
-	/* we should actuall find a way to return the arrays of switchpoints nicely */
-	return "SwitchPoint";
-}
+			std::string const ValueSchedule::GetAsString() const
+			{
+				/* we should actuall find a way to return the arrays of switchpoints nicely */
+				return "SwitchPoint";
+			}
+		} // namespace VC
+	} // namespace Internal
+} // namespace OpenZWave

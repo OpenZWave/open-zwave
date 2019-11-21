@@ -33,29 +33,35 @@
 
 namespace OpenZWave
 {
-	class EventImpl
+	namespace Internal
 	{
-	private:
-		friend class Event;
-		friend class SocketImpl;
-		friend class Wait;
+		namespace Platform
+		{
 
-		EventImpl();
-		~EventImpl();
+			class EventImpl
+			{
+				private:
+					friend class Event;
+					friend class SocketImpl;
+					friend class Wait;
 
-		void Set();
-		void Reset();
-		
-		bool Wait( int32 _timeout );	// The wait method is to be used only by the Wait::Multiple method
-		bool IsSignalled();
+					EventImpl();
+					~EventImpl();
 
-		pthread_mutex_t		m_lock;
-		pthread_cond_t		m_condition;
-		bool			m_manualReset;
-		bool			m_isSignaled;
-		unsigned int		m_waitingThreads;
-	};
+					void Set();
+					void Reset();
 
+					bool Wait(int32 _timeout);	// The wait method is to be used only by the Wait::Multiple method
+					bool IsSignalled();
+
+					pthread_mutex_t m_lock;
+					pthread_cond_t m_condition;
+					bool m_manualReset;
+					bool m_isSignaled;
+					unsigned int m_waitingThreads;
+			};
+		} // namespace Platform
+	} // namespace Internal
 } // namespace OpenZWave
 
 #endif //_EventImpl_H

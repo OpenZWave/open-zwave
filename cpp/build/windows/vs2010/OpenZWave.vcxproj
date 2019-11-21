@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="DebugDLL|Win32">
@@ -230,11 +230,13 @@ exit 0</Command>
     <ClInclude Include="..\..\..\src\Defs.h" />
     <ClInclude Include="..\..\..\src\Driver.h" />
     <ClInclude Include="..\..\..\src\DNSThread.h" />
+    <ClInclude Include="..\..\..\src\SensorMultiLevelCCTypes.h" />
     <ClInclude Include="..\..\..\src\TimerThread.h" />
     <ClInclude Include="..\..\..\src\Http.h" />
     <ClInclude Include="..\..\..\src\Group.h" />
     <ClInclude Include="..\..\..\src\Localization.h" />
     <CIInclude Include="..\..\..\src\NotificationCCTypes.h" />
+    <CIInclude Include="..\..\..\src\SensorMultiLevelCCTypes.h" />
     <ClInclude Include="..\..\..\src\Manager.h" />
     <ClInclude Include="..\..\..\src\ManufacturerSpecificDB.h" />
     <ClInclude Include="..\..\..\src\Msg.h" />
@@ -359,6 +361,7 @@ exit 0</Command>
     <ClCompile Include="..\..\..\src\Group.cpp" />
     <ClCompile Include="..\..\..\src\Localization.cpp" />
     <ClCompile Include="..\..\..\src\NotificationCCTypes.cpp" />
+    <ClCompile Include="..\..\..\src\SensorMultiLevelCCTypes.cpp" />
     <ClCompile Include="..\..\..\src\Manager.cpp" />
     <ClCompile Include="..\..\..\src\ManufacturerSpecificDB.cpp" />
     <ClCompile Include="..\..\..\src\Msg.cpp" />
@@ -403,6 +406,7 @@ exit 0</Command>
     <ClCompile Include="..\..\..\src\value_classes\ValueByte.cpp" />
     <ClCompile Include="..\..\..\src\value_classes\ValueDecimal.cpp" />
     <ClCompile Include="..\..\..\src\value_classes\ValueInt.cpp" />
+    <ClCompile Include="..\..\..\src\value_classes\ValueID.cpp" />
     <ClCompile Include="..\..\..\src\value_classes\ValueList.cpp" />
     <ClCompile Include="..\..\..\src\value_classes\ValueShort.cpp" />
     <ClCompile Include="..\..\..\src\value_classes\ValueStore.cpp" />

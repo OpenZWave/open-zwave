@@ -34,85 +34,81 @@
 #include "platform/Log.h"
 #include "value_classes/ValueButton.h"
 
-using namespace OpenZWave;
-
-enum BasicWindowCoveringCmd
+namespace OpenZWave
 {
-	BasicWindowCoveringCmd_StartLevelChange	= 0x01,
-	BasicWindowCoveringCmd_StopLevelChange	= 0x02
-};
+	namespace Internal
+	{
+		namespace CC
+		{
 
-enum
-{
-	BasicWindowCoveringIndex_Open = 0,
-	BasicWindowCoveringIndex_Close
-};
+			enum BasicWindowCoveringCmd
+			{
+				BasicWindowCoveringCmd_StartLevelChange = 0x01,
+				BasicWindowCoveringCmd_StopLevelChange = 0x02
+			};
 
 //-----------------------------------------------------------------------------
 // <BasicWindowCovering::SetValue>
 // Set a value on the Z-Wave device
 //-----------------------------------------------------------------------------
-bool BasicWindowCovering::SetValue
-(
-	Value const& _value
-)
-{
-	if( ValueID::ValueType_Button == _value.GetID().GetType() )
-	{
-		ValueButton const* button = static_cast<ValueButton const*>(&_value);
+			bool BasicWindowCovering::SetValue(Internal::VC::Value const& _value)
+			{
+				if (ValueID::ValueType_Button == _value.GetID().GetType())
+				{
+					Internal::VC::ValueButton const* button = static_cast<Internal::VC::ValueButton const*>(&_value);
 
-		uint8 action = 0x40;
-		if( button->GetID().GetIndex() )	// Open is index zero, so non-zero is close.
-		{
-			// Close
-			action = 0;
-		}
+					uint8 action = 0x40;
+					if (button->GetID().GetIndex() == ValueID_Index_BasicWindowCovering::Close)	// Open is index zero, so non-zero is close.
+					{
+						// Close
+						action = 0;
+					}
 
-		if( button && button->IsPressed() )
-		{
-			Log::Write( LogLevel_Info, GetNodeId(), "BasicWindowCovering - Start Level Change (%s)", action ? "Open" : "Close" );
-			Msg* msg = new Msg( "BasicWindowCoveringCmd_StartLevelChange", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-			msg->SetInstance( this, _value.GetID().GetInstance() );
-			msg->Append( GetNodeId() );
-			msg->Append( 3 );
-			msg->Append( GetCommandClassId() );
-			msg->Append( BasicWindowCoveringCmd_StartLevelChange );
-			msg->Append( action );
-			msg->Append( GetDriver()->GetTransmitOptions() );
-			GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
-			return true;
-		}
-		else
-		{
-			Log::Write( LogLevel_Info, GetNodeId(), "BasicWindowCovering - Stop Level Change" );
-			Msg* msg = new Msg( "BasicWindowCoveringCmd_StopLevelChange", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-			msg->SetInstance( this, _value.GetID().GetInstance() );
-			msg->Append( GetNodeId() );
-			msg->Append( 2 );
-			msg->Append( GetCommandClassId() );
-			msg->Append( BasicWindowCoveringCmd_StopLevelChange );
-			msg->Append( GetDriver()->GetTransmitOptions() );
-			GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
-			return true;
-		}
-	}
+					if (button && button->IsPressed())
+					{
+						Log::Write(LogLevel_Info, GetNodeId(), "BasicWindowCovering - Start Level Change (%s)", action ? "Open" : "Close");
+						Msg* msg = new Msg("BasicWindowCoveringCmd_StartLevelChange", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
+						msg->SetInstance(this, _value.GetID().GetInstance());
+						msg->Append(GetNodeId());
+						msg->Append(3);
+						msg->Append(GetCommandClassId());
+						msg->Append(BasicWindowCoveringCmd_StartLevelChange);
+						msg->Append(action);
+						msg->Append(GetDriver()->GetTransmitOptions());
+						GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
+						return true;
+					}
+					else
+					{
+						Log::Write(LogLevel_Info, GetNodeId(), "BasicWindowCovering - Stop Level Change");
+						Msg* msg = new Msg("BasicWindowCoveringCmd_StopLevelChange", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
+						msg->SetInstance(this, _value.GetID().GetInstance());
+						msg->Append(GetNodeId());
+						msg->Append(2);
+						msg->Append(GetCommandClassId());
+						msg->Append(BasicWindowCoveringCmd_StopLevelChange);
+						msg->Append(GetDriver()->GetTransmitOptions());
+						GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
+						return true;
+					}
+				}
 
-	return false;
-}
+				return false;
+			}
 
 //-----------------------------------------------------------------------------
 // <BasicWindowCovering::CreateVars>
 // Create the values managed by this command class
 //-----------------------------------------------------------------------------
-void BasicWindowCovering::CreateVars
-(
-	uint8 const _instance
-)
-{
-	if( Node* node = GetNodeUnsafe() )
-	{
-		node->CreateValueButton( ValueID::ValueGenre_User, GetCommandClassId(), _instance, BasicWindowCoveringIndex_Open, "Open", 0 );
-		node->CreateValueButton( ValueID::ValueGenre_User, GetCommandClassId(), _instance, BasicWindowCoveringIndex_Close, "Close", 0 );
-	}
-}
+			void BasicWindowCovering::CreateVars(uint8 const _instance)
+			{
+				if (Node* node = GetNodeUnsafe())
+				{
+					node->CreateValueButton(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_BasicWindowCovering::Open, "Open", 0);
+					node->CreateValueButton(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_BasicWindowCovering::Close, "Close", 0);
+				}
+			}
+		} // namespace CC
+	} // namespace Internal
+} // namespace OpenZWave
 

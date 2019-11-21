@@ -33,94 +33,94 @@
 
 #include "DNSImpl.h"
 
-
-
-using namespace OpenZWave;
-
-DNSImpl::DNSImpl
-(
-)
+namespace OpenZWave
 {
-    res_init();
-}
+	namespace Internal
+	{
+		namespace Platform
+		{
 
-DNSImpl::~DNSImpl
-(
-)
-{
+			DNSImpl::DNSImpl() :
+					status(DNSError_None)
+			{
+				res_init();
+			}
 
-}
+			DNSImpl::~DNSImpl()
+			{
 
-bool DNSImpl::LookupTxT
-(
-string lookup,
-string &result
-)
-{
+			}
 
+			bool DNSImpl::LookupTxT(string lookup, string &result)
+			{
 
-    int response;
-    unsigned char query_buffer[1024];
-    ns_msg nsMsg;
-    ns_rr rr;
-    const unsigned char *p, *start;
-   	unsigned char l;
-   	int rrlen;
+				int response;
+				unsigned char query_buffer[1024];
+				ns_msg nsMsg;
+				ns_rr rr;
+				const unsigned char *p, *start;
+				unsigned char l;
+				int rrlen;
 
-   	char outb[1025];
-
+				char outb[1025];
 
 #ifdef __APPLE_CC__
-    response= res_query(lookup.c_str(), ns_c_in, ns_t_txt, query_buffer, sizeof(query_buffer));
+				response = res_query(lookup.c_str(), ns_c_in, ns_t_txt, query_buffer, sizeof(query_buffer));
 #else
-    response= res_query(lookup.c_str(), C_IN, ns_t_txt, query_buffer, sizeof(query_buffer));
+				response= res_query(lookup.c_str(), C_IN, ns_t_txt, query_buffer, sizeof(query_buffer));
 #endif
-    if (response < 0) {
-    	Log::Write(LogLevel_Warning, "Error looking up txt Record: %s - %s", lookup.c_str(), hstrerror(h_errno));
-    	switch (h_errno) {
-    		case HOST_NOT_FOUND:
-    			status = DNSError_NotFound;
-    			break;
-    		case NO_DATA:
-    			status = DNSError_NotFound;
-    			break;
-    		case NO_RECOVERY:
-    			status = DNSError_InternalError;
-    			break;
-    		case TRY_AGAIN:
-    			status = DNSError_InternalError;
-    			break;
-    		default:
-    			status = DNSError_InternalError;
-    			break;
+				if (response < 0)
+				{
+					Log::Write(LogLevel_Warning, "Error looking up txt Record: %s - %s", lookup.c_str(), hstrerror(h_errno));
+					switch (h_errno)
+					{
+						case HOST_NOT_FOUND:
+							status = DNSError_NotFound;
+							break;
+						case NO_DATA:
+							status = DNSError_NotFound;
+							break;
+						case NO_RECOVERY:
+							status = DNSError_InternalError;
+							break;
+						case TRY_AGAIN:
+							status = DNSError_InternalError;
+							break;
+						default:
+							status = DNSError_InternalError;
+							break;
 
-    	}
-    	return false;
-    }
+					}
+					return false;
+				}
 
-    ns_initparse(query_buffer, response, &nsMsg);
+				ns_initparse(query_buffer, response, &nsMsg);
 
-    ns_parserr(&nsMsg, ns_s_an, 0, &rr);
+				ns_parserr(&nsMsg, ns_s_an, 0, &rr);
 
-   	p = start = ns_rr_rdata(rr);
-   	rrlen = ns_rr_rdlen(rr);
-   	if (rrlen > 1024) {
-   		status = DNSError_InternalError;
-   		return false;
-   	}
-   	while(p < start + rrlen)
-   	{
-   		l = *p;
-   		p++;
-   		if(p + l > start + rrlen)
-   		{
-   			break;
-   		}
-   		memcpy(outb, p, l);
-    	outb[l] = 0;
-   		p += l;
-   	}
-   	result = outb;
-   	status = DNSError_None;
-	return true;
-}
+				p = start = ns_rr_rdata(rr);
+				rrlen = ns_rr_rdlen(rr);
+				if (rrlen > 1024)
+				{
+					status = DNSError_InternalError;
+					return false;
+				}
+				while (p < start + rrlen)
+				{
+					l = *p;
+					p++;
+					if (p + l > start + rrlen)
+					{
+						break;
+					}
+					memcpy(outb, p, l);
+					outb[l] = 0;
+					p += l;
+				}
+				result = outb;
+				status = DNSError_None;
+				return true;
+			}
+		} // namespace Platform
+	} // namespace Internal
+} // namespace OpenZWave

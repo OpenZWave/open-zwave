@@ -178,6 +178,10 @@ $(top_srcdir)/cpp/src/vers.cpp:
 		-e 's|[@]VERSION@|$(VERSION).$(VERSION_REV)|g' \
 		< "$(top_srcdir)/dist/openzwave.spec.in" > "$(top_srcdir)/dist/openzwave.spec"
 
+#create a vers.cpp file that contains our version and subversion revisions
+updateIndexDefines: $(top_srcdir)/cpp/src/ValueIDIndexesDefines.def
+	@$(CXX) -E -P -o $(top_srcdir)/cpp/src/ValueIDIndexesDefines.h -x c++ $<	
+
 
 #$(OBJDIR)/vers.o:	$(top_builddir)/vers.cpp
 
