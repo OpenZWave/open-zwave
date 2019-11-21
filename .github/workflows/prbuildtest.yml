@@ -19,6 +19,6 @@ jobs:
       env:
         BBSERVER: bamboo.my-ho.st
         BBUSER: ${{ secrets.bamboouser }}
-        BBPASS: ${{ secrets.bamboopass }
+        BBPASS: ${{ secrets.bamboopass }}
         BBPRJ: OZW-PRTST
         PPPR: ${{ steps.findPr.outputs.pr }}
