@@ -9,8 +9,17 @@ jobs:
 
     steps:
     - name: Trigger Bamboo Build
-      uses: Fishwaldo/webhook-action@master  
+    - uses: jwalton/gh-find-current-pr@v1
+      id: findPr
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+    - uses: Fishwaldo/webhook-action@master  
       env:
+        BBSERVER: bamboo.my-ho.st
+        BBUSER: ${{ secrets.bamboouser }}
+        BBPASS: ${{ secrets.bamboopass }
+        BBPRJ: OZW-PRTST
+        PPPR: ${{ steps.findPr.outputs.pr }}
         WEBHOOK_URL: http://${{ secrets.bamboouser }}:${{ secrets.bamboopass }}@bamboo.my-ho.st/bamboo/rest/api/latest/plan/OZW-PRTST/branch/1982.json?vcsBranch=refs/pull/1982/head
         data: "{'vscBranch': 'refs/heads/1982/head', 'os_authType': 'basic'}"      
 
