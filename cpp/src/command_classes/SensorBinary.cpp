@@ -152,7 +152,7 @@ namespace OpenZWave
 			{
 				if (SensorBinaryCmd_Report == (SensorBinaryCmd) _data[0])
 				{
-					if (_length > 2)
+					if (_length > 3)
 					{
 						uint8 index = m_sensorsMap[_data[2]];
 
