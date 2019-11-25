@@ -1631,6 +1631,103 @@ uint8 Node::GetNumInstances(uint8 const _ccid)
 	return instances;
 }
 
+string Node::GetBasicString() 
+{
+	char str[32];
+	string label;
+	uint8 _basic = GetBasic();
+
+	snprintf(str, sizeof(str), "Basic 0x%.2x", _basic);
+	label = str;
+
+	// Read in the device class data if it has not been read already.
+	if (!s_deviceClassesLoaded)
+	{
+		ReadDeviceClasses();
+	}
+	if (s_basicDeviceClasses.find(_basic) != s_basicDeviceClasses.end()) {
+		return s_basicDeviceClasses.at(_basic);
+	}
+	return "Unknown";
+}
+
+uint8 Node::GetGeneric(uint8 const _instance) const
+{
+	if (_instance > 0) {
+		if (Internal::CC::MultiInstance *cc = static_cast<Internal::CC::MultiInstance *>(GetCommandClass(Internal::CC::MultiInstance::StaticGetCommandClassId()))) 
+		{
+			return cc->GetGenericInstanceDeviceType(_instance);
+		}
+	}
+	return m_generic;
+}
+string Node::GetGenericString(uint8 const _instance)
+{
+	char str[32];
+	string label;
+	uint8 _generic = GetGeneric(_instance);
+
+	snprintf(str, sizeof(str), "Generic 0x%.2x", _generic);
+	label = str;
+
+	// Read in the device class data if it has not been read already.
+	if (!s_deviceClassesLoaded)
+	{
+		ReadDeviceClasses();
+	}
+
+	// Get the Generic device class label
+	if (s_genericDeviceClasses.find(_generic) != s_genericDeviceClasses.end())
+	{
+		GenericDeviceClass* genericDeviceClass = s_genericDeviceClasses.at(_generic);
+		label = genericDeviceClass->GetLabel();
+	}
+	return label;
+}
+
+
+uint8 Node::GetSpecific(uint8 const _instance) const
+{
+	if (_instance > 0) {
+		if (Internal::CC::MultiInstance *cc = static_cast<Internal::CC::MultiInstance *>(GetCommandClass(Internal::CC::MultiInstance::StaticGetCommandClassId())))
+		{
+			return cc->GetSpecificInstanceDeviceType(_instance);
+		}
+	}
+	return m_specific;
+}		
+
+string Node::GetSpecificString(uint8 const _instance)
+{
+	char str[32];
+	string label;
+	uint8 _generic = GetGeneric(_instance);
+	uint8 _specific = GetSpecific(_instance);
+
+	snprintf(str, sizeof(str), "Specific 0x%.2x", _specific);
+	label = str;
+
+	// Read in the device class data if it has not been read already.
+	if (!s_deviceClassesLoaded)
+	{
+		ReadDeviceClasses();
+	}
+
+	// Get the Generic device class label
+	if (s_genericDeviceClasses.find(_generic) != s_genericDeviceClasses.end())
+	{
+		GenericDeviceClass* genericDeviceClass = s_genericDeviceClasses.at(_generic);
+		label = genericDeviceClass->GetLabel();
+				// Override with any specific device class label
+		if (DeviceClass* specificDeviceClass = genericDeviceClass->GetSpecificDeviceClass(_specific))
+		{
+			label = specificDeviceClass->GetLabel();
+		}
+
+	}
+	return label;
+}
+
 void Node::SetSecuredClasses(uint8 const* _data, uint8 const _length, uint32 const _instance)
 {
 	uint32 i;

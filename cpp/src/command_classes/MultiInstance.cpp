@@ -323,7 +323,8 @@ namespace OpenZWave
 					}
 
 					uint8 endPoint = _data[1] & 0x7f;
-
+					m_endPointGenericType.insert(std::pair<uint8, uint8>(endPoint, _data[2]));
+					m_endPointSpecificType.insert(std::pair<uint8, uint8>(endPoint, _data[3]));
 					Log::Write(LogLevel_Info, GetNodeId(), "Received MultiChannelCapabilityReport from node %d for endpoint %d", GetNodeId(), endPoint);
 					Log::Write(LogLevel_Info, GetNodeId(), "    Endpoint is%sdynamic, and is a %s", dynamic ? " " : " not ", node->GetEndPointDeviceClassLabel(_data[2], _data[3]).c_str());
 					Log::Write(LogLevel_Info, GetNodeId(), "    Command classes supported by the endpoint are:");
@@ -617,8 +618,8 @@ namespace OpenZWave
 				}
 			}
 //-----------------------------------------------------------------------------
-// <MultiInstance::HandleMultiChannelEncap>
-// Handle a message from the Z-Wave network
+// <MultiInstance::SetInstanceLabel>
+// Set the Generic Label for a Instance
 //-----------------------------------------------------------------------------
 			void MultiInstance::SetInstanceLabel(uint8 const _instance, char *label)
 			{
@@ -629,6 +630,29 @@ namespace OpenZWave
 					node->SetInstanceLabel(_instance, label);
 				}
 			}
+//-----------------------------------------------------------------------------
+// <MultiInstance::GetGenericInstanceDeviceType>
+// Get the Generic DeviceType for a EndPoint
+//-----------------------------------------------------------------------------
+			uint8 MultiInstance::GetGenericInstanceDeviceType(uint8 _instance) 
+			{
+				if (m_endPointGenericType.find(_instance) != m_endPointGenericType.end())
+					return m_endPointGenericType.at(_instance);
+					
+				return 0;
+			}
+//-----------------------------------------------------------------------------
+// <MultiInstance::GetSpecificEndpointDeviceType>
+// Get the Specific DeviceType for a Endpoint
+//-----------------------------------------------------------------------------
+			uint8 MultiInstance::GetSpecificInstanceDeviceType(uint8 _instance) 
+			{
+				if (m_endPointSpecificType.find(_instance) != m_endPointSpecificType.end())
+					return m_endPointSpecificType.at(_instance);
+
+				return 0;
+			}
+
 		} // namespace CC
 	} // namespace Internal
 } // namespace OpenZWave
