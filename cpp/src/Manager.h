@@ -856,6 +856,14 @@ namespace OpenZWave
 			 * \return True if the node does have the class instantiated, will return name & version
 			 */
 			bool GetNodeClassInformation(uint32 const _homeId, uint8 const _nodeId, uint8 const _commandClassId, string *_className = NULL, uint8 *_classVersion = NULL);
+
+			/**
+			 * \brief Get a friendly name for the CommandClass ID
+			 * \param _commandClassId Id of the class to test for
+			 * \return String returning the CommandClass Name
+			 */
+			string GetCommandClassName(uint8 const _commandClassId);
+
 			/**
 			 * \brief Get whether the node is awake or asleep
 			 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
