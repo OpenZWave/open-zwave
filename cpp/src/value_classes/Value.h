@@ -125,7 +125,7 @@ namespace OpenZWave
 						return m_verifyChanges;
 					}
 
-					void SetChangeVerified(bool _refreshAfterSet)
+					void SetRefreshAfterSet(bool _refreshAfterSet)
 					{
 						m_refreshAfterSet = _refreshAfterSet;
 					}
