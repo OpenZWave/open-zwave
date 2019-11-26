@@ -35,6 +35,7 @@
 #include "command_classes/Association.h"
 #include "command_classes/AssociationCommandConfiguration.h"
 #include "command_classes/MultiChannelAssociation.h"
+#include "command_classes/MultiInstance.h"
 #include "platform/Log.h"
 
 #include "tinyxml.h"
@@ -226,12 +227,18 @@ void Group::AddAssociation(uint8 const _nodeId, uint8 const _endPoint)
 		if (Node* node = driver->GetNodeUnsafe(m_nodeId))
 		{
 			Internal::CC::MultiChannelAssociation* cc = static_cast<Internal::CC::MultiChannelAssociation*>(node->GetCommandClass(Internal::CC::MultiChannelAssociation::StaticGetCommandClassId()));
+			Internal::CC::MultiInstance *mc = static_cast<Internal::CC::MultiInstance*>(node->GetCommandClass(Internal::CC::MultiInstance::StaticGetCommandClassId()));
 			if (cc && IsMultiInstance())
 			{
-				cc->Set(m_groupIdx, _nodeId, _endPoint);
-				cc->QueryGroup(m_groupIdx, 0);
+				if (mc) { 
+					cc->Set(m_groupIdx, _nodeId, _endPoint);
+					cc->QueryGroup(m_groupIdx, 0);
+					return;
+				} else {
+					Log::Write(LogLevel_Warning, m_nodeId, "MultiChannelAssociation is Present, but MultiChannel CC is not. Trying Plain Association...");
+				}
 			}
-			else if (Internal::CC::Association* cc = static_cast<Internal::CC::Association*>(node->GetCommandClass(Internal::CC::Association::StaticGetCommandClassId())))
+			if (Internal::CC::Association* cc = static_cast<Internal::CC::Association*>(node->GetCommandClass(Internal::CC::Association::StaticGetCommandClassId())))
 			{
 				cc->Set(m_groupIdx, _nodeId);
 				cc->QueryGroup(m_groupIdx, 0);

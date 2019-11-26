@@ -958,33 +958,76 @@ uint8 Manager::GetNodeBasic(uint32 const _homeId, uint8 const _nodeId)
 }
 
 //-----------------------------------------------------------------------------
+// <Manager::GetNodeBasic>
+// Get the basic type of a node
+//-----------------------------------------------------------------------------
+string Manager::GetNodeBasicString(uint32 const _homeId, uint8 const _nodeId)
+{
+	if (Driver* driver = GetDriver(_homeId))
+	{
+		return driver->GetNodeBasicString(_nodeId);
+	}
+
+	return "Unknown";
+}
+
+
+//-----------------------------------------------------------------------------
 // <Manager::GetNodeGeneric>
 // Get the generic type of a node
 //-----------------------------------------------------------------------------
-uint8 Manager::GetNodeGeneric(uint32 const _homeId, uint8 const _nodeId)
+uint8 Manager::GetNodeGeneric(uint32 const _homeId, uint8 const _nodeId, uint8 const _instance)
 {
 	uint8 genericType = 0;
 	if (Driver* driver = GetDriver(_homeId))
 	{
-		genericType = driver->GetNodeGeneric(_nodeId);
+		genericType = driver->GetNodeGeneric(_nodeId, _instance);
 	}
 
 	return genericType;
+}
+//-----------------------------------------------------------------------------
+// <Manager::GetNodeGeneric>
+// Get the generic type of a node
+//-----------------------------------------------------------------------------
+
+string Manager::GetNodeGenericString(uint32 const _homeId, uint8 const _nodeId, uint8 const _instance) 
+{
+	if (Driver *driver = GetDriver(_homeId))
+	{
+		return driver->GetNodeGenericString(_nodeId, _instance);
+	}
+	return "Unknown";
+}
+
+
+//-----------------------------------------------------------------------------
+// <Manager::GetNodeSpecific>
+// Get the specific type of a node
+//-----------------------------------------------------------------------------
+uint8 Manager::GetNodeSpecific(uint32 const _homeId, uint8 const _nodeId, uint8 const _instance)
+{
+	uint8 specific = 0;
+	if (Driver* driver = GetDriver(_homeId))
+	{
+		specific = driver->GetNodeSpecific(_nodeId, _instance);
+	}
+
+	return specific;
 }
 
 //-----------------------------------------------------------------------------
 // <Manager::GetNodeSpecific>
 // Get the specific type of a node
 //-----------------------------------------------------------------------------
-uint8 Manager::GetNodeSpecific(uint32 const _homeId, uint8 const _nodeId)
+string Manager::GetNodeSpecificString(uint32 const _homeId, uint8 const _nodeId, uint8 const _instance)
 {
-	uint8 specific = 0;
 	if (Driver* driver = GetDriver(_homeId))
 	{
-		specific = driver->GetNodeSpecific(_nodeId);
+		return driver->GetNodeSpecificString(_nodeId, _instance);
 	}
 
-	return specific;
+	return "Unknown";
 }
 
 //-----------------------------------------------------------------------------
@@ -1352,6 +1395,14 @@ bool Manager::GetNodeClassInformation(uint32 const _homeId, uint8 const _nodeId,
 	}
 
 	return result;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetCommandClassName>
+// Get a String representing the Command Class Name
+//-----------------------------------------------------------------------------
+string Manager::GetCommandClassName(uint8 const _commandClassId) {
+	return OpenZWave::Internal::CC::CommandClasses::GetName(_commandClassId);
 }
 
 //-----------------------------------------------------------------------------

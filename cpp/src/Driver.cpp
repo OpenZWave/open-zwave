@@ -1146,7 +1146,9 @@ bool Driver::WriteMsg(string const &msg)
 		else
 		{
 			// That's it - already tried to send GetMaxSendAttempt() times.
-			Log::Write(LogLevel_Error, nodeId, "ERROR: Dropping command, expected response not received after %d attempt(s)", m_currentMsg->GetMaxSendAttempts());
+			Log::Write(LogLevel_Error, nodeId, "ERROR: Dropping command, expected response not received after %d attempt(s). Command: \"%s\"",
+					   m_currentMsg->GetMaxSendAttempts(),
+					   m_currentMsg->GetAsString().c_str());
 		}
 		if (m_currentControllerCommand != NULL)
 		{
@@ -4579,35 +4581,84 @@ uint8 Driver::GetNodeBasic(uint8 const _nodeId)
 }
 
 //-----------------------------------------------------------------------------
+// <Driver::GetNodeBasic>
+// Get the basic type of a node
+//-----------------------------------------------------------------------------
+string Driver::GetNodeBasicString(uint8 const _nodeId)
+{
+	Internal::LockGuard LG(m_nodeMutex);
+	if (Node* node = GetNode(_nodeId))
+	{
+		return node->GetBasicString();
+	}
+
+	return "Unknown";
+}
+
+
+
+
+//-----------------------------------------------------------------------------
 // <Driver::GetNodeGeneric>
 // Get the generic type of a node
 //-----------------------------------------------------------------------------
-uint8 Driver::GetNodeGeneric(uint8 const _nodeId)
+uint8 Driver::GetNodeGeneric(uint8 const _nodeId, uint8 const _instance)
 {
 	uint8 genericType = 0;
 	Internal::LockGuard LG(m_nodeMutex);
 	if (Node* node = GetNode(_nodeId))
 	{
-		genericType = node->GetGeneric();
+		genericType = node->GetGeneric(_instance);
 	}
 
 	return genericType;
 }
 
 //-----------------------------------------------------------------------------
+// <Driver::GetNodeGeneric>
+// Get the generic type of a node
+//-----------------------------------------------------------------------------
+string Driver::GetNodeGenericString(uint8 const _nodeId, uint8 const _instance)
+{
+	Internal::LockGuard LG(m_nodeMutex);
+	if (Node* node = GetNode(_nodeId))
+	{
+		return node->GetGenericString(_instance);
+	}
+
+	return "Unknown";
+}
+
+
+//-----------------------------------------------------------------------------
 // <Driver::GetNodeSpecific>
 // Get the specific type of a node
 //-----------------------------------------------------------------------------
-uint8 Driver::GetNodeSpecific(uint8 const _nodeId)
+uint8 Driver::GetNodeSpecific(uint8 const _nodeId, uint8 const _instance)
 {
 	uint8 specific = 0;
 	Internal::LockGuard LG(m_nodeMutex);
 	if (Node* node = GetNode(_nodeId))
 	{
-		specific = node->GetSpecific();
+		specific = node->GetSpecific(_instance);
 	}
 
 	return specific;
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::GetNodeSpecific>
+// Get the specific type of a node
+//-----------------------------------------------------------------------------
+string Driver::GetNodeSpecificString(uint8 const _nodeId, uint8 const _instance)
+{
+	Internal::LockGuard LG(m_nodeMutex);
+	if (Node* node = GetNode(_nodeId))
+	{
+		return node->GetSpecificString(_instance);
+	}
+
+	return "Unknown";
 }
 
 //-----------------------------------------------------------------------------
