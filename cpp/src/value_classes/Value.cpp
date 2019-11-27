@@ -195,7 +195,6 @@ namespace OpenZWave
 					m_refreshAfterSet = !strcmp(refreshAfterSet, "true");
 				}
 
-
 				if (TIXML_SUCCESS == _valueElement->QueryIntAttribute("min", &intVal))
 				{
 					m_min = intVal;
@@ -244,7 +243,7 @@ namespace OpenZWave
 				_valueElement->SetAttribute("read_only", m_readOnly ? "true" : "false");
 				_valueElement->SetAttribute("write_only", m_writeOnly ? "true" : "false");
 				_valueElement->SetAttribute("verify_changes", m_verifyChanges ? "true" : "false");
-			    _valueElement->SetAttribute("refresh_after_set", m_refreshAfterSet ? "true" : "false");
+				_valueElement->SetAttribute("refresh_after_set", m_refreshAfterSet ? "true" : "false");
 
 				snprintf(str, sizeof(str), "%d", m_pollIntensity);
 				_valueElement->SetAttribute("poll_intensity", str);
