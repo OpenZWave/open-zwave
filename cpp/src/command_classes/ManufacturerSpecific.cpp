@@ -83,6 +83,11 @@ namespace OpenZWave
 			{
 
 				bool res = false;
+				if (_instance != 1) {
+					/* Not applicable to get this info on multiple instances */
+					return res;
+				}
+
 				if (GetVersion() > 1)
 				{
 					if (_requestFlags & RequestFlag_Static)
@@ -342,7 +347,6 @@ namespace OpenZWave
 						node->CreateValueString(ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_ManufacturerSpecific::SerialNumber, "Serial Number", "", true, false, "", 0);
 					}
 				}
-
 			}
 
 //-----------------------------------------------------------------------------
