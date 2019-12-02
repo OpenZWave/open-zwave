@@ -2647,10 +2647,10 @@ namespace OpenZWave
 			string const GetMetaData(uint32 const _homeId, uint8 const _nodeId, Node::MetaDataFields _metadata);
 			 /**
 			  * \brief Retrieve metadata from its name
-			  * \param metaDataFiledtoParse the string to parse (careful, case sensitive)
+			  * \param metaDataFiledToParse the string to parse (careful, case sensitive)
 			  * \return the found metaDataField if parsing is successful, or MetaData_Invalid 
 			  */
-			 Node::MetaDataFields GetMetaDataId(const string & metaDataFiledtoParse);
+			 Node::MetaDataFields GetMetaDataId(const string & metaDataFiledToParse);
 			 /**
 			  * \brief Get the MetaData string representation
 			  * \param metaData the metaData enum

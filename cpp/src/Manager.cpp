@@ -4825,9 +4825,9 @@ return "";
 // <Manager::GetMetaDataId>
 // Retrieve metadata from its name
 //-----------------------------------------------------------------------------
-Node::MetaDataFields Manager::GetMetaDataId(const string& metaDataFiledtoParse)
+Node::MetaDataFields Manager::GetMetaDataId(const string& metaDataFiledToParse)
 {
-	return Node::GetMetaDataId(metaDataFiledtoParse);
+	return Node::GetMetaDataId(metaDataFiledToParse);
 }
 
 
