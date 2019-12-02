@@ -227,6 +227,9 @@
 		<Product type="1d03" id="00a2" name="ZW162 Doorbell 6" config="aeotec/zw162.xml"/>
 		<Product type="0003" id="00b4" name="ZWA006 Smart Boost Timer Switch" config="aeotec/zwa006.xml"/>
 		<Product type="0103" id="00b4" name="ZWA006 Smart Boost Timer Switch" config="aeotec/zwa006.xml"/>
+		<Product type="0002" id="0007" name="ZWA008 Door Window Sensor 7" config="aeotec/zwa008.xml"/>
+		<Product type="0102" id="0007" name="ZWA008 Door Window Sensor 7" config="aeotec/zwa008.xml"/>
+		<Product type="0202" id="0007" name="ZWA008 Door Window Sensor 7" config="aeotec/zwa008.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0088" name="Airvent SAM S.p.A.">
 	</Manufacturer>
@@ -954,7 +957,8 @@
 		<Product type="0101" id="0005" name="HKZW-SO01 Smart Plug" config="hank/hkzw-so01-smartplug.xml"/>
 		<Product type="0100" id="000a" name="HKZW-SO05 Smart Plug" config="hank/hkzw-so05-smartplug.xml"/>
 		<Product type="0200" id="0006" name="HKZW-MS01 Multisensor" config="hank/hkzw-ms01.xml"/>
-		<Product type="0200" id="0012" name="HKZW-MS02 Motion Sensor" config="hank/hkzw-ms02.xml"/>
+		<Product type="0200" id="0012" name="HKZW-MS02 Motion Sensor" config="hank/hkzw-ms02-200.xml"/>
+        <Product type="0300" id="0012" name="HKZW-MS02 Motion Sensor" config="hank/hkzw-ms02-300.xml"/>
 		<Product type="0200" id="0008" name="HKZW-DWS01 Door/Window Sensor" config="hank/hkzw-dws01.xml"/>
 		<Product type="0201" id="0008" name="HKZW-DWS01 Door/Window Sensor" config="hank/hkzw-dws01.xml"/>
 		<Product type="0200" id="0009" name="HKZW-SCN01 Scene Controller" config="hank/scenecontroller1.xml"/>
@@ -983,6 +987,7 @@
 		<Product type="8006" id="1000" name="Smart Metering Plug HS2SK-Z" config="heiman/HS2SK-Z.xml"/>
 		<Product type="8007" id="1000" name="Temperature Humidity Sensor HS1HT-Z" config="heiman/HS1HT-Z.xml"/>
 		<Product type="8008" id="1000" name="Smart Plug HS2SK-Z" config="heiman/HS2SK-Z.xml"/>
+		<Product type="8009" id="1000" name="Indoor Siren HS2WD-Z" config="heiman/HS2WD-Z.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0344" name="HELTUN">
 		<Product type="0003" id="0001" name="HE-ZW-THERM-FL2 Heating Thermostat" config="heltun/he-zw-therm-fl2.xml"/>
@@ -1040,6 +1045,7 @@
 		<Product type="201"  id="a"    name="HS-LS100+ Leak Sensor" config="homeseer/hs-ls100plus.xml"/>
 		<Product type="0201" id="000b" name="HS-FLS100+ Floodlight Sensor" config="homeseer/hs-fls100plus.xml"/>
 		<Product type="0203" id="0001" name="HS-FC200+ Z-Wave Plus Fan Controller" config="homeseer/hs-fc200plus.xml"/>
+		<Product type="0202" id="0001" name="HS-FS100+ Flex Sensor" config="homeseer/hs-fs100plus.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0275" name="Honest Technology">
 	</Manufacturer>
@@ -1047,6 +1053,7 @@
 	</Manufacturer>
 	<Manufacturer id="0039" name="Honeywell">
 		<Product type="0011" id="0001" name="TH8320ZW1000 Touchscreen Thermostat" config="honeywell/th8320zw1000.xml"/>
+		<Product type="0011" id="0008" name="TH6320ZW2003 T6 Pro Series Thermostat" config="honeywell/th6320zw2003.xml"/>
 		<Product type="0001" id="0003" name="Lynx Touch L5100 / L7000" config="honeywell/lynx-touch-l5100.xml"/>
 		<Product type="4944" id="3038" name="39351 / ZW3005 In-Wall Smart Dimmer" config="honeywell/39351-ZW3005.xml"/>
 	</Manufacturer>
@@ -1219,6 +1226,7 @@
 		<Product type="0001" id="0001" name="Touchpad Electronic Deadbolt" config="kwikset/smartcode.xml"/>
 		<Product type="0003" id="0642" name="SmartCode 916" config="kwikset/smartcode.xml"/>
 		<Product type="0006" id="0440" name="SmartCode 10" config="kwikset/smartcode.xml"/>
+		<Product type="0003" id="0440" name="SmartCode 914 Z-Wave Plus" config="kwikset/smartcode.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0051" name="Lagotek Corp">
 	</Manufacturer>
@@ -1539,6 +1547,7 @@
 		<Product type="0001" id="0001" name="123658 Plug-in Switch plus Power Meter" config="popp/123658.xml"/>
 		<Product type="0003" id="0001" name="009105 Wall Plug Switch Schuko (IP44)" config="popp/009105.xml"/>
 		<Product type="0003" id="000a" name="700397 Wall Plug Switch Outdoor Schuko (IP44)" config="popp/700397.xml"/>
+		<Product type="0003" id="1002" name="700793 Power Plug" config="popp/700793.xml"/>
 		<Product type="0004" id="0002" name="Solar Powered Outdoor Siren" config="popp/solar-siren.xml" />
 		<Product type="0004" id="0003" name="004407 CO Detector" config="popp/004407.xml"/>
 		<Product type="0004" id="0004" name="009402 10-Year Smoke Detector" config="popp/009402.xml"/>
@@ -1623,6 +1632,7 @@
 		<Product type="0007" id="0052" name="ZMNHTDx Smart meter S4 S5 S6" config="qubino/ZMNHTDx.xml"/>
 		<Product type="0007" id="0053" name="ZMNHZDx Weather Station" config="qubino/ZMNHZDx.xml"/>
 		<Product type="0007" id="0054" name="ZMNHXDx 3-phase Smart Meter" config="qubino/ZMNHXDx.xml"/>
+		<Product type="0005" id="0054" name="ZMNKIDx OnOff Thermostat 2" config="qubino/ZMNKIDx.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0130" name="Quby">
 		<Product type="0001" id="0001" name="Energy Management System"/>
@@ -1840,6 +1850,7 @@
 	<Manufacturer id="029C" name="SoftAtHome">
 	</Manufacturer>
 	<Manufacturer id="0047" name="Somfy">
+		<Product type="5a52" id="5400" name="1811265 Z-Wave to RTS Interface" config="somfy/1811265_ZRTSI.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0394" name="SONG JIANG YUN-AN TECHNOLOGY">
 	</Manufacturer>
@@ -1871,7 +1882,7 @@
 		<Product type="0002" id="1a72" name="IS140-2" config="steinel/is140-2.xml"/>
 		<Product type="0001" id="1a74" name="RS LED D2" config="steinel/rs-led-d2.xml"/>
 		<Product type="0001" id="1a73" name="XLED HOME 2" config="steinel/xled-home-2.xml"/>
-                <Product type="0001" id="1a75" name="L810 LED iHF" config="steinel/l810-led-ihf.xml"/>
+        <Product type="0001" id="1a75" name="L810 LED iHF" config="steinel/l810-led-ihf.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0239" name="Stelpro">
 		<Product type="0001" id="0001" name="STZW402+ Electronic Thermostat" config="stelpro/stzw402.xml"/>
@@ -1883,6 +1894,11 @@
 	<Manufacturer id="0105" name="Sumitomo">
 	</Manufacturer>
 	<Manufacturer id="028B" name="Sunjet Components">
+	</Manufacturer>
+	<Manufacturer id="0330" name="Sunricher">
+		<Product type="0300" id="a10d" name="Z-Wave Wall Controller SR-ZV9001T4-DIM-EU" config="sunricher/srzv9001t4dimeu.xml"/>
+		<Product type="0200" id="d005" name="In-wall Dimmer SR-ZV9101SAC-HP-EU" config="sunricher/srzv9101sachpeu.xml"/>
+		<Product type="0200" id="d00c" name="Nexa/Tronika ZV-9101" config="sunricher/zv9101.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0054" name="Superna">
 	</Manufacturer>
@@ -2254,9 +2270,10 @@
 		<Product type="0101" id="000D" name="ZEN15 Power Switch" config="zooz/zen15.xml" />
 		<Product type="0301" id="0012" name="ZSE18 Motion Sensor" config="zooz/zse18.xml" />
 		<Product type="0401" id="0002" name="ZST10 S2 Z-Wave Plus USB Stick" />
+		<Product type="a000" id="a003" name="ZEN25 S2 Double Plug" config="zooz/zen25.xml" />
 		<Product type="a000" id="a001" name="ZEN26 S2 On Off Wall Switch" config="zooz/zen26.xml" />
 		<Product type="a000" id="a002" name="ZEN27 S2 Dimmer Wall Switch" config="zooz/zen27.xml" />
-		<Product type="b111" id="1e1c" name="ZEN21 Switch V2.0" config="zooz/zen21.xml" />
+		<Product type="b111" id="1e1c" name="ZEN21 Switch V2.0" config="zooz/zen21v2.xml" />
 		<Product type="000c" id="0003" name="ZSE19 S2 Multisiren" config="zooz/zse19.xml" />
 		<Product type="a000" id="a004" name="ZEN20 V2.0 Power Strip" config="zooz/zen20v2.xml" />
 		<Product type="0001" id="0005" name="ZSE29 Outdoor Motion Sensor" config="zooz/zse29.xml" />
@@ -2271,6 +2288,7 @@
 		<Product type="b111" id="1e1c" name="ZEN21 Switch V2.0" config="zooz/zen21.xml" />
 	</Manufacturer>
 	<Manufacturer id="0315" name="zwaveproducts.com">
+		<Product type="4447" id="3031" name="PA-100" config="zwp/PA-100.xml"/>
 		<Product type="4447" id="3034" name="WD-100" config="zwp/WD-100.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0021" name="Zykronix">
