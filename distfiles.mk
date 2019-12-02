@@ -546,6 +546,7 @@ DISTFILES =	.gitignore \
 	config/zooz/zen22v2.xml \
 	config/zooz/zen23.xml \
 	config/zooz/zen24.xml \
+	config/zooz/zen25.xml \
 	config/zooz/zen26.xml \
 	config/zooz/zen27.xml \
 	config/zooz/zse08.xml \
