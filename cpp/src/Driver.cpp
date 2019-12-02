@@ -2704,6 +2704,7 @@ void Driver::HandleSerialAPIGetInitDataResponse(uint8* _data)
 		QueueNotification(notification);
 		NotifyWatchers();
 		m_driverThread->Stop();
+		return;
 	}
 	if (!m_init)
 	{
