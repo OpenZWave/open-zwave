@@ -2642,6 +2642,15 @@ void Driver::HandleSerialAPIGetInitDataResponse
 {
 	int32 i;
 
+	if (m_homeId == 0 || m_Controller_nodeId == -1) {
+		Log::Write(LogLevel_Fatal, "Failed to get HomeID or Controller Node ID during Init Sequence");
+		Notification* notification = new Notification(Notification::Type_DriverFailed);
+		QueueNotification(notification);
+		NotifyWatchers();
+		m_driverThread->Stop();
+		return;
+	}
+	
 	if( !m_init )
 	{
 		// Mark the driver as ready (we have to do this first or
