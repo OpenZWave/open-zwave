@@ -37,7 +37,7 @@ Tech manual: https://www.eurotronic.org/fileadmin/user_upload/eurotronic.org/Pro
     </CommandClass>
 
     <!-- Setpoints typeInterpretation="A" -->
-    <CommandClass id="67" base="0" >
+    <CommandClass id="67" base="0" typeInterpretation="A">
         <Instance index="1"/>
         <Value type="decimal" genre="user" instance="1" index="1" label="Heat" units="&#x00b0;C" read_only="false" write_only="false" min="8" max="28" value="20"/>
         <Value type="decimal" genre="user" instance="1" index="11" label="Heat Eco" units="&#x00b0;C" read_only="false" write_only="false" min="8" max="28" value="16"/>
