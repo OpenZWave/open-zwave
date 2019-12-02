@@ -63,6 +63,7 @@
 #include "value_classes/ValueShort.h"
 #include "value_classes/ValueString.h"
 #include "value_classes/ValueBitSet.h"
+#include "Http.h"
 
 using namespace OpenZWave;
 
@@ -4898,3 +4899,13 @@ if (Driver *driver = GetDriver(_homeId))
 return false;
 }
 
+bool Manager::setHttpClient(uint32 const _homeId, OpenZWave::Internal::i_HttpClient* httpClient)
+{
+   if (Driver* driver = GetDriver(_homeId))
+   {
+      httpClient->SetDriver(driver);
+      driver->setHttpClient(httpClient);
+      return true;
+   }
+   return false;
+}

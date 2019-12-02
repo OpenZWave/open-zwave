@@ -73,12 +73,14 @@ namespace OpenZWave
 		{
 			public:
 				i_HttpClient(Driver *);
+				i_HttpClient();
 				virtual ~i_HttpClient()
 				{
 				}
 				;
 				virtual bool StartDownload(HttpDownload *transfer) = 0;
 				void FinishDownload(HttpDownload *transfer);
+            void SetDriver(Driver*);
 			private:
 				Driver* m_driver;
 		};

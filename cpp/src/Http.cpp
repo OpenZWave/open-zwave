@@ -46,6 +46,12 @@ namespace OpenZWave
 				m_driver(driver)
 		{
 		}
+
+      i_HttpClient::i_HttpClient():
+         m_driver(NULL)
+		{
+		   
+		}
 		;
 
 		void i_HttpClient::FinishDownload(HttpDownload *transfer)
@@ -55,6 +61,11 @@ namespace OpenZWave
 			event->type = Driver::EventMsg::Event_Http;
 			event->event.httpdownload = transfer;
 			this->m_driver->SubmitEventMsg(event);
+		}
+
+      void i_HttpClient::SetDriver(Driver* driver)
+		{
+         m_driver = driver;
 		}
 
 		HttpClient::HttpClient(OpenZWave::Driver *drv) :

@@ -54,6 +54,7 @@ namespace OpenZWave
 			class ValueStore;
 		}
 		class Msg;
+      class i_HttpClient;
 	}
 	class Options;
 	class Node;
@@ -2720,6 +2721,8 @@ namespace OpenZWave
 			 */
 			bool downloadLatestMFSRevision(uint32 const _homeId);
 
+
+         bool setHttpClient(uint32 const _homeId, OpenZWave::Internal::i_HttpClient*);
 			/*@}*/
 
 	};
