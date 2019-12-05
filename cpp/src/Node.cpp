@@ -461,8 +461,15 @@ void Node::AdvanceQueries()
 				Internal::CC::MultiInstance* micc = static_cast<Internal::CC::MultiInstance*>(GetCommandClass(Internal::CC::MultiInstance::StaticGetCommandClassId()));
 				if (micc)
 				{
-					m_queryPending = micc->RequestInstances();
-					addQSC = m_queryPending;
+					if (micc->IsAfterMark())
+					{
+						Log::Write(LogLevel_Detail, m_nodeId, "Skipping RequestInstances() because MultiChannel CC is \"after mark\"");
+					}
+					else
+					{
+						m_queryPending = micc->RequestInstances();
+						addQSC = m_queryPending;
+					}
 				}
 
 				// when done, advance to the Static stage
