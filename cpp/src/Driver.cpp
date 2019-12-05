@@ -497,7 +497,7 @@ bool Driver::Init(uint32 _attempts)
 		return false;
 	}
 
-	m_Controller_nodeId = -1;
+	m_Controller_nodeId = 255;
 	m_waitingForAck = false;
 
 	// Open the controller
@@ -2698,8 +2698,9 @@ void Driver::HandleSerialAPIGetInitDataResponse(uint8* _data)
 {
 	int32 i;
 
-	if (m_homeId == 0 || m_Controller_nodeId == -1) {
-		Log::Write(LogLevel_Fatal, "Failed to get HomeID or Controller Node ID during Init Sequence");
+	if (m_homeId == 0 || m_Controller_nodeId == 255 || m_Controller_nodeId == 0) {
+		Log::Write(LogLevel_Fatal, "Failed to get HomeID or Controller Node ID during Init Sequence, m_homeId = 0x%08x, m_Controller_nodeId = %d",
+				   m_homeId, m_Controller_nodeId);
 		Notification* notification = new Notification(Notification::Type_DriverFailed);
 		QueueNotification(notification);
 		NotifyWatchers();
