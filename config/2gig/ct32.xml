@@ -7,6 +7,8 @@
   -->
   <!-- This thermostat's setpoint descriptions are 0 based, not 1 -->
   <CommandClass id="67" base="0"/>
+  <!-- Map endpoints to instances -->
+  <CommandClass id="96" mapping="endpoints"/>
   <CommandClass id="112">
     <Value type="list" index="1" genre="config" label="Temperature Reporting Threshold" units="" min="0" max="4" value="0" size="1">
       <Help>
@@ -174,4 +176,3 @@
     </Associations>
   </CommandClass>
 </Product>
-
