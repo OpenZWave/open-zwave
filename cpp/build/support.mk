@@ -38,14 +38,24 @@ XMLLINT := $(shell which xmllint)
 TMP     := /tmp
 #pkg-config binary for package config files
 PKGCONFIG := $(shell which pkg-config)
-#svn binary for doing a make dist export
+#git binary for doing a make dist export
 GIT		:= $(shell which git)
-# if svnversion is not installed, then set the revision to 0
+# if git is not installed, then set the revision to 0
 ifeq ($(GIT),)
+$(warning  git executable not found, setting VERSION_REV to 0)
 VERSION_REV ?= 0
 else
-GITVERSION	:= $(shell $(GIT) --git-dir $(top_srcdir)/.git describe --long --tags --dirty 2>/dev/null | sed s/^v//)
+_ := $(shell $(GIT) -C $(top_srcdir) update-index --assume-unchanged dist/openzwave.spec 2>&1)
+ifneq ($(_),)
+$(warning  git update-index returned: $(_))
+endif
+GITVERSION	:= $(shell $(GIT) -C $(top_srcdir) describe --long --tags --dirty 2>/dev/null | sed s/^v//)
+_ := $(shell $(GIT) -C $(top_srcdir) update-index --no-assume-unchanged dist/openzwave.spec 2>&1)
+ifneq ($(_),)
+$(warning  git update-index returned: $(_))
+endif
 ifeq ($(GITVERSION),)
+$(warning  git describe returned an empty result, setting GITVERSION to VERSION_MAJ.VERSION_MIN.-1 and VERSION_REV to 0)
 GITVERSION	:= $(VERSION_MAJ).$(VERSION_MIN).-1
 VERSION_REV	:= 0
 else
