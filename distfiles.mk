@@ -303,6 +303,7 @@ DISTFILES =	.github/workflows/PRTest.yml \
 	config/ge/28169-plugin-switch.xml \
 	config/ge/45604.xml \
 	config/ge/46201-switch.xml \
+	config/ge/46203-dimmer.xml \
 	config/ge/dimmer.xml \
 	config/ge/dimmer_module.xml \
 	config/ge/hinge-pin.xml \
@@ -596,6 +597,7 @@ DISTFILES =	.github/workflows/PRTest.yml \
 	config/images/ge/28169-plugin-switch.png \
 	config/images/ge/45604.png \
 	config/images/ge/46201-switch.png \
+	config/images/ge/46203-dimmer.png \
 	config/images/ge/dimmer.png \
 	config/images/ge/dimmer_module.png \
 	config/images/ge/hinge-pin.png \
