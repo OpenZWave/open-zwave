@@ -45,7 +45,7 @@ TEST(OpenZWave, Version)
 	// "Expected: (ozw_vers_revision) >= (900), actual: 0 vs 900 [ FAILED ] OpenZWave.Version (0 ms)""
 	if (ozw_vers_revision != 0)
 	{
-		EXPECT_GE(ozw_vers_revision, 900);
+		EXPECT_GE(ozw_vers_revision, 992);
 	}
 }
 TEST(ValueID, Constructor)
@@ -119,6 +119,18 @@ TEST(ValueID, GetStoreKey)
 	delete vid4;
 	delete vid5;
 	delete vid6;
+}
+TEST(ValueID, GetAsString)
+{
+	EXPECT_EQ(
+		ValueID(0xFFFF, static_cast<uint64>(0x400000133002A)).GetAsString(),
+		"HomeID: 0x0000ffff, ValueID: (Id 0x000400000133002a, NodeID 1, Genre basic, CC 0xcc, Instance 2, Index 4, Type bitset)");
+	EXPECT_EQ(
+		ValueID(static_cast<uint64>(0x1), 0x02, ValueID::ValueGenre_System, 0x04, 5, 6, ValueID::ValueType_String).GetAsString(),
+		"HomeID: 0x00000001, ValueID: (Id 0x0006000002c10057, NodeID 2, Genre system, CC 0x04, Instance 5, Index 6, Type string)");
+	EXPECT_EQ(
+		ValueID(static_cast<uint64>(0xABCDEF01), static_cast<uint64>(0x0123456789ABCDEF)).GetAsString(),
+		"HomeID: 0xabcdef01, ValueID: (Id 0x0123456789abcdef, NodeID 137, Genre config, CC 0xaf, Instance 222, Index 291, Type invalid type)");
 }
 } // namespace Testing
 } // namespace OpenZWave
