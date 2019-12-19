@@ -2758,7 +2758,17 @@ void Node::ReadValueFromXML(uint8 const _commandClassId, TiXmlElement const* _va
 Internal::VC::Value* Node::GetValue(ValueID const& _id)
 {
 	// This increments the value's reference count
-	return GetValueStore()->GetValue(_id.GetValueStoreKey());
+	auto value = GetValueStore()->GetValue(_id.GetValueStoreKey());
+
+	if (value->GetID().GetId() != _id.GetId())
+	{
+		Log::Write(LogLevel_Error, m_nodeId, "Node::GetValue called with: %s but GetValueStore returned: %s",
+				   _id.GetAsString().c_str(), value->GetID().GetAsString().c_str());
+
+		value->Release();
+		return nullptr;
+	}
+	return value;
 }
 
 //-----------------------------------------------------------------------------
