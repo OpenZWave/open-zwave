@@ -59,16 +59,6 @@ To perform a factory reset, please perform the following:
 			Is the least four significant bytes (LSB). 			
 			</Help>
     </Value>
-    <Value genre="config" index="35" instance="1" label="lock type" read_only="true" size="2" type="short">
-      <Help>Unique ID of the lock type
-			910 Z-Wave (Legacy, FW 3.4) 0x00 0x00
-			912 Z-Wave (Legacy, FW 3.2) 0x00 0x00
-			910 Z-Wave 0x02 0x36
-			912 Z-Wave 0x03 0x36
-			914 Z-Wave 0x04 0x36
-			916 Z-Wave 0x06 0x42
-			</Help>
-    </Value>
     <Value genre="config" index="40" label="Reset To Factory Defaults" size="1" type="list" value="0" write_only="true">
       <Help>Reset to factory defaults</Help>
       <Item label="Do reset" value="1"/>
