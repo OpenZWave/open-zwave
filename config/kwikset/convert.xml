@@ -61,7 +61,7 @@ To perform a factory reset, please perform the following:
     </Value>
     <Value genre="config" index="40" label="Reset To Factory Defaults" size="1" type="list" value="0" write_only="true">
       <Help>Reset to factory defaults</Help>
-      <Item label="Do reset" value="1"/>
+      <Item label="Perform Factory Reset" value="1"/>
       <Item label="Normal" value="0"/>
     </Value>
   </CommandClass>
