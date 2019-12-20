@@ -3,8 +3,8 @@ Kwikset Convert
 http://s7d5.scene7.com/is/content/BDHHI/z-wave-configuration
 --><Product Revision="14" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
-    <!--<MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0090:0001:0001</MetaDataItem>
-    <MetaDataItem name="ProductPic">images/kwikset/convert.png</MetaDataItem>-->
+    <!--<MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0090:0001:0001</MetaDataItem>-->
+    <MetaDataItem name="ProductPic">images/kwikset/convert.png</MetaDataItem>
     <MetaDataItem id="0446" name="ZWProductPage" type="0003">https://products.z-wavealliance.org/products/2268</MetaDataItem>
     <MetaDataItem id="0446" name="FrequencyName" type="0003">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem id="0446" name="Identifier" type="0003">914</MetaDataItem>
