@@ -7,7 +7,7 @@ http://s7d5.scene7.com/is/content/BDHHI/z-wave-configuration
     <MetaDataItem name="ProductPic">images/kwikset/convert.png</MetaDataItem>
     <MetaDataItem id="0446" name="ZWProductPage" type="0003">https://products.z-wavealliance.org/products/2268</MetaDataItem>
     <MetaDataItem id="0446" name="FrequencyName" type="0003">U.S. / Canada / Mexico</MetaDataItem>
-    <MetaDataItem id="0446" name="Identifier" type="0003">914</MetaDataItem>
+    <MetaDataItem id="0446" name="Identifier" type="0003">914C</MetaDataItem>
     <MetaDataItem name="ProductPage">https://www.kwikset.com/products/detail/kwikset-convert-smart-lock-conversion-kit-with-z-wave-technology</MetaDataItem>
     <MetaDataItem name="Description">Extend your smart home system to your current deadbolt, enabling your existing deadbolt to wirelessly communicate with your smart home or security system
 Dramatically reduced, all-metal interior 
