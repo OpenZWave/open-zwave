@@ -19,7 +19,7 @@ Works with existing select single cylinder deadbolts</MetaDataItem>
     </ChangeLog>
     <MetaDataItem name="WakeupDescription">The electronic conversion kit remains asleep until an action occurs on the latch or a request is received from the RF side.
 For the RF side, it will wake up every 1 second to check if there are any requests from your smart home controller.</MetaDataItem>
-    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/2369/Install Guide GED1800 04112017.pdf</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&filename=MarketCertificationFiles/2268/Install_Guide_914C_03_09_2017.pdf</MetaDataItem>
     <MetaDataItem name="InclusionDescription">Initiate the process to add the lock to your system at your smart home controller.
 When prompted by your smart home system to add the lock, press button “A” on the lock interior one time. The red LED will illuminate when the lock enters Add Mode.
 Please allow time for the controller to add the lock to your system.</MetaDataItem>
