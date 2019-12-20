@@ -39,9 +39,9 @@ To perform a factory reset, please perform the following:
     <Value genre="config" index="31" instance="1" label="Dipswitches state" max="255" min="0" read_only="true" type="byte">
       <Help>Bit mask field that returns the state of the user accessible Dipswitches on the door look.
 			Bit 0 Lock LED Status (1: enable)
-			Bit 1 Auto lock (1: enable)
-			Bit 2 Auto Buzzer (1: enable)
-			Bit 3 Secure Screen (1: enable) *Only for MB 916
+			Bit 1 Autolock (1: enable)
+			Bit 2 Buzzer (1: enable)
+			Bit 3 Handing Invert (1: enable)
 			</Help>
     </Value>
     <Value genre="config" index="33" instance="1" label="MSB SKU part numbers" max="255" min="0" type="byte">
