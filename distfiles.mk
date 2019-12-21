@@ -227,6 +227,7 @@ DISTFILES =	.gitignore \
 	config/fibaro/fgsd002.xml \
 	config/fibaro/fgss101.xml \
 	config/fibaro/fgt001.xml \
+	config/fibaro/fgwoe.xml \
 	config/fibaro/fgwpe.xml \
 	config/fibaro/fgwpfzw5.xml \
 	config/fibaro/fgwpg111.xml \
@@ -550,6 +551,7 @@ DISTFILES =	.gitignore \
 	config/zooz/zen20.xml \
 	config/zooz/zen20v2.xml \
 	config/zooz/zen21.xml \
+	config/zooz/zen21v2.xml \
 	config/zooz/zen22.xml \
 	config/zooz/zen22v2.xml \
 	config/zooz/zen23.xml \
