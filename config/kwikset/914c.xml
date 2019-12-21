@@ -12,7 +12,7 @@ Works with existing select single cylinder deadbolts</MetaDataItem>
     <MetaDataItem name="ProductSupport">http://www.kwikset.com/Customer-Support/Overview.aspx</MetaDataItem>
     <MetaDataItem name="Name">Convert Electronic Deadbolt</MetaDataItem>
     <ChangeLog>
-      <Entry author="Jeff Sanicola" date="20 Dec 2019" revision="1">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2268/xml</Entry>
+      <Entry author="Jeff Sanicola - jeff.sanicola@outlook.com" date="20 Dec 2019" revision="1">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2268/xml</Entry>
     </ChangeLog>
     <MetaDataItem name="WakeupDescription">The electronic conversion kit remains asleep until an action occurs on the latch or a request is received from the RF side.
 For the RF side, it will wake up every 1 second to check if there are any requests from your smart home controller.</MetaDataItem>
