@@ -1,7 +1,7 @@
 <Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0090:0446:0003</MetaDataItem>
-    <MetaDataItem name="ProductPic">images/kwikset/convert.png</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/kwikset/914c.png</MetaDataItem>
     <MetaDataItem id="0446" name="ZWProductPage" type="0003">https://products.z-wavealliance.org/products/2268</MetaDataItem>
     <MetaDataItem id="0446" name="FrequencyName" type="0003">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem id="0446" name="Identifier" type="0003">914C</MetaDataItem>
@@ -39,7 +39,7 @@ To perform a factory reset, please perform the following:
 			Bit 1 Autolock (1: enable)
 			Bit 2 Buzzer (1: enable)
 			Bit 3 Handing Invert (1: enable)
-			</Help>
+      </Help>
     </Value>
     <Value genre="config" index="33" instance="1" label="MSB SKU part numbers" max="255" min="0" type="byte">
       <Help>The Configuration Parameter 33 and 34 are used to set the SKU part numbers to the Kwikset locks. 
@@ -54,7 +54,7 @@ To perform a factory reset, please perform the following:
     <Value genre="config" index="34" instance="1" label="LSB SKU part numbers" max="255" min="0" type="byte">
       <Help>The Configuration Parameter 33 and 34 are used to set the SKU part numbers to the Kwikset locks. 
 			Is the least four significant bytes (LSB). 			
-			</Help>
+      </Help>
     </Value>
     <Value genre="config" index="40" label="Reset To Factory Defaults" size="1" type="list" value="0" write_only="true">
       <Help>Reset to factory defaults</Help>
