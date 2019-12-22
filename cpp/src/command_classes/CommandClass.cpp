@@ -38,6 +38,7 @@
 #include "Driver.h"
 #include "Localization.h"
 #include "Manager.h"
+#include "TimerThread.h"
 #include "platform/Log.h"
 #include "value_classes/Value.h"
 #include "value_classes/ValueStore.h"
@@ -69,12 +70,14 @@ namespace OpenZWave
 				m_com.EnableFlag(COMPAT_FLAG_REFRESHONWAKEUP, false);
 				m_com.EnableFlag(COMPAT_FLAG_VERIFYCHANGED, false);
 				m_com.EnableFlag(COMPAT_FLAG_NO_REFRESH_AFTER_SET, false);
+				m_com.EnableFlag(COMPAT_FLAG_DELAY_REFRESH_AFTER_SET, 0);
 				m_dom.EnableFlag(STATE_FLAG_CCVERSION, 1);
 				m_dom.EnableFlag(STATE_FLAG_STATIC_REQUESTS, 0);
 				m_dom.EnableFlag(STATE_FLAG_AFTERMARK, false);
 				m_dom.EnableFlag(STATE_FLAG_ENCRYPTED, false);
 				m_dom.EnableFlag(STATE_FLAG_INNIF, false);
 
+				Timer::SetDriver(GetDriver());
 			}
 
 //-----------------------------------------------------------------------------
@@ -792,6 +795,28 @@ namespace OpenZWave
 			}
 
 //-----------------------------------------------------------------------------
+// <CommandClass::RequestValueUpdate>
+// Handle update requests after setting value, optionally delaying the get
+//-----------------------------------------------------------------------------
+			bool CommandClass::RequestValueUpdate
+			(
+        uint32 const _requestFlags,
+        uint16 const _dummy1,   // = 0 (not used)
+        uint8 const _instance,
+        Driver::MsgQueue const _queue
+			)
+			{
+				if (m_com.GetFlagInt(COMPAT_FLAG_DELAY_REFRESH_AFTER_SET) > 0) {
+					Log::Write(LogLevel_Debug, GetNodeId(), "  Delaying refresh for %dms", m_com.GetFlagInt(COMPAT_FLAG_DELAY_REFRESH_AFTER_SET));
+					TimerThread::TimerCallback callback = bind(&CommandClass::RequestValue, this, _requestFlags, _dummy1, _instance, _queue);
+					TimerSetEvent(m_com.GetFlagInt(COMPAT_FLAG_DELAY_REFRESH_AFTER_SET), callback, 1);
+					return true;
+				} else {
+					return RequestValue(_requestFlags, _dummy1, _instance, _queue);
+				}
+			}
+
+//-----------------------------------------------------------------------------
 // <CommandClass::refreshValuesOnWakeup>
 // Refresh Values upon Wakeup Notification
 //-----------------------------------------------------------------------------
@@ -812,4 +837,3 @@ namespace OpenZWave
 		} // namespace CC
 	} // namespace Internal
 } // namespace OpenZWave
-

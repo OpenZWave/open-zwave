@@ -301,7 +301,7 @@ namespace OpenZWave
 								{
 									// queue a "RequestValue" message to update the value
 									if (m_refreshAfterSet) {
-										cc->RequestValue( 0, m_id.GetIndex(), m_id.GetInstance(), Driver::MsgQueue_Send );
+										cc->RequestValueUpdate(0, m_id.GetIndex(), m_id.GetInstance(), Driver::MsgQueue_Send);
 									}
 								}
 								else

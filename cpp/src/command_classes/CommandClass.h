@@ -35,6 +35,7 @@
 #include "Bitfield.h"
 #include "Driver.h"
 #include "CompatOptionManager.h"
+#include "TimerThread.h"
 
 namespace OpenZWave
 {
@@ -57,7 +58,7 @@ namespace OpenZWave
 			/** \brief Base class for all Z-Wave command classes.
 			 * \ingroup CommandClass
 			 */
-			class OPENZWAVE_EXPORT CommandClass
+			class OPENZWAVE_EXPORT CommandClass: protected Timer
 			{
 					friend Internal::VC::ValueStore;
 				public:
@@ -82,6 +83,7 @@ namespace OpenZWave
 					{
 						return false;
 					}
+					bool RequestValueUpdate(uint32 const _requestFlags, uint16 const _index, uint8 const _instance, Driver::MsgQueue const _queue);
 					virtual void refreshValuesOnWakeup();
 
 					virtual uint8 const GetCommandClassId() const = 0;

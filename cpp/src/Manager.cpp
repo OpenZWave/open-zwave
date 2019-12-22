@@ -401,6 +401,13 @@ Driver* Manager::GetDriver(uint32 const _homeId)
 		return it->second;
 	}
 
+	for( list<Driver*>::iterator it = m_pendingDrivers.begin(); it != m_pendingDrivers.end(); ++it )
+	{
+		if ((*it)->GetHomeId() == _homeId) {
+			return *it;
+		}
+	}
+
 	Log::Write(LogLevel_Error, "mgr,     Manager::GetDriver failed - Home ID 0x%.8x is unknown", _homeId);
 	OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_HOMEID, "Invalid HomeId passed to GetDriver");
 	//assert(0); << Don't assert as this might be a valid condition when we call RemoveDriver. See comments above.

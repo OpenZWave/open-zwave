@@ -29,7 +29,6 @@
 #define _CentralScene_H
 
 #include "command_classes/CommandClass.h"
-#include "TimerThread.h"
 
 namespace OpenZWave
 {
@@ -41,7 +40,7 @@ namespace OpenZWave
 			/** \brief Implements COMMAND_CLASS_CENTRAL_SCENE (0x5B), a Z-Wave device command class.
 			 *  \ingroup CommandClass
 			 */
-			class CentralScene: public CommandClass, private Timer
+			class CentralScene: public CommandClass
 			{
 				public:
 					static CommandClass* Create(uint32 const _homeId, uint8 const _nodeId)

@@ -62,6 +62,12 @@ Main features of FIBARO Wall Plug:
     <Compatibility/>
   </CommandClass>
   <!-- Configuration -->
+  <CommandClass id="37">
+    <Compatibility>
+      <!-- When toggling the switch, an immediate get-after-set returns busy. Add a 150ms delay. -->
+      <DelayRefreshAfterSet>150</DelayRefreshAfterSet>
+    </Compatibility>
+  </CommandClass>
   <CommandClass id="112">
     <Value genre="config" index="2" instance="1" label="Remember device status after a power failure" size="1" type="list" value="1">
       <Help>This parameter determines how the Wall Plug will react in the event of power supply failure (e.g. taking out from the electrical outlet).

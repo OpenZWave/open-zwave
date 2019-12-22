@@ -109,6 +109,7 @@
 			   <xs:attribute name='index' type='xs:string' use='required'/>
 			  </xs:complexType>
 		   </xs:element>
+		   <xs:element name="DelayRefreshAfterSet" type="xs:integer" minOccurs='0'/>
 	  </xs:choice>
   </xs:complexType>
  </xs:element>

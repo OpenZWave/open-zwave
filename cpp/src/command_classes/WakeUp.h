@@ -31,7 +31,6 @@
 #include <list>
 #include "command_classes/CommandClass.h"
 #include "Driver.h"
-#include "TimerThread.h"
 
 namespace OpenZWave
 {
@@ -48,7 +47,7 @@ namespace OpenZWave
 			/** \brief Implements COMMAND_CLASS_WAKE_UP (0x84), a Z-Wave device command class.
 			 * \ingroup CommandClass
 			 */
-			class WakeUp: public CommandClass, private Timer
+			class WakeUp: public CommandClass
 			{
 				public:
 					static CommandClass* Create(uint32 const _homeId, uint8 const _nodeId)
