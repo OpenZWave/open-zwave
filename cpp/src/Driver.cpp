@@ -3606,11 +3606,7 @@ void Driver::HandleApplicationCommandHandlerRequest(uint8* _data, bool encrypted
 			node->SetNodeAlive(true);
 		}
 	}
-	if (Internal::CC::ApplicationStatus::StaticGetCommandClassId() == classId)
-	{
-		//TODO: Test this class function or implement
-	}
-	else if (Internal::CC::ControllerReplication::StaticGetCommandClassId() == classId)
+	if (Internal::CC::ControllerReplication::StaticGetCommandClassId() == classId)
 	{
 		if (m_controllerReplication && m_currentControllerCommand && (ControllerCommand_ReceiveConfiguration == m_currentControllerCommand->m_controllerCommand))
 		{
