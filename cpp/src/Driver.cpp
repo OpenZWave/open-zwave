@@ -1721,7 +1721,8 @@ bool Driver::ReadMsg()
 				Log::Write(LogLevel_Warning, "m_currentMsg was NULL when trying to set MaxSendAttempts");
 				Log::QueueDump();
 			}
-			WriteMsg("CAN");
+			// Don't do WriteMsg("CAN"); here, the controller has data waiting to be handled by OZW.
+			// Instead, let the main loop handle incoming message first to flush the buffer(s)
 			break;
 		}
 
