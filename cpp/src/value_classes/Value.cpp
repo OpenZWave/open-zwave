@@ -57,7 +57,7 @@ namespace OpenZWave
 // Constructor
 //-----------------------------------------------------------------------------
 			Value::Value(uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint16 const _index, ValueID::ValueType const _type, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, bool const _isSet, uint8 const _pollIntensity) :
-					m_min(0), m_max(0), m_refreshTime(0), m_verifyChanges(false), m_id(_homeId, _nodeId, _genre, _commandClassId, _instance, _index, _type), m_units(_units), m_readOnly(_readOnly), m_writeOnly(_writeOnly), m_isSet(_isSet), m_affectsLength(0), m_affects(), m_affectsAll(false), m_checkChange(false), m_pollIntensity(_pollIntensity)
+					m_min(0), m_max(0), m_refreshTime(0), m_verifyChanges(false), m_refreshAfterSet(true), m_id(_homeId, _nodeId, _genre, _commandClassId, _instance, _index, _type), m_units(_units), m_readOnly(_readOnly), m_writeOnly(_writeOnly), m_isSet(_isSet), m_affectsLength(0), m_affects(), m_affectsAll(false), m_checkChange(false), m_pollIntensity(_pollIntensity)
 			{
 				SetLabel(_label);
 			}
@@ -67,7 +67,7 @@ namespace OpenZWave
 // Constructor (from XML)
 //-----------------------------------------------------------------------------
 			Value::Value() :
-					m_min(0), m_max(0), m_refreshTime(0), m_verifyChanges(false), m_readOnly(false), m_writeOnly(false), m_isSet(false), m_affectsLength(0), m_affects(), m_affectsAll(false), m_checkChange(false), m_pollIntensity(0)
+					m_min(0), m_max(0), m_refreshTime(0), m_verifyChanges(false), m_refreshAfterSet(true), m_readOnly(false), m_writeOnly(false), m_isSet(false), m_affectsLength(0), m_affects(), m_affectsAll(false), m_checkChange(false), m_pollIntensity(0)
 			{
 			}
 
@@ -300,7 +300,9 @@ namespace OpenZWave
 								if (!IsWriteOnly())
 								{
 									// queue a "RequestValue" message to update the value
-									cc->RequestValue(0, m_id.GetIndex(), m_id.GetInstance(), Driver::MsgQueue_Send);
+									if (m_refreshAfterSet) {
+										cc->RequestValue( 0, m_id.GetIndex(), m_id.GetInstance(), Driver::MsgQueue_Send );
+									}
 								}
 								else
 								{
