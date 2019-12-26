@@ -497,7 +497,7 @@ bool Driver::Init(uint32 _attempts)
 		return false;
 	}
 
-	m_Controller_nodeId = -1;
+	m_Controller_nodeId = 255;
 	m_waitingForAck = false;
 
 	// Open the controller
@@ -517,8 +517,8 @@ bool Driver::Init(uint32 _attempts)
 	uint8 nak = NAK;
 	m_controller->Write(&nak, 1);
 
-	// Get/set ZWave controller information in its preferred initialization order
-	m_controller->PlayInitSequence(this);
+	/* this kicks of the Init Sequence to get the Controller in shape. */
+	SendMsg(new Internal::Msg("FUNC_ID_ZW_GET_VERSION", 0xff, REQUEST, FUNC_ID_ZW_GET_VERSION, false), Driver::MsgQueue_Command);
 
 	//If we ever want promiscuous mode uncomment this code.
 	//Msg* msg = new Msg( "FUNC_ID_ZW_SET_PROMISCUOUS_MODE", 0xff, REQUEST, FUNC_ID_ZW_SET_PROMISCUOUS_MODE, false, false );
@@ -2434,6 +2434,8 @@ void Driver::HandleGetVersionResponse(uint8* _data)
 		NotifyWatchers();
 		m_driverThread->Stop();
 	}
+	/* send the Next Initilization Message */
+	SendMsg(new Internal::Msg("FUNC_ID_ZW_MEMORY_GET_ID", 0xff, REQUEST, FUNC_ID_ZW_MEMORY_GET_ID, false), Driver::MsgQueue_Command);
 	return;
 }
 
@@ -2498,6 +2500,7 @@ void Driver::HandleGetControllerCapabilitiesResponse(uint8* _data)
 		snprintf(str, sizeof(str), "    The PC controller is a %s%s%s", (m_controllerCaps & ControllerCaps_Secondary) ? "secondary" : "primary", (m_controllerCaps & ControllerCaps_SUC) ? " static update controller (SUC)" : " controller", (m_controllerCaps & ControllerCaps_OnOtherNetwork) ? " which is using a Home ID from another network." : ".");
 		Log::Write(LogLevel_Info, GetNodeNumber(m_currentMsg), str);
 	}
+	SendMsg(new Internal::Msg("FUNC_ID_ZW_GET_SUC_NODE_ID", 0xff, REQUEST, FUNC_ID_ZW_GET_SUC_NODE_ID, false), Driver::MsgQueue_Command);
 }
 
 //-----------------------------------------------------------------------------
@@ -2671,6 +2674,7 @@ void Driver::HandleGetSUCNodeIdResponse(uint8* _data)
 			Log::Write(LogLevel_Info, "  No SUC, not becoming SUC as option is disabled");
 		}
 	}
+	SendMsg(new Internal::Msg("FUNC_ID_SERIAL_API_GET_CAPABILITIES", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_CAPABILITIES, false), Driver::MsgQueue_Command);
 }
 
 //-----------------------------------------------------------------------------
@@ -2683,6 +2687,7 @@ void Driver::HandleMemoryGetIdResponse(uint8* _data)
 	m_homeId = (((uint32) _data[2]) << 24) | (((uint32) _data[3]) << 16) | (((uint32) _data[4]) << 8) | ((uint32) _data[5]);
 	m_Controller_nodeId = _data[6];
 	m_controllerReplication = static_cast<Internal::CC::ControllerReplication*>(Internal::CC::ControllerReplication::Create(m_homeId, m_Controller_nodeId));
+	SendMsg(new Internal::Msg("FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES", 0xff, REQUEST, FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES, false), Driver::MsgQueue_Command);
 }
 
 //-----------------------------------------------------------------------------
@@ -2693,6 +2698,15 @@ void Driver::HandleSerialAPIGetInitDataResponse(uint8* _data)
 {
 	int32 i;
 
+	if (m_homeId == 0 || m_Controller_nodeId == 255 || m_Controller_nodeId == 0) {
+		Log::Write(LogLevel_Fatal, "Failed to get HomeID or Controller Node ID during Init Sequence, m_homeId = 0x%08x, m_Controller_nodeId = %d",
+				   m_homeId, m_Controller_nodeId);
+		Notification* notification = new Notification(Notification::Type_DriverFailed);
+		QueueNotification(notification);
+		NotifyWatchers();
+		m_driverThread->Stop();
+		return;
+	}
 	if (!m_init)
 	{
 		// Mark the driver as ready (we have to do this first or
@@ -2774,8 +2788,8 @@ void Driver::HandleSerialAPIGetInitDataResponse(uint8* _data)
 			}
 		}
 	}
-
 	m_init = true;
+
 }
 
 //-----------------------------------------------------------------------------
@@ -4386,8 +4400,8 @@ void Driver::InitAllNodes()
 			}
 		}
 	}
-	// Fetch new node data from the Z-Wave network
-	m_controller->PlayInitSequence(this);
+	// Kick off the Initilization Sequence again
+	SendMsg(new Internal::Msg("FUNC_ID_ZW_GET_VERSION", 0xff, REQUEST, FUNC_ID_ZW_GET_VERSION, false), Driver::MsgQueue_Command);
 }
 
 //-----------------------------------------------------------------------------

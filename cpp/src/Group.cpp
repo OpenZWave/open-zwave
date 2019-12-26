@@ -108,14 +108,20 @@ Group::Group(uint32 const _homeId, uint8 const _nodeId, TiXmlElement const* _gro
 
 			if (associationElement->QueryIntAttribute("id", &intVal) == TIXML_SUCCESS)
 			{
-				InstanceAssociation association;
-				association.m_nodeId = (uint8) intVal;
-				if (associationElement->QueryIntAttribute("instance", &intVal) == TIXML_SUCCESS)
-					association.m_instance = (uint8) intVal;
-				else
-					association.m_instance = 0x00;
+				/* intVal is a Int, so refuse to load anything high thatn 254 */
+				if (intVal >= 255) {
+					Log::Write(LogLevel_Warning, m_nodeId, "Broadcast Address was found in cache for Association Group %d - Ignoring", m_groupIdx);
+					/* we really should go and Delete it from the Node, but since this is a cache, lets just ignore it here */
+				} else { 
+					InstanceAssociation association;
+					association.m_nodeId = (uint8) intVal;
+					if (associationElement->QueryIntAttribute("instance", &intVal) == TIXML_SUCCESS)
+						association.m_instance = (uint8) intVal;
+					else
+						association.m_instance = 0x00;
 
-				pending.push_back(association);
+					pending.push_back(association);
+				}
 			}
 		}
 
@@ -188,15 +194,18 @@ void Group::WriteXML(TiXmlElement* _groupElement)
 	{
 		TiXmlElement* associationElement = new TiXmlElement("Node");
 
-		snprintf(str, 16, "%d", it->first.m_nodeId);
-		associationElement->SetAttribute("id", str);
-		if (it->first.m_instance != 0)
-		{
-			snprintf(str, 16, "%d", it->first.m_instance);
-			associationElement->SetAttribute("instance", str);
+		if (it->first.m_nodeId == 255) {
+			Log::Write(LogLevel_Warning, m_nodeId, "Broadcast Address was found in Association Group %d when writing cache. Ignoring", m_groupIdx);
+		} else { 
+			snprintf(str, 16, "%d", it->first.m_nodeId);
+			associationElement->SetAttribute("id", str);
+			if (it->first.m_instance != 0)
+			{
+				snprintf(str, 16, "%d", it->first.m_instance);
+				associationElement->SetAttribute("instance", str);
+			}
+			_groupElement->LinkEndChild(associationElement);
 		}
-
-		_groupElement->LinkEndChild(associationElement);
 	}
 }
 
@@ -222,6 +231,11 @@ bool Group::Contains(uint8 const _nodeId, uint8 const _endPoint)
 //-----------------------------------------------------------------------------
 void Group::AddAssociation(uint8 const _nodeId, uint8 const _endPoint)
 {
+	if (_nodeId == 255) {
+		Log::Write(LogLevel_Warning, m_nodeId, "Attemping to add broadcast address to Association Group %d - Ignoring", m_groupIdx);
+		return;
+	}
+	
 	if (Driver* driver = Manager::Get()->GetDriver(m_homeId))
 	{
 		if (Node* node = driver->GetNodeUnsafe(m_nodeId))
