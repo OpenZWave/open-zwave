@@ -56,8 +56,7 @@ namespace OpenZWave
 		// Match constructor order
 		// ValueID(uint32 const _homeId, uint8 const _nodeId, ValueGenre const _genre, uint8 const _commandClassId,
 		// uint8 const _instance, uint16 const _valueIndex, ValueType const _type)
-		using namespace std;
-		ostringstream s;
+		std::ostringstream s;
 
 		s
 			<< "HomeID: 0x" << hex << setfill('0') << setw(8) << GetHomeId()
