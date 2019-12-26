@@ -87,6 +87,10 @@ namespace OpenZWave
 								Log::Write(LogLevel_Info, _value->GetID().GetNodeId(), "Setting VerifiedChanged Flag on Value %d for CC %s", _value->GetID().GetIndex(), cc->GetCommandClassName().c_str());
 								_value->SetChangeVerified(true);
 							}
+							if (cc->m_com.GetFlagBool(COMPAT_FLAG_NO_REFRESH_AFTER_SET, _value->GetID().GetIndex())) {
+								Log::Write(LogLevel_Info, _value->GetID().GetNodeId(), "Setting NoRefreshAfterSet Flag on Value %d for CC %s", _value->GetID().GetIndex(), cc->GetCommandClassName().c_str());
+								_value->SetRefreshAfterSet(false);
+							}
 						}
 					}
 					Notification* notification = new Notification(Notification::Type_ValueAdded);

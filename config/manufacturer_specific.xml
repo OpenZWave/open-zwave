@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ManufacturerSpecificData Revision="61" xmlns="https://github.com/OpenZWave/open-zwave">
+<ManufacturerSpecificData Revision="63" xmlns="https://github.com/OpenZWave/open-zwave">
   <Manufacturer id="0028" name="2B Electronics"></Manufacturer>
   <Manufacturer id="0098" name="2GIG Technologies">
     <Product config="2gig/ct50e.xml" id="015e" name="CT50e Thermostat" type="3200"/>
@@ -1030,7 +1030,7 @@
     <Product config="kwikset/smartcode.xml" id="0642" name="SmartCode 916" type="0003"/>
     <Product config="kwikset/smartcode.xml" id="0440" name="SmartCode 914" type="0003"/>
     <Product config="kwikset/smartcode.xml" id="0440" name="SmartCode 10" type="0006"/>
-    <Product config="kwikset/smartcode.xml" id="0446" name="Convert 914" type="0003"/>
+    <Product config="kwikset/914c.xml" id="0446" name="Convert 914" type="0003"/>
   </Manufacturer>
   <Manufacturer id="0051" name="Lagotek Corp"></Manufacturer>
   <Manufacturer id="0173" name="Leak Intelligence LLC"></Manufacturer>
@@ -1420,6 +1420,7 @@
   </Manufacturer>
   <Manufacturer id="0216" name="RET Nanjing Intelligence System"></Manufacturer>
   <Manufacturer id="0153" name="Revolv"></Manufacturer>
+  <Manufacturer id="0346" name="Ring"></Manufacturer>
   <Manufacturer id="035E" name="RISCO Group"></Manufacturer>
   <Manufacturer id="023B" name="ROC-Connect"></Manufacturer>
   <Manufacturer id="0197" name="RPE Ajax LLC"></Manufacturer>
