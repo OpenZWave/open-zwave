@@ -1,7 +1,7 @@
 <!--
 Aeotec Radiator Thermostat
 Product website: https://aeotec.com/z-wave-home-automation/thermostat-radiator-valve-trv/
---><Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
+--><Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
     <MetaData>
         <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0371:0015:0002</MetaDataItem>
         <MetaDataItem name="ProductPic">images/aeotec/zwa021.png</MetaDataItem>
@@ -32,6 +32,7 @@ Product website: https://aeotec.com/z-wave-home-automation/thermostat-radiator-v
         </MetaDataItem>
         <ChangeLog>
             <Entry author="Ben Van Mechelen - ben@benvm.be" date="23 dec 2019" revision="1">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/3627</Entry>
+            <Entry author="Jean-Francois Auger - nechry@gmail.com" date="29 dec 2019" revision="2">ProductPic</Entry>
         </ChangeLog>
         <MetaDataItem id="0015" name="ZWProductPage" type="0002">https://products.z-wavealliance.org/products/3627</MetaDataItem>
         <MetaDataItem id="0015" name="Identifier" type="0002">4251295701387</MetaDataItem>
