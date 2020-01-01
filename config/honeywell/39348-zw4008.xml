@@ -2,8 +2,8 @@
   <MetaData>
     <!--<MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/</MetaDataItem>-->
     <MetaDataItem name="ProductPic">images/honeywell/39348-ZW4008.png</MetaDataItem>
-    <MetaDataItem id="3035" name="ZWProductPage" type="4952">https://products.z-wavealliance.org/products/3599/</MetaDataItem>
-    <MetaDataItem id="3035" name="Identifier" type="4952">39348 / ZW4008</MetaDataItem>
+    <MetaDataItem id="3135" name="ZWProductPage" type="4952">https://products.z-wavealliance.org/products/3599/</MetaDataItem>
+    <MetaDataItem id="3135" name="Identifier" type="4952">39348 / ZW4008</MetaDataItem>
     <MetaDataItem name="InclusionDescription">1. Follow the instructions for your Z-Wave certified controller to
 include a device to the Z-Wave network.
 2. Once the controller is ready to add your device,
