@@ -20,7 +20,7 @@ Note: This should only be used in the event your network’s primary controller 
       <Entry author="Jeff Sanicola - jeff.sanicola@outlook.com" date="01 Jan 2020" revision="1">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/Products/3599/xml</Entry>
     </ChangeLog>
   </MetaData>
-  <!-- Configuration Parameters - per https://products.z-wavealliance.org/products/2724 -->
+  <!-- Configuration Parameters - per https://products.z-wavealliance.org/products/3599 -->
   <CommandClass id="112">
     <Value genre="config" index="3" label="LED Indication Configuration" max="3" min="0" size="1" type="list" value="0">
       <Help>Sets when the LED on the switch is lit.</Help>
