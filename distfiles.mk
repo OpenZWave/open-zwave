@@ -670,6 +670,7 @@ DISTFILES =	.github/workflows/PRTest.yml \
 	config/images/iwatsu/ne-4ct.png \
 	config/images/jasco/45601.png \
 	config/images/kaipule/im20.png \
+	config/images/kwikset/914c.png \
 	config/images/kwikset/smartcode.png \
 	config/images/leviton/dz15s.png \
 	config/images/leviton/dz6hd.png \
@@ -891,6 +892,7 @@ DISTFILES =	.github/workflows/PRTest.yml \
 	config/jasco/45601.xml \
 	config/kaipule/im20.xml \
 	config/kaipule/ix32.xml \
+	config/kwikset/914c.xml \
 	config/kwikset/smartcode.xml \
 	config/leviton/dz15s.xml \
 	config/leviton/dz6hd.xml \

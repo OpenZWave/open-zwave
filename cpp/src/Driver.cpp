@@ -1432,6 +1432,8 @@ bool Driver::MoveMessagesToWakeUpQueue(uint8 const _targetNodeId, bool const _mo
 
 					m_sendMutex->Unlock();
 
+					CheckCompletedNodeQueries();
+
 					// Move completed successfully
 					return true;
 				}
