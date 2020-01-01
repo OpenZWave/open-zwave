@@ -29,6 +29,12 @@ Note: This should only be used in the event your network’s primary controller 
       <Item label="LED always off" value="2"/>
       <Item label="LED always on" value="3"/>
     </Value>
+    <value genre="config" index="19" label="Alternate Exclusion" max="1" size="1" type="list" value="0">
+      <Help>0 (default) - Press any button on the device 
+1 - Press 2 times ON button and then 2 times OFF button, LED will flash 5 times if done successful</Help>
+      <Item label="Any button" value="0"/>
+      <Item label="2x ON button, 2x OFF button" value="1"/>
+    </value>
   </CommandClass>
   <!-- Association Groups -->
   <CommandClass id="133">
