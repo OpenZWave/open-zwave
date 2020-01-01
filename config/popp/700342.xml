@@ -20,10 +20,10 @@
   </MetaData>
   <CommandClass id="112" name="COMMAND_CLASS_CONFIGURATION" version="1" request_flags="4" innif="true">
     <Value type="byte" genre="config" instance="1" index="3" label="Value of On-Command" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="99" value="99">
-	<Help>This value is sent as BASIC Set to Association Group 3 when an Smoke Alarm occurs.</Help>
+      <Help>This value is sent as BASIC Set to Association Group 3 when an Smoke Alarm occurs.</Help>
     </Value>
     <Value type="byte" genre="config" instance="1" index="4" label="Value of Off-Command" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="99" value="99">
-	<Help>This value is sent as BASIC Set to Association Group 3 when an Smoke Alarm is cleared.</Help>
+      <Help>This value is sent as BASIC Set to Association Group 3 when an Smoke Alarm is cleared.</Help>
     </Value>
   </CommandClass>
   <CommandClass id="113" name="COMMAND_CLASS_ALARM" version="5" request_flags="2" innif="true">
