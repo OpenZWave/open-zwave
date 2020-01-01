@@ -18,7 +18,7 @@
       <Entry author="Márton Rubi - rubimart@airlink.hu" date="31 Dec 2019" revision="1"></Entry>
     </ChangeLog>
   </MetaData>
-  <CommandClass id="112" name="COMMAND_CLASS_CONFIGURATION" version="1" request_flags="4" innif="true">
+  <CommandClass id="112">
     <Value type="byte" genre="config" instance="1" index="3" label="Value of On-Command" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="99" value="99">
       <Help>This value is sent as BASIC Set to Association Group 3 when an Smoke Alarm occurs.</Help>
     </Value>
@@ -26,7 +26,7 @@
       <Help>This value is sent as BASIC Set to Association Group 3 when an Smoke Alarm is cleared.</Help>
     </Value>
   </CommandClass>
-  <CommandClass id="113" name="COMMAND_CLASS_ALARM" version="5" request_flags="2" innif="true">
+  <CommandClass id="113">
     <Instance index="1" />
     <Value type="byte" genre="user" instance="1" index="0" label="Alarm Type" units="" read_only="true" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="255" value="0" />
     <Value type="byte" genre="user" instance="1" index="1" label="Alarm Level" units="" read_only="true" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="255" value="0" />
