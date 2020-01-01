@@ -19,17 +19,12 @@
     </ChangeLog>
   </MetaData>
   <CommandClass id="112">
-    <Value type="byte" genre="config" instance="1" index="3" label="Value of On-Command" units="" read_only="false" write_only="false" verify_changes="false" min="0" max="99" value="99">
+    <Value genre="config" index="3" instance="1" label="Value of On-Command" max="99" min="0" size="1" type="byte" value="99">
       <Help>This value is sent as BASIC Set to Association Group 3 when an Smoke Alarm occurs.</Help>
     </Value>
-    <Value type="byte" genre="config" instance="1" index="4" label="Value of Off-Command" units="" read_only="false" write_only="false" verify_changes="false" min="0" max="99" value="99">
-      <Help>This value is sent as BASIC Set to Association Group 3 when an Smoke Alarm is cleared.</Help>
+    <Value genre="config" index="4" instance="1" label="Value of Off-Command" max="99" min="0" size="1" type="byte" value="99">
+      <Help>This value is sent as BASIC Set to Association Group 3 when an Smoke Alarm is cleared. </Help>
     </Value>
-  </CommandClass>
-  <CommandClass id="113">
-    <Instance index="1" />
-    <Value type="byte" genre="user" instance="1" index="0" label="Alarm Type" units="" read_only="true" write_only="false" verify_changes="false" min="0" max="255" value="0" />
-    <Value type="byte" genre="user" instance="1" index="1" label="Alarm Level" units="" read_only="true" write_only="false" verify_changes="false" min="0" max="255" value="0" />
   </CommandClass>
   <!-- Association Groups -->
   <CommandClass id="133">
