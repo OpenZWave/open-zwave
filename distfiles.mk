@@ -113,6 +113,7 @@ DISTFILES =	.github/workflows/PRTest.yml \
 	config/aeotec/zwa005.xml \
 	config/aeotec/zwa006.xml \
 	config/aeotec/zwa008.xml \
+	config/aeotec/zwa021.xml \
 	config/airlinemechanical/zds-ud10.xml \
 	config/alfred/DB2.xml \
 	config/assa_abloy/ConexisL1.xml \
@@ -455,6 +456,7 @@ DISTFILES =	.github/workflows/PRTest.yml \
 	config/images/aeotec/zwa004.png \
 	config/images/aeotec/zwa005.png \
 	config/images/aeotec/zwa006.png \
+	config/images/aeotec/zwa021.png \
 	config/images/airlinemechanical/zds-ud10.png \
 	config/images/alfred/DB2.png \
 	config/images/assa_abloy/ConexisL1.png \
