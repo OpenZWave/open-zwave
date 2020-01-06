@@ -7,13 +7,10 @@
     <MetaDataItem name="ProductSupport">https://www.popp.eu/support/manuals/</MetaDataItem>
     <MetaDataItem name="ProductPic">images/popp/009402.png</MetaDataItem>
     <MetaDataItem name="ProductManual">https://manuals.zwave.eu/backend/make.php?lang=en&sku=pope700342&type=popp</MetaDataItem>
-    <MetaDataItem name="WakeupDescription"><!-- Short description on how to wake up the device if its battery powered --></MetaDataItem>
-    <MetaDataItem name="InclusionDescription">To include the device start the inclusion on your controller and then hit the little button on the wireless module for 1 second</MetaDataItem>
-    <MetaDataItem name="ExclusionDescription">To exclude the device start the inclusion on your controller and then hit  the little button on the wireless module for 1 second</MetaDataItem>
+    <MetaDataItem name="WakeupDescription">A double click on the Z-Wave button wakes up the device></MetaDataItem>
+    <MetaDataItem name="InclusionDescription">Secure Inclusion: Push the button for 3 seconds, Unsecure Inclusion: Push the button for 1 seconds</MetaDataItem>
+    <MetaDataItem name="ExclusionDescription">Push the button for 1 second</MetaDataItem>
     <MetaDataItem name="ResetDescription">To reset the device keep the button pushed for 10 seconds. After 5 seconds the led starts flashing and after another 5 seconds there is a short beep signaling the successful reset back to factory defaults. Use this procedure only when the network primary controller is missing or otherwise inoperable.</MetaDataItem>
-    <MetaDataItem id="0004" name="ZWProductPage" type="0004">https://products.z-wavealliance.org/products/2078/</MetaDataItem>
-    <MetaDataItem id="0004" name="Identifier" type="0004">Ei600ZW</MetaDataItem>
-    <MetaDataItem id="0004" name="FrequencyName" type="0004">CEPT (Europe)</MetaDataItem>
     <ChangeLog>
       <Entry author="Márton Rubi - rubimart@airlink.hu" date="06 Jan 2020" revision="1"></Entry>
     </ChangeLog>
