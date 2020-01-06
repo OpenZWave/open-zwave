@@ -12,7 +12,7 @@
     <MetaDataItem name="ExclusionDescription">Push the button for 1 second</MetaDataItem>
     <MetaDataItem name="ResetDescription">To reset the device keep the button pushed for 10 seconds. After 5 seconds the led starts flashing and after another 5 seconds there is a short beep signaling the successful reset back to factory defaults. Use this procedure only when the network primary controller is missing or otherwise inoperable.</MetaDataItem>
     <ChangeLog>
-      <Entry author="Márton Rubi - rubimart@airlink.hu" date="06 Jan 2020" revision="1"></Entry>
+      <Entry author="Márton Rubi - rubimart@airlink.hu" date="06 Jan 2020" revision="1">From the User Manual and the 009402.xml</Entry>
     </ChangeLog>
   </MetaData>
   <CommandClass id="112">
