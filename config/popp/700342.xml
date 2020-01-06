@@ -6,7 +6,7 @@
     <MetaDataItem name="ProductPage">https://www.popp.eu/products/sensors/10-jahres-rauchmelder-700342/</MetaDataItem>
     <MetaDataItem name="ProductSupport">https://www.popp.eu/support/manuals/</MetaDataItem>
     <MetaDataItem name="ProductPic">images/popp/009402.png</MetaDataItem>
-    <MetaDataItem name="ProductManual">https://manuals.zwave.eu/backend/make.php?lang=en&sku=pope700342&type=popp</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://www.popp.eu/005107en</MetaDataItem>
     <MetaDataItem name="WakeupDescription">A double click on the Z-Wave button wakes up the device></MetaDataItem>
     <MetaDataItem name="InclusionDescription">Secure Inclusion: Push the button for 3 seconds, Unsecure Inclusion: Push the button for 1 seconds</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">Push the button for 1 second</MetaDataItem>
