@@ -2758,7 +2758,12 @@ void Node::ReadValueFromXML(uint8 const _commandClassId, TiXmlElement const* _va
 Internal::VC::Value* Node::GetValue(ValueID const& _id)
 {
 	// This increments the value's reference count
-	auto value = GetValueStore()->GetValue(_id.GetValueStoreKey());
+	Internal::VC::Value *value = GetValueStore()->GetValue(_id.GetValueStoreKey());
+	
+	if (!value) {
+		Log::Write(LogLevel_Warning, m_nodeId, "Node::GetValue - Couldn't find ValueID in Store: %s", _id.GetAsString().c_str());
+		return nullptr;
+	}
 
 	if (value->GetID().GetId() != _id.GetId())
 	{
