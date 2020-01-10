@@ -1600,6 +1600,7 @@
   <Manufacturer id="019b" name="ThermoFloor AS">
     <Product config="thermofloor/heatit021.xml" id="0001" name="Heatit Thermostat TF 021" type="0001"/>
     <Product config="thermofloor/heatit056.xml" id="0202" name="Heatit Thermostat TF 056" type="0003"/>
+    <Product config="thermofloor/heatit-zdim.xml" id="2200" name="Heatit ZDim" type="0003"/>
   </Manufacturer>
   <Manufacturer id="0317" name="Think Simple srl"></Manufacturer>
   <Manufacturer id="022A" name="TIMEVALVE"></Manufacturer>
