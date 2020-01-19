@@ -1844,6 +1844,7 @@
     <Product config="heiman/HS1CG-Z.xml" id="1000" name="Combustible Gas Sensor HS1CG-Z" type="8003"/>
     <Product config="heiman/HS1WL-Z.xml" id="1000" name="Water Leakage Sensor HS1WL-Z" type="8004"/>
     <Product config="heiman/HS1CA-Z.xml" id="1000" name="CO Sensor HS1CA-Z" type="8005"/>
+    <Product config="zipato/ne-nas-ab02z.xml" id="1083" name="Indoor Siren" type="0003"/>
   </Manufacturer>
   <Manufacturer id="0120" name="Zonoff"></Manufacturer>
   <Manufacturer id="027a" name="Zooz">
