@@ -20,7 +20,7 @@
   <!-- COMMAND_CLASS_CONFIGURATION -->
   <CommandClass id="112">
 
-    <Value genre="config" index="7" label="Siren On Mode" max="2" min="1" type="list" units="" value="1">
+    <Value genre="config" index="7" label="Siren On Mode" max="2" min="1" size="1" type="list" units="" value="1">
       <Help>This parameter defines the default sound index, volume and the duration time for siren on</Help>
       <Item label="Alarm Mode" value="1"/>
       <Item label="Doorbell Mode" value="2"/>
