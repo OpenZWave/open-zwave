@@ -802,6 +802,7 @@ DISTFILES =	.github/workflows/PRTest.yml \
 	config/images/there/800z.png \
 	config/images/thermofloor/heatit021.png \
 	config/images/thermofloor/heatit056.png \
+	config/images/thermofloor/heatit_zdim.png \
 	config/images/trane/TZEMT400AB32MAA.png \
 	config/images/trane/TZEMT400BB32MAA.png \
 	config/images/trane/TZEMT524AA21MA.png \
@@ -1095,6 +1096,7 @@ DISTFILES =	.github/workflows/PRTest.yml \
 	config/telldus/tzwp100.xml \
 	config/telldus/tzwp102.xml \
 	config/there/800z.xml \
+	config/thermofloor/heatit-zdim.xml \
 	config/thermofloor/heatit021.xml \
 	config/thermofloor/heatit056.xml \
 	config/trane/TZEMT400AB32MAA.xml \

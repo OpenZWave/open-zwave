@@ -11,27 +11,27 @@ The dimmer has end-turn function. This allows you to turn on the light and dimmi
 The dimmer fits into standard Elko, Schneider Exxact and Gira System 55 frame systems.
 
 FUNCTIONS
-• Z-wave rotary dimmer
-• Scene controller
-• Dims:
-• LED
-• 230V halogen
-• Incandescent lightbulbs
-• Dimable LED-drivers
-• Electronic transformators
-• Starts at 1VA and dims up to 200VA LED
-• Trailing edge
-• Multiway switching option
-• Electronic thermal cutoff with automatic reset
-• Firmware updates (OTA)
-• Power metering
-• Supports encryption mode: S0, S2 Authenticated Class, S2 Unauthenticated Class
+- Z-wave rotary dimmer
+- Scene controller
+- Dims:
+- LED
+- 230V halogen
+- Incandescent lightbulbs
+- Dimable LED-drivers
+- Electronic transformators
+- Starts at 1VA and dims up to 200VA LED
+- Trailing edge
+- Multiway switching option
+- Electronic thermal cutoff with automatic reset
+- Firmware updates (OTA)
+- Power metering
+- Supports encryption mode: S0, S2 Authenticated Class, S2 Unauthenticated Class
 
 CONNECTION
 1. Disconnect the power.
 2. Connect the live to the dimmer terminal marked "L".
 3. Connect the neutral to the dimmer terminal marked "N".
-4. Connect the neutral to the load terminal marked “N".
+4. Connect the neutral to the load terminal marked ï¿½N".
 5. Connect the load terminal marked "L" to the dimmer terminal marked (see wiring
  diagram).
 6. Install the dimmer (A) in the wall box. Make sure that no wires are pinched.
@@ -51,8 +51,8 @@ Rated voltage 230V AC 50Hz
 Power 1VA - 200VA
 Input current 0,9A
 Controls Push and rotary dimmer
-Operating temperature -20°C - 40°C
-Connection Max. 2,5mm²
+Operating temperature -20ï¿½C - 40ï¿½C
+Connection Max. 2,5mmï¿½
 Flush mounting depth 15mm
 IP Code IP 20
 Size (LxWxH) 84 x 84 x 43mm
@@ -80,7 +80,7 @@ controller is missing or otherwise inoperable</MetaDataItem>
     <MetaDataItem name="InclusionDescription">INCLUSION/EXCLUSION
 Press the main button on dimmer 6 times in a rapid sequence. Heatit Z-DIM is now included in your Z-Wave network.</MetaDataItem>
     <ChangeLog>
-      <Entry author="Pål Kristensen - paalkr77@gmail.com" date="10 January 2020" revision="1">Initial release</Entry>
+      <Entry author="PÃ¥l Kristensen - paalkr77@gmail.com" date="10 January 2020" revision="1">Initial release</Entry>
     </ChangeLog>
   </MetaData>
   
@@ -164,7 +164,7 @@ The parameter defines the initial dimming level after power loss.
 
   <CommandClass id="133">
     <Associations num_groups="3">
-      <Group index="1" label="Lifeline" max_associations="8" auto="true" />
+      <Group index="1" label="Lifeline" max_associations="8" />
       <Group index="2" label="Dimming level" max_associations="8" auto="true" />
       <Group index="3" label="State of Device ON/OFF" max_associations="8" auto="true" />
     </Associations>
