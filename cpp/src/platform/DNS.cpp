@@ -36,28 +36,29 @@
 #include "platform/unix/DNSImpl.h"	// Platform-specific implementation of a DNS Operations
 #endif
 
-using namespace OpenZWave;
+namespace OpenZWave
+{
+	namespace Internal
+	{
+		namespace Platform
+		{
 
-DNS::DNS
-(
-)
-{
-	this->m_pImpl = new DNSImpl();
-}
-DNS::~DNS
-(
-)
-{
-	delete this->m_pImpl;
-}
+			DNS::DNS() :
+					status(DNSError_None)
+			{
+				this->m_pImpl = new DNSImpl();
+			}
+			DNS::~DNS()
+			{
+				delete this->m_pImpl;
+			}
 
-bool DNS::LookupTxT
-(
-string lookup,
-string &result
-)
-{
-	bool ret = this->m_pImpl->LookupTxT(lookup, result);
-	status = this->m_pImpl->status;
-	return ret;
-}
+			bool DNS::LookupTxT(string lookup, string &result)
+			{
+				bool ret = this->m_pImpl->LookupTxT(lookup, result);
+				status = this->m_pImpl->status;
+				return ret;
+			}
+		} // namespace Platform
+	} // namespace Internal
+} // namespace OpenZWave

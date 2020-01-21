@@ -32,31 +32,33 @@
 #include "Driver.h"
 #include "platform/Log.h"
 
-using namespace OpenZWave;
-
-enum ProprietaryCmd
+namespace OpenZWave
 {
-	ProprietaryCmd_Set		= 0x01,
-	ProprietaryCmd_Get		= 0x02,
-	ProprietaryCmd_Report	= 0x03
-};
+	namespace Internal
+	{
+		namespace CC
+		{
 
+			enum ProprietaryCmd
+			{
+				ProprietaryCmd_Set = 0x01,
+				ProprietaryCmd_Get = 0x02,
+				ProprietaryCmd_Report = 0x03
+			};
 
 //-----------------------------------------------------------------------------
 // <Proprietary::HandleMsg>
 // Handle a message from the Z-Wave network
 //-----------------------------------------------------------------------------
-bool Proprietary::HandleMsg
-(
-	uint8 const* _data,
-	uint32 const _length,
-	uint32 const _instance	// = 1
-)
-{
-	if (ProprietaryCmd_Report == (ProprietaryCmd)_data[0])
-	{
-		return true;
-	}
-	return false;
-}
-
+			bool Proprietary::HandleMsg(uint8 const* _data, uint32 const _length, uint32 const _instance	// = 1
+					)
+			{
+				if (ProprietaryCmd_Report == (ProprietaryCmd) _data[0])
+				{
+					return true;
+				}
+				return false;
+			}
+		} // namespace CC
+	} // namespace Internal
+} // namespace OpenZWave

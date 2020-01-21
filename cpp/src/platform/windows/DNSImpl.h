@@ -33,14 +33,21 @@
 
 namespace OpenZWave
 {
-	class DNSImpl {
-		public:
-			DNSImpl();
-			virtual ~DNSImpl();
-			virtual bool LookupTxT(string, string &);
-			DNSError status;
-		private:
+	namespace Internal
+	{
+		namespace Platform
+		{
+			class DNSImpl
+			{
+				public:
+					DNSImpl();
+					virtual ~DNSImpl();
+					virtual bool LookupTxT(string, string &);
+					DNSError status;
+				private:
 
-	};
-}
+			};
+		} // namespace Platform
+	} // namespace Internal
+} // namespace OpenZWave
 #endif

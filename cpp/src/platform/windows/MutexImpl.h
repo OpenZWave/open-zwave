@@ -30,28 +30,33 @@
 
 #include <windows.h>
 
-
 namespace OpenZWave
 {
-	/** \brief Windows-specific implementation of the Mutex class.
-	 */
-	class MutexImpl
+	namespace Internal
 	{
-	private:
-		friend class Mutex;
+		namespace Platform
+		{
 
-		MutexImpl();
-		~MutexImpl();
+			/** \brief Windows-specific implementation of the Mutex class.
+			 */
+			class MutexImpl
+			{
+				private:
+					friend class Mutex;
 
-		bool Lock( bool const _bWait = true );
-		void Unlock();
+					MutexImpl();
+					~MutexImpl();
 
-		bool IsSignalled();
+					bool Lock(bool const _bWait = true);
+					void Unlock();
 
-		CRITICAL_SECTION	m_criticalSection;
-		uint32				m_lockCount;				// Keep track of the locks (there can be more than one if they occur on the same thread.
-	};
+					bool IsSignalled();
 
+					CRITICAL_SECTION m_criticalSection;
+					uint32 m_lockCount;				// Keep track of the locks (there can be more than one if they occur on the same thread.
+			};
+		} // namespace Platform
+	} // namespace Internal
 } // namespace OpenZWave
 
 #endif //_MutexIF_H

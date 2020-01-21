@@ -31,16 +31,17 @@
 
 using namespace OpenZWave;
 
-
 //-----------------------------------------------------------------------------
 // <Notification::GetAsString>
 // Return a string representation of OZW
 //-----------------------------------------------------------------------------
 
-string Notification::GetAsString() const {
+string Notification::GetAsString() const
+{
 	string str;
 	string command;
-	switch (m_type) {
+	switch (m_type)
+	{
 		case Type_ValueAdded:
 			str = "ValueAdded";
 			break;
@@ -120,7 +121,8 @@ string Notification::GetAsString() const {
 			str = "AllNodesQueried";
 			break;
 		case Type_Notification:
-			switch (m_byte) {
+			switch (m_byte)
+			{
 				case Code_MsgComplete:
 					str = "Notification - MsgComplete";
 					break;
@@ -148,58 +150,59 @@ string Notification::GetAsString() const {
 			str = "DriverRemoved";
 			break;
 		case Type_ControllerCommand:
-            switch ( m_command )
-            {
-                case Driver::ControllerCommand_AddDevice:
-                    command = "AddDevice ";
-                    break;
-                case Driver::ControllerCommand_AssignReturnRoute:
-                    command = "AssignReturnRoute ";
-                    break;
-                case Driver::ControllerCommand_CreateButton:
-                    command = "CreateButton ";
-                    break;
-                case Driver::ControllerCommand_CreateNewPrimary:
-                    command = "CreateNewPrimary ";
-                    break;
-                case Driver::ControllerCommand_DeleteAllReturnRoutes:
-                    command = "DeleteAllReturnRoutes ";
-                    break;
-                case Driver::ControllerCommand_DeleteButton:
-                    command = "DeleteButton ";
-                    break;
-                case Driver::ControllerCommand_HasNodeFailed:
-                    command = "HasNodeFailed ";
-                    break;
-                case Driver::ControllerCommand_ReceiveConfiguration:
-                    command = "ReceiveConfiguration ";
-                    break;
-                case Driver::ControllerCommand_RemoveDevice:
-                    command = "RemoveDevice ";
-                    break;
-                case Driver::ControllerCommand_RemoveFailedNode:
-                    command = "RemoveFailedNode ";
-                    break;
-                case Driver::ControllerCommand_ReplaceFailedNode:
-                    command = "ReplaceFailedNode ";
-                    break;
-                case Driver::ControllerCommand_ReplicationSend:
-                    command = "ReplicationSend ";
-                    break;
-                case Driver::ControllerCommand_RequestNetworkUpdate:
-                    command = "RequestNetworkUpdate ";
-                    break;
-                case Driver::ControllerCommand_RequestNodeNeighborUpdate:
-                    command = "RequestNodeNeighborUpdate ";
-                    break;
-                case Driver::ControllerCommand_SendNodeInformation:
-                    command = "SendNodeInformation ";
-                    break;
-                case Driver::ControllerCommand_TransferPrimaryRole:
-                    command = "TransferPrimaryRole ";
-                    break;
-		    }
-			switch (m_event) {
+			switch (m_command)
+			{
+				case Driver::ControllerCommand_AddDevice:
+					command = "AddDevice ";
+					break;
+				case Driver::ControllerCommand_AssignReturnRoute:
+					command = "AssignReturnRoute ";
+					break;
+				case Driver::ControllerCommand_CreateButton:
+					command = "CreateButton ";
+					break;
+				case Driver::ControllerCommand_CreateNewPrimary:
+					command = "CreateNewPrimary ";
+					break;
+				case Driver::ControllerCommand_DeleteAllReturnRoutes:
+					command = "DeleteAllReturnRoutes ";
+					break;
+				case Driver::ControllerCommand_DeleteButton:
+					command = "DeleteButton ";
+					break;
+				case Driver::ControllerCommand_HasNodeFailed:
+					command = "HasNodeFailed ";
+					break;
+				case Driver::ControllerCommand_ReceiveConfiguration:
+					command = "ReceiveConfiguration ";
+					break;
+				case Driver::ControllerCommand_RemoveDevice:
+					command = "RemoveDevice ";
+					break;
+				case Driver::ControllerCommand_RemoveFailedNode:
+					command = "RemoveFailedNode ";
+					break;
+				case Driver::ControllerCommand_ReplaceFailedNode:
+					command = "ReplaceFailedNode ";
+					break;
+				case Driver::ControllerCommand_ReplicationSend:
+					command = "ReplicationSend ";
+					break;
+				case Driver::ControllerCommand_RequestNetworkUpdate:
+					command = "RequestNetworkUpdate ";
+					break;
+				case Driver::ControllerCommand_RequestNodeNeighborUpdate:
+					command = "RequestNodeNeighborUpdate ";
+					break;
+				case Driver::ControllerCommand_SendNodeInformation:
+					command = "SendNodeInformation ";
+					break;
+				case Driver::ControllerCommand_TransferPrimaryRole:
+					command = "TransferPrimaryRole ";
+					break;
+			}
+			switch (m_event)
+			{
 				case Driver::ControllerState_Normal:
 					str = command + "ControllerCommand - Normal";
 					break;
@@ -210,7 +213,8 @@ string Notification::GetAsString() const {
 					str = command + "ControllerCommand - Canceled";
 					break;
 				case Driver::ControllerState_Error:
-					switch (m_byte) {
+					switch (m_byte)
+					{
 						case Driver::ControllerError_None:
 							str = "ControllerCommand - Error - None";
 							break;
@@ -275,61 +279,61 @@ string Notification::GetAsString() const {
 					break;
 			}
 			break;
-			case Type_NodeReset:
-				str = "Node Reset";
-				break;
-			case Type_UserAlerts:
-				switch (m_useralerttype) {
-					case Alert_None:
-						str = "User Alert - No Alert";
-						break;
-					case Alert_ConfigOutOfDate:
-						str = "User Alert - Config File out of Date";
-						break;
-					case Alert_MFSOutOfDate:
-						str = "User Alert - Manufacturer_specific.xml out of Date";
-						break;
-					case Alert_ConfigFileDownloadFailed:
-						str = "A Config File Failed to download";
-						break;
-					case Alert_DNSError:
-						str = "A DNS Error Occurred";
-						break;
-					case Alert_NodeReloadRequired:
-						str = "Node Reload Is Required due to new Config File";
-						break;
-					case Alert_UnsupportedController:
-						str = "Controller Library is not a type we support";
-						break;
-					case Alert_ApplicationStatus_Retry:
-						str = "Application Status: Retry Later";
-						break;
-					case Alert_ApplicationStatus_Queued:
-						str = "Application Status: Command has been queued for execution later";
-						break;
-					case Alert_ApplicationStatus_Rejected:
-						str =  "Application Status: Command Rejected";
-				}
-				break;
-			case Type_ManufacturerSpecificDBReady:
-				str = "ManufacturerSpecificDB Ready";
-				break;
+		case Type_NodeReset:
+			str = "Node Reset";
+			break;
+		case Type_UserAlerts:
+			switch (m_useralerttype)
+			{
+				case Alert_None:
+					str = "User Alert - No Alert";
+					break;
+				case Alert_ConfigOutOfDate:
+					str = "User Alert - Config File out of Date";
+					break;
+				case Alert_MFSOutOfDate:
+					str = "User Alert - Manufacturer_specific.xml out of Date";
+					break;
+				case Alert_ConfigFileDownloadFailed:
+					str = "A Config File Failed to download";
+					break;
+				case Alert_DNSError:
+					str = "A DNS Error Occurred";
+					break;
+				case Alert_NodeReloadRequired:
+					str = "Node Reload Is Required due to new Config File";
+					break;
+				case Alert_UnsupportedController:
+					str = "Controller Library is not a type we support";
+					break;
+				case Alert_ApplicationStatus_Retry:
+					str = "Application Status: Retry Later";
+					break;
+				case Alert_ApplicationStatus_Queued:
+					str = "Application Status: Command has been queued for execution later";
+					break;
+				case Alert_ApplicationStatus_Rejected:
+					str = "Application Status: Command Rejected";
+			}
+			break;
+		case Type_ManufacturerSpecificDBReady:
+			str = "ManufacturerSpecificDB Ready";
+			break;
 
 	}
 	return str;
 
 }
 
-
 std::ostream& operator<<(std::ostream &os, const Notification &dt)
 {
-    os << dt.GetAsString();
-    return os;
+	os << dt.GetAsString();
+	return os;
 }
 
 std::ostream& operator<<(std::ostream &os, const Notification *dt)
 {
-    os << dt->GetAsString();
-    return os;
+	os << dt->GetAsString();
+	return os;
 }
 
