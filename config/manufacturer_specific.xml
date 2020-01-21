@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ManufacturerSpecificData Revision="65" xmlns="https://github.com/OpenZWave/open-zwave">
+<ManufacturerSpecificData Revision="70" xmlns="https://github.com/OpenZWave/open-zwave">
   <Manufacturer id="0028" name="2B Electronics"></Manufacturer>
   <Manufacturer id="0098" name="2GIG Technologies">
     <Product config="2gig/ct50e.xml" id="015e" name="CT50e Thermostat" type="3200"/>
@@ -895,9 +895,9 @@
     <Product config="homeseer/hs-wd100plus.xml" id="3034" name="HS-WD100+ Wall Dimmer" type="4447"/>
     <Product config="homeseer/hs-ws200plus.xml" id="3035" name="HS-WS200+ Wall Switch" type="4447"/>
     <Product config="homeseer/hs-wd200plus.xml" id="3036" name="HS-WD200+ Wall Dimmer" type="4447"/>
-    <Product type="201" id="8" name="HS-DS100+ Door/Window Sensor" config="homeseer/hs-ds100plus.xml"/>
-    <Product config="homeseer/hs-ms100plus.xml" id="9" name="HS-MS100+ Motion Sensor" type="201"/>
-    <Product config="homeseer/hs-ls100plus.xml" id="a" name="HS-LS100+ Leak Sensor" type="201"/>
+    <Product config="homeseer/hs-ds100plus.xml" id="0008" name="HS-DS100+ Door/Window Sensor" type="0201"/>
+    <Product config="homeseer/hs-ms100plus.xml" id="0009" name="HS-MS100+ Motion Sensor" type="0201"/>
+    <Product config="homeseer/hs-ls100plus.xml" id="000a" name="HS-LS100+ Leak Sensor" type="0201"/>
     <Product config="homeseer/hs-fls100plus.xml" id="000b" name="HS-FLS100+ Floodlight Sensor" type="0201"/>
     <Product config="homeseer/hs-fc200plus.xml" id="0001" name="HS-FC200+ Z-Wave Plus Fan Controller" type="0203"/>
   </Manufacturer>
@@ -908,6 +908,7 @@
     <Product config="honeywell/th6320zw2003.xml" id="0008" name="TH6320ZW2003 T6 Pro Series Thermostat" type="0011"/>
     <Product config="honeywell/lynx-touch-l5100.xml" id="0003" name="Lynx Touch L5100 / L7000" type="0001"/>
     <Product config="honeywell/39351-ZW3005.xml" id="3038" name="39351 / ZW3005 In-Wall Smart Dimmer" type="4944"/>
+    <Product config="honeywell/39348-zw4008.xml" id="3135" name="39348 / ZW4008 In-Wall Smart Switch" type="4952"/>
   </Manufacturer>
   <Manufacturer id="0313" name="Hoppe"></Manufacturer>
   <Manufacturer id="0377" name="HORNBACH Baumarkt AG"></Manufacturer>
@@ -1287,7 +1288,8 @@
     <Product config="popp/700397.xml" id="000a" name="700397 Wall Plug Switch Outdoor Schuko (IP44)" type="0003"/>
     <Product config="popp/solar-siren.xml" id="0002" name="Solar Powered Outdoor Siren" type="0004"/>
     <Product config="popp/004407.xml" id="0003" name="004407 CO Detector" type="0004"/>
-    <Product config="popp/009402.xml" id="0004" name="009402 10-Year Smoke Detector" type="0004"/>
+    <Product config="popp/009402.xml" id="0004" name="009402 10-Year Smoke Detector with Siren" type="0004"/>
+    <Product config="popp/700342.xml" id="000d" name="700342 10-Year Smoke Detector" type="0004"/>	  
     <Product config="popp/009501.xml" id="0003" name="009501 Flow Stop" type="0005"/>
     <Product config="popp/700168.xml" id="0011" name="Popp Z-Rain Rain Sensor" type="0004"/>
     <Product config="popp/012501.xml" id="0001" name="012501 Strike Lock Control" type="0005"/>
@@ -1599,6 +1601,7 @@
   <Manufacturer id="019b" name="ThermoFloor AS">
     <Product config="thermofloor/heatit021.xml" id="0001" name="Heatit Thermostat TF 021" type="0001"/>
     <Product config="thermofloor/heatit056.xml" id="0202" name="Heatit Thermostat TF 056" type="0003"/>
+    <Product config="thermofloor/heatit-zdim.xml" id="2200" name="Heatit ZDim" type="0003"/>
   </Manufacturer>
   <Manufacturer id="0317" name="Think Simple srl"></Manufacturer>
   <Manufacturer id="022A" name="TIMEVALVE"></Manufacturer>
@@ -1843,6 +1846,7 @@
     <Product config="heiman/HS1CG-Z.xml" id="1000" name="Combustible Gas Sensor HS1CG-Z" type="8003"/>
     <Product config="heiman/HS1WL-Z.xml" id="1000" name="Water Leakage Sensor HS1WL-Z" type="8004"/>
     <Product config="heiman/HS1CA-Z.xml" id="1000" name="CO Sensor HS1CA-Z" type="8005"/>
+    <Product config="zipato/ne-nas-ab02z.xml" id="1083" name="Indoor Siren" type="0003"/>
   </Manufacturer>
   <Manufacturer id="0120" name="Zonoff"></Manufacturer>
   <Manufacturer id="027a" name="Zooz">
