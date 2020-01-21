@@ -113,6 +113,7 @@ DISTFILES =	.github/workflows/PRTest.yml \
 	config/aeotec/zwa005.xml \
 	config/aeotec/zwa006.xml \
 	config/aeotec/zwa008.xml \
+	config/aeotec/zwa021.xml \
 	config/airlinemechanical/zds-ud10.xml \
 	config/alfred/DB2.xml \
 	config/assa_abloy/ConexisL1.xml \
@@ -362,6 +363,7 @@ DISTFILES =	.github/workflows/PRTest.yml \
 	config/homeseer/hsm100.xml \
 	config/homeseer/hsm200.xml \
 	config/homeseer/ztroller.xml \
+	config/honeywell/39348-zw4008.xml \
 	config/honeywell/39351-ZW3005.xml \
 	config/honeywell/lynx-touch-l5100.xml \
 	config/honeywell/th6320zw2003.xml \
@@ -455,6 +457,7 @@ DISTFILES =	.github/workflows/PRTest.yml \
 	config/images/aeotec/zwa004.png \
 	config/images/aeotec/zwa005.png \
 	config/images/aeotec/zwa006.png \
+	config/images/aeotec/zwa021.png \
 	config/images/airlinemechanical/zds-ud10.png \
 	config/images/alfred/DB2.png \
 	config/images/assa_abloy/ConexisL1.png \
@@ -644,6 +647,7 @@ DISTFILES =	.github/workflows/PRTest.yml \
 	config/images/homeseer/hs-ws100plus.png \
 	config/images/homeseer/hs-ws200plus.png \
 	config/images/homeseer/hsm200.png \
+	config/images/honeywell/39348-zw4008.png \
 	config/images/honeywell/39351-ZW3005.png \
 	config/images/honeywell/lynx-touch-l5100.png \
 	config/images/honeywell/th6320zw2003.png \
@@ -798,6 +802,7 @@ DISTFILES =	.github/workflows/PRTest.yml \
 	config/images/there/800z.png \
 	config/images/thermofloor/heatit021.png \
 	config/images/thermofloor/heatit056.png \
+	config/images/thermofloor/heatit_zdim.png \
 	config/images/trane/TZEMT400AB32MAA.png \
 	config/images/trane/TZEMT400BB32MAA.png \
 	config/images/trane/TZEMT524AA21MA.png \
@@ -842,6 +847,7 @@ DISTFILES =	.github/workflows/PRTest.yml \
 	config/images/zipato/HS1SA-Z.png \
 	config/images/zipato/HS1WL-Z.png \
 	config/images/zipato/RGBBulb.png \
+	config/images/zipato/ne-nas-ab01z.png \
 	config/images/zipato/pan04.png \
 	config/images/zipato/phpab01.png \
 	config/images/zipato/pse02.png \
@@ -1091,6 +1097,7 @@ DISTFILES =	.github/workflows/PRTest.yml \
 	config/telldus/tzwp100.xml \
 	config/telldus/tzwp102.xml \
 	config/there/800z.xml \
+	config/thermofloor/heatit-zdim.xml \
 	config/thermofloor/heatit021.xml \
 	config/thermofloor/heatit056.xml \
 	config/trane/TZEMT400AB32MAA.xml \
@@ -1151,6 +1158,7 @@ DISTFILES =	.github/workflows/PRTest.yml \
 	config/zipato/MiniKeypad.xml \
 	config/zipato/RGBBulb.xml \
 	config/zipato/RGBBulb2.xml \
+	config/zipato/ne-nas-ab02z.xml \
 	config/zipato/pan04.xml \
 	config/zipato/vszd2102.xml \
 	config/zipato/zp3102.xml \
