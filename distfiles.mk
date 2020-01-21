@@ -847,6 +847,7 @@ DISTFILES =	.github/workflows/PRTest.yml \
 	config/images/zipato/HS1SA-Z.png \
 	config/images/zipato/HS1WL-Z.png \
 	config/images/zipato/RGBBulb.png \
+	config/images/zipato/ne-nas-ab01z.png \
 	config/images/zipato/pan04.png \
 	config/images/zipato/phpab01.png \
 	config/images/zipato/pse02.png \
@@ -1157,6 +1158,7 @@ DISTFILES =	.github/workflows/PRTest.yml \
 	config/zipato/MiniKeypad.xml \
 	config/zipato/RGBBulb.xml \
 	config/zipato/RGBBulb2.xml \
+	config/zipato/ne-nas-ab02z.xml \
 	config/zipato/pan04.xml \
 	config/zipato/vszd2102.xml \
 	config/zipato/zp3102.xml \
