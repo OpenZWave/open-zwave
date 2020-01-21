@@ -1000,6 +1000,7 @@ DISTFILES =	.github/workflows/PRTest.yml \
 	config/popp/123658.xml \
 	config/popp/700045.xml \
 	config/popp/700168.xml \
+	config/popp/700342.xml \
 	config/popp/700397.xml \
 	config/popp/700793.xml \
 	config/popp/dwt.xml \
