@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Product Revision="4" xmlns='https://github.com/OpenZWave/open-zwave'>
+<Product Revision="1" xmlns='https://github.com/OpenZWave/open-zwave'>
+  <MetaData>
+   <MetaDataItem name="Name">Fan Coil Thermostat HE-FT01</MetaDataItem>
+   <MetaDataItem name="Description">This is advanced programmable Thermostat for Heating/Cooling Systems</MetaDataItem>
+   <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0344:0002:0004</MetaDataItem>
+   <MetaDataItem name="ProductPage">https://www.heltun.com/</MetaDataItem>
+   <MetaDataItem name="ProductSupport">https://www.heltun.com/support</MetaDataItem>
+   <MetaDataItem name="ProductPic">images/heltun/he-ft01.png</MetaDataItem>
+   <MetaDataItem id="0002" name="ZWProductPage" type="0004">https://products.z-wavealliance.org/products/3717</MetaDataItem>
+   <MetaDataItem id="0002" name="FrequencyName" type="0004">U.S. / Canada / Mexico</MetaDataItem>
+   <MetaDataItem id="0002" name="FrequencyName" type="0004">CEPT (Europe)</MetaDataItem>
+   <MetaDataItem id="0002" name="FrequencyName" type="0004">Australia / New Zealand</MetaDataItem>
+   <MetaDataItem id="0002" name="FrequencyName" type="0004">Russia</MetaDataItem>
+   <MetaDataItem id="0002" name="FrequencyName" type="0004">Israel</MetaDataItem>
+   <MetaDataItem id="0002" name="FrequencyName" type="0004">China</MetaDataItem>
+   <MetaDataItem id="0002" name="FrequencyName" type="0004">South Korea</MetaDataItem>
+   <MetaDataItem id="0002" name="FrequencyName" type="0004">Japan</MetaDataItem>
+   <MetaDataItem id="0002" name="FrequencyName" type="0004">Hong Kong</MetaDataItem>
+   <MetaDataItem id="0002" name="FrequencyName" type="0004">India</MetaDataItem>
+   <MetaDataItem id="0002" name="Identifier" type="0004">HE-FT01</MetaDataItem>
+   <ChangeLog>
+	   <Entry author="Narek Manukyan - n.manukyan@heltun.com" date="22 January 2020" revision="1">Metadata for HELTUN FanCoil Thermostat</Entry>
+   </ChangeLog>
+  </MetaData>
 <!-- Thermostat modes -->
   <CommandClass id="64">
     <Instance index="1"/>
