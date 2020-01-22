@@ -37,26 +37,32 @@
 
 namespace OpenZWave
 {
-	class SerialControllerImpl
+	namespace Internal
 	{
-	private:
-		friend class SerialController;
+		namespace Platform
+		{
 
-		SerialControllerImpl( SerialController* _owner );
-		~SerialControllerImpl();
+			class SerialControllerImpl
+			{
+				private:
+					friend class SerialController;
 
-		bool Open();
-		void Close();
+					SerialControllerImpl(SerialController* _owner);
+					~SerialControllerImpl();
 
-		uint32 Write( uint8* _buffer, uint32 _length );
-		void StartReadTask();
+					bool Open();
+					void Close();
 
-		Windows::Devices::SerialCommunication::SerialDevice ^ m_serialDevice;
-		Concurrency::cancellation_token_source   m_readTaskCancelationTokenSource;
+					uint32 Write(uint8* _buffer, uint32 _length);
+					void StartReadTask();
 
-		SerialController*			m_owner;
-	};
+					Windows::Devices::SerialCommunication::SerialDevice ^ m_serialDevice;
+					Concurrency::cancellation_token_source m_readTaskCancelationTokenSource;
 
+					SerialController* m_owner;
+			};
+		} // namespace Platform
+	} // namespace Internal
 } // namespace OpenZWave
 
 #endif //_SerialControllerImpl_H

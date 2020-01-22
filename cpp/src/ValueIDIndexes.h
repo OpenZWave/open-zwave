@@ -25,8 +25,6 @@
 //
 //-----------------------------------------------------------------------------
 
-
-
 /* This file is includes the pre-processed ValueIDIndexesDefines.h to avoid problems
  * with MSVC not supporting enough arguments with Macro's.
  * If you are adding a ValueID, you should add its index ENUM to ValuIDIndexDefines.def and the run
@@ -37,7 +35,15 @@
 
 #ifndef _ValueIDIndexes_H
 #define _ValueIDIndexes_H
+namespace OpenZWave
+{
+
+#ifdef _MSC_VER
+#define strncpy(x, y, z) strncpy_s(x, sizeof(x), y, sizeof(x)-1)
+#endif
 
 #include "ValueIDIndexesDefines.h"
+
+}
 
 #endif
