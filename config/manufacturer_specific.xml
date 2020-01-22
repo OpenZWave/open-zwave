@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ManufacturerSpecificData Revision="70" xmlns="https://github.com/OpenZWave/open-zwave">
+<ManufacturerSpecificData Revision="71" xmlns="https://github.com/OpenZWave/open-zwave">
   <Manufacturer id="0028" name="2B Electronics"></Manufacturer>
   <Manufacturer id="0098" name="2GIG Technologies">
     <Product config="2gig/ct50e.xml" id="015e" name="CT50e Thermostat" type="3200"/>
@@ -864,6 +864,8 @@
     <Product config="heltun/he-zw-therm-fl2.xml" id="0001" name="HE-ZW-THERM-FL2 Heating Thermostat" type="0003"/>
     <Product config="heltun/he-zw-sw-5a-1.xml" id="0003" name="HE-ZW-SW-5A-1 Touch Panel Switch" type="0003"/>
     <Product config="heltun/he-zw-therm-fc1.xml" id="0002" name="HE-ZW-THERM-FC1 Fan Coil Thermostat" type="0003"/>
+    <Product config="heltun/he-ht01.xml" id="0001" name="Heating Thermostat HE-HT01" type="0004"/>
+    <Product config="heltun/he-ft01.xml" id="0002" name="Fan Coil Thermostat HE-FT01" type="0004"/>
   </Manufacturer>
   <Manufacturer id="020F" name="Herald Datanetics Limited"></Manufacturer>
   <Manufacturer id="0017" name="HiTech Automation"></Manufacturer>

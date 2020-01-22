@@ -346,6 +346,8 @@ DISTFILES =	.github/workflows/PRTest.yml \
 	config/heiman/HS1WL-Z.xml \
 	config/heiman/HS2SK-Z.xml \
 	config/heiman/HS2WD-Z.xml \
+	config/heltun/he-ft01.xml \
+	config/heltun/he-ht01.xml \
 	config/heltun/he-zw-sw-5a-1.xml \
 	config/heltun/he-zw-therm-fc1.xml \
 	config/heltun/he-zw-therm-fl2.xml \
@@ -637,6 +639,8 @@ DISTFILES =	.github/workflows/PRTest.yml \
 	config/images/heiman/HS1SA-Z.png \
 	config/images/heiman/HS1WL-Z.png \
 	config/images/heiman/HS2SK-Z.png \
+	config/images/heltun/he-ft01.png \
+	config/images/heltun/he-ht01.png \
 	config/images/homeseer/hs-ds100plus.png \
 	config/images/homeseer/hs-fc200plus.png \
 	config/images/homeseer/hs-fls100plus.png \
