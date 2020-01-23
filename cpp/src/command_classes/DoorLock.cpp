@@ -236,7 +236,8 @@ namespace OpenZWave
 					}
 
 					ClearStaticRequest(StaticRequest_Values);
-
+					Log::Write(LogLevel_Info, GetNodeId(), "REcieved DoorLock Config Report: OutsideMode %d, InsideMode %d, Timeout Enabled: %d : %d:%d", ((_data[2] & 0xF0) >> 4), (_data[2] & 0x0F), _data[1], _data[3], _data[4]);
+					return true;
 				}
 				return false;
 			}

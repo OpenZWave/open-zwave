@@ -461,8 +461,15 @@ void Node::AdvanceQueries()
 				Internal::CC::MultiInstance* micc = static_cast<Internal::CC::MultiInstance*>(GetCommandClass(Internal::CC::MultiInstance::StaticGetCommandClassId()));
 				if (micc)
 				{
-					m_queryPending = micc->RequestInstances();
-					addQSC = m_queryPending;
+					if (micc->IsAfterMark())
+					{
+						Log::Write(LogLevel_Detail, m_nodeId, "Skipping RequestInstances() because MultiChannel CC is \"after mark\"");
+					}
+					else
+					{
+						m_queryPending = micc->RequestInstances();
+						addQSC = m_queryPending;
+					}
 				}
 
 				// when done, advance to the Static stage
@@ -1631,6 +1638,103 @@ uint8 Node::GetNumInstances(uint8 const _ccid)
 	return instances;
 }
 
+string Node::GetBasicString() 
+{
+	char str[32];
+	string label;
+	uint8 _basic = GetBasic();
+
+	snprintf(str, sizeof(str), "Basic 0x%.2x", _basic);
+	label = str;
+
+	// Read in the device class data if it has not been read already.
+	if (!s_deviceClassesLoaded)
+	{
+		ReadDeviceClasses();
+	}
+	if (s_basicDeviceClasses.find(_basic) != s_basicDeviceClasses.end()) {
+		return s_basicDeviceClasses.at(_basic);
+	}
+	return "Unknown";
+}
+
+uint8 Node::GetGeneric(uint8 const _instance) const
+{
+	if (_instance > 0) {
+		if (Internal::CC::MultiInstance *cc = static_cast<Internal::CC::MultiInstance *>(GetCommandClass(Internal::CC::MultiInstance::StaticGetCommandClassId()))) 
+		{
+			return cc->GetGenericInstanceDeviceType(_instance);
+		}
+	}
+	return m_generic;
+}
+string Node::GetGenericString(uint8 const _instance)
+{
+	char str[32];
+	string label;
+	uint8 _generic = GetGeneric(_instance);
+
+	snprintf(str, sizeof(str), "Generic 0x%.2x", _generic);
+	label = str;
+
+	// Read in the device class data if it has not been read already.
+	if (!s_deviceClassesLoaded)
+	{
+		ReadDeviceClasses();
+	}
+
+	// Get the Generic device class label
+	if (s_genericDeviceClasses.find(_generic) != s_genericDeviceClasses.end())
+	{
+		GenericDeviceClass* genericDeviceClass = s_genericDeviceClasses.at(_generic);
+		label = genericDeviceClass->GetLabel();
+	}
+	return label;
+}
+
+
+uint8 Node::GetSpecific(uint8 const _instance) const
+{
+	if (_instance > 0) {
+		if (Internal::CC::MultiInstance *cc = static_cast<Internal::CC::MultiInstance *>(GetCommandClass(Internal::CC::MultiInstance::StaticGetCommandClassId())))
+		{
+			return cc->GetSpecificInstanceDeviceType(_instance);
+		}
+	}
+	return m_specific;
+}		
+
+string Node::GetSpecificString(uint8 const _instance)
+{
+	char str[32];
+	string label;
+	uint8 _generic = GetGeneric(_instance);
+	uint8 _specific = GetSpecific(_instance);
+
+	snprintf(str, sizeof(str), "Specific 0x%.2x", _specific);
+	label = str;
+
+	// Read in the device class data if it has not been read already.
+	if (!s_deviceClassesLoaded)
+	{
+		ReadDeviceClasses();
+	}
+
+	// Get the Generic device class label
+	if (s_genericDeviceClasses.find(_generic) != s_genericDeviceClasses.end())
+	{
+		GenericDeviceClass* genericDeviceClass = s_genericDeviceClasses.at(_generic);
+		label = genericDeviceClass->GetLabel();
+				// Override with any specific device class label
+		if (DeviceClass* specificDeviceClass = genericDeviceClass->GetSpecificDeviceClass(_specific))
+		{
+			label = specificDeviceClass->GetLabel();
+		}
+
+	}
+	return label;
+}
+
 void Node::SetSecuredClasses(uint8 const* _data, uint8 const _length, uint32 const _instance)
 {
 	uint32 i;
@@ -2654,7 +2758,22 @@ void Node::ReadValueFromXML(uint8 const _commandClassId, TiXmlElement const* _va
 Internal::VC::Value* Node::GetValue(ValueID const& _id)
 {
 	// This increments the value's reference count
-	return GetValueStore()->GetValue(_id.GetValueStoreKey());
+	Internal::VC::Value *value = GetValueStore()->GetValue(_id.GetValueStoreKey());
+	
+	if (!value) {
+		Log::Write(LogLevel_Warning, m_nodeId, "Node::GetValue - Couldn't find ValueID in Store: %s", _id.GetAsString().c_str());
+		return nullptr;
+	}
+
+	if (value->GetID().GetId() != _id.GetId())
+	{
+		Log::Write(LogLevel_Error, m_nodeId, "Node::GetValue called with: %s but GetValueStore returned: %s",
+				   _id.GetAsString().c_str(), value->GetID().GetAsString().c_str());
+
+		value->Release();
+		return nullptr;
+	}
+	return value;
 }
 
 //-----------------------------------------------------------------------------
@@ -3266,27 +3385,47 @@ void Node::ReadDeviceClasses()
 
 				if (!strcmp(str, "Generic"))
 				{
-					s_genericDeviceClasses[(uint8_t) (key & 0xFF)] = new GenericDeviceClass(child);
+					if (s_genericDeviceClasses.find((uint8_t)(key & 0xFF)) == s_genericDeviceClasses.end()) {
+						s_genericDeviceClasses[(uint8_t) (key & 0xFF)] = new GenericDeviceClass(child);
+					} else {
+						Log::Write(LogLevel_Warning, "Duplicate Entry for Generic Device Class %d", key);
+					}
 				}
 				else if (!strcmp(str, "Basic"))
 				{
-					char const* label = child->Attribute("label");
-					if (label)
-					{
-						s_basicDeviceClasses[(uint8_t) (key & 0xFF)] = label;
+					if (s_basicDeviceClasses.find((uint8_t)(key & 0xFF)) == s_basicDeviceClasses.end()) { 
+						char const* label = child->Attribute("label");
+						if (label)
+						{
+							s_basicDeviceClasses[(uint8_t) (key & 0xFF)] = label;
+						}
+					} else {
+						Log::Write(LogLevel_Warning, "Duplicate Entry for Basic Device Class %d", key);
 					}
 				}
 				else if (!strcmp(str, "Role"))
 				{
-					s_roleDeviceClasses[(uint8_t) (key & 0xFF)] = new DeviceClass(child);
+					if (s_roleDeviceClasses.find((uint8_t)(key & 0xFF)) == s_roleDeviceClasses.end()) { 
+						s_roleDeviceClasses[(uint8_t) (key & 0xFF)] = new DeviceClass(child);
+					} else {
+						Log::Write(LogLevel_Warning, "Duplicate Entry for Role Device Classes %d", key);
+					}
 				}
 				else if (!strcmp(str, "DeviceType"))
 				{
-					s_deviceTypeClasses[key] = new DeviceClass(child);
+					if (s_deviceTypeClasses.find(key) == s_deviceTypeClasses.end()) { 
+						s_deviceTypeClasses[key] = new DeviceClass(child);
+					} else {
+						Log::Write(LogLevel_Warning, "Duplicate Entry for Device Type Class %d", key);
+					}
 				}
 				else if (!strcmp(str, "NodeType"))
 				{
-					s_nodeTypes[(uint8_t) (key & 0xFF)] = new DeviceClass(child);
+					if (s_nodeTypes.find((uint8_t)(key & 0xFF)) == s_nodeTypes.end()) {
+						s_nodeTypes[(uint8_t) (key & 0xFF)] = new DeviceClass(child);
+					} else {
+						Log::Write(LogLevel_Warning, "Duplicate Entry for Node Type %d", key);
+					}
 				}
 			}
 		}

@@ -127,12 +127,12 @@ namespace OpenZWave
 // <MultiChannelAssociation::RequestState>
 // Nothing to do for Association
 //-----------------------------------------------------------------------------
-			bool MultiChannelAssociation::RequestState(uint32 const _requestFlags, uint8 const _instance, Driver::MsgQueue const _queue)
+			bool MultiChannelAssociation::RequestState(uint32 const _requestFlags, uint8 const _endPoint, Driver::MsgQueue const _queue)
 			{
 				if ((_requestFlags & RequestFlag_Static) && HasStaticRequest(StaticRequest_Values))
 				{
 					// Request the supported group info
-					return RequestValue(_requestFlags, 0, _instance, _queue);
+					return RequestValue(_requestFlags, 0, _endPoint, _queue);
 				}
 
 				return false;
@@ -143,11 +143,11 @@ namespace OpenZWave
 // Nothing to do for Association
 //-----------------------------------------------------------------------------
 			bool MultiChannelAssociation::RequestValue(uint32 const _requestFlags, uint16 const _dummy1,	// = 0 (not used)
-					uint8 const _instance, Driver::MsgQueue const _queue)
+					uint8 const _endPoint, Driver::MsgQueue const _queue)
 			{
-				if (_instance != 1)
+				if (_endPoint != 1)
 				{
-					// This command class doesn't work with multiple instances
+					// This command class doesn't work with multiple End Points
 					return false;
 				}
 				// Request the supported group info
@@ -188,7 +188,7 @@ namespace OpenZWave
 // <MultiChannelAssociation::HandleMsg>
 // Handle a message from the Z-Wave network
 //-----------------------------------------------------------------------------
-			bool MultiChannelAssociation::HandleMsg(uint8 const* _data, uint32 const _length, uint32 const _instance	// = 1
+			bool MultiChannelAssociation::HandleMsg(uint8 const* _data, uint32 const _length, uint32 const _endPoint	// = 1
 					)
 			{
 				bool handled = false;
@@ -201,7 +201,7 @@ namespace OpenZWave
 						// Retrieve the number of groups this device supports.
 						// The groups will be queried with the session data.
 						m_numGroups = _data[1];
-						Log::Write(LogLevel_Info, GetNodeId(), "Received Multi Instance Association Groupings report from node %d. Number of groups is %d", GetNodeId(), m_numGroups);
+						Log::Write(LogLevel_Info, GetNodeId(), "Received MULTI_CHANNEL_ASSOCIATION_GROUPINGS_REPORT from node %d. Number of groups is %d", GetNodeId(), m_numGroups);
 						ClearStaticRequest(StaticRequest_Values);
 						handled = true;
 					}
@@ -212,86 +212,89 @@ namespace OpenZWave
 						uint8 maxAssociations = _data[2];		// If the maxAssociations is zero, this is not a supported group.
 						uint8 numReportsToFollow = _data[3];	// If a device supports a lot of associations, they may come in more than one message.
 
-						if (maxAssociations)
-						{
-							if (_length >= 5)
+						if (groupIdx != 0) {
+							if (maxAssociations)
 							{
-								// format:
-								//   node A
-								//   node B
-								//   0x00 Marker
-								//   node C 
-								//   instance #
-								//   node D
-								//   instance #
-								Log::Write(LogLevel_Info, GetNodeId(), "Received Multi Instance Association report from node %d, group %d", GetNodeId(), groupIdx);
-								Log::Write(LogLevel_Info, GetNodeId(), "  The group contains:");
-								bool pastMarker = false;
-								for (i = 0; i < _length - 5; ++i)
+								if (_length >= 5)
 								{
-									if (_data[i + 4] == 0x00)
+									// format:
+									//   node A
+									//   node B
+									//   0x00 Marker
+									//   node C 
+									//   End Point #
+									//   node D
+									//   End Point #
+									Log::Write(LogLevel_Info, GetNodeId(), "Received MULTI_CHANNEL_ASSOCIATION_REPORT from node %d, group %d", GetNodeId(), groupIdx);
+									Log::Write(LogLevel_Info, GetNodeId(), "  The group contains:");
+									bool pastMarker = false;
+									for (i = 0; i < _length - 5; ++i)
 									{
-										pastMarker = true;
-									}
-									else
-									{
-										if (!pastMarker)
+										if (_data[i + 4] == 0x00)
 										{
-											Log::Write(LogLevel_Info, GetNodeId(), "    Node %d", _data[i + 4]);
-											InstanceAssociation association;
-											association.m_nodeId = _data[i + 4];
-											association.m_instance = 0x00;
-											m_pendingMembers.push_back(association);
+											pastMarker = true;
 										}
 										else
 										{
-											Log::Write(LogLevel_Info, GetNodeId(), "    Node %d instance %d", _data[i + 4], _data[i + 5]);
-											InstanceAssociation association;
-											association.m_nodeId = _data[i + 4];
-											association.m_instance = _data[i + 5];
-											m_pendingMembers.push_back(association);
-											i++;
+											if (!pastMarker)
+											{
+												Log::Write(LogLevel_Info, GetNodeId(), "    Node %d", _data[i + 4]);
+												InstanceAssociation association;
+												association.m_nodeId = _data[i + 4];
+												association.m_instance = 0x00;
+												m_pendingMembers.push_back(association);
+											}	
+											else
+											{
+												Log::Write(LogLevel_Info, GetNodeId(), "    Node %d End Point %d", _data[i + 4], _data[i + 5]);
+												InstanceAssociation association;
+												association.m_nodeId = _data[i + 4];
+												association.m_instance = _data[i + 5];
+												m_pendingMembers.push_back(association);
+												i++;
+											}
 										}
 									}
 								}
-							}
 
-							if (numReportsToFollow)
-							{
-								// We're expecting more reports for this group
-								Log::Write(LogLevel_Info, GetNodeId(), "%d more association reports expected for node %d, group %d", numReportsToFollow, GetNodeId(), groupIdx);
-								return true;
+								if (numReportsToFollow)
+								{
+									// We're expecting more reports for this group
+									Log::Write(LogLevel_Info, GetNodeId(), "%d more association reports expected for node %d, group %d", numReportsToFollow, GetNodeId(), groupIdx);
+									return true;
+								}
+								else
+								{
+									// No more reports to come for this group, so we can apply the pending list
+									Group* group = node->GetGroup(groupIdx);
+									if ( NULL == group)
+									{
+										// Group has not been created yet
+										group = new Group(GetHomeId(), GetNodeId(), groupIdx, maxAssociations);
+										node->AddGroup(group);
+									}
+									group->SetMultiInstance(true);
+
+									// Update the group with its new contents
+									group->OnGroupChanged(m_pendingMembers);
+									m_pendingMembers.clear();
+								}
 							}
 							else
 							{
-								// No more reports to come for this group, so we can apply the pending list
-								Group* group = node->GetGroup(groupIdx);
-								if ( NULL == group)
-								{
-									// Group has not been created yet
-									group = new Group(GetHomeId(), GetNodeId(), groupIdx, maxAssociations);
-									node->AddGroup(group);
-								}
-								group->SetMultiInstance(true);
-
-								// Update the group with its new contents
-								group->OnGroupChanged(m_pendingMembers);
-								m_pendingMembers.clear();
+								// maxAssociations is zero, so we've reached the end of the query process
+								Log::Write(LogLevel_Info, GetNodeId(), "Max associations for node %d, group %d is zero.  Querying associations for this node is complete.", GetNodeId(), groupIdx);
+								node->AutoAssociate();
+								m_queryAll = false;
 							}
+						} else {
+							Log::Write(LogLevel_Warning, GetNodeId(), "Recieved Group 0 Assocation - Invalid");
 						}
-						else
-						{
-							// maxAssociations is zero, so we've reached the end of the query process
-							Log::Write(LogLevel_Info, GetNodeId(), "Max associations for node %d, group %d is zero.  Querying associations for this node is complete.", GetNodeId(), groupIdx);
-							node->AutoAssociate();
-							m_queryAll = false;
-						}
-
 						if (m_queryAll)
 						{
 							// Work out which is the next group we will query.
 							// If we are currently on group 255, the next group will be 1.
-							uint8 nextGroup = groupIdx + 1;
+							uint8 nextGroup = m_currentGroupQuery + 1;
 							if (!nextGroup)
 							{
 								nextGroup = 1;
@@ -308,6 +311,7 @@ namespace OpenZWave
 								Log::Write(LogLevel_Info, GetNodeId(), "Querying associations for node %d is complete.", GetNodeId());
 								node->AutoAssociate();
 								m_queryAll = false;
+								m_currentGroupQuery = 0;
 							}
 						}
 
@@ -335,6 +339,8 @@ namespace OpenZWave
 					msg->Append(_groupIdx);
 					msg->Append(GetDriver()->GetTransmitOptions());
 					GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
+					if (m_queryAll) 
+						m_currentGroupQuery = _groupIdx;
 					return;
 				}
 				else
@@ -348,18 +354,18 @@ namespace OpenZWave
 // <MultiChannelAssociation::Set>
 // Add an association between devices
 //-----------------------------------------------------------------------------
-			void MultiChannelAssociation::Set(uint8 _groupIdx, uint8 _targetNodeId, uint8 _instance)
+			void MultiChannelAssociation::Set(uint8 _groupIdx, uint8 _targetNodeId, uint8 _endPoint)
 			{
 
-				/* for Qubino devices, we should always set a Instance if its the ControllerNode, so MultChannelEncap works.  - See Bug #857 */
-				if ((m_com.GetFlagBool(COMPAT_FLAG_MCA_FORCEINSTANCES) == true) && (_instance == 0) && (GetDriver()->GetControllerNodeId() == _targetNodeId))
+				/* for Qubino devices, we should always set a End Point if its the ControllerNode, so MultChannelEncap works.  - See Bug #857 */
+				if ((m_com.GetFlagBool(COMPAT_FLAG_MCA_FORCEINSTANCES) == true) && (_endPoint == 0) && (GetDriver()->GetControllerNodeId() == _targetNodeId))
 				{
-					_instance = 0x01;
+					_endPoint = 0x01;
 				}
 
-				Log::Write(LogLevel_Info, GetNodeId(), "MultiChannelAssociation::Set - Adding instance %d on node %d to group %d of node %d", _instance, _targetNodeId, _groupIdx, GetNodeId());
+				Log::Write(LogLevel_Info, GetNodeId(), "MultiChannelAssociation::Set - Adding End Point %d on node %d to group %d of node %d", _endPoint, _targetNodeId, _groupIdx, GetNodeId());
 
-				if (_instance == 0x00)
+				if (_endPoint == 0x00)
 				{
 					Msg* msg = new Msg("MultiChannelAssociationCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
 					msg->Append(GetNodeId());
@@ -381,7 +387,7 @@ namespace OpenZWave
 					msg->Append(_groupIdx);
 					msg->Append(0x00); // marker
 					msg->Append(_targetNodeId);
-					msg->Append(_instance);
+					msg->Append(_endPoint);
 					msg->Append(GetDriver()->GetTransmitOptions());
 					GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
 				}
@@ -391,11 +397,11 @@ namespace OpenZWave
 // <MultiChannelAssociation::Remove>
 // Remove an association between devices
 //-----------------------------------------------------------------------------
-			void MultiChannelAssociation::Remove(uint8 _groupIdx, uint8 _targetNodeId, uint8 _instance)
+			void MultiChannelAssociation::Remove(uint8 _groupIdx, uint8 _targetNodeId, uint8 _endPoint)
 			{
-				Log::Write(LogLevel_Info, GetNodeId(), "MultiChannelAssociation::Remove - Removing instance %d on node %d from group %d of node %d", _instance, _targetNodeId, _groupIdx, GetNodeId());
+				Log::Write(LogLevel_Info, GetNodeId(), "MultiChannelAssociation::Remove - Removing End Point %d on node %d from group %d of node %d", _endPoint, _targetNodeId, _groupIdx, GetNodeId());
 
-				if (_instance == 0x00)
+				if (_endPoint == 0x00)
 				{
 					Msg* msg = new Msg("MultiChannelAssociationCmd_Remove", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
 					msg->Append(GetNodeId());
@@ -417,7 +423,7 @@ namespace OpenZWave
 					msg->Append(_groupIdx);
 					msg->Append(0x00); // marker
 					msg->Append(_targetNodeId);
-					msg->Append(_instance);
+					msg->Append(_endPoint);
 					msg->Append(GetDriver()->GetTransmitOptions());
 					GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
 				}
