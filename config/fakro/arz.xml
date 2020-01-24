@@ -1,4 +1,4 @@
-<Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
+<!-- Fakro ARZ Z-Wave --><Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0085:0002:0002</MetaDataItem>
     <MetaDataItem name="ProductPic">images/fakro/arz.png</MetaDataItem>
@@ -10,7 +10,30 @@
     <MetaDataItem id="0002" name="FrequencyName" type="0002">CEPT (Europe)</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="1">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/677/xml</Entry>
+	  <Entry author="PePe" date="24 January 2020" revision="1">Add more option config and more group associations</Entry>
     </ChangeLog>
   </MetaData>
+  <!-- Configuration -->
+  <CommandClass id="112">
+    <Value type="list" genre="config" instance="1" index="12" label="Calibrate" min="1" max="2" value="1" size="1">
+      <Help>Calibrated/Discalibrated. 1-Calibrated 2-Discalibrated. Default value: 1 Calibrated</Help>
+      <Item label="Calibrated" value="1" />
+      <Item label="Discalibrated-to enter the calibration mode must first time discalibrate and then calibrate." value="2" />
+    </Value>
+
+    <Value type="list" genre="config" instance="1" index="13" label="Last saved position" min="1" max="2" value="1" size="1">
+      <Help>Last saved position. 1-FF go to Max  2-FF go to previous position. Default value: 1-FF go to Max</Help>
+      <Item label="FF go to Max" value="1" />
+      <Item label="FF go to previous position" value="2" />
+    </Value>
+  </CommandClass>
   <CommandClass id="112"/>
+    <!-- Association Groups -->
+  <CommandClass id="133">
+    <Associations num_groups="3">
+      <Group index="1" label="Lifeline" max_associations="1"/>
+	  <Group index="2" label="Basic Repeat" max_associations="5"/>
+	  <Group index="3" label="Multilevel Repeat" max_associations="5"/>
+    </Associations>
+  </CommandClass>
 </Product>
