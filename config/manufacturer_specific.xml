@@ -1797,7 +1797,9 @@
 		<Product type="0003" id="2087" name="Power plug 12A" config="shenzen_neo/nas-wr01z.xml"/>
 		<Product type="0003" id="0083" name="Battery Powered PIR Sensor" config="shenzen_neo/nas-pd01z.xml"/>
 		<Product type="0003" id="1083" name="Battery Powered PIR Sensor" config="shenzen_neo/nas-pd01z.xml"/>
-		<Product type="0003" id="108d" name="Battery Powered PIR Sensor V2" config="shenzen_neo/nas-pd02z.xml"/>
+		<Product type="0003" id="108d" name="Battery Powered PIR Sensor V3" config="shenzen_neo/nas-pd03z.xml"/>
+		<Product type="0003" id="208d" name="Battery Powered PIR Sensor V3" config="shenzen_neo/nas-pd03z.xml"/>
+		<!--<Product type="0003" id="108d" name="Battery Powered PIR Sensor V2" config="shenzen_neo/nas-pd02z.xml"/>-->
 		<!--<Product type="0003" id="108d" name="Battery Powered PIR Sensor with temp" config="shenzen_neo/nas-pd01z.xml"/>-->
 		<Product type="0003" id="0085" name="Water Leakage Detector" config="shenzen_neo/nas-ws02z.xml"/>
 		<Product type="0003" id="1085" name="Water Leakage Detector" config="shenzen_neo/nas-ws02z.xml"/>
