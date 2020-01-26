@@ -1,65 +1,66 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Fakro ZWS230 Chain actuator 230VAC -->
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="3">
+<!-- Fakro ZWS230 Chain actuator 230VAC --><Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0085:0001:0003</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/fakro/zws12.png</MetaDataItem>
+    <MetaDataItem id="0001" name="ZWProductPage" type="0003">https://products.z-wavealliance.org/products/105/</MetaDataItem>
+    <MetaDataItem name="Name">Fakro CHAIN ACTUATOR ZWS230</MetaDataItem>
+    <MetaDataItem name="ProductSupport">https://www.fakro.com/roof-windows/electric-control/controlled-devices/chain-motor-units/</MetaDataItem>
+    <MetaDataItem name="Description">Window opener 12VDCThe ZWS12 and ZW230 chain motors thanks to their small dimensions and suitable force output are ideal for roof window operating, being fully compatible with the Z-Wave system. The motors can be applied in both centre pivot and top hung and pivot roof windows as well as windows of non-standard dimensions.
+The maximum chain reach is 24cm for ZWS12 and 36cm for ZW230. The motors are equipped with built-in overload protection which acts as a sensor of correct window closing.</MetaDataItem>
+    <MetaDataItem name="ProductPage">https://www.fakro.com/roof-windows/electric-control/controlled-devices/chain-motor-units/</MetaDataItem>
+    <MetaDataItem id="0001" name="FrequencyName" type="0003">CEPT (Europe)</MetaDataItem>
+    <ChangeLog>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="4">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/105/xml</Entry>
+	  <Entry author="PePe" date="26 January 2020" revision="5">Correct update config for model ZWS230</Entry>
+    </ChangeLog>
+  </MetaData>
   <!-- Configuration -->  
-  <!--
   <CommandClass id="112">
-    <Value type="list" genre="config" instance="1" index="7" label="Speed motor I" min="1" max="4" value="2" size="1">
+    <Value type="list" genre="config" instance="1" index="12" label="Callibrate" min="1" max="2" value="1" size="1">
+      <Help>Callibrate</Help>
+      <Item label="1 -calibrated" value="1" />
+      <Item label="2 -discalibrated" value="2" />
+    </Value>
+
+    <Value type="list" genre="config" instance="1" index="13" label="Last saved position" min="1" max="2" value="1" size="1">
+      <Help>Last saved position. 1- FF go to Max  2- FF go to previous position</Help>
+      <Item label="1 -FF go to Max" value="1" />
+      <Item label="2 -FF go to previous position" value="2" />
+    </Value>
+
+    <Value type="byte" genre="config" instance="1" index="15" label="Close after time" min="0" max="120" value="0" units="minutes">
+      <Help>Close after time. 0 : dont close. [1 to 120] minutes to close.</Help>
+    </Value>
+
+    <Value type="list" genre="config" instance="1" index="7" label="Motor speed I" min="1" max="4" value="2" size="1" >
+      <Help>Motor speed I</Help>
+      <Item label="1 -the lowest speed" value="1" />
+	  <Item label="2 -default" value="2" />
+	  <Item label="3" value="3" />
+      <Item label="4 -the higest speed" value="4" />
+    </Value>
+
+	<Value type="list" genre="config" instance="1" index="8" label="Motor speed II (rain sensor)" min="1" max="4" value="2" size="1" >
+      <Help>Motor speed II (rain sensor)</Help>
+      <Item label="1 -the lowest speed" value="1" />
+	  <Item label="2 -default" value="2" />
+	  <Item label="3" value="3" />
+      <Item label="4 -the higest speed" value="4" />
+    </Value>
+
+	<Value type="list" genre="config" instance="1" index="99" label="Factory settings" min="1" max="2" value="1" size="1">
       <Help></Help>
-      <Item label="1" value="1" />
-      <Item label="2" value="2" />
-      <Item label="3" value="3" />
-      <Item label="4" value="4" />
-    </Value>
-
-    <Value type="list" genre="config" instance="1" index="8" label="Speed motor II (ZRD)" min="1" max="4" value="2" size="1">
-      <Help></Help>
-      <Item label="1" value="1" />
-      <Item label="2" value="2" />
-      <Item label="3" value="3" />
-      <Item label="4" value="4" />
-    </Value>
-
-    <Value type="list" genre="config" instance="1" index="9" label="Soft start" min="1" max="2" value="1" size="1">
-      <Help></Help>
-      <Item label="Yes" value="1" />
-      <Item label="No" value="2" />
-    </Value>
-
-    <Value type="list" genre="config" instance="1" index="12" label="Callibration" min="1" max="3" value="2" size="1" >
-      <Help></Help>
-      <Item label="Start calibration" value="1" />
-      <Item label="Remove calibration" value="2" />
-      <Item label="Only report (when encoder damage)" value="3" />
-    </Value>
-
-    <Value type="byte" genre="config" instance="1" index="14" label="Comfortable position" min="1" max="99" value="32">
-      <Help>
-        1 : go to comfortable position.
-        [2 to 99] select comfortable position.
-        32 - default
-      </Help>
-    </Value>
-
-    <Value type="byte" genre="config" instance="1" index="15" label="Close after time" min="0" max="255" value="0" units="minutes">
-      <Help>
-        0 : dont close.
-        [1 to 255] minutes to close.
-      </Help>
-    </Value>
-
-    <Value type="list" genre="config" instance="1" index="99" label="Factory settings" min="1" max="2" value="1" size="1">
-      <Help></Help>
-      <Item label="Reset" value="1" />
+      <Item label="Reset to default" value="1" />
       <Item label="Normal" value="2" />
     </Value>
   </CommandClass>
-  -->
-
-  <!-- Association Groups -->
+    <!-- Association Groups -->
   <CommandClass id="133">
-    <Associations num_groups="1">
-      <Group index="1" max_associations="5" label="Lifeline"/>
+    <Associations num_groups="4">
+      <Group index="1" label="Lifeline" max_associations="1"/>
+	  <Group index="2" label="Basic Repeat" max_associations="5"/>
+	  <Group index="3" label="Multilevel Repeat" max_associations="5"/>
+	  <Group index="4" label="Basic Rain" max_associations="5"/>
     </Associations>
   </CommandClass>
 </Product>
