@@ -1,0 +1,25 @@
+<Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <!--<MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/</MetaDataItem>-->
+    <MetaDataItem name="ProductPic">images/rcs/tbz48.png</MetaDataItem>
+    <MetaDataItem id="0009" name="ZWProductPage" type="0001">https://products.z-wavealliance.org/products/685/</MetaDataItem>
+    <MetaDataItem name="Description">Z-Wave Battery Thermostat</MetaDataItem>
+    <MetaDataItem name="ProductPage">https://www.rcstechnology.com/products/</MetaDataItem>
+    <MetaDataItem name="Name">Z-Wave Battery Thermostat TBZ48</MetaDataItem>
+    <MetaDataItem id="0009" name="FrequencyName" type="0001">U.S. / Canada / Mexico</MetaDataItem>
+    <MetaDataItem name="ProductSupport">http://www.rcstechnology.com/oldsite/products/stats/zwave.htm</MetaDataItem>
+    <MetaDataItem id="0009" name="Identifier" type="0001">TBZ48</MetaDataItem>
+    <ChangeLog>
+      <Entry author="Sean Tibbetts -- seantibb@gmail.com" date="28 Jan 2020" revision="1">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/685/xml</Entry>
+    </ChangeLog>
+  </MetaData>
+  <!-- This thermostat's setpoint descriptions are 1 based, not 0 -->
+  <CommandClass id="67">
+    <Instance index="1"/>
+    <Value genre="user" index="1" instance="1" label="Heating 1" max="0" min="0" read_only="false" type="decimal" units="F" value="65" write_only="false"/>
+    <Value genre="user" index="2" instance="1" label="Cooling 1" max="0" min="0" read_only="false" type="decimal" units="F" value="80" write_only="false"/>
+    <Compatibility>
+      <Base>0</Base>
+    </Compatibility>
+  </CommandClass>
+</Product>
