@@ -278,6 +278,7 @@ DISTFILES =	.github/workflows/PRTest.yml \
 	config/followgood/swz-1002.xml \
 	config/forest/fs2z5232000002.xml \
 	config/fortrezz/fmi.xml \
+	config/fortrezz/fts05p.xml \
 	config/fortrezz/gdc1_fortrezz_1501.xml \
 	config/fortrezz/mimo2plus.xml \
 	config/fortrezz/mimolite.xml \
@@ -577,6 +578,7 @@ DISTFILES =	.github/workflows/PRTest.yml \
 	config/images/followgood/swz-1002.png \
 	config/images/forest/fs2z5232000002.png \
 	config/images/fortrezz/fmi.png \
+	config/images/fortrezz/fts05p.png \
 	config/images/fortrezz/gdc1_fortrezz_1501.png \
 	config/images/fortrezz/mimo2plus.png \
 	config/images/fortrezz/mimolite.png \
