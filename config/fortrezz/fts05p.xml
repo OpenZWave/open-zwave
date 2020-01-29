@@ -6,7 +6,7 @@
     <MetaDataItem name="ProductPage">https://www.fortrezz.com/shop/flood-sensor-w-probe</MetaDataItem>
     <MetaDataItem name="ProductSupport">https://www.fortrezz.com/support</MetaDataItem>
     <MetaDataItem name="ProductPic">images/fortrezz/fts05p.png</MetaDataItem>
-    <MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&filename=MarketCertificationFiles/2458/User%20Manual%20FTS05-FTS05P.pdf</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&amp;filename=MarketCertificationFiles/2458/User%20Manual%20FTS05-FTS05P.pdf</MetaDataItem>
     <MetaDataItem name="WakeupDescription">To initiate manual wakeup, press the program button once, while in network. Device stays awake for 10 seconds or longer if communicating with the controller.</MetaDataItem>
     <MetaDataItem name="InclusionDescription">1) Set up the Add/Inclusion mode at the controller; 2) Briefly press the switch once and the controller will indicate the unit has been added into the network. Also, the LED will blink 2 quick blinks when complete.</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">1) Set up the Remove/Exclusion mode at the controller; 2) Press and hold the switch for approx. 2 seconds and then release. The controller will indicates the unit has been removed from the network. The LED will blink 4 quick blinks when complete.</MetaDataItem>
