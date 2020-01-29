@@ -29,8 +29,8 @@
 #define _ValueString_H
 
 #include <string>
-#include "Defs.h"
-#include "value_classes/Value.h"
+#include "../Defs.h"
+#include "Value.h"
 
 class TiXmlElement;
 

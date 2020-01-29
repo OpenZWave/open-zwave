@@ -30,8 +30,8 @@
 
 #include <string>
 #include <vector>
-#include "Defs.h"
-#include "value_classes/Value.h"
+#include "../Defs.h"
+#include "Value.h"
 
 class TiXmlElement;
 

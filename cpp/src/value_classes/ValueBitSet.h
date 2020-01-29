@@ -30,9 +30,9 @@
 
 #include <string>
 #include <map>
-#include "Defs.h"
-#include "value_classes/Value.h"
-#include "Bitfield.h"
+#include "../Defs.h"
+#include "Value.h"
+#include "../Bitfield.h"
 
 class TiXmlElement;
 

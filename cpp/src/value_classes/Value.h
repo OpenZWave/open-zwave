@@ -32,10 +32,10 @@
 #ifdef __FreeBSD__
 #include <time.h>
 #endif
-#include "Defs.h"
-#include "platform/Ref.h"
-#include "value_classes/ValueID.h"
-#include "platform/Log.h"
+#include "../Defs.h"
+#include "../platform/Ref.h"
+#include "ValueID.h"
+#include "../platform/Log.h"
 
 class TiXmlElement;
 
