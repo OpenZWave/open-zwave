@@ -206,7 +206,7 @@
     <Product config="aeotec/zwa005.xml" id="0005" name="ZWA005 TriSensor" type="0002"/>
     <Product config="aeotec/zwa005.xml" id="0005" name="ZWA005 TriSensor" type="0102"/>
     <Product config="aeotec/zwa005.xml" id="0005" name="ZWA005 TriSensor" type="0202"/>
-    <Product config="aeotec/zwa021.xml" id="0015" name="ZWA021 Thermostatic Valve" type="0002"/>
+    <Product config="aeotec/zwa021.xml" id="0015" name="ZWA021 Thermostatic Valve" type="0002"/>	  
     <Product config="aeotec/zw162.xml" id="00a2" name="ZW162 Doorbell 6" type="0003"/>
     <Product config="aeotec/zw162.xml" id="00a2" name="ZW162 Doorbell 6" type="0103"/>
     <Product config="aeotec/zw162.xml" id="00a2" name="ZW162 Doorbell 6" type="0203"/>
@@ -216,6 +216,9 @@
     <Product config="aeotec/zwa008.xml" id="0007" name="ZWA008 Door Window Sensor 7" type="0002"/>
     <Product config="aeotec/zwa008.xml" id="0007" name="ZWA008 Door Window Sensor 7" type="0102"/>
     <Product config="aeotec/zwa008.xml" id="0007" name="ZWA008 Door Window Sensor 7" type="0202"/>
+    <Product config="aeotec/zw141.xml" id="008d" name="ZW141 Nano Shutter" type="0003"/>
+    <Product config="aeotec/zw141.xml" id="008d" name="ZW141 Nano Shutter" type="0103"/>  
+    <Product config="aeotec/zw141.xml" id="008d" name="ZW141 Nano Shutter" type="0203"/>  	  
     <Product config="aeotec/zw164.xml" id="00a4" name="ZW164 Indoor Siren 6" type="0003"/>
     <Product config="aeotec/zw175.xml" id="00af" name="ZW175 Smart Switch 7" type="0003"/>
     <Product config="aeotec/zw187.xml" id="00bb" name="ZW187 Recessed Door Sensor 7" type="0002"/>
