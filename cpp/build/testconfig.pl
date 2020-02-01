@@ -637,4 +637,6 @@ if ($errorsize == 0)
 	open my $FH, '>', 'cpp/build/testconfigversions.cfg';
 	print $FH Data::Dumper->Dump([\%CFG::versiondb], ['*versiondb']);
 	close $FH;	
+} else {
+	exit 1;
 }
