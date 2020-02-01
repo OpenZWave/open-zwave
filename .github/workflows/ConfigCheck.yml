@@ -6,7 +6,7 @@ on:
       - 'config/**'
 
 jobs:
-  build:
+  ConfigTest:
 
     runs-on: ubuntu-latest
     
