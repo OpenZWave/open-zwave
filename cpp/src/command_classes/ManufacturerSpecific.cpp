@@ -134,11 +134,10 @@ namespace OpenZWave
 			bool ManufacturerSpecific::RequestValue(uint32 const _requestFlags, uint16 const _dummy1,	// = 0 (not used)
 					uint8 const _instance, Driver::MsgQueue const _queue)
 			{
-				if (_instance != 1)
-				{
-					// This command class doesn't work with multiple instances
-					return false;
-				}
+				return false;
+			}
+
+			bool ManufacturerSpecific::Init() {
 				if (m_com.GetFlagBool(COMPAT_FLAG_GETSUPPORTED))
 				{
 					Msg* msg = new Msg("ManufacturerSpecificCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
@@ -147,7 +146,7 @@ namespace OpenZWave
 					msg->Append(GetCommandClassId());
 					msg->Append(ManufacturerSpecificCmd_Get);
 					msg->Append(GetDriver()->GetTransmitOptions());
-					GetDriver()->SendMsg(msg, _queue);
+					GetDriver()->SendMsg(msg, Driver::MsgQueue_Query);
 					return true;
 				}
 				else
