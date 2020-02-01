@@ -28,7 +28,7 @@
 
 #include <windows.h>
 #include "FileOpsImpl.h"
-#include "Utils.h"
+#include "../../Utils.h"
 
 namespace OpenZWave
 {

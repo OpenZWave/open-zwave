@@ -28,7 +28,7 @@
 #ifndef _BarrierOperator_H
 #define _BarrierOperator_H
 
-#include "command_classes/CommandClass.h"
+#include "CommandClass.h"
 
 namespace OpenZWave
 {

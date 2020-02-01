@@ -25,21 +25,21 @@
 //
 //-----------------------------------------------------------------------------
 
-#include "command_classes/CommandClasses.h"
-#include "command_classes/Meter.h"
-#include "command_classes/MultiInstance.h"
-#include "Defs.h"
-#include "Msg.h"
-#include "Node.h"
-#include "Driver.h"
-#include "platform/Log.h"
-#include "Utils.h"
+#include "CommandClasses.h"
+#include "Meter.h"
+#include "MultiInstance.h"
+#include "../Defs.h"
+#include "../Msg.h"
+#include "../Node.h"
+#include "../Driver.h"
+#include "../platform/Log.h"
+#include "../Utils.h"
 
-#include "value_classes/ValueDecimal.h"
-#include "value_classes/ValueList.h"
-#include "value_classes/ValueButton.h"
-#include "value_classes/ValueInt.h"
-#include "value_classes/ValueBool.h"
+#include "../value_classes/ValueDecimal.h"
+#include "../value_classes/ValueList.h"
+#include "../value_classes/ValueButton.h"
+#include "../value_classes/ValueInt.h"
+#include "../value_classes/ValueBool.h"
 
 namespace OpenZWave
 {

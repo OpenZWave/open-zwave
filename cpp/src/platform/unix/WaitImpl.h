@@ -32,9 +32,9 @@
 #include <stdio.h>
 #include <pthread.h>
 #include <list>
-#include "Defs.h"
-#include "platform/Ref.h"
-#include "platform/Wait.h"
+#include "../../Defs.h"
+#include "../Ref.h"
+#include "../Wait.h"
 
 namespace OpenZWave
 {

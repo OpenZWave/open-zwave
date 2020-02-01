@@ -25,14 +25,14 @@
 //
 //-----------------------------------------------------------------------------
 
-#include "command_classes/CommandClasses.h"
-#include "command_classes/ManufacturerProprietary.h"
-#include "Defs.h"
-#include "Msg.h"
-#include "Driver.h"
-#include "platform/Log.h"
+#include "CommandClasses.h"
+#include "ManufacturerProprietary.h"
+#include "../Defs.h"
+#include "../Msg.h"
+#include "../Driver.h"
+#include "../platform/Log.h"
 
-#include "value_classes/ValueByte.h"
+#include "../value_classes/ValueByte.h"
 
 namespace OpenZWave
 {

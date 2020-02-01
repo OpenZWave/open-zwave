@@ -25,17 +25,17 @@
 //
 //-----------------------------------------------------------------------------
 
-#include "command_classes/CommandClasses.h"
-#include "command_classes/ControllerReplication.h"
-#include "Defs.h"
-#include "Msg.h"
-#include "Driver.h"
-#include "Node.h"
-#include "Utils.h"
+#include "CommandClasses.h"
+#include "ControllerReplication.h"
+#include "../Defs.h"
+#include "../Msg.h"
+#include "../Driver.h"
+#include "../Node.h"
+#include "../Utils.h"
 
-#include "value_classes/ValueByte.h"
-#include "value_classes/ValueList.h"
-#include "value_classes/ValueButton.h"
+#include "../value_classes/ValueByte.h"
+#include "../value_classes/ValueList.h"
+#include "../value_classes/ValueButton.h"
 
 namespace OpenZWave
 {

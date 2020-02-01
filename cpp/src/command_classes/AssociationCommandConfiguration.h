@@ -28,10 +28,10 @@
 #ifndef _AssociationCommandConfiguration_H
 #define _AssociationCommandConfiguration_H
 
-#include "command_classes/CommandClass.h"
-#include "value_classes/ValueBool.h"
-#include "value_classes/ValueByte.h"
-#include "value_classes/ValueShort.h"
+#include "CommandClass.h"
+#include "../value_classes/ValueBool.h"
+#include "../value_classes/ValueByte.h"
+#include "../value_classes/ValueShort.h"
 
 namespace OpenZWave
 {

@@ -28,7 +28,7 @@
 #ifndef _Protection_H
 #define _Protection_H
 
-#include "command_classes/CommandClass.h"
+#include "CommandClass.h"
 
 namespace OpenZWave
 {

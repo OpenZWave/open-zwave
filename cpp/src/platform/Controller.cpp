@@ -24,9 +24,9 @@
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
-#include "Defs.h"
-#include "Driver.h"
-#include "platform/Controller.h"
+#include "../Defs.h"
+#include "../Driver.h"
+#include "Controller.h"
 
 namespace OpenZWave
 {

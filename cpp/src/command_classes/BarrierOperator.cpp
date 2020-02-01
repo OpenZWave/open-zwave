@@ -25,16 +25,16 @@
 //
 //-----------------------------------------------------------------------------
 
-#include "command_classes/CommandClasses.h"
-#include "command_classes/BarrierOperator.h"
-#include "Defs.h"
-#include "Msg.h"
-#include "Node.h"
-#include "Driver.h"
-#include "platform/Log.h"
+#include "CommandClasses.h"
+#include "BarrierOperator.h"
+#include "../Defs.h"
+#include "../Msg.h"
+#include "../Node.h"
+#include "../Driver.h"
+#include "../platform/Log.h"
 
-#include "value_classes/ValueByte.h"
-#include "value_classes/ValueBool.h"
+#include "../value_classes/ValueByte.h"
+#include "../value_classes/ValueBool.h"
 
 namespace OpenZWave
 {

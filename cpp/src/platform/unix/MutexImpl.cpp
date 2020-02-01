@@ -26,8 +26,8 @@
 //
 //-----------------------------------------------------------------------------
 
-#include "Defs.h"
-#include "platform/Log.h"
+#include "../../Defs.h"
+#include "../Log.h"
 #include "MutexImpl.h"
 
 #include <stdio.h>

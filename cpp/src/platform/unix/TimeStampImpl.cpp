@@ -27,7 +27,7 @@
 //-----------------------------------------------------------------------------
 #include <string>
 #include <cstring>
-#include "Defs.h"
+#include "../../Defs.h"
 #include "TimeStampImpl.h"
 
 namespace OpenZWave

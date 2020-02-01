@@ -27,7 +27,7 @@
 #include "SimpleAVCommandItem.h"
 #include <vector>
 #include <string>
-#include "Defs.h"
+#include "../Defs.h"
 
 namespace OpenZWave
 {

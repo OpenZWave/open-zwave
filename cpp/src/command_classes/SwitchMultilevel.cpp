@@ -25,18 +25,18 @@
 //
 //-----------------------------------------------------------------------------
 
-#include "command_classes/CommandClasses.h"
-#include "command_classes/SwitchMultilevel.h"
-#include "command_classes/WakeUp.h"
-#include "Defs.h"
-#include "Msg.h"
-#include "Driver.h"
-#include "Node.h"
-#include "platform/Log.h"
+#include "CommandClasses.h"
+#include "SwitchMultilevel.h"
+#include "WakeUp.h"
+#include "../Defs.h"
+#include "../Msg.h"
+#include "../Driver.h"
+#include "../Node.h"
+#include "../platform/Log.h"
 
-#include "value_classes/ValueBool.h"
-#include "value_classes/ValueButton.h"
-#include "value_classes/ValueByte.h"
+#include "../value_classes/ValueBool.h"
+#include "../value_classes/ValueButton.h"
+#include "../value_classes/ValueByte.h"
 
 namespace OpenZWave
 {

@@ -29,8 +29,8 @@
 #define _MultiChannelAssociation_H
 
 #include <vector>
-#include "Group.h"
-#include "command_classes/CommandClass.h"
+#include "../Group.h"
+#include "CommandClass.h"
 
 namespace OpenZWave
 {

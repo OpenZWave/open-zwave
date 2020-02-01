@@ -28,8 +28,8 @@
 #ifndef _CentralScene_H
 #define _CentralScene_H
 
-#include "command_classes/CommandClass.h"
-#include "TimerThread.h"
+#include "CommandClass.h"
+#include "../TimerThread.h"
 
 namespace OpenZWave
 {

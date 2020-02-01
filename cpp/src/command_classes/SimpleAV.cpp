@@ -24,19 +24,19 @@
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
-#include "command_classes/CommandClasses.h"
-#include "command_classes/MultiInstance.h"
-#include "command_classes/SimpleAV.h"
-#include "command_classes/SimpleAVCommandItem.h"
-#include "Defs.h"
-#include "Msg.h"
-#include "Node.h"
-#include "Driver.h"
-#include "platform/Log.h"
+#include "CommandClasses.h"
+#include "MultiInstance.h"
+#include "SimpleAV.h"
+#include "SimpleAVCommandItem.h"
+#include "../Defs.h"
+#include "../Msg.h"
+#include "../Node.h"
+#include "../Driver.h"
+#include "../platform/Log.h"
 #include <vector>
 
-#include "value_classes/ValueShort.h"
-#include "value_classes/ValueList.h"
+#include "../value_classes/ValueShort.h"
+#include "../value_classes/ValueList.h"
 
 namespace OpenZWave
 {

@@ -28,8 +28,8 @@
 #ifndef _Alarm_H
 #define _Alarm_H
 
-#include "command_classes/CommandClass.h"
-#include "TimerThread.h"
+#include "CommandClass.h"
+#include "../TimerThread.h"
 
 namespace OpenZWave
 {

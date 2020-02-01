@@ -30,8 +30,8 @@
 
 #include <stdarg.h>
 #include <string>
-#include "Defs.h"
-#include "platform/FileOps.h"
+#include "../../Defs.h"
+#include "../FileOps.h"
 
 #define COPY_BUF_SIZE 4096
 

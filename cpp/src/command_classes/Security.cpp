@@ -27,16 +27,16 @@
 
 #include <ctime>
 
-#include "command_classes/CommandClasses.h"
-#include "command_classes/Security.h"
-#include "Defs.h"
-#include "Msg.h"
-#include "Node.h"
-#include "Driver.h"
-#include "platform/Log.h"
-#include "Utils.h"
+#include "CommandClasses.h"
+#include "Security.h"
+#include "../Defs.h"
+#include "../Msg.h"
+#include "../Node.h"
+#include "../Driver.h"
+#include "../platform/Log.h"
+#include "../Utils.h"
 
-#include "value_classes/ValueBool.h"
+#include "../value_classes/ValueBool.h"
 
 namespace OpenZWave
 {

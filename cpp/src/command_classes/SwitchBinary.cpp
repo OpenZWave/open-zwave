@@ -27,17 +27,17 @@
 //        pp. 78ff
 //-----------------------------------------------------------------------------
 
-#include "command_classes/CommandClasses.h"
-#include "command_classes/SwitchBinary.h"
-#include "command_classes/WakeUp.h"
-#include "Defs.h"
-#include "Msg.h"
-#include "Driver.h"
-#include "Node.h"
-#include "platform/Log.h"
+#include "CommandClasses.h"
+#include "SwitchBinary.h"
+#include "WakeUp.h"
+#include "../Defs.h"
+#include "../Msg.h"
+#include "../Driver.h"
+#include "../Node.h"
+#include "../platform/Log.h"
 
-#include "value_classes/ValueBool.h"
-#include "value_classes/ValueByte.h"
+#include "../value_classes/ValueBool.h"
+#include "../value_classes/ValueByte.h"
 
 namespace OpenZWave
 {

@@ -32,8 +32,8 @@
 #include <Windows.h>
 #include <ppltasks.h>
 
-#include "Defs.h"
-#include "platform/SerialController.h"
+#include "../../Defs.h"
+#include "../SerialController.h"
 
 namespace OpenZWave
 {

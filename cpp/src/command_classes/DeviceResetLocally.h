@@ -28,7 +28,7 @@
 #ifndef _DeviceResetLocally_H
 #define _DeviceResetLocally_H
 
-#include "command_classes/CommandClass.h"
+#include "CommandClass.h"
 
 namespace OpenZWave
 {

@@ -27,7 +27,7 @@
 //-----------------------------------------------------------------------------
 #include <windows.h>
 
-#include "Defs.h"
+#include "../../Defs.h"
 #include "EventImpl.h"
 
 namespace OpenZWave

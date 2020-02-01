@@ -25,23 +25,23 @@
 //
 //-----------------------------------------------------------------------------
 
-#include "command_classes/CommandClasses.h"
-#include "command_classes/ManufacturerSpecific.h"
+#include "CommandClasses.h"
+#include "ManufacturerSpecific.h"
 #include "tinyxml.h"
 
-#include "Defs.h"
-#include "Msg.h"
-#include "Node.h"
-#include "Options.h"
-#include "Manager.h"
-#include "Driver.h"
-#include "ManufacturerSpecificDB.h"
-#include "Notification.h"
-#include "platform/Log.h"
+#include "../Defs.h"
+#include "../Msg.h"
+#include "../Node.h"
+#include "../Options.h"
+#include "../Manager.h"
+#include "../Driver.h"
+#include "../ManufacturerSpecificDB.h"
+#include "../Notification.h"
+#include "../platform/Log.h"
 
-#include "value_classes/ValueStore.h"
-#include "value_classes/ValueString.h"
-#include "value_classes/ValueInt.h"
+#include "../value_classes/ValueStore.h"
+#include "../value_classes/ValueString.h"
+#include "../value_classes/ValueInt.h"
 
 namespace OpenZWave
 {

@@ -25,18 +25,18 @@
 //
 //-----------------------------------------------------------------------------
 
-#include "command_classes/CommandClasses.h"
-#include "command_classes/SensorMultilevel.h"
-#include "command_classes/MultiInstance.h"
-#include "Defs.h"
-#include "Msg.h"
-#include "Node.h"
-#include "Driver.h"
-#include "SensorMultiLevelCCTypes.h"
-#include "platform/Log.h"
+#include "CommandClasses.h"
+#include "SensorMultilevel.h"
+#include "MultiInstance.h"
+#include "../Defs.h"
+#include "../Msg.h"
+#include "../Node.h"
+#include "../Driver.h"
+#include "../SensorMultiLevelCCTypes.h"
+#include "../platform/Log.h"
 
 
-#include "value_classes/ValueDecimal.h"
+#include "../value_classes/ValueDecimal.h"
 
 namespace OpenZWave
 {

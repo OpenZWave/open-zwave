@@ -26,14 +26,14 @@
 //
 //-----------------------------------------------------------------------------
 #include <string>
-#include "platform/DNS.h"
+#include "DNS.h"
 
 #ifdef WIN32
-#include "platform/windows/DNSImpl.h"	// Platform-specific implementation of a DNS Operations
+#include "windows/DNSImpl.h"	// Platform-specific implementation of a DNS Operations
 #elif defined WINRT
-#include "platform/winRT/DNSImpl.h"	// Platform-specific implementation of a DNS Operations
+#include "winRT/DNSImpl.h"	// Platform-specific implementation of a DNS Operations
 #else
-#include "platform/unix/DNSImpl.h"	// Platform-specific implementation of a DNS Operations
+#include "unix/DNSImpl.h"	// Platform-specific implementation of a DNS Operations
 #endif
 
 namespace OpenZWave

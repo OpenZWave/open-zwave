@@ -28,8 +28,8 @@
 #ifndef _DNSImpl_H
 #define _DNSImpl_H
 
-#include "Defs.h"
-#include "platform/DNS.h"
+#include "../../Defs.h"
+#include "../DNS.h"
 
 namespace OpenZWave
 {

@@ -26,9 +26,9 @@
 //
 //-----------------------------------------------------------------------------
 
-#include "Defs.h"
+#include "../../Defs.h"
 #include "HidControllerWinRT.h"
-#include "platform/Log.h"
+#include "../Log.h"
 
 #include <ppltasks.h>
 #include <winstring.h>

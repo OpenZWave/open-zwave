@@ -29,22 +29,22 @@
 // But we cannot rename the class names as we already have a Notification Class used
 // for signaling events to the application.
 
-#include "command_classes/CommandClasses.h"
-#include "command_classes/Alarm.h"
-#include "command_classes/NodeNaming.h"
-#include "command_classes/UserCode.h"
-#include "Defs.h"
-#include "Msg.h"
-#include "Node.h"
-#include "Driver.h"
-#include "NotificationCCTypes.h"
-#include "platform/Log.h"
+#include "CommandClasses.h"
+#include "Alarm.h"
+#include "NodeNaming.h"
+#include "UserCode.h"
+#include "../Defs.h"
+#include "../Msg.h"
+#include "../Node.h"
+#include "../Driver.h"
+#include "../NotificationCCTypes.h"
+#include "../platform/Log.h"
 
-#include "value_classes/ValueByte.h"
-#include "value_classes/ValueBool.h"
-#include "value_classes/ValueList.h"
-#include "value_classes/ValueString.h"
-#include "value_classes/ValueInt.h"
+#include "../value_classes/ValueByte.h"
+#include "../value_classes/ValueBool.h"
+#include "../value_classes/ValueList.h"
+#include "../value_classes/ValueString.h"
+#include "../value_classes/ValueInt.h"
 
 namespace OpenZWave
 {

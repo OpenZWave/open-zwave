@@ -28,7 +28,7 @@
 #ifndef _Version_H
 #define _Version_H
 
-#include "command_classes/CommandClass.h"
+#include "CommandClass.h"
 
 namespace OpenZWave
 {

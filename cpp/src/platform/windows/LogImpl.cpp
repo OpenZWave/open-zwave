@@ -29,7 +29,7 @@
 #include <cerrno>
 #include <list>
 
-#include "Defs.h"
+#include "../../Defs.h"
 #include "LogImpl.h"
 
 #ifdef MINGW

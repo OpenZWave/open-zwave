@@ -31,8 +31,8 @@
 
 #include <windows.h>
 
-#include "Defs.h"
-#include "platform/Controller.h"
+#include "../../Defs.h"
+#include "../Controller.h"
 #include <ppltasks.h>
 
 namespace OpenZWave

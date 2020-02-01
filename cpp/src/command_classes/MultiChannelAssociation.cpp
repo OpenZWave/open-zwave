@@ -26,14 +26,14 @@
 //-----------------------------------------------------------------------------
 
 #include "tinyxml.h"
-#include "command_classes/CommandClasses.h"
-#include "command_classes/MultiChannelAssociation.h"
-#include "Defs.h"
-#include "Msg.h"
-#include "Driver.h"
-#include "Node.h"
-#include "Group.h"
-#include "platform/Log.h"
+#include "CommandClasses.h"
+#include "MultiChannelAssociation.h"
+#include "../Defs.h"
+#include "../Msg.h"
+#include "../Driver.h"
+#include "../Node.h"
+#include "../Group.h"
+#include "../platform/Log.h"
 
 namespace OpenZWave
 {

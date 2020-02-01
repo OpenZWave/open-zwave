@@ -28,7 +28,7 @@
 #ifndef _ZWavePlusInfo_H
 #define _ZWavePlusInfo_H
 
-#include "command_classes/CommandClass.h"
+#include "CommandClass.h"
 
 namespace OpenZWave
 {

@@ -33,7 +33,7 @@
 #include <time.h>
 #include <sys/time.h>
 #include <list>
-#include "platform/Log.h"
+#include "../Log.h"
 
 namespace OpenZWave
 {

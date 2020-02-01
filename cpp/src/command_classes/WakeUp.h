@@ -29,9 +29,9 @@
 #define _WakeUp_H
 
 #include <list>
-#include "command_classes/CommandClass.h"
-#include "Driver.h"
-#include "TimerThread.h"
+#include "CommandClass.h"
+#include "../Driver.h"
+#include "../TimerThread.h"
 
 namespace OpenZWave
 {

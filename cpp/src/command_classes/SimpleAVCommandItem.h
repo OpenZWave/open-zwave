@@ -30,7 +30,7 @@
 
 #include <string>
 #include <vector>
-#include "Defs.h"
+#include "../Defs.h"
 
 namespace OpenZWave
 {

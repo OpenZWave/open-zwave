@@ -28,7 +28,7 @@
 #ifndef _TimeParameters_H
 #define _TimeParameters_H
 
-#include "command_classes/CommandClass.h"
+#include "CommandClass.h"
 
 namespace OpenZWave
 {

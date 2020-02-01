@@ -62,9 +62,9 @@ typedef intptr_t SOCKET;
 #  include "polarssl/ctr_drbg.h"
 #endif
 
-#include "platform/HttpClient.h"
-#include "platform/Log.h"
-#include "Utils.h"
+#include "HttpClient.h"
+#include "Log.h"
+#include "../Utils.h"
 
 #define SOCKETVALID(s) ((s) != INVALID_SOCKET)
 

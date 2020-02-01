@@ -25,15 +25,15 @@
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
-#include "Defs.h"
-#include "platform/Mutex.h"
+#include "../Defs.h"
+#include "Mutex.h"
 
 #ifdef WIN32
-#include "platform/windows/MutexImpl.h"	// Platform-specific implementation of a mutex
+#include "windows/MutexImpl.h"	// Platform-specific implementation of a mutex
 #elif defined WINRT
-#include "platform/winRT/MutexImpl.h"	// Platform-specific implementation of a mutex
+#include "winRT/MutexImpl.h"	// Platform-specific implementation of a mutex
 #else
-#include "platform/unix/MutexImpl.h"	// Platform-specific implementation of a mutex
+#include "unix/MutexImpl.h"	// Platform-specific implementation of a mutex
 #endif
 
 namespace OpenZWave

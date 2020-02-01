@@ -28,7 +28,7 @@
 #ifndef _ClimateControlSchedule_H
 #define _ClimateControlSchedule_H
 
-#include "command_classes/CommandClass.h"
+#include "CommandClass.h"
 
 namespace OpenZWave
 {

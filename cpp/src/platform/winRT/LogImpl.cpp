@@ -28,7 +28,7 @@
 #include <windows.h>
 #include <list>
 
-#include "Defs.h"
+#include "../../Defs.h"
 #include "LogImpl.h"
 
 #ifdef MINGW

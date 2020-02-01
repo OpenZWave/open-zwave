@@ -25,12 +25,12 @@
 //
 //-----------------------------------------------------------------------------
 
-#include "Msg.h"
-#include "platform/Thread.h"
-#include "platform/Event.h"
-#include "platform/Log.h"
-#include "platform/TimeStamp.h"
-#include "platform/HidController.h"
+#include "../Msg.h"
+#include "Thread.h"
+#include "Event.h"
+#include "Log.h"
+#include "TimeStamp.h"
+#include "HidController.h"
 
 #ifdef USE_HID
 #include "hidapi.h"

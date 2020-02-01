@@ -25,13 +25,13 @@
 //
 //-----------------------------------------------------------------------------
 
-#include "command_classes/CommandClasses.h"
-#include "command_classes/ApplicationStatus.h"
-#include "Defs.h"
-#include "Msg.h"
-#include "Driver.h"
-#include "Notification.h"
-#include "platform/Log.h"
+#include "CommandClasses.h"
+#include "ApplicationStatus.h"
+#include "../Defs.h"
+#include "../Msg.h"
+#include "../Driver.h"
+#include "../Notification.h"
+#include "../platform/Log.h"
 
 namespace OpenZWave
 {

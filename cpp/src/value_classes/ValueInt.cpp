@@ -28,10 +28,10 @@
 #include <sstream>
 #include <limits.h>
 #include "tinyxml.h"
-#include "value_classes/ValueInt.h"
-#include "Msg.h"
-#include "platform/Log.h"
-#include "Manager.h"
+#include "ValueInt.h"
+#include "../Msg.h"
+#include "../platform/Log.h"
+#include "../Manager.h"
 #include <ctime>
 
 namespace OpenZWave

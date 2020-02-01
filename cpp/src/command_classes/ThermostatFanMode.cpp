@@ -26,15 +26,15 @@
 //-----------------------------------------------------------------------------
 
 #include <string>
-#include "command_classes/CommandClasses.h"
-#include "command_classes/ThermostatFanMode.h"
-#include "Defs.h"
-#include "Msg.h"
-#include "Node.h"
-#include "Driver.h"
-#include "platform/Log.h"
+#include "CommandClasses.h"
+#include "ThermostatFanMode.h"
+#include "../Defs.h"
+#include "../Msg.h"
+#include "../Node.h"
+#include "../Driver.h"
+#include "../platform/Log.h"
 
-#include "value_classes/ValueList.h"
+#include "../value_classes/ValueList.h"
 
 #include "tinyxml.h"
 

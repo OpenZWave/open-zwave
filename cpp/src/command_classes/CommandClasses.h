@@ -31,7 +31,7 @@
 #include <string>
 #include <map>
 #include <list>
-#include "Defs.h"
+#include "../Defs.h"
 
 namespace OpenZWave
 {

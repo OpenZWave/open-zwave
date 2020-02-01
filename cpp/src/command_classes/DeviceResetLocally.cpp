@@ -25,12 +25,12 @@
 //
 //-----------------------------------------------------------------------------
 
-#include "command_classes/CommandClasses.h"
-#include "command_classes/DeviceResetLocally.h"
-#include "command_classes/NoOperation.h"
-#include "Defs.h"
-#include "Manager.h"
-#include "platform/Log.h"
+#include "CommandClasses.h"
+#include "DeviceResetLocally.h"
+#include "NoOperation.h"
+#include "../Defs.h"
+#include "../Manager.h"
+#include "../platform/Log.h"
 
 namespace OpenZWave
 {

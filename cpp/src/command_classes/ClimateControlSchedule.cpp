@@ -25,16 +25,16 @@
 //
 //-----------------------------------------------------------------------------
 
-#include "command_classes/CommandClasses.h"
-#include "command_classes/ClimateControlSchedule.h"
-#include "Defs.h"
-#include "Msg.h"
-#include "Driver.h"
-#include "Node.h"
-#include "platform/Log.h"
-#include "value_classes/ValueByte.h"
-#include "value_classes/ValueList.h"
-#include "value_classes/ValueSchedule.h"
+#include "CommandClasses.h"
+#include "ClimateControlSchedule.h"
+#include "../Defs.h"
+#include "../Msg.h"
+#include "../Driver.h"
+#include "../Node.h"
+#include "../platform/Log.h"
+#include "../value_classes/ValueByte.h"
+#include "../value_classes/ValueList.h"
+#include "../value_classes/ValueSchedule.h"
 
 #include "tinyxml.h"
 

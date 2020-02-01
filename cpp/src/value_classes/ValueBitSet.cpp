@@ -26,12 +26,12 @@
 //-----------------------------------------------------------------------------
 
 #include "tinyxml.h"
-#include "value_classes/ValueBitSet.h"
-#include "Driver.h"
-#include "Node.h"
-#include "platform/Log.h"
-#include "Manager.h"
-#include "Localization.h"
+#include "ValueBitSet.h"
+#include "../Driver.h"
+#include "../Node.h"
+#include "../platform/Log.h"
+#include "../Manager.h"
+#include "../Localization.h"
 #include <ctime>
 
 namespace OpenZWave

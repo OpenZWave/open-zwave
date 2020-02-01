@@ -28,7 +28,7 @@
 #ifndef _SoundSwitch_H
 #define _SoundSwitch_H
 
-#include "command_classes/CommandClass.h"
+#include "CommandClass.h"
 
 namespace OpenZWave
 {
