@@ -106,7 +106,7 @@ namespace OpenZWave
 				// that the controller will receive the wake-up notifications from
 				// the device.  Once this is done, we can request the rest of the node
 				// state.
-				RequestState(CommandClass::RequestFlag_Session, 1, Driver::MsgQueue_WakeUp);
+				RequestValue(0, ValueID_Index_WakeUp::Interval, 1, Driver::MsgQueue_WakeUp);
 			}
 
 //-----------------------------------------------------------------------------
@@ -120,18 +120,9 @@ namespace OpenZWave
 				{
 					if (GetVersion() > 1)
 					{
-						requests |= RequestValue(_requestFlags, WakeUpCmd_IntervalCapabilitiesGet, _instance, _queue);
+						requests |= RequestValue(_requestFlags, ValueID_Index_WakeUp::Min_Interval, _instance, _queue);
 					}
 				}
-				if (_requestFlags & RequestFlag_Session)
-				{
-					Node* node = GetNodeUnsafe();
-					if (node != NULL && !node->IsController())
-					{
-						requests |= RequestValue(_requestFlags, 0, _instance, _queue);
-					}
-				}
-
 				return requests;
 			}
 
@@ -147,7 +138,9 @@ namespace OpenZWave
 					return false;
 				}
 
-				if (_getTypeEnum == WakeUpCmd_IntervalCapabilitiesGet)
+				if (_getTypeEnum == ValueID_Index_WakeUp::Min_Interval 
+					|| _getTypeEnum == ValueID_Index_WakeUp::Max_Interval 
+					|| _getTypeEnum == ValueID_Index_WakeUp::Interval_Step)
 				{
 					Msg* msg = new Msg("WakeUpCmd_IntervalCapabilityGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
 					msg->Append(GetNodeId());
@@ -158,7 +151,7 @@ namespace OpenZWave
 					GetDriver()->SendMsg(msg, _queue);
 				}
 
-				if (_getTypeEnum == 0)
+				if (_getTypeEnum == ValueID_Index_WakeUp::Interval)
 				{
 					// We won't get a response until the device next wakes up
 					Msg* msg = new Msg("WakeUpCmd_IntervalGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
@@ -183,37 +176,51 @@ namespace OpenZWave
 			{
 				if (WakeUpCmd_IntervalReport == (WakeUpCmd) _data[0])
 				{
+					// some interval reports received are validly formatted (proper checksum, etc.) but only have length
+					// of 3 (0x84 (classid), 0x06 (IntervalReport), 0x00).  Not sure what this means
+					if (_length < 6)
+					{
+						Log::Write(LogLevel_Warning, "");
+						Log::Write(LogLevel_Warning, GetNodeId(), "Unusual response: WakeUpCmd_IntervalReport with len = %d.  Ignored.", _length);
+						return false;
+					}
+
+					m_interval = ((uint32) _data[1]) << 16;
+					m_interval |= (((uint32) _data[2]) << 8);
+					m_interval |= (uint32) _data[3];
+
+					uint8 targetNodeId = _data[4];
+
+					Log::Write(LogLevel_Info, GetNodeId(), "Received Wakeup Interval report from node %d: Interval=%d, Target Node=%d", GetNodeId(), m_interval, targetNodeId);
+
 					if (Internal::VC::ValueInt* value = static_cast<Internal::VC::ValueInt*>(GetValue(_instance, ValueID_Index_WakeUp::Interval)))
 					{
-						// some interval reports received are validly formatted (proper checksum, etc.) but only have length
-						// of 3 (0x84 (classid), 0x06 (IntervalReport), 0x00).  Not sure what this means
-						if (_length < 6)
-						{
-							Log::Write(LogLevel_Warning, "");
-							Log::Write(LogLevel_Warning, GetNodeId(), "Unusual response: WakeUpCmd_IntervalReport with len = %d.  Ignored.", _length);
-							value->Release();
-							return false;
-						}
+						value->OnValueRefreshed((int32) m_interval);
 
-						uint32 interval = ((uint32) _data[1]) << 16;
-						interval |= (((uint32) _data[2]) << 8);
-						interval |= (uint32) _data[3];
-
-						uint8 targetNodeId = _data[4];
-
-						Log::Write(LogLevel_Info, GetNodeId(), "Received Wakeup Interval report from node %d: Interval=%d, Target Node=%d", GetNodeId(), interval, targetNodeId);
-
-						value->OnValueRefreshed((int32) interval);
-
-						// Ensure that the target node for wake-up notifications is the controller
-						// but only if node is not a listening device. Hybrid devices that can be
-						// powered by other then batteries shouldn't do this.
 						Node *node = GetNodeUnsafe();
 						if (GetDriver()->GetControllerNodeId() != targetNodeId && ((node) && (!node->IsListeningDevice())))
 						{
 							SetValue(*value);
 						}
 						value->Release();
+					}
+					// Ensure that the target node for wake-up notifications is the controller
+					// but only if node is not a listening device. Hybrid devices that can be
+					// powered by other then batteries shouldn't do this.
+					Node *node = GetNodeUnsafe();
+					if (GetDriver()->GetControllerNodeId() != targetNodeId && ((node) && (!node->IsListeningDevice())))
+					{
+						Msg* msg = new Msg("WakeUpCmd_IntervalSet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
+						msg->Append(GetNodeId());
+						msg->Append(6);	// length of command bytes following
+						msg->Append(GetCommandClassId());
+						msg->Append(WakeUpCmd_IntervalSet);
+						msg->Append((uint8) ((m_interval >> 16) & 0xff));
+						msg->Append((uint8) ((m_interval >> 8) & 0xff));
+						msg->Append((uint8) (m_interval & 0xff));
+						msg->Append(GetDriver()->GetControllerNodeId());
+						msg->Append(GetDriver()->GetTransmitOptions());
+						GetDriver()->SendMsg(msg, Driver::MsgQueue_WakeUp);
 					}
 					return true;
 				}
@@ -264,13 +271,14 @@ namespace OpenZWave
 //-----------------------------------------------------------------------------
 			bool WakeUp::SetValue(Internal::VC::Value const& _value)
 			{
-				if (ValueID::ValueType_Int == _value.GetID().GetType())
+				if (ValueID_Index_WakeUp::Interval == _value.GetID().GetIndex())
 				{
 					Internal::VC::ValueInt const* value = static_cast<Internal::VC::ValueInt const*>(&_value);
 
 					Msg* msg = new Msg("WakeUpCmd_IntervalSet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
 					msg->Append(GetNodeId());
 
+#if 0
 					if (GetNodeUnsafe()->GetCommandClass(MultiCmd::StaticGetCommandClassId()))
 					{
 						msg->Append(10);
@@ -278,15 +286,15 @@ namespace OpenZWave
 						msg->Append(MultiCmd::MultiCmdCmd_Encap);
 						msg->Append(1);
 					}
-
-					int32 interval = value->GetValue();
+#endif
+					m_interval = value->GetValue();
 
 					msg->Append(6);	// length of command bytes following
 					msg->Append(GetCommandClassId());
 					msg->Append(WakeUpCmd_IntervalSet);
-					msg->Append((uint8) ((interval >> 16) & 0xff));
-					msg->Append((uint8) ((interval >> 8) & 0xff));
-					msg->Append((uint8) (interval & 0xff));
+					msg->Append((uint8) ((m_interval >> 16) & 0xff));
+					msg->Append((uint8) ((m_interval >> 8) & 0xff));
+					msg->Append((uint8) (m_interval & 0xff));
 					msg->Append(GetDriver()->GetControllerNodeId());
 					msg->Append(GetDriver()->GetTransmitOptions());
 					GetDriver()->SendMsg(msg, Driver::MsgQueue_WakeUp);
@@ -296,15 +304,6 @@ namespace OpenZWave
 				return false;
 			}
 
-//-----------------------------------------------------------------------------
-// <WakeUp::SetVersion>
-// Set the command class version
-//-----------------------------------------------------------------------------
-			void WakeUp::SetVersion(uint8 const _version)
-			{
-				CommandClass::SetVersion(_version);
-				CreateVars(1);
-			}
 
 //-----------------------------------------------------------------------------
 // <WakeUp::SetAwake>
@@ -490,6 +489,11 @@ namespace OpenZWave
 							node->CreateValueInt(ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_WakeUp::Interval_Step, "Wake-up Interval Step", "Seconds", true, false, 0, 0);
 						}
 						node->CreateValueInt(ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_WakeUp::Interval, "Wake-up Interval", "Seconds", false, false, 3600, 0);
+						if (Internal::VC::ValueInt* value = static_cast<Internal::VC::ValueInt*>(GetValue(_instance, ValueID_Index_WakeUp::Interval)))
+						{
+							value->OnValueRefreshed((int32) m_interval);
+							value->Release();
+						}
 					}
 				}
 			}
