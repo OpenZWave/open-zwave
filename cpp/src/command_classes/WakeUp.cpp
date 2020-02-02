@@ -64,7 +64,7 @@ namespace OpenZWave
 // Constructor
 //-----------------------------------------------------------------------------
 			WakeUp::WakeUp(uint32 const _homeId, uint8 const _nodeId) :
-					CommandClass(_homeId, _nodeId), m_mutex(new Internal::Platform::Mutex()), m_awake(true), m_pollRequired(false)
+					CommandClass(_homeId, _nodeId), m_mutex(new Internal::Platform::Mutex()), m_awake(true), m_pollRequired(false), m_interval(0)
 			{
 				Timer::SetDriver(GetDriver());
 				Options::Get()->GetOptionAsBool("AssumeAwake", &m_awake);
@@ -122,6 +122,9 @@ namespace OpenZWave
 					{
 						requests |= RequestValue(_requestFlags, ValueID_Index_WakeUp::Min_Interval, _instance, _queue);
 					}
+					if (m_interval == 0)
+						requests |= RequestValue(_requestFlags, ValueID_Index_WakeUp::Interval, _instance, _queue);
+					ClearStaticRequest(RequestFlag_Static);
 				}
 				return requests;
 			}
@@ -198,29 +201,30 @@ namespace OpenZWave
 						value->OnValueRefreshed((int32) m_interval);
 
 						Node *node = GetNodeUnsafe();
-						if (GetDriver()->GetControllerNodeId() != targetNodeId && ((node) && (!node->IsListeningDevice())))
+						if ((GetDriver()->GetControllerNodeId() != targetNodeId) && node)
 						{
 							SetValue(*value);
 						}
 						value->Release();
-					}
-					// Ensure that the target node for wake-up notifications is the controller
-					// but only if node is not a listening device. Hybrid devices that can be
-					// powered by other then batteries shouldn't do this.
-					Node *node = GetNodeUnsafe();
-					if (GetDriver()->GetControllerNodeId() != targetNodeId && ((node) && (!node->IsListeningDevice())))
-					{
-						Msg* msg = new Msg("WakeUpCmd_IntervalSet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
-						msg->Append(GetNodeId());
-						msg->Append(6);	// length of command bytes following
-						msg->Append(GetCommandClassId());
-						msg->Append(WakeUpCmd_IntervalSet);
-						msg->Append((uint8) ((m_interval >> 16) & 0xff));
-						msg->Append((uint8) ((m_interval >> 8) & 0xff));
-						msg->Append((uint8) (m_interval & 0xff));
-						msg->Append(GetDriver()->GetControllerNodeId());
-						msg->Append(GetDriver()->GetTransmitOptions());
-						GetDriver()->SendMsg(msg, Driver::MsgQueue_WakeUp);
+					} else { 
+						// Ensure that the target node for wake-up notifications is the controller
+						// but only if node is not a listening device. Hybrid devices that can be
+						// powered by other then batteries shouldn't do this.
+						Node *node = GetNodeUnsafe();
+						if ((GetDriver()->GetControllerNodeId() != targetNodeId) && node)
+						{
+							Msg* msg = new Msg("WakeUpCmd_IntervalSet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
+							msg->Append(GetNodeId());
+							msg->Append(6);	// length of command bytes following
+							msg->Append(GetCommandClassId());
+							msg->Append(WakeUpCmd_IntervalSet);
+							msg->Append((uint8) ((m_interval >> 16) & 0xff));
+							msg->Append((uint8) ((m_interval >> 8) & 0xff));
+							msg->Append((uint8) (m_interval & 0xff));
+							msg->Append(GetDriver()->GetControllerNodeId());
+							msg->Append(GetDriver()->GetTransmitOptions());
+							GetDriver()->SendMsg(msg, Driver::MsgQueue_WakeUp);
+						}
 					}
 					return true;
 				}

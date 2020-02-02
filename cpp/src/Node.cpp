@@ -1497,23 +1497,19 @@ void Node::UpdateProtocolInfo(uint8 const* _data)
 #endif
 		m_basicprotocolInfoReceived = true;
 	}
-	else
+	/* we have to setup the Wakeup CC if needed here, because
+		* it wouldn't have been created in the SetProtocolInfo function, as we didn't
+		* have the Device Flags then
+		*/
+	if (!m_listening && !IsFrequentListeningDevice())
 	{
-		/* we have to setup the Wakeup CC if needed here, because
-		 * it wouldn't have been created in the SetProtocolInfo function, as we didn't
-		 * have the Device Flags then
-		 */
-		if (!m_listening && !IsFrequentListeningDevice())
+		// Device does not always listen, so we need the WakeUp handler.  We can't
+		// wait for the command class list because the request for the command
+		// classes may need to go in the wakeup queue itself!
+		if (Internal::CC::CommandClass* pCommandClass = AddCommandClass(Internal::CC::WakeUp::StaticGetCommandClassId()))
 		{
-			// Device does not always listen, so we need the WakeUp handler.  We can't
-			// wait for the command class list because the request for the command
-			// classes may need to go in the wakeup queue itself!
-			if (Internal::CC::CommandClass* pCommandClass = AddCommandClass(Internal::CC::WakeUp::StaticGetCommandClassId()))
-			{
-				pCommandClass->SetInstance(1);
-			}
+			pCommandClass->SetInstance(1);
 		}
-
 	}
 	m_protocolInfoReceived = true;
 }
