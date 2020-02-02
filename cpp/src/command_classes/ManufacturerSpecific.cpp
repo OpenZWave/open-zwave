@@ -256,12 +256,15 @@ namespace OpenZWave
 						Internal::VC::ValueString *default_value = static_cast<Internal::VC::ValueString*>(GetValue(_instance, ValueID_Index_ManufacturerSpecific::DeviceID));
 						default_value->OnValueRefreshed(deviceID);
 						default_value->Release();
+						Log::Write(LogLevel_Info, GetNodeId(), "Got ManufacturerSpecific FactoryDefault: %s", deviceID.c_str());
 					}
 					else if (deviceIDType == DeviceSpecificGet_DeviceIDType_SerialNumber)
 					{
 						Internal::VC::ValueString *serial_value = static_cast<Internal::VC::ValueString*>(GetValue(_instance, ValueID_Index_ManufacturerSpecific::SerialNumber));
 						serial_value->OnValueRefreshed(deviceID);
 						serial_value->Release();
+						Log::Write(LogLevel_Info, GetNodeId(), "Got ManufacturerSpecific SerialNumber: %s", deviceID.c_str());
+
 					}
 					return true;
 				}
