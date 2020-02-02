@@ -146,6 +146,10 @@ namespace OpenZWave
 						return 0;
 					}
 
+					virtual bool supportsMultiInstance() {
+						return true;
+					}
+
 					void SetInstances(uint8 const _instances);
 					void SetInstance(uint8 const _endPoint);
 					/* overridden in the MultiInstance CC to set the Global Label for each Instance */

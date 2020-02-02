@@ -84,7 +84,7 @@ namespace OpenZWave
 			{
 				if (IsAfterMark())
 				{
-					Log::Write(LogLevel_Info, GetNodeId(), "Controlled Class");
+					Log::Write(LogLevel_Info, GetNodeId(), "%s is a Controlling Class", GetCommandClassName().c_str());
 					return false;
 				}
 				if (_requestFlags & RequestFlag_Dynamic)
