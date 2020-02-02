@@ -112,6 +112,9 @@ Node::Node(uint32 const _homeId, uint8 const _nodeId) :
 	memset(m_rssi_3, 0, sizeof(m_rssi_3));
 	memset(m_rssi_4, 0, sizeof(m_rssi_4));
 	memset(m_rssi_5, 0, sizeof(m_rssi_5));
+
+	AddCommandClass(Internal::CC::NoOperation::StaticGetCommandClassId());
+	AddCommandClass(Internal::CC::ManufacturerSpecific::StaticGetCommandClassId());
 }
 
 //-----------------------------------------------------------------------------
@@ -201,12 +204,6 @@ void Node::AdvanceQueries()
 				if (!ProtocolInfoReceived())
 				{
 					Log::Write(LogLevel_Detail, m_nodeId, "QueryStage_ProtocolInfo");
-					/* Add NoOp Class  - All Devices Support it and its not dependant 
-					 * upon Version CC being present */
-					AddCommandClass(Internal::CC::NoOperation::StaticGetCommandClassId());
-					/* Add ManufacturerSpecific Class */
-					AddCommandClass(Internal::CC::ManufacturerSpecific::StaticGetCommandClassId());
-
 
 					Internal::Msg* msg = new Internal::Msg("Get Node Protocol Info", m_nodeId, REQUEST, FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO, false);
 					msg->Append(m_nodeId);
@@ -533,15 +530,16 @@ void Node::AdvanceQueries()
 				Log::Write(LogLevel_Detail, m_nodeId, "QueryStage_CacheLoad");
 				Log::Write(LogLevel_Info, GetNodeId(), "Loading Cache for node %d: Manufacturer=%s, Product=%s", GetNodeId(), GetManufacturerName().c_str(), GetProductName().c_str());
 				Log::Write(LogLevel_Info, GetNodeId(), "Node Identity Codes: %.4x:%.4x:%.4x", GetManufacturerId(), GetProductType(), GetProductId());
-				//
-				// Send a NoOperation message to see if the node is awake
-				// and alive. Based on the response or lack of response
-				// will determine next step. Called here when configuration exists.
-				//
-				Internal::CC::NoOperation* noop = static_cast<Internal::CC::NoOperation*>(GetCommandClass(Internal::CC::NoOperation::StaticGetCommandClassId()));
 				/* Don't do this if its to the Controller */
 				if (GetDriver()->GetControllerNodeId() != m_nodeId)
 				{
+					//
+					// Send a NoOperation message to see if the node is awake
+					// and alive. Based on the response or lack of response
+					// will determine next step. Called here when configuration exists.
+					//
+					Internal::CC::NoOperation* noop = static_cast<Internal::CC::NoOperation*>(GetCommandClass(Internal::CC::NoOperation::StaticGetCommandClassId()));
+
 					noop->Set(true);
 					m_queryPending = true;
 					addQSC = true;
@@ -1208,7 +1206,6 @@ void Node::ReadCommandClassesXML(TiXmlElement const* _ccsElement)
 							ccElement = ccElement->NextSiblingElement();
 							continue;
 						}
-
 						// Command class support does not exist yet, so we create it
 						cc = AddCommandClass(id);
 					}
