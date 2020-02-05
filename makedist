@@ -9,7 +9,7 @@ use List::Util 1.33 'any';
 my $input = ".distfiles";
 my $output = "distfiles.mk";
 
-my @excludedir = (".github");
+my @excludedir = (".github", ".github/workflows");
 my @excludefile = ();
 
 open( my $fh => $input) || die "Cannot open $input: $!";
