@@ -40,20 +40,31 @@ TMP     := /tmp
 PKGCONFIG := $(shell which pkg-config)
 #git binary for doing a make dist export
 GIT		:= $(shell which git)
-# if git is not installed, then set the revision to 0
-ifeq ($(GIT),)
-$(warning  git executable not found, setting VERSION_REV to 0)
-VERSION_REV ?= 0
+#check if this is a Git Checkout, or a Distribution File
+GITDIR  := $(wildcard $(top_srcdir)/.git/)
+ifneq ($(GITDIR),)
+ifneq ($(GIT),0)
+GITCO	:= 1
+else 
+GITCO	:= 0
+endif
 else
+GITCO	:= 0
+endif
+
+ifeq ($(GITCO), 1)
+
 _ := $(shell $(GIT) -C $(top_srcdir) update-index --assume-unchanged dist/openzwave.spec 2>&1)
 ifneq ($(_),)
 $(warning  git update-index returned: $(_))
 endif
+
 GITVERSION	:= $(shell $(GIT) -C $(top_srcdir) describe --long --tags --dirty 2>/dev/null | sed s/^v//)
 _ := $(shell $(GIT) -C $(top_srcdir) update-index --no-assume-unchanged dist/openzwave.spec 2>&1)
 ifneq ($(_),)
 $(warning  git update-index returned: $(_))
 endif
+
 ifeq ($(GITVERSION),)
 $(warning  git describe returned an empty result, setting GITVERSION to VERSION_MAJ.VERSION_MIN.-1 and VERSION_REV to 0)
 GITVERSION	:= $(VERSION_MAJ).$(VERSION_MIN).-1
@@ -61,12 +72,24 @@ VERSION_REV	:= 0
 else
 VERSION_REV 	?= $(shell echo $(GITVERSION) | awk '{split($$0,a,"-"); print a[2]}')
 endif
+
+else 
+ifeq ($(VERSION_REV),)
+VERFILE	:= $(wildcard $(top_srcdir)/cpp/src/vers.cpp)
+ifneq ($(VERFILE),)
+VERSION_REV := $(shell sed -n 's/uint16_t ozw_vers_revision = \(.*\);$$/\1/p' $(VERFILE))
+else
+$(warning Missing Either Git Binary, Not a Source Checkout or doesn't have a vers.cpp)
 endif
+endif
+endif
+
 ifeq ($(VERSION_REV),)
 VERSION_REV ?= 0
 endif
 # version number to use on the shared library
 VERSION := $(VERSION_MAJ).$(VERSION_MIN)
+
 
 # using seting from bitbake
 ifeq ($(BITBAKE_ENV),1)
