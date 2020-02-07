@@ -154,10 +154,10 @@ namespace OpenZWave
 						 * Command Classes created after the Discovery Phase is completed!
 						 */
 						Log::Write(LogLevel_Info, GetNodeId(), "Received SecurityCmd_SupportedReport from node %d (instance %d)", GetNodeId(), _instance);
-						m_secured = true;
+						m_secured[_instance] = true;
 						if (Internal::VC::ValueBool* value = static_cast<Internal::VC::ValueBool*>(GetValue(_instance, ValueID_Index_Security::Secured)))
 						{
-							value->OnValueRefreshed(m_secured);
+							value->OnValueRefreshed(m_secured[_instance]);
 							value->Release();
 						}
 						HandleSupportedReport(&_data[2], _length - 3, _instance);
@@ -261,6 +261,12 @@ namespace OpenZWave
 				if (Node* node = GetNodeUnsafe())
 				{
 					node->CreateValueBool(ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_Security::Secured, "Secured", "", true, false, false, 0);
+					if (Internal::VC::ValueBool* value = static_cast<Internal::VC::ValueBool*>(GetValue(_instance, ValueID_Index_Security::Secured)))
+					{
+						value->OnValueRefreshed(m_secured[_instance]);
+						value->Release();
+					}
+
 				}
 			}
 		} // namespace CC

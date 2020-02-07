@@ -92,7 +92,7 @@ map<uint16, Node::DeviceClass*> Node::s_deviceTypeClasses;
 map<uint8, Node::DeviceClass*> Node::s_nodeTypes;
 
 static char const* c_queryStageNames[] =
-{ "None", "ProtocolInfo", "Probe", "WakeUp", "Versions", "ManufacturerSpecific1", "NodeInfo", "NodePlusInfo", "Instances", "SecurityReport", "ManufacturerSpecific2", "Static", "CacheLoad", "Associations", "Neighbors", "Session", "Dynamic", "Configuration", "Complete" };
+{ "None", "ProtocolInfo", "Probe", "WakeUp", "NodeInfo", "NodePlusInfo", "SecurityReport", "Versions", "ManufacturerSpecific1", "Instances", "ManufacturerSpecific2", "Static", "CacheLoad", "Associations", "Neighbors", "Session", "Dynamic", "Configuration", "Complete" };
 
 //-----------------------------------------------------------------------------
 // <Node::Node>
@@ -264,89 +264,8 @@ void Node::AdvanceQueries()
 				else
 				{
 					// this is not a sleeping device, so move to the ManufacturerSpecific1 stage
-					m_queryStage = QueryStage_Versions;
-					m_queryRetries = 0;
-				}
-				break;
-			}
-			case QueryStage_Versions:
-			{
-				// Get the version information of CommandClasses that have not had their Version Retrieved So far. (most Likely ManufacturerSpecific)
-				Log::Write(LogLevel_Detail, m_nodeId, "QueryStage_Versions");
-				if (GetDriver()->GetControllerNodeId() == m_nodeId)
-				{
-					m_queryStage = QueryStage_ManufacturerSpecific1;
-					m_queryRetries = 0;
-					break;
-				}
-				Internal::CC::Version* vcc = static_cast<Internal::CC::Version*>(GetCommandClass(Internal::CC::Version::StaticGetCommandClassId()));
-				if (!vcc)
-				{
-					vcc = static_cast<Internal::CC::Version*>(AddCommandClass(Internal::CC::Version::StaticGetCommandClassId()));
-				}
-				Log::Write(LogLevel_Info, m_nodeId, "Requesting Versions");
-				for (map<uint8, Internal::CC::CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it)
-				{
-					Internal::CC::CommandClass* cc = it->second;
-					Log::Write(LogLevel_Info, m_nodeId, "Requesting Versions for %s - Max: %d - Current %d", cc->GetCommandClassName().c_str(), cc->GetMaxVersion(), cc->GetVersion());
-
-					if (cc->GetMaxVersion() > 1 && cc->GetVersion() == 0)
-					{
-						// Get the version for each supported command class that
-						// we have implemented at greater than version one.
-						m_queryPending |= vcc->RequestCommandClassVersion(it->second);
-					}
-					else
-					{
-						// set the Version to 1 
-						cc->SetVersion(1);
-					}
-				}
-				addQSC = m_queryPending;
-				// advance to Instances stage when finished
-				if (!m_queryPending)
-				{
-					m_queryStage = QueryStage_ManufacturerSpecific1;
-					m_queryRetries = 0;
-				}
-				break;
-			}
-			case QueryStage_ManufacturerSpecific1:
-			{
-				// Obtain manufacturer, product type and product ID code from the node device
-				// Manufacturer Specific data is requested before the other command class data so
-				// that we can modify the supported command classes list through the product XML files.
-				Log::Write(LogLevel_Detail, m_nodeId, "QueryStage_ManufacturerSpecific1");
-
-				/* if its the Controller, then we can just load up the XML straight away */
-				if (GetDriver()->GetControllerNodeId() == m_nodeId)
-				{
-					Log::Write(LogLevel_Detail, m_nodeId, "Load Controller Manufacturer Specific Config");
-					Internal::CC::ManufacturerSpecific* cc = static_cast<Internal::CC::ManufacturerSpecific*>(GetCommandClass(Internal::CC::ManufacturerSpecific::StaticGetCommandClassId()));
-					if (cc)
-					{
-						cc->SetInstance(1);
-						cc->SetProductDetails(GetDriver()->GetManufacturerId(), GetDriver()->GetProductType(), GetDriver()->GetProductId());
-						cc->LoadConfigXML();
-					}
 					m_queryStage = QueryStage_NodeInfo;
 					m_queryRetries = 0;
-				}
-				else
-				{
-					Log::Write(LogLevel_Detail, m_nodeId, "Checking for ManufacturerSpecific CC and Requesting values if present on this node");
-					Internal::CC::ManufacturerSpecific* cc = static_cast<Internal::CC::ManufacturerSpecific*>(GetCommandClass(Internal::CC::ManufacturerSpecific::StaticGetCommandClassId()));
-					if (cc)
-					{
-						cc->SetInstance(1);
-						m_queryPending = cc->Init();
-						addQSC = m_queryPending;
-					}
-					if (!m_queryPending)
-					{
-						m_queryStage = QueryStage_NodeInfo;
-						m_queryRetries = 0;
-					}
 				}
 				break;
 			}
@@ -386,41 +305,10 @@ void Node::AdvanceQueries()
 				else
 				{
 					// this is not a Zwave+ node, so move onto the next querystage
-					m_queryStage = QueryStage_Instances;
-					m_queryRetries = 0;
-				}
-
-				break;
-			}
-			case QueryStage_Instances:
-			{
-				// if the device at this node supports multiple instances, obtain a list of these instances
-				Log::Write(LogLevel_Detail, m_nodeId, "QueryStage_Instances");
-				Internal::CC::MultiInstance* micc = static_cast<Internal::CC::MultiInstance*>(GetCommandClass(Internal::CC::MultiInstance::StaticGetCommandClassId()));
-				if (micc)
-				{
-					if (micc->IsAfterMark())
-					{
-						Log::Write(LogLevel_Detail, m_nodeId, "Skipping RequestInstances() because MultiChannel CC is \"after mark\"");
-					}
-					else
-					{
-						m_queryPending = micc->RequestInstances();
-						addQSC = m_queryPending;
-					}
-				}
-
-				// when done, advance to the Static stage
-				if (!m_queryPending)
-				{
 					m_queryStage = QueryStage_SecurityReport;
 					m_queryRetries = 0;
-
-					Log::Write(LogLevel_Info, m_nodeId, "Essential node queries are complete");
-					Notification* notification = new Notification(Notification::Type_EssentialNodeQueriesComplete);
-					notification->SetHomeAndNodeIds(m_homeId, m_nodeId);
-					GetDriver()->QueueNotification(notification);
 				}
+
 				break;
 			}
 
@@ -446,10 +334,123 @@ void Node::AdvanceQueries()
 				else
 				{
 					// this is not a Security Device, so move onto the next querystage
-					m_queryStage = QueryStage_ManufacturerSpecific2;
+					m_queryStage = QueryStage_Versions;
 					m_queryRetries = 0;
 				}
 
+				break;
+			}
+
+			case QueryStage_Versions:
+			{
+				// Get the version information of CommandClasses that have not had their Version Retrieved So far. (most Likely ManufacturerSpecific)
+				Log::Write(LogLevel_Detail, m_nodeId, "QueryStage_Versions");
+				if (GetDriver()->GetControllerNodeId() == m_nodeId)
+				{
+					m_queryStage = QueryStage_ManufacturerSpecific1;
+					m_queryRetries = 0;
+					break;
+				}
+				Internal::CC::Version* vcc = static_cast<Internal::CC::Version*>(GetCommandClass(Internal::CC::Version::StaticGetCommandClassId()));
+				if (!vcc)
+				{
+					vcc = static_cast<Internal::CC::Version*>(AddCommandClass(Internal::CC::Version::StaticGetCommandClassId()));
+				}
+				Log::Write(LogLevel_Info, m_nodeId, "Requesting Versions");
+				for (map<uint8, Internal::CC::CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it)
+				{
+					Internal::CC::CommandClass* cc = it->second;
+					Log::Write(LogLevel_Info, m_nodeId, "Requesting Versions for %s - Max: %d - Current %d", cc->GetCommandClassName().c_str(), cc->GetMaxVersion(), cc->GetVersion());
+
+					if (cc->GetMaxVersion() > 1 && cc->GetVersion() == 0)
+					{
+						// Get the version for each supported command class that
+						// we have implemented at greater than version one.
+						m_queryPending |= vcc->RequestCommandClassVersion(it->second);
+					}
+					else if (cc->GetVersion() == 0)
+					{
+						// set the Version to 1 
+						cc->SetVersion(1);
+					}
+				}
+				addQSC = m_queryPending;
+				// advance to Instances stage when finished
+				if (!m_queryPending)
+				{
+					m_queryStage = QueryStage_ManufacturerSpecific1;
+					m_queryRetries = 0;
+				}
+				break;
+			}
+			case QueryStage_ManufacturerSpecific1:
+			{
+				// Obtain manufacturer, product type and product ID code from the node device
+				// Manufacturer Specific data is requested before the other command class data so
+				// that we can modify the supported command classes list through the product XML files.
+				Log::Write(LogLevel_Detail, m_nodeId, "QueryStage_ManufacturerSpecific1");
+
+				/* if its the Controller, then we can just load up the XML straight away */
+				if (GetDriver()->GetControllerNodeId() == m_nodeId)
+				{
+					Log::Write(LogLevel_Detail, m_nodeId, "Load Controller Manufacturer Specific Config");
+					Internal::CC::ManufacturerSpecific* cc = static_cast<Internal::CC::ManufacturerSpecific*>(GetCommandClass(Internal::CC::ManufacturerSpecific::StaticGetCommandClassId()));
+					if (cc)
+					{
+						cc->SetInstance(1);
+						cc->SetProductDetails(GetDriver()->GetManufacturerId(), GetDriver()->GetProductType(), GetDriver()->GetProductId());
+						cc->LoadConfigXML();
+					}
+					m_queryStage = QueryStage_Instances;
+					m_queryRetries = 0;
+				}
+				else
+				{
+					Log::Write(LogLevel_Detail, m_nodeId, "Checking for ManufacturerSpecific CC and Requesting values if present on this node");
+					Internal::CC::ManufacturerSpecific* cc = static_cast<Internal::CC::ManufacturerSpecific*>(GetCommandClass(Internal::CC::ManufacturerSpecific::StaticGetCommandClassId()));
+					if (cc)
+					{
+						cc->SetInstance(1);
+						m_queryPending = cc->Init();
+						addQSC = m_queryPending;
+					}
+					if (!m_queryPending)
+					{
+						m_queryStage = QueryStage_Instances;
+						m_queryRetries = 0;
+					}
+				}
+				break;
+			}
+			case QueryStage_Instances:
+			{
+				// if the device at this node supports multiple instances, obtain a list of these instances
+				Log::Write(LogLevel_Detail, m_nodeId, "QueryStage_Instances");
+				Internal::CC::MultiInstance* micc = static_cast<Internal::CC::MultiInstance*>(GetCommandClass(Internal::CC::MultiInstance::StaticGetCommandClassId()));
+				if (micc)
+				{
+					if (micc->IsAfterMark())
+					{
+						Log::Write(LogLevel_Detail, m_nodeId, "Skipping RequestInstances() because MultiChannel CC is \"after mark\"");
+					}
+					else
+					{
+						m_queryPending = micc->RequestInstances();
+						addQSC = m_queryPending;
+					}
+				}
+
+				// when done, advance to the Static stage
+				if (!m_queryPending)
+				{
+					m_queryStage = QueryStage_ManufacturerSpecific2;
+					m_queryRetries = 0;
+
+					Log::Write(LogLevel_Info, m_nodeId, "Essential node queries are complete");
+					Notification* notification = new Notification(Notification::Type_EssentialNodeQueriesComplete);
+					notification->SetHomeAndNodeIds(m_homeId, m_nodeId);
+					GetDriver()->QueueNotification(notification);
+				}
 				break;
 			}
 			case QueryStage_ManufacturerSpecific2:
