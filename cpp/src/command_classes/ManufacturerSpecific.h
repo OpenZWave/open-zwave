@@ -87,6 +87,12 @@ namespace OpenZWave
 					void setFileConfigRevision(uint32 rev);
 					void setLoadedConfigRevision(uint32 rev);
 
+					bool Init();
+
+					bool supportsMultiInstance() override {
+						return false;
+					}
+
 				protected:
 					virtual void CreateVars(uint8 const _instance) override;
 
