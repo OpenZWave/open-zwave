@@ -46,7 +46,7 @@ namespace OpenZWave
 		{
 
 			Security::Security(uint32 const _homeId, uint8 const _nodeId) :
-					CommandClass(_homeId, _nodeId), m_schemeagreed(false), m_secured(false)
+					CommandClass(_homeId, _nodeId), m_schemeagreed(false)
 
 			{
 				/* We don't want the Driver to route "Security" messages back to us for Encryption,
@@ -55,7 +55,8 @@ namespace OpenZWave
 				 * in the SecurityCmd_SupportedReport from the device - Which some devices do)
 				 */
 				ClearSecureSupport();
-
+				for (int i = 0; i < 255; i++)
+					m_secured[i] = false;
 			}
 
 			Security::~Security()
