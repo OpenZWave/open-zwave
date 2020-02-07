@@ -49,10 +49,39 @@ namespace OpenZWave
 
 			enum ConfigurationCmd
 			{
+				ConfigurationCmd_Defaults_Reset = 0x01,
 				ConfigurationCmd_Set = 0x04,
 				ConfigurationCmd_Get = 0x05,
-				ConfigurationCmd_Report = 0x06
+				ConfigurationCmd_Report = 0x06,
+				ConfigurationCmd_Bulk_Set = 0x07,
+				ConfigurationCmd_Bulk_Get = 0x08,
+				ConfigurationCmd_Bulk_Report = 0x09,
+				ConfigurationCmd_Name_Get = 0x0A,
+				ConfigurationCmd_Name_Report = 0x0B,
+				ConfigurationCmd_Info_Get = 0x0C,
+				ConfigurationCmd_Info_Report = 0x0D,
+				ConfigurationCmd_Properties_Get = 0x0E,
+				ConfigurationCmd_Properties_Report = 0x0F
 			};
+
+			uint32 Configuration::getField(const uint8 *data, CC_Param_Size size, uint8 &pos) {
+				uint32 value;
+				switch (size) {
+					case CC_Param_Size::CC_Param_Size_Byte:
+						value = data[pos++];
+						break;
+					case CC_Param_Size::CC_Param_Size_Short:
+						value = (data[pos++] << 8) + data[pos++];
+						break;
+					case CC_Param_Size::CC_Param_Size_Int:
+						value = (data[pos++] << 24) + (data[pos++] << 16) + (data[pos++] << 8) + data[pos++];
+						break;
+					case CC_Param_Size::CC_Param_Size_Unassigned:
+						value = 0;
+						break;
+				}
+				return value;
+			}
 
 //-----------------------------------------------------------------------------
 // <Configuration::HandleMsg>
@@ -155,8 +184,134 @@ namespace OpenZWave
 
 					Log::Write(LogLevel_Info, GetNodeId(), "Received Configuration report: Parameter=%d, Value=%d", parameter, paramValue);
 					return true;
-				}
+				} 
+				else if (ConfigurationCmd_Properties_Report == (ConfigurationCmd) _data[0])
+				{
+					uint16 paramNo = (_data[1] << 8) + _data[2];
+					CC_Param_Format paramFormat = (CC_Param_Format)((_data[3] & 0x38) >> 3);
+					CC_Param_Size paramSize = (CC_Param_Size)(_data[3] & 0x07);
+					if (paramSize == CC_Param_Size::CC_Param_Size_Unassigned) {
+						/* this is a non-existant Param, but the "next param" field holds the next Param Number. Go Get it... */
+						//uint16 nextParam = (_data[4] << 8) + _data[5];
+						Log::Write(LogLevel_Info, GetNodeId(), "First Configuration CC Param to Query is %d", ((_data[4] << 8) + _data[5]));
+						{
+							Msg* msg = new Msg("ConfigurationCmd_Properties_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
+							msg->Append(GetNodeId());
+							msg->Append(4);
+							msg->Append(GetCommandClassId());
+							msg->Append(ConfigurationCmd_Properties_Get);
+							msg->Append(_data[4]);
+							msg->Append(_data[5]);
+							msg->Append(GetDriver()->GetTransmitOptions());
+							GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
+						}
+						{
+							Msg* msg = new Msg("ConfigurationCmd_Name_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
+							msg->Append(GetNodeId());
+							msg->Append(4);
+							msg->Append(GetCommandClassId());
+							msg->Append(ConfigurationCmd_Name_Get);
+							msg->Append(_data[4]);
+							msg->Append(_data[5]);
+							msg->Append(GetDriver()->GetTransmitOptions());
+							GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
+						}
+						{
+							Msg* msg = new Msg("ConfigurationCmd_Info_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
+							msg->Append(GetNodeId());
+							msg->Append(4);
+							msg->Append(GetCommandClassId());
+							msg->Append(ConfigurationCmd_Info_Get);
+							msg->Append(_data[4]);
+							msg->Append(_data[5]);
+							msg->Append(GetDriver()->GetTransmitOptions());
+							GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
+						}
 
+						return true;
+					}
+					/* the length of each of the remaining fields depends upon the CC_Param_Size
+					 * so we use a little helper function to extract them out 
+					 */
+					uint8 position = 4;
+					ConfigParam param;
+					param.paramNo = paramNo;
+					param.min = getField(_data, paramSize, position);
+					param.max = getField(_data, paramSize, position);
+					param.defaultval = getField(_data, paramSize, position);
+					param.format = paramFormat;
+					m_ConfigParams[paramNo] =  param;
+					uint16 nextParam = getField(_data, CC_Param_Size::CC_Param_Size_Short, position);
+					Log::Write(LogLevel_Warning, GetNodeId(), "Param %d Format: %d Size: %d Min: %d Max: %d Default %d Next %d", param.paramNo, param.format, paramSize, param.min, param.max, param.defaultval, nextParam);
+					
+
+					if (nextParam > 0) {
+						{
+							Msg* msg = new Msg("ConfigurationCmd_Properties_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
+							msg->Append(GetNodeId());
+							msg->Append(4);
+							msg->Append(GetCommandClassId());
+							msg->Append(ConfigurationCmd_Properties_Get);
+							msg->Append(((nextParam & 0xFF00) >> 8));
+							msg->Append((nextParam & 0xFF));
+							msg->Append(GetDriver()->GetTransmitOptions());
+							GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
+						}
+						{
+							Msg* msg = new Msg("ConfigurationCmd_Name_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
+							msg->Append(GetNodeId());
+							msg->Append(4);
+							msg->Append(GetCommandClassId());
+							msg->Append(ConfigurationCmd_Name_Get);
+							msg->Append(((nextParam & 0xFF00) >> 8));
+							msg->Append((nextParam & 0xFF));
+							msg->Append(GetDriver()->GetTransmitOptions());
+							GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
+						}
+						{
+							Msg* msg = new Msg("ConfigurationCmd_Info_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
+							msg->Append(GetNodeId());
+							msg->Append(4);
+							msg->Append(GetCommandClassId());
+							msg->Append(ConfigurationCmd_Info_Get);
+							msg->Append(((nextParam & 0xFF00) >> 8));
+							msg->Append((nextParam & 0xFF));
+							msg->Append(GetDriver()->GetTransmitOptions());
+							GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
+						}
+
+					}
+					return true;
+
+				}
+				else if (ConfigurationCmd_Name_Report == (ConfigurationCmd) _data[0])
+				{
+					uint16 paramNo = (_data[1] << 8) + _data[2];
+					if (m_ConfigParams.find(paramNo) != m_ConfigParams.end()) {
+						for (int i = 4; i < _length; i++) {
+							m_ConfigParams.at(paramNo).name += _data[i];
+						}
+						uint8 moreInfo = (_data[3]);
+						Log::Write(LogLevel_Warning, GetNodeId(), "Param %d Name: %s (moreInfo %d)", paramNo, m_ConfigParams.at(paramNo).name.c_str(), moreInfo);
+					} else {
+						Log::Write(LogLevel_Warning, GetNodeId(), "Cant Find Config Param %d for NameReport", paramNo);
+					}
+					return true;
+				}
+				else if (ConfigurationCmd_Info_Report == (ConfigurationCmd) _data[0])
+				{
+					uint16 paramNo = (_data[1] << 8) + _data[2];
+					if (m_ConfigParams.find(paramNo) != m_ConfigParams.end()) { 
+						for (int i = 4; i < _length; i++) {
+							m_ConfigParams.at(paramNo).help += _data[i];
+						}
+						uint8 moreInfo = (_data[3]);
+						Log::Write(LogLevel_Warning, GetNodeId(), "Param %d Help: %s (moreInfo: %d)", paramNo, m_ConfigParams.at(paramNo).help.c_str(), moreInfo);
+					} else {
+						Log::Write(LogLevel_Warning, GetNodeId(), "Cant Find Config Param %d for InfoReport", paramNo);
+					}
+					return true;
+				}
 				return false;
 			}
 
@@ -220,6 +375,34 @@ namespace OpenZWave
 				Log::Write(LogLevel_Info, GetNodeId(), "Configuration::Set failed (bad value or value type) - Parameter=%d", param);
 				return false;
 			}
+//-----------------------------------------------------------------------------
+// <Configuration::RequestValue>
+// Request current parameter value from the device
+//-----------------------------------------------------------------------------
+
+
+				bool Configuration::RequestState(uint32 const _requestFlags, uint8 const _instance, Driver::MsgQueue const _queue)
+				{
+					/* discovery of Params is only available in CC Version 3 and above */
+					if (GetVersion() > 2) { 
+						if (_requestFlags & RequestFlag_Session) {
+							/* Make a request for Param 0 - That will tell us the first available Param */
+							Msg* msg = new Msg("ConfigurationCmd_Properties_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
+							msg->Append(GetNodeId());
+							msg->Append(4);
+							msg->Append(GetCommandClassId());
+							msg->Append(ConfigurationCmd_Properties_Get);
+							msg->Append(0x00);
+							msg->Append(0x00);
+							msg->Append(GetDriver()->GetTransmitOptions());
+							GetDriver()->SendMsg(msg, _queue);
+							return true;
+						}
+					}
+					return false;
+				}
+
+
 
 //-----------------------------------------------------------------------------
 // <Configuration::RequestValue>
