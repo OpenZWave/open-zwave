@@ -195,7 +195,7 @@ namespace OpenZWave
 						//uint16 nextParam = (_data[4] << 8) + _data[5];
 						Log::Write(LogLevel_Info, GetNodeId(), "First Configuration CC Param to Query is %d", ((_data[4] << 8) + _data[5]));
 						{
-							Msg* msg = new Msg("ConfigurationCmd_Properties_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
+							Msg* msg = new Msg("ConfigurationCmd_Properties_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
 							msg->Append(GetNodeId());
 							msg->Append(4);
 							msg->Append(GetCommandClassId());
@@ -206,7 +206,7 @@ namespace OpenZWave
 							GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
 						}
 						{
-							Msg* msg = new Msg("ConfigurationCmd_Name_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
+							Msg* msg = new Msg("ConfigurationCmd_Name_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
 							msg->Append(GetNodeId());
 							msg->Append(4);
 							msg->Append(GetCommandClassId());
@@ -217,7 +217,7 @@ namespace OpenZWave
 							GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
 						}
 						{
-							Msg* msg = new Msg("ConfigurationCmd_Info_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
+							Msg* msg = new Msg("ConfigurationCmd_Info_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
 							msg->Append(GetNodeId());
 							msg->Append(4);
 							msg->Append(GetCommandClassId());
@@ -247,7 +247,7 @@ namespace OpenZWave
 
 					if (nextParam > 0) {
 						{
-							Msg* msg = new Msg("ConfigurationCmd_Properties_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
+							Msg* msg = new Msg("ConfigurationCmd_Properties_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
 							msg->Append(GetNodeId());
 							msg->Append(4);
 							msg->Append(GetCommandClassId());
@@ -258,7 +258,7 @@ namespace OpenZWave
 							GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
 						}
 						{
-							Msg* msg = new Msg("ConfigurationCmd_Name_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
+							Msg* msg = new Msg("ConfigurationCmd_Name_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
 							msg->Append(GetNodeId());
 							msg->Append(4);
 							msg->Append(GetCommandClassId());
@@ -269,7 +269,7 @@ namespace OpenZWave
 							GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
 						}
 						{
-							Msg* msg = new Msg("ConfigurationCmd_Info_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
+							Msg* msg = new Msg("ConfigurationCmd_Info_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
 							msg->Append(GetNodeId());
 							msg->Append(4);
 							msg->Append(GetCommandClassId());
@@ -288,7 +288,7 @@ namespace OpenZWave
 				{
 					uint16 paramNo = (_data[1] << 8) + _data[2];
 					if (m_ConfigParams.find(paramNo) != m_ConfigParams.end()) {
-						for (int i = 4; i < _length; i++) {
+						for (int i = 4; i <= (_length -1); i++) {
 							m_ConfigParams.at(paramNo).name += _data[i];
 						}
 						uint8 moreInfo = (_data[3]);
@@ -302,7 +302,7 @@ namespace OpenZWave
 				{
 					uint16 paramNo = (_data[1] << 8) + _data[2];
 					if (m_ConfigParams.find(paramNo) != m_ConfigParams.end()) { 
-						for (int i = 4; i < _length; i++) {
+						for (int i = 4; i <= (_length -1); i++) {
 							m_ConfigParams.at(paramNo).help += _data[i];
 						}
 						uint8 moreInfo = (_data[3]);
@@ -387,7 +387,7 @@ namespace OpenZWave
 					if (GetVersion() > 2) { 
 						if (_requestFlags & RequestFlag_Session) {
 							/* Make a request for Param 0 - That will tell us the first available Param */
-							Msg* msg = new Msg("ConfigurationCmd_Properties_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
+							Msg* msg = new Msg("ConfigurationCmd_Properties_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
 							msg->Append(GetNodeId());
 							msg->Append(4);
 							msg->Append(GetCommandClassId());
