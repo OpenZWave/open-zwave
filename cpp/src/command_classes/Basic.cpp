@@ -84,7 +84,7 @@ namespace OpenZWave
 			{
 				if (IsAfterMark())
 				{
-					Log::Write(LogLevel_Info, GetNodeId(), "Controlled Class");
+					Log::Write(LogLevel_Info, GetNodeId(), "%s is a Controlling Class", GetCommandClassName().c_str());
 					return false;
 				}
 				if (_requestFlags & RequestFlag_Dynamic)
@@ -218,7 +218,15 @@ namespace OpenZWave
 //-----------------------------------------------------------------------------
 			void Basic::CreateVars(uint8 const _instance)
 			{
-				m_instances.push_back(_instance);
+				if (m_com.GetFlagByte(COMPAT_FLAG_BASIC_MAPPING) == 0)
+				{
+					Log::Write(LogLevel_Info, GetNodeId(), "COMMAND_CLASS_BASIC is not mapped to another CC. Exposing ValueID");
+					if (Node* node = GetNodeUnsafe())
+					{
+						node->CreateValueByte(ValueID::ValueGenre_Basic, GetCommandClassId(), _instance, ValueID_Index_Basic::Set, "Basic", "", false, false, 0, 0);
+					}
+				}
+
 			}
 
 //-----------------------------------------------------------------------------
@@ -270,24 +278,6 @@ namespace OpenZWave
 					m_com.SetFlagByte(COMPAT_FLAG_BASIC_MAPPING, _commandClassId);
 					RemoveValue(1, ValueID_Index_Basic::Set);
 					res = true;
-				}
-
-				if (m_com.GetFlagByte(COMPAT_FLAG_BASIC_MAPPING) == 0)
-				{
-					if (_doLog)
-						Log::Write(LogLevel_Info, GetNodeId(), "    COMMAND_CLASS_BASIC is not mapped");
-					if (Node* node = GetNodeUnsafe())
-					{
-						if (m_instances.size() > 0)
-						{
-							for (unsigned int i = 0; i < m_instances.size(); i++)
-								node->CreateValueByte(ValueID::ValueGenre_Basic, GetCommandClassId(), m_instances[i], ValueID_Index_Basic::Set, "Basic", "", false, false, 0, 0);
-						}
-						else
-						{
-							node->CreateValueByte(ValueID::ValueGenre_Basic, GetCommandClassId(), 0, ValueID_Index_Basic::Set, "Basic", "", false, false, 0, 0);
-						}
-					}
 				}
 				return res;
 			}

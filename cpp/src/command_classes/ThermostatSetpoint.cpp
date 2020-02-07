@@ -291,12 +291,16 @@ namespace OpenZWave
 // <ThermostatSetpoint::CreateVars>
 // Create the values managed by this command class
 //-----------------------------------------------------------------------------
-			void ThermostatSetpoint::CreateVars(uint8 const _instance, uint8 const _index)
+			void ThermostatSetpoint::CreateVars(uint8 const _instance)
 			{
+#if 0
+/* I don't think this was ever orignally called when we had a index param, so lets not create this strange SetPoint */
+#issue #1981
 				if (Node* node = GetNodeUnsafe())
 				{
 					node->CreateValueDecimal(ValueID::ValueGenre_User, GetCommandClassId(), _instance, _index, "Setpoint", "C", false, false, "0.0", 0);
 				}
+#endif
 			}
 		} // namespace CC
 	} // namespace Internal

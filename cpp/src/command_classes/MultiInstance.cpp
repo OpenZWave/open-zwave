@@ -347,8 +347,6 @@ namespace OpenZWave
 							continue;
 						}
 
-						m_endPointCommandClasses.insert(commandClassId);
-
 						// Ensure the node supports this command class
 						CommandClass* cc = node->GetCommandClass(commandClassId);
 
@@ -356,6 +354,9 @@ namespace OpenZWave
 						{
 							cc = node->AddCommandClass(commandClassId);
 						}
+
+
+
 						if (cc && afterMark)
 						{
 							cc->SetAfterMark();
@@ -365,7 +366,9 @@ namespace OpenZWave
 						{
 							Log::Write(LogLevel_Info, GetNodeId(), "        %s", cc->GetCommandClassName().c_str());
 						}
-						/* The AddCommandClass will bitch about unsupported CC's so we don't need to duplicate that output */
+						/* The AddCommandClass above will bitch about unsupported CC's so we don't need to duplicate that output */
+
+						m_endPointCommandClasses.insert(commandClassId);
 					}
 
 					// Create internal library instances for each command class in the list
@@ -396,6 +399,11 @@ namespace OpenZWave
 								CommandClass* cc = node->GetCommandClass(commandClassId);
 								if (cc)
 								{
+									if (cc->supportsMultiInstance() == false) {
+										Log::Write(LogLevel_Info, GetNodeId(), "%s doesn't support MultiInstance - Not adding Instance", cc->GetCommandClassName().c_str());
+										continue;
+									}
+
 									cc->SetInstance(i);
 									if (m_com.GetFlagBool(COMPAT_FLAG_MI_MAPROOTTOENDPOINT) != false || i != 1)
 									{
@@ -447,6 +455,11 @@ namespace OpenZWave
 							CommandClass* cc = node->GetCommandClass(commandClassId);
 							if (cc)
 							{
+								if (cc->supportsMultiInstance() == false) {
+									Log::Write(LogLevel_Info, GetNodeId(), "%s doesn't support MultiInstance. Not adding Instances", cc->GetCommandClassName().c_str());
+									continue;
+								}
+
 								// get instance gets an instance for an endpoint
 								// but i'm only interested if there is a related instance for an endpoint and not in the actual result
 								// soo if the result is != 0, the endpoint is already handled
