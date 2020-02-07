@@ -316,6 +316,8 @@ void Node::AdvanceQueries()
 			}
 			case QueryStage_NodeInfo:
 			{
+				
+				Log::Write(LogLevel_Info, GetNodeId(), "NodeInfo Stage - NodeInfoRecieved %d - NotInfoSupported %d", NodeInfoReceived(), m_nodeInfoSupported);
 				if (!NodeInfoReceived() && m_nodeInfoSupported && (GetDriver()->GetControllerNodeId() != m_nodeId))
 				{
 					// obtain from the node a list of command classes that it 1) supports and 2) controls (separated by a mark in the buffer)
@@ -3362,8 +3364,9 @@ void Node::ReadDeviceClasses()
 	TiXmlDocument doc;
 	if (!doc.LoadFile(filename.c_str(), TIXML_ENCODING_UTF8))
 	{
-		Log::Write(LogLevel_Info, "Failed to load device_classes.xml");
-		Log::Write(LogLevel_Info, "Check that the config path provided when creating the Manager points to the correct location.");
+		Log::Write(LogLevel_Warning, "Failed to load device_classes.xml");
+		Log::Write(LogLevel_Warning, "Check that the config path provided when creating the Manager points to the correct location.");
+		Log::Write(LogLevel_Warning, "tinyXML Reported %s", doc.ErrorDesc());
 		return;
 	}
 	doc.SetUserData((void *) filename.c_str());
