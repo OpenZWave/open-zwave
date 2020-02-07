@@ -367,6 +367,7 @@ DISTFILES =	.gitignore \
 	config/homeseer/ztroller.xml \
 	config/honeywell/39348-zw4008.xml \
 	config/honeywell/39351-ZW3005.xml \
+	config/honeywell/39357-ZW3004.xml \
 	config/honeywell/lynx-touch-l5100.xml \
 	config/honeywell/th6320zw2003.xml \
 	config/honeywell/th8320zw1000.xml \
@@ -654,6 +655,7 @@ DISTFILES =	.gitignore \
 	config/images/homeseer/hsm200.png \
 	config/images/honeywell/39348-zw4008.png \
 	config/images/honeywell/39351-ZW3005.png \
+	config/images/honeywell/39357-ZW3004.png \
 	config/images/honeywell/lynx-touch-l5100.png \
 	config/images/honeywell/th6320zw2003.png \
 	config/images/honeywell/th8320zw1000.png \
