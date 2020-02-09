@@ -193,7 +193,7 @@ namespace OpenZWave
 						msg->Append(VersionCmd_CommandClassGet);
 						msg->Append(_commandClass->GetCommandClassId());
 						msg->Append(GetDriver()->GetTransmitOptions());
-						GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
+						GetDriver()->SendMsg(msg, Driver::MsgQueue_Query);
 						return true;
 //					}
 				}
