@@ -111,7 +111,7 @@ namespace OpenZWave
 			{
 				if (_requestFlags & RequestFlag_Dynamic)
 				{
-					return RequestValue(_requestFlags, 0, _instance, _queue);
+					return RequestValue(_requestFlags, ValueID_Index_SensorBinary::Sensor_1, _instance, _queue);
 				}
 
 				return false;
