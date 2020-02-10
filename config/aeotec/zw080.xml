@@ -1,4 +1,5 @@
-<!-- Aeon Labs DSD31 Siren Gen5 --><Product Revision="6" xmlns="https://github.com/OpenZWave/open-zwave">
+<!-- Aeon Labs DSD31 Siren Gen5 -->
+<Product Revision="6" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0086:0050:0104</MetaDataItem>
     <MetaDataItem name="ProductPic">images/aeotec/zw080.png</MetaDataItem>
@@ -8,10 +9,11 @@
     <MetaDataItem name="ExclusionDescription">Turn the primary controller of Z-Wave network into exclusion mode, short press the product’s Action button that you can find on the product's housing.</MetaDataItem>
     <MetaDataItem id="0050" name="Identifier" type="0104">ZW080-A17</MetaDataItem>
     <MetaDataItem name="Description">Aeon Labs Siren Gen5 is an siren Z-Wave device that when an emergency is happening it lets you know. Its 105dB Speaker System is always heard. Its super-bright LED system lights your path even when it’s dark. Siren provides a smart home with the perfect security and safety features that it needs.
-Those security and safety features are matched by smart features. Siren’s speaker system can access 5 different audio alerts, allowing your smart home to pick the alert best suited to the emergency. The speaker system’s volume can also be adjusted so that Siren is perfect for every space in every home.
-It also act as a repeater that forward Z-Wave command messages to destination nodes if the originating controller is out of range from the destination node.
-By taking advantage of the Z-Wave mesh network, commands can be routed to their destination via intermediary “listening” Z-Wave products. Products that are Z-Wave certified can be used and communicate with other Z-Wave certified devices.
-Also a tool that can be programmed, scheduled, controlled and communicated with from anywhere in the world.</MetaDataItem>
+      Those security and safety features are matched by smart features. Siren’s speaker system can access 5 different audio alerts, allowing your smart home to pick the alert best suited to the emergency. The speaker system’s volume can also be adjusted so that Siren is perfect for every space in every home.
+      It also act as a repeater that forward Z-Wave command messages to destination nodes if the originating controller is out of range from the destination node.
+      By taking advantage of the Z-Wave mesh network, commands can be routed to their destination via intermediary “listening” Z-Wave products. Products that are Z-Wave certified can be used and communicate with other Z-Wave certified devices.
+      Also a tool that can be programmed, scheduled, controlled and communicated with from anywhere in the world.
+    </MetaDataItem>
     <MetaDataItem name="InclusionDescription">Turn the primary controller of Z-Wave network into inclusion mode, short press the product’s Action button that you can find on the product's housing.</MetaDataItem>
     <MetaDataItem name="Name">Siren Gen5</MetaDataItem>
     <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/1141/Siren Gen5 Manual.pdf</MetaDataItem>
@@ -50,7 +52,7 @@ Also a tool that can be programmed, scheduled, controlled and communicated with 
       <Item label="Sound 5 - High Volume" value="1283"/>
     </Value>
     <Value genre="config" index="38" label="Enable/disable the action button" max="1" min="0" size="1" type="list" units="" value="1">
-      <Help>Enable/disable to turn off the alarm sound via pressing the Action Button. </Help>
+      <Help>Enable/disable to turn off the alarm sound via pressing the Action Button.</Help>
       <Item label="Disable" value="0"/>
       <Item label="Enable" value="1"/>
     </Value>

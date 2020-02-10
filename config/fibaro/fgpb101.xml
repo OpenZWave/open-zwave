@@ -1,33 +1,35 @@
-<!-- Fibaro : Button FGPB101 --><Product Revision="6" xmlns="https://github.com/OpenZWave/open-zwave">
+<!-- Fibaro : Button FGPB101 -->
+<Product Revision="6" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/010F:1000:0F01</MetaDataItem>
     <MetaDataItem name="ProductPic">images/fibaro/fgpb101.png</MetaDataItem>
     <MetaDataItem id="1000" name="ZWProductPage" type="0F01">https://products.z-wavealliance.org/products/1944/</MetaDataItem>
     <MetaDataItem name="ResetDescription">Reset procedure allows to restore the device back to its factory settings, which means all information about the Z-Wave controller and user configuration will be deleted. In order to reset the device:
-1)	Click the Button exactly five times.
-2)	Press and hold the Button for at least 5 seconds.
-Please use this procedure only when the network primary controller is missing or otherwise inoperable</MetaDataItem>
-    <MetaDataItem name="Name">FIBARO Button </MetaDataItem>
-    <MetaDataItem name="ExclusionDescription">1)	Place the Button within the direct range of your Z-Wave controller.
-2)	Set the main controller in remove mode (see the controller’s manual).
-3)	Click the Button at least six times.
-4)	Wait for the removing process to end.
-5)	Successful removing will be confirmed by the Z-Wave controller’s message.
-</MetaDataItem>
-    <MetaDataItem name="InclusionDescription">1)	Place the Button within the direct range of your Z-Wave controller.
-2)	Set the main controller in (security/non-security) add mode (see the controller’s manual).
-3)	Click the Button at least six times.
-4)	Wait for the adding process to end.
-5)	Successful adding will be confirmed by the Z-Wave controller’s message.
-</MetaDataItem>
-    <MetaDataItem name="Description">FIBARO Button is a compact, battery-powered, Z-Wave Plus compatible device. It allows you to control devices through the Z-Wave network and run various scenes defined in FIBARO System. 
-Different actions may be triggered with one to five clicks or by holding the button down. In Panic Button mode, each press of the button results in triggering the Fibaro Alarm. 
-With its small design and wireless communication, the FIBARO Button can be conveniently mounted on any surface and in any position or location at home, e.g. beside the bed or under the desk.
-</MetaDataItem>
+      1) Click the Button exactly five times.
+      2) Press and hold the Button for at least 5 seconds.
+      Please use this procedure only when the network primary controller is missing or otherwise inoperable
+    </MetaDataItem>
+    <MetaDataItem name="Name">FIBARO Button</MetaDataItem>
+    <MetaDataItem name="ExclusionDescription">1) Place the Button within the direct range of your Z-Wave controller.
+      2) Set the main controller in remove mode (see the controller’s manual).
+      3) Click the Button at least six times.
+      4) Wait for the removing process to end.
+      5) Successful removing will be confirmed by the Z-Wave controller’s message.
+    </MetaDataItem>
+    <MetaDataItem name="InclusionDescription">1) Place the Button within the direct range of your Z-Wave controller.
+      2) Set the main controller in (security/non-security) add mode (see the controller’s manual).
+      3) Click the Button at least six times.
+      4) Wait for the adding process to end.
+      5) Successful adding will be confirmed by the Z-Wave controller’s message.
+    </MetaDataItem>
+    <MetaDataItem name="Description">FIBARO Button is a compact, battery-powered, Z-Wave Plus compatible device. It allows you to control devices through the Z-Wave network and run various scenes defined in FIBARO System.
+      Different actions may be triggered with one to five clicks or by holding the button down. In Panic Button mode, each press of the button results in triggering the Fibaro Alarm.
+      With its small design and wireless communication, the FIBARO Button can be conveniently mounted on any surface and in any position or location at home, e.g. beside the bed or under the desk.
+    </MetaDataItem>
     <MetaDataItem id="1000" name="Identifier" type="0F01">FGPB-101</MetaDataItem>
-    <MetaDataItem name="WakeupDescription">The Button needs to be woken up to receive information about the new configuration from the controller, like parameters and associations. 
-1)	Click the Button 4 times to wake it up
-</MetaDataItem>
+    <MetaDataItem name="WakeupDescription">The Button needs to be woken up to receive information about the new configuration from the controller, like parameters and associations.
+      1) Click the Button 4 times to wake it up
+    </MetaDataItem>
     <MetaDataItem id="1000" name="FrequencyName" type="0F01">CEPT (Europe)</MetaDataItem>
     <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/2018/FGPB-101-EN-T-v1.1.pdf</MetaDataItem>
     <ChangeLog>
@@ -46,27 +48,27 @@ With its small design and wireless communication, the FIBARO Button can be conve
   <CommandClass id="112">
     <Value genre="config" index="1" instance="1" label="Scenes sent to the controller" max="127" min="0" type="byte" value="127">
       <Help>
-				This parameter determines which actions result in sending scene IDs and attributes assigned to them.
-				1 - Key Pressed 1 time.
-				2 - Key Pressed 2 times.
-				4 - Key Pressed 3 times.
-				8 - Key Pressed 4 times.
-				16 - Key Pressed 5 times.
-				32 - Key Held Down.
-				64 - Key Released.
-				Note: Values of parameter 1 may be combined, e.g. 1+2=3 means that scenes will be sent after pressing the button once or twice.
-				Default: 127 All.
-			</Help>
+        This parameter determines which actions result in sending scene IDs and attributes assigned to them.
+        1 - Key Pressed 1 time.
+        2 - Key Pressed 2 times.
+        4 - Key Pressed 3 times.
+        8 - Key Pressed 4 times.
+        16 - Key Pressed 5 times.
+        32 - Key Held Down.
+        64 - Key Released.
+        Note: Values of parameter 1 may be combined, e.g. 1+2=3 means that scenes will be sent after pressing the button once or twice.
+        Default: 127 All.
+      </Help>
     </Value>
     <Value genre="config" index="3" instance="1" label="Associations in Z-Wave network security mode" max="7" min="0" type="byte" value="7">
       <Help>
-				This parameter defines how commands are sent in specified association groups: as secure or non-secure.
-				Parameter is active only in Z-Wave network security mode. It does not apply to 1st Lifeline group.
-				1 - 2nd group sent as secure.
-				2 - 3rd group sent as secure.
-				4 - 4th group sent as secure.
-				Default: 3 All.
-			</Help>
+        This parameter defines how commands are sent in specified association groups: as secure or non-secure.
+        Parameter is active only in Z-Wave network security mode. It does not apply to 1st Lifeline group.
+        1 - 2nd group sent as secure.
+        2 - 3rd group sent as secure.
+        4 - 4th group sent as secure.
+        Default: 3 All.
+      </Help>
     </Value>
     <Value genre="config" index="10" instance="1" label="Key Pressed 1 time - command sent to 2nd association group" size="1" type="list" value="3">
       <Help>This parameter defines commands sent to devices associated in 2nd association group after a single click</Help>
@@ -137,16 +139,16 @@ With its small design and wireless communication, the FIBARO Button can be conve
     </Value>
     <Value genre="config" index="30" instance="1" label="Alarm frame triggers" max="127" min="0" type="byte" value="127">
       <Help>
-				Parameter determines which actions result in sending alarm frames to 4th association group.
-				1 - Key Pressed 1 time.
-				2 - Key Pressed 2 times.
-				4 - Key Pressed 3 times.
-				8 - Key Pressed 4 times.
-				16 - Key Pressed 5 times.
-				32 - Key Held Down.
-				64 - Key Released.
-				Default: 127 All.
-			</Help>
+        Parameter determines which actions result in sending alarm frames to 4th association group.
+        1 - Key Pressed 1 time.
+        2 - Key Pressed 2 times.
+        4 - Key Pressed 3 times.
+        8 - Key Pressed 4 times.
+        16 - Key Pressed 5 times.
+        32 - Key Held Down.
+        64 - Key Released.
+        Default: 127 All.
+      </Help>
     </Value>
   </CommandClass>
   <!-- Association Groups -->

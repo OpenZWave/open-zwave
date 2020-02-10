@@ -5,16 +5,16 @@
     <MetaDataItem id="0803" name="ZWProductPage" type="2008">https://products.z-wavealliance.org/products/877/</MetaDataItem>
     <MetaDataItem name="Description">ZL 7101 Z-Wave Plug-in Dimmer Module
 
-Features:
-*Plug-In Module
-*Z-wave control &amp; AC power output
-*Suitable for most bulb type appliance
-*Adjusting the light via the middle button
-*Protection function via the middle button 
-*Max load output: 300W, 60Hz
-*Input: 120VAC
-*Dimensions: 100*60*37mm
-</MetaDataItem>
+      Features:
+      *Plug-In Module
+      *Z-wave control &amp; AC power output
+      *Suitable for most bulb type appliance
+      *Adjusting the light via the middle button
+      *Protection function via the middle button
+      *Max load output: 300W, 60Hz
+      *Input: 120VAC
+      *Dimensions: 100*60*37mm
+    </MetaDataItem>
     <MetaDataItem name="Name">Dimmer Module ZL7101US</MetaDataItem>
     <MetaDataItem id="0803" name="FrequencyName" type="2008">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem id="0803" name="Identifier" type="2008">ZL7101US</MetaDataItem>

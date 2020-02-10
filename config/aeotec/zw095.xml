@@ -1,7 +1,8 @@
 <!--
 Aeotec ZW095 Home Energy Meter Gen5
 https://aeotec.freshdesk.com/helpdesk/attachments/6009584689
---><Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
+-->
+<Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0086:005F:0102</MetaDataItem>
     <MetaDataItem name="ProductPic">images/aeotec/zw095.png</MetaDataItem>
@@ -9,9 +10,10 @@ https://aeotec.freshdesk.com/helpdesk/attachments/6009584689
     <MetaDataItem name="ResetDescription">Press and hold the Action button that you can find on the product's housing for 10 seconds and then release. This procedure should only be used when the primary controller is inoperable.</MetaDataItem>
     <MetaDataItem id="005F" name="FrequencyName" type="0102">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem name="InclusionDescription">Turn the primary controller of Z-Wave network into inclusion mode, short press the product’s Action button that you can find on the product's housing.</MetaDataItem>
-    <MetaDataItem name="Description">Aeon Labs Home Energy Meter Gen5 is a Z-Wave device that can monitor the total amount of electricity of your home. 
-It can report the wattage energy usage and KWH usage to a Z-Wave Controller (especially a gateway). In near real-time you’ll have a full understanding of how much electricity you use and when you use it.
-Products that are Z-Wave certified can be used and communicate with other Z-Wave certified devices. Also a tool that can be programmed, scheduled, controlled and communicated with from anywhere in the world.</MetaDataItem>
+    <MetaDataItem name="Description">Aeon Labs Home Energy Meter Gen5 is a Z-Wave device that can monitor the total amount of electricity of your home.
+      It can report the wattage energy usage and KWH usage to a Z-Wave Controller (especially a gateway). In near real-time you’ll have a full understanding of how much electricity you use and when you use it.
+      Products that are Z-Wave certified can be used and communicate with other Z-Wave certified devices. Also a tool that can be programmed, scheduled, controlled and communicated with from anywhere in the world.
+    </MetaDataItem>
     <MetaDataItem id="005F" name="Identifier" type="0102">ZW095-A</MetaDataItem>
     <MetaDataItem name="WakeupDescription">N/A</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">Turn the primary controller of Z-Wave network into exclusion mode, short press the product’s Action button that you can find on the product's housing.</MetaDataItem>
@@ -37,185 +39,185 @@ Products that are Z-Wave certified can be used and communicate with other Z-Wave
     </Value>
     <Value genre="config" index="3" label="Selective reporting" max="1" min="0" size="1" type="list" units="" value="1">
       <Help>
-				Enable selective reporting only when power change reaches a certain threshold or percentage set in 4-11 below. This is used to reduce network traffic.
-			</Help>
+        Enable selective reporting only when power change reaches a certain threshold or percentage set in 4-11 below. This is used to reduce network traffic.
+      </Help>
       <Item label="Disable" value="0"/>
       <Item label="Enable" value="1"/>
     </Value>
     <Value genre="config" index="4" label="Wattage Threshold Whole HEM" max="60000" min="0" type="short" units="watts" value="50">
       <Help>
-				Threshold change in wattage to induce a automatic report (whole HEM).
-			</Help>
+        Threshold change in wattage to induce a automatic report (whole HEM).
+      </Help>
     </Value>
     <Value genre="config" index="5" label="Wattage Threshold C1" max="60000" min="0" type="short" units="watts" value="50">
       <Help>
-				Threshold change in wattage to induce a automatic report (Clamp 1).
-			</Help>
+        Threshold change in wattage to induce a automatic report (Clamp 1).
+      </Help>
     </Value>
     <Value genre="config" index="6" label="Wattage Threshold C2" max="60000" min="0" type="short" units="watts" value="50">
       <Help>
-				Threshold change in wattage to induce a automatic report (Clamp 2).
-			</Help>
+        Threshold change in wattage to induce a automatic report (Clamp 2).
+      </Help>
     </Value>
     <Value genre="config" index="7" label="Wattage Threshold C3" max="60000" min="0" type="short" units="watts" value="50">
       <Help>
-				Threshold change in wattage to induce a automatic report (Clamp 3).
-			</Help>
+        Threshold change in wattage to induce a automatic report (Clamp 3).
+      </Help>
     </Value>
     <Value genre="config" index="8" label="Wattage Percentage Change Whole HEM" max="100" min="0" type="byte" units="%" value="10">
       <Help>
-				Percentage change in wattage to induce a automatic report (whole HEM).
-			</Help>
+        Percentage change in wattage to induce a automatic report (whole HEM).
+      </Help>
     </Value>
     <Value genre="config" index="9" label="Wattage Percentage Change C1" max="100" min="0" type="byte" units="%" value="10">
       <Help>
-				Percentage change in wattage to induce a automatic report (Clamp 1).
-			</Help>
+        Percentage change in wattage to induce a automatic report (Clamp 1).
+      </Help>
     </Value>
     <Value genre="config" index="10" label="Wattage Percentage Change C2" max="100" min="0" type="byte" units="%" value="10">
       <Help>
-				Percentage change in wattage to induce a automatic report (Clamp 2).
-			</Help>
+        Percentage change in wattage to induce a automatic report (Clamp 2).
+      </Help>
     </Value>
     <Value genre="config" index="11" label="Wattage Percentage Change C3" max="100" min="0" type="byte" units="%" value="10">
       <Help>
-				Percentage change in wattage to induce a automatic report (Clamp 3).
-			</Help>
+        Percentage change in wattage to induce a automatic report (Clamp 3).
+      </Help>
     </Value>
     <Value genre="config" index="13" label="Reporting CRC-16 Encapsulation Command" max="1" min="0" size="1" type="list" units="" value="1">
       <Help>
-				Enable /disable reporting CRC-16 Encapsulation Command.
-			</Help>
+        Enable /disable reporting CRC-16 Encapsulation Command.
+      </Help>
       <Item label="Disable" value="0"/>
       <Item label="Enable" value="1"/>
     </Value>
     <Value affects="101,102,103" genre="config" index="100" label="Reset #101-103" type="button" write_only="true">
       <Help>
-				Reset to default parameters number 101-103. Any value other then 0 will initiate this reset.
-			</Help>
+        Reset to default parameters number 101-103. Any value other then 0 will initiate this reset.
+      </Help>
     </Value>
     <Value genre="config" index="101" label="Group 1 Reports" type="int" units="" value="2">
       <Help>
-				Which reports need to send in group1. Format is as follows:
-				Byte 1 (msb):
-				Bit 7: Reserved
-				Bit 6: Reserved
-				Bit 5: Auto Send Meter Report (for kVar) at the group time interval (Clamp 3)
-				Bit 4: Auto Send Meter Report (for kVar) at the group time interval (Clamp 2)
-				Bit 3: Auto Send Meter Report (for kVar) at the group time interval (Clamp 1)
-				Bit 2: Auto Send Meter Report (for KVah) at the group time interval (Clamp 3)
-				Bit 1: Auto Send Meter Report (for KVah) at the group time interval (Clamp 2)
-				Bit 0: Auto Send Meter Report (for KVah) at the group time interval (Clamp 1)
-				Byte 2:
-				Bit 7: Reserved
-				Bit 6: Reserved
-				Bit 5: Auto Send Meter Report (for A) at the group time interval (Clamp 3)
-				Bit 4: Auto Send Meter Report (for A) at the group time interval (Clamp 2)
-				Bit 3: Auto Send Meter Report (for A) at the group time interval (Clamp 1)
-				Bit 2: Auto Send Meter Report (for V) at the group time interval (Clamp 3)
-				Bit 1: Auto Send Meter Report (for V) at the group time interval (Clamp 2)
-				Bit 0: Auto Send Meter Report (for V) at the group time interval (Clamp 1)
-				Byte 3:
-				Bit 7: Reserved
-				Bit 6: Reserved
-				Bit 5: Auto Send Meter Report (for kWh) at the group time interval (Clamp 3)
-				Bit 4: Auto Send Meter Report (for kWh) at the group time interval (Clamp 2)
-				Bit 3: Auto Send Meter Report (for kWh) at the group time interval (Clamp 1)
-				Bit 2: Auto Send Meter Report (for Watt) at the group time interval (Clamp 3)
-				Bit 1: Auto Send Meter Report (for Watt) at the group time interval (Clamp 2)
-				Bit 0: Auto Send Meter Report (for Watt) at the group time interval (Clamp 1)
-				Byte 4 (lsb):
-				Bit 7: Reserved
-				Bit 6: Reserved
-				Bit 5: Auto Send Meter Report (for kVar) at the group time interval (Whole HEM)
-				Bit 4: Auto Send Meter Report (for KVah) at the group time interval (Whole HEM)
-				Bit 3: Auto Send Meter Report (for A) at the group time interval (Whole HEM)
-				Bit 2: Auto Send Meter Report (for V) at the group time interval (Whole HEM)
-				Bit 1: Auto Send Meter Report (for Watt) at the group time interval (Whole HEM)
-				Bit 0: Auto Send Meter Report (for kWh) at the group time interval (Whole HEM)
-			</Help>
+        Which reports need to send in group1. Format is as follows:
+        Byte 1 (msb):
+        Bit 7: Reserved
+        Bit 6: Reserved
+        Bit 5: Auto Send Meter Report (for kVar) at the group time interval (Clamp 3)
+        Bit 4: Auto Send Meter Report (for kVar) at the group time interval (Clamp 2)
+        Bit 3: Auto Send Meter Report (for kVar) at the group time interval (Clamp 1)
+        Bit 2: Auto Send Meter Report (for KVah) at the group time interval (Clamp 3)
+        Bit 1: Auto Send Meter Report (for KVah) at the group time interval (Clamp 2)
+        Bit 0: Auto Send Meter Report (for KVah) at the group time interval (Clamp 1)
+        Byte 2:
+        Bit 7: Reserved
+        Bit 6: Reserved
+        Bit 5: Auto Send Meter Report (for A) at the group time interval (Clamp 3)
+        Bit 4: Auto Send Meter Report (for A) at the group time interval (Clamp 2)
+        Bit 3: Auto Send Meter Report (for A) at the group time interval (Clamp 1)
+        Bit 2: Auto Send Meter Report (for V) at the group time interval (Clamp 3)
+        Bit 1: Auto Send Meter Report (for V) at the group time interval (Clamp 2)
+        Bit 0: Auto Send Meter Report (for V) at the group time interval (Clamp 1)
+        Byte 3:
+        Bit 7: Reserved
+        Bit 6: Reserved
+        Bit 5: Auto Send Meter Report (for kWh) at the group time interval (Clamp 3)
+        Bit 4: Auto Send Meter Report (for kWh) at the group time interval (Clamp 2)
+        Bit 3: Auto Send Meter Report (for kWh) at the group time interval (Clamp 1)
+        Bit 2: Auto Send Meter Report (for Watt) at the group time interval (Clamp 3)
+        Bit 1: Auto Send Meter Report (for Watt) at the group time interval (Clamp 2)
+        Bit 0: Auto Send Meter Report (for Watt) at the group time interval (Clamp 1)
+        Byte 4 (lsb):
+        Bit 7: Reserved
+        Bit 6: Reserved
+        Bit 5: Auto Send Meter Report (for kVar) at the group time interval (Whole HEM)
+        Bit 4: Auto Send Meter Report (for KVah) at the group time interval (Whole HEM)
+        Bit 3: Auto Send Meter Report (for A) at the group time interval (Whole HEM)
+        Bit 2: Auto Send Meter Report (for V) at the group time interval (Whole HEM)
+        Bit 1: Auto Send Meter Report (for Watt) at the group time interval (Whole HEM)
+        Bit 0: Auto Send Meter Report (for kWh) at the group time interval (Whole HEM)
+      </Help>
     </Value>
     <Value genre="config" index="102" label="Group 2 Reports" type="int" units="" value="1">
       <Help>
-				Which reports need to send in group2. Format is as follows:
-				Byte 1 (msb):
-				Bit 7: Reserved
-				Bit 6: Reserved
-				Bit 5: Auto Send Meter Report (for kVar) at the group time interval (Clamp 3)
-				Bit 4: Auto Send Meter Report (for kVar) at the group time interval (Clamp 2)
-				Bit 3: Auto Send Meter Report (for kVar) at the group time interval (Clamp 1)
-				Bit 2: Auto Send Meter Report (for KVah) at the group time interval (Clamp 3)
-				Bit 1: Auto Send Meter Report (for KVah) at the group time interval (Clamp 2)
-				Bit 0: Auto Send Meter Report (for KVah) at the group time interval (Clamp 1)
-				Byte 2:
-				Bit 7: Reserved
-				Bit 6: Reserved
-				Bit 5: Auto Send Meter Report (for A) at the group time interval (Clamp 3)
-				Bit 4: Auto Send Meter Report (for A) at the group time interval (Clamp 2)
-				Bit 3: Auto Send Meter Report (for A) at the group time interval (Clamp 1)
-				Bit 2: Auto Send Meter Report (for V) at the group time interval (Clamp 3)
-				Bit 1: Auto Send Meter Report (for V) at the group time interval (Clamp 2)
-				Bit 0: Auto Send Meter Report (for V) at the group time interval (Clamp 1)
-				Byte 3:
-				Bit 7: Reserved
-				Bit 6: Reserved
-				Bit 5: Auto Send Meter Report (for kWh) at the group time interval (Clamp 3)
-				Bit 4: Auto Send Meter Report (for kWh) at the group time interval (Clamp 2)
-				Bit 3: Auto Send Meter Report (for kWh) at the group time interval (Clamp 1)
-				Bit 2: Auto Send Meter Report (for Watt) at the group time interval (Clamp 3)
-				Bit 1: Auto Send Meter Report (for Watt) at the group time interval (Clamp 2)
-				Bit 0: Auto Send Meter Report (for Watt) at the group time interval (Clamp 1)
-				Byte 4 (lsb):
-				Bit 7: Reserved
-				Bit 6: Reserved
-				Bit 5: Auto Send Meter Report (for kVar) at the group time interval (Whole HEM)
-				Bit 4: Auto Send Meter Report (for KVah) at the group time interval (Whole HEM)
-				Bit 3: Auto Send Meter Report (for A) at the group time interval (Whole HEM)
-				Bit 2: Auto Send Meter Report (for V) at the group time interval (Whole HEM)
-				Bit 1: Auto Send Meter Report (for Watt) at the group time interval (Whole HEM)
-				Bit 0: Auto Send Meter Report (for kWh) at the group time interval (Whole HEM)
-			</Help>
+        Which reports need to send in group2. Format is as follows:
+        Byte 1 (msb):
+        Bit 7: Reserved
+        Bit 6: Reserved
+        Bit 5: Auto Send Meter Report (for kVar) at the group time interval (Clamp 3)
+        Bit 4: Auto Send Meter Report (for kVar) at the group time interval (Clamp 2)
+        Bit 3: Auto Send Meter Report (for kVar) at the group time interval (Clamp 1)
+        Bit 2: Auto Send Meter Report (for KVah) at the group time interval (Clamp 3)
+        Bit 1: Auto Send Meter Report (for KVah) at the group time interval (Clamp 2)
+        Bit 0: Auto Send Meter Report (for KVah) at the group time interval (Clamp 1)
+        Byte 2:
+        Bit 7: Reserved
+        Bit 6: Reserved
+        Bit 5: Auto Send Meter Report (for A) at the group time interval (Clamp 3)
+        Bit 4: Auto Send Meter Report (for A) at the group time interval (Clamp 2)
+        Bit 3: Auto Send Meter Report (for A) at the group time interval (Clamp 1)
+        Bit 2: Auto Send Meter Report (for V) at the group time interval (Clamp 3)
+        Bit 1: Auto Send Meter Report (for V) at the group time interval (Clamp 2)
+        Bit 0: Auto Send Meter Report (for V) at the group time interval (Clamp 1)
+        Byte 3:
+        Bit 7: Reserved
+        Bit 6: Reserved
+        Bit 5: Auto Send Meter Report (for kWh) at the group time interval (Clamp 3)
+        Bit 4: Auto Send Meter Report (for kWh) at the group time interval (Clamp 2)
+        Bit 3: Auto Send Meter Report (for kWh) at the group time interval (Clamp 1)
+        Bit 2: Auto Send Meter Report (for Watt) at the group time interval (Clamp 3)
+        Bit 1: Auto Send Meter Report (for Watt) at the group time interval (Clamp 2)
+        Bit 0: Auto Send Meter Report (for Watt) at the group time interval (Clamp 1)
+        Byte 4 (lsb):
+        Bit 7: Reserved
+        Bit 6: Reserved
+        Bit 5: Auto Send Meter Report (for kVar) at the group time interval (Whole HEM)
+        Bit 4: Auto Send Meter Report (for KVah) at the group time interval (Whole HEM)
+        Bit 3: Auto Send Meter Report (for A) at the group time interval (Whole HEM)
+        Bit 2: Auto Send Meter Report (for V) at the group time interval (Whole HEM)
+        Bit 1: Auto Send Meter Report (for Watt) at the group time interval (Whole HEM)
+        Bit 0: Auto Send Meter Report (for kWh) at the group time interval (Whole HEM)
+      </Help>
     </Value>
     <Value genre="config" index="103" label="Group 3 Reports" type="int" units="" value="0">
       <Help>
-				Which reports need to send in group3. Format is as follows:
-				Byte 1 (msb):
-				Bit 7: Reserved
-				Bit 6: Reserved
-				Bit 5: Auto Send Meter Report (for kVar) at the group time interval (Clamp 3)
-				Bit 4: Auto Send Meter Report (for kVar) at the group time interval (Clamp 2)
-				Bit 3: Auto Send Meter Report (for kVar) at the group time interval (Clamp 1)
-				Bit 2: Auto Send Meter Report (for KVah) at the group time interval (Clamp 3)
-				Bit 1: Auto Send Meter Report (for KVah) at the group time interval (Clamp 2)
-				Bit 0: Auto Send Meter Report (for KVah) at the group time interval (Clamp 1)
-				Byte 2:
-				Bit 7: Reserved
-				Bit 6: Reserved
-				Bit 5: Auto Send Meter Report (for A) at the group time interval (Clamp 3)
-				Bit 4: Auto Send Meter Report (for A) at the group time interval (Clamp 2)
-				Bit 3: Auto Send Meter Report (for A) at the group time interval (Clamp 1)
-				Bit 2: Auto Send Meter Report (for V) at the group time interval (Clamp 3)
-				Bit 1: Auto Send Meter Report (for V) at the group time interval (Clamp 2)
-				Bit 0: Auto Send Meter Report (for V) at the group time interval (Clamp 1)
-				Byte 3:
-				Bit 7: Reserved
-				Bit 6: Reserved
-				Bit 5: Auto Send Meter Report (for kWh) at the group time interval (Clamp 3)
-				Bit 4: Auto Send Meter Report (for kWh) at the group time interval (Clamp 2)
-				Bit 3: Auto Send Meter Report (for kWh) at the group time interval (Clamp 1)
-				Bit 2: Auto Send Meter Report (for Watt) at the group time interval (Clamp 3)
-				Bit 1: Auto Send Meter Report (for Watt) at the group time interval (Clamp 2)
-				Bit 0: Auto Send Meter Report (for Watt) at the group time interval (Clamp 1)
-				Byte 4 (lsb):
-				Bit 7: Reserved
-				Bit 6: Reserved
-				Bit 5: Auto Send Meter Report (for kVar) at the group time interval (Whole HEM)
-				Bit 4: Auto Send Meter Report (for KVah) at the group time interval (Whole HEM)
-				Bit 3: Auto Send Meter Report (for A) at the group time interval (Whole HEM)
-				Bit 2: Auto Send Meter Report (for V) at the group time interval (Whole HEM)
-				Bit 1: Auto Send Meter Report (for Watt) at the group time interval (Whole HEM)
-				Bit 0: Auto Send Meter Report (for kWh) at the group time interval (Whole HEM)
-			</Help>
+        Which reports need to send in group3. Format is as follows:
+        Byte 1 (msb):
+        Bit 7: Reserved
+        Bit 6: Reserved
+        Bit 5: Auto Send Meter Report (for kVar) at the group time interval (Clamp 3)
+        Bit 4: Auto Send Meter Report (for kVar) at the group time interval (Clamp 2)
+        Bit 3: Auto Send Meter Report (for kVar) at the group time interval (Clamp 1)
+        Bit 2: Auto Send Meter Report (for KVah) at the group time interval (Clamp 3)
+        Bit 1: Auto Send Meter Report (for KVah) at the group time interval (Clamp 2)
+        Bit 0: Auto Send Meter Report (for KVah) at the group time interval (Clamp 1)
+        Byte 2:
+        Bit 7: Reserved
+        Bit 6: Reserved
+        Bit 5: Auto Send Meter Report (for A) at the group time interval (Clamp 3)
+        Bit 4: Auto Send Meter Report (for A) at the group time interval (Clamp 2)
+        Bit 3: Auto Send Meter Report (for A) at the group time interval (Clamp 1)
+        Bit 2: Auto Send Meter Report (for V) at the group time interval (Clamp 3)
+        Bit 1: Auto Send Meter Report (for V) at the group time interval (Clamp 2)
+        Bit 0: Auto Send Meter Report (for V) at the group time interval (Clamp 1)
+        Byte 3:
+        Bit 7: Reserved
+        Bit 6: Reserved
+        Bit 5: Auto Send Meter Report (for kWh) at the group time interval (Clamp 3)
+        Bit 4: Auto Send Meter Report (for kWh) at the group time interval (Clamp 2)
+        Bit 3: Auto Send Meter Report (for kWh) at the group time interval (Clamp 1)
+        Bit 2: Auto Send Meter Report (for Watt) at the group time interval (Clamp 3)
+        Bit 1: Auto Send Meter Report (for Watt) at the group time interval (Clamp 2)
+        Bit 0: Auto Send Meter Report (for Watt) at the group time interval (Clamp 1)
+        Byte 4 (lsb):
+        Bit 7: Reserved
+        Bit 6: Reserved
+        Bit 5: Auto Send Meter Report (for kVar) at the group time interval (Whole HEM)
+        Bit 4: Auto Send Meter Report (for KVah) at the group time interval (Whole HEM)
+        Bit 3: Auto Send Meter Report (for A) at the group time interval (Whole HEM)
+        Bit 2: Auto Send Meter Report (for V) at the group time interval (Whole HEM)
+        Bit 1: Auto Send Meter Report (for Watt) at the group time interval (Whole HEM)
+        Bit 0: Auto Send Meter Report (for kWh) at the group time interval (Whole HEM)
+      </Help>
     </Value>
     <Value affects="111,112,113" genre="config" index="110" label="Reset #111-113" type="button" units="" value="0" write_only="true">
       <Help>Reset to default parameters number 111-113</Help>

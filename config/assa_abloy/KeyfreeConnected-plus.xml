@@ -5,51 +5,52 @@
     <MetaDataItem id="0001" name="ZWProductPage" type="0007">https://products.z-wavealliance.org/products/2576/</MetaDataItem>
     <MetaDataItem name="InclusionDescription">Put the Z-Wave controller into add mode
 
-Enter the Master code on the lock, followed by #
+      Enter the Master code on the lock, followed by #
 
-Press the 4 button, followed by #
+      Press the 4 button, followed by #
 
-Press the 1 button followed by #
+      Press the 1 button followed by #
 
-Refer to the operation manual of the Z-Wave controller to complete the add/inclusion process
+      Refer to the operation manual of the Z-Wave controller to complete the add/inclusion process
 
-For more information on this please visit:
-www.yale.co.uk/smart-living
-</MetaDataItem>
+      For more information on this please visit:
+      www.yale.co.uk/smart-living
+    </MetaDataItem>
     <MetaDataItem name="ExclusionDescription">Put the Z-Wave controller into remove mode
 
-Enter the Master code on the lock, followed by #
+      Enter the Master code on the lock, followed by #
 
-Press the 4 button, followed by #
+      Press the 4 button, followed by #
 
-Press the 2 button followed by #
+      Press the 2 button followed by #
 
-Refer to the operation manual of the Z-Wave controller to complete the remove/exclusion process
+      Refer to the operation manual of the Z-Wave controller to complete the remove/exclusion process
 
-For more information on this please visit:
-www.yale.co.uk/smart-living
-</MetaDataItem>
+      For more information on this please visit:
+      www.yale.co.uk/smart-living
+    </MetaDataItem>
     <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/2743/Instruction Manual V2b.pdf</MetaDataItem>
     <MetaDataItem name="Description">Keyfree Connected Ready smart lock
 
-Features
+      Features
 
-    Battery operated
-    Low battery indicator with emergency battery connection
-    User codes and settings remain if batteries are replaced
-    3 minute lock out if code is entered incorrectly 5 times
-    Tamper alarm
-    For use on UPVC &amp; Composite Doors
-    2 year guarantee
-</MetaDataItem>
+      Battery operated
+      Low battery indicator with emergency battery connection
+      User codes and settings remain if batteries are replaced
+      3 minute lock out if code is entered incorrectly 5 times
+      Tamper alarm
+      For use on UPVC &amp; Composite Doors
+      2 year guarantee
+    </MetaDataItem>
     <MetaDataItem name="Name">Keyfree Connected</MetaDataItem>
     <MetaDataItem name="ResetDescription">Enter the Master code on the lock, followed by #
 
-Press the 4 button, followed by #
+      Press the 4 button, followed by #
 
-Press the 0 button followed by #
+      Press the 0 button followed by #
 
-Please use this procedure only when the network controller is missing or inoperable</MetaDataItem>
+      Please use this procedure only when the network controller is missing or inoperable
+    </MetaDataItem>
     <MetaDataItem id="0001" name="FrequencyName" type="0007">CEPT (Europe)</MetaDataItem>
     <MetaDataItem id="0001" name="Identifier" type="0007">YD-01-CON</MetaDataItem>
     <ChangeLog>
@@ -61,13 +62,13 @@ Please use this procedure only when the network controller is missing or inopera
     <MetaDataItem id="0001" name="Identifier" type="0006">YKFCON</MetaDataItem>
   </MetaData>
   <!-- Yale Keyfree Connected (YKFCON)
-http://ozw.my-ho.st/Yale/Yale%20ZWave%20Developer%20Guide.pdf 
+http://ozw.my-ho.st/Yale/Yale%20ZWave%20Developer%20Guide.pdf
 https://products.z-wavealliance.org/products/2743/configs
 -->
-<!-- Yale Keyless Connected (YD-01-CON)
-https://products.z-wavealliance.org/products/2576/configs
--->
-	<!-- Configuration -->
+  <!-- Yale Keyless Connected (YD-01-CON)
+  https://products.z-wavealliance.org/products/2576/configs
+  -->
+  <!-- Configuration -->
   <CommandClass id="112">
     <Value genre="config" index="1" instance="1" label="Volume Level" size="1" type="list" value="3">
       <Help>Volume of the keypad tones and any voice prompts (default = 3, high)</Help>

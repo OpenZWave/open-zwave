@@ -1,20 +1,24 @@
-<!-- Enerwave ZW15RM Plus http://enerwaveautomation.com/products/smart-outlet-zwave-zw15rm/ --><Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+<!-- Enerwave ZW15RM Plus http://enerwaveautomation.com/products/smart-outlet-zwave-zw15rm/ -->
+<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/011A:0105:0111</MetaDataItem>
     <MetaDataItem name="ProductPic">images/enerwave/zw15rmplus.png</MetaDataItem>
     <MetaDataItem id="0105" name="ZWProductPage" type="0111">https://products.z-wavealliance.org/products/1776/</MetaDataItem>
     <MetaDataItem name="Description">The ZW15RM TR Duplex Receptacle is a perfect wireless manual and remote on/off control replacement of regular receptacles, controlling table and floor lamps, small appliances, etc. It provides two different type outlets. One outlet with Z-Wave mark has programmable functions such as scenes, association, schedule event, etc. It is fully interoperable with other Z-Wave certified device from other manufacturers and/or other applications. It can report wattage energy usage or kWh energy usage to a Z-Wave gateway.It has a Blue LED on the face cover indicates the status of the controlled outlet and/or act as a night light. The other outlet with Tamper-Resistant feature provides constant power, helps you and your families prevent electrical injuries.</MetaDataItem>
     <MetaDataItem name="InclusionDescription">When the controller is in add mode and the blue LED is blinking on the
-ZW15RM, press and hold the program button of ZW15RM for 3 second, and
-then the controller will verify the add.</MetaDataItem>
-    <MetaDataItem name="Name"> IN-Wall Smart Meter TR Duplex Receptacle</MetaDataItem>
+      ZW15RM, press and hold the program button of ZW15RM for 3 second, and
+      then the controller will verify the add.
+    </MetaDataItem>
+    <MetaDataItem name="Name">IN-Wall Smart Meter TR Duplex Receptacle</MetaDataItem>
     <MetaDataItem id="0105" name="FrequencyName" type="0111">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/1776/ZW15RM(20160509 ).pdf</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">When the controller is in remove mode, press and hold the program button of
-ZW15RM for 3 second, and then the controller will remove it from the current
-Z-Wave network, and the LED will blink on the receptacle,when power on.</MetaDataItem>
+      ZW15RM for 3 second, and then the controller will remove it from the current
+      Z-Wave network, and the LED will blink on the receptacle,when power on.
+    </MetaDataItem>
     <MetaDataItem name="ResetDescription">Once program button is pressed and hold for 10 second, the device will send a device reset locally notification to controller. Then clear all of information for
-the network, and restore factory defaults, and reset the module. Use this  procedure only in the event that the network primary controller is missing or otherwise inoperable.</MetaDataItem>
+      the network, and restore factory defaults, and reset the module. Use this procedure only in the event that the network primary controller is missing or otherwise inoperable.
+    </MetaDataItem>
     <MetaDataItem id="0105" name="Identifier" type="0111">ZW15RM</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="24 May 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1776/xml</Entry>

@@ -4,48 +4,51 @@
     <MetaDataItem name="ProductPic">images/shenzen_neo/nas-ds01z.png</MetaDataItem>
     <MetaDataItem id="0082" name="ZWProductPage" type="0003">https://products.z-wavealliance.org/products/1668/</MetaDataItem>
     <MetaDataItem id="0082" name="Identifier" type="0003">NAS-DS01Z</MetaDataItem>
-    <MetaDataItem name="Name">Door Sensor </MetaDataItem>
+    <MetaDataItem name="Name">Door Sensor</MetaDataItem>
     <MetaDataItem name="WakeupDescription">Manual Wakeup the Sensor
 
-You can press the button once to wake up the device and send wakeup notification to controller. If press successfully, the LED will blink one time.</MetaDataItem>
+      You can press the button once to wake up the device and send wakeup notification to controller. If press successfully, the LED will blink one time.
+    </MetaDataItem>
     <MetaDataItem id="0082" name="FrequencyName" type="0003">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem name="ResetDescription">Note: to use the reset procedure only when the primary controller is missing or inoperable.
 
-Restore the Sensor (Door/Window detector) to Factory Default Settings
+      Restore the Sensor (Door/Window detector) to Factory Default Settings
 
-Reset procedure will delete all information on the Z-Wave network and Z-Wave controller or Z-Wave Gateway, and restore the sensor to factory default settings.
-1.Remove the device cover. 
+      Reset procedure will delete all information on the Z-Wave network and Z-Wave controller or Z-Wave Gateway, and restore the sensor to factory default settings.
+      1.Remove the device cover.
 
-2.Make sure the sensor is powered. 
+      2.Make sure the sensor is powered.
 
-3.Press and hold the button for 10 seconds, 
+      3.Press and hold the button for 10 seconds,
 
-4.Release the button. 
+      4.Release the button.
 
-</MetaDataItem>
+    </MetaDataItem>
     <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/1782/Door-Window User Guide.doc</MetaDataItem>
     <MetaDataItem name="Description">This product can be included and operated in any Z-Wave network with other Z-Wave certified devices from other manufacturers and/or other applications. All non-battery operated nodes within the network will act as repeaters regardless of vendor to increase reliability of the network.
 
-In the front casing, there is button that is used to carry out include, exclude or reset factory default settings on PCB Board.
+      In the front casing, there is button that is used to carry out include, exclude or reset factory default settings on PCB Board.
 
-When power is first supplied, the LED will flash on and off alternately at one second intervals within 5 seconds if the detector has not been added a Z-Wave network. Please get familiar with the terms below before starting the operations.</MetaDataItem>
+      When power is first supplied, the LED will flash on and off alternately at one second intervals within 5 seconds if the detector has not been added a Z-Wave network. Please get familiar with the terms below before starting the operations.
+    </MetaDataItem>
     <MetaDataItem name="InclusionDescription">Add the Sensor (Door/Window detector) to Z-Wave Network
 
-1.Remove the sensor cover. 
+      1.Remove the sensor cover.
 
-2.Make sure the sensor is powered. 
+      2.Make sure the sensor is powered.
 
-3.Set Z-Wave controller or Z-Wave gateway into inclusion mode (Refer to the controller or gateway operating manual) 
-4.Press the button three times within 1.5 second, the device will enter inclusion mode. And the LED will flash on and off alternately five times. 
-</MetaDataItem>
+      3.Set Z-Wave controller or Z-Wave gateway into inclusion mode (Refer to the controller or gateway operating manual)
+      4.Press the button three times within 1.5 second, the device will enter inclusion mode. And the LED will flash on and off alternately five times.
+    </MetaDataItem>
     <MetaDataItem name="ExclusionDescription">Delete the Sensor (Door/Window detector) from Z-Wave Network
 
-1.Remove the device cover. 
+      1.Remove the device cover.
 
-2.Make sure the sensor is powered. 
+      2.Make sure the sensor is powered.
 
-3.Set Z-Wave controller or Z-Wave gateway into exclusion mode (Refer to the controller or gateway operating manual) 
-4.Press the button three times within 1.5 second, the device will enter exclusion mode. </MetaDataItem>
+      3.Set Z-Wave controller or Z-Wave gateway into exclusion mode (Refer to the controller or gateway operating manual)
+      4.Press the button three times within 1.5 second, the device will enter exclusion mode.
+    </MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="24 May 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1668/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="24 May 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1782/xml</Entry>

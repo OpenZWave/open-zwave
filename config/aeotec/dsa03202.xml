@@ -1,12 +1,13 @@
-<Product Revision="5" 
-  xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="5"
+         xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0086:0003:0001</MetaDataItem>
     <MetaDataItem name="ProductPic">images/aeotec/dsa03202.png</MetaDataItem>
     <MetaDataItem id="0003" name="ZWProductPage" type="0001">https://products.z-wavealliance.org/products/143/</MetaDataItem>
     <MetaDataItem name="Description">Minimote Z-wave Remote Controller.The Aeon Labs Minimote is low-cost remote controller focused on end-user ease of use.
 
-Although simplicity and user experience is the primary focus, the full range of Z-Wave remote controller capabilities are left intact for the advanced user. Network installation is vastly improved via the interface. The Minimote is upgradeable by the end-user such that the latest Z-Wave protocols are always available. An internal lithium battery allows for months of usage and is recharged via USB.</MetaDataItem>
+      Although simplicity and user experience is the primary focus, the full range of Z-Wave remote controller capabilities are left intact for the advanced user. Network installation is vastly improved via the interface. The Minimote is upgradeable by the end-user such that the latest Z-Wave protocols are always available. An internal lithium battery allows for months of usage and is recharged via USB.
+    </MetaDataItem>
     <MetaDataItem id="0003" name="FrequencyName" type="0001">CEPT (Europe) / U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem name="Name">Aeon Labs Minimote US</MetaDataItem>
     <MetaDataItem name="ProductPage">http://www.aeon-labs.com/site/products/view/3/</MetaDataItem>
@@ -18,9 +19,9 @@ Although simplicity and user experience is the primary focus, the full range of 
       <Entry author="Peter Gebruers - peter.gebruers@gmail.com" date="22 Aug 2019" revision="5">Added GetSupported false and add 3rd option to parameter 250 to work around this limitation</Entry>
     </ChangeLog>
   </MetaData>
-  <!-- 
-Aeotec DSA03202 Minimote 
-https://aeotec.freshdesk.com/helpdesk/attachments/6009584532 
+  <!--
+Aeotec DSA03202 Minimote
+https://aeotec.freshdesk.com/helpdesk/attachments/6009584532
 -->
   <!-- Minimote requires at least firmware 1.17, 1.19 is highly recommend -->
   <!-- Minimote will normally not respond to Get commands, but Set is possible when woken up -->
@@ -69,10 +70,11 @@ https://aeotec.freshdesk.com/helpdesk/attachments/6009584532
         Option As-Last-Set is not a real option, it exists because the Minimote does not report back its actual setting.
         When long-pressing a button, if RED + BLUE LED turn on/off at the same time, device is in scene mode.
         If the BLUE LED starts blinking, it is in group mode.
-        NOTE: Minimote firmware 1.17 or higher is required, firmware 1.19 is highly recommended.</Help>
+        NOTE: Minimote firmware 1.17 or higher is required, firmware 1.19 is highly recommended.
+      </Help>
       <Item label="Group" value="0"/>
       <Item label="Scene" value="1"/>
-      <Item label="As-Last-Set" value="2" />
+      <Item label="As-Last-Set" value="2"/>
     </Value>
   </CommandClass>
   <!-- COMMAND_CLASS_SWITCH_MULTILEVEL. This class isn't supported by the Minimote -->

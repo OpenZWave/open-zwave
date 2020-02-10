@@ -4,10 +4,11 @@
     <MetaDataItem name="ProductPic">images/vitrum/vitrumII-Blind.png</MetaDataItem>
     <MetaDataItem id="5A00" name="ZWProductPage" type="1300">https://products.z-wavealliance.org/products/7/</MetaDataItem>
     <MetaDataItem name="Description">Switch with two touch keys for control of curtains and roller blinds
-Two-button roll-down shutters and curtains control
-Touch control with capacitive technology and concave surface for tactile identification of the switch itself
-Acoustic feedback signal
-Crown backlit by low-consumption LEDs</MetaDataItem>
+      Two-button roll-down shutters and curtains control
+      Touch control with capacitive technology and concave surface for tactile identification of the switch itself
+      Acoustic feedback signal
+      Crown backlit by low-consumption LEDs
+    </MetaDataItem>
     <MetaDataItem name="Name">VITRUM II Control of Roller Blinds - EU BOX</MetaDataItem>
     <MetaDataItem name="ProductSupport">http://www.vitrum.com/eng/content/vitrum-ii-roll-down-shutter-and-curtain-control</MetaDataItem>
     <MetaDataItem id="5A00" name="FrequencyName" type="1300">CEPT (Europe)</MetaDataItem>

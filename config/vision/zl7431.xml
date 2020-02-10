@@ -12,7 +12,7 @@
     </ChangeLog>
   </MetaData>
   <!-- Vision ZL7431 In-Wall Switch, Single Relay -->
-    <!-- Configuration Parameters -->
+  <!-- Configuration Parameters -->
   <CommandClass id="112">
     <Value genre="config" index="1" label="Behavior" max="2" min="1" size="1" type="list" value="2">
       <Help></Help>

@@ -10,10 +10,10 @@ Aeotec ZW129 WallMote Duo, base on Engineering Spec 9/27/2016
     <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/2234/Aeon Labs WallMote manual.pdf</MetaDataItem>
     <MetaDataItem name="Name">WallMote</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">Turn the primary controller of Z-Wave network into exclusion mode, short press the product’s Action button that you can find on the product's housing.</MetaDataItem>
-    <MetaDataItem name="Description">Aeotec WallMote is an intelligent Z-Wave remote controller that mounted on a wall. It has 2 touch buttons that you can easily control the Z-Wave devices in your home network via touching, long pressing or sliding the button areas. 
-Its surface has a RGB LED to indicate the button actions also accompanied by touch beep and vibration. 
-The WallMote Quad is also a security Z-Wave device and supports Over The Air (OTA) feature for the products firmware upgrade.
-</MetaDataItem>
+    <MetaDataItem name="Description">Aeotec WallMote is an intelligent Z-Wave remote controller that mounted on a wall. It has 2 touch buttons that you can easily control the Z-Wave devices in your home network via touching, long pressing or sliding the button areas.
+      Its surface has a RGB LED to indicate the button actions also accompanied by touch beep and vibration.
+      The WallMote Quad is also a security Z-Wave device and supports Over The Air (OTA) feature for the products firmware upgrade.
+    </MetaDataItem>
     <MetaDataItem id="0081" name="Identifier" type="0102">ZW129-A</MetaDataItem>
     <MetaDataItem id="0081" name="FrequencyName" type="0102">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem name="InclusionDescription">Turn the primary controller of Z-Wave network into inclusion mode, short press the product’s Action button that you can find on the product's housing.</MetaDataItem>
@@ -51,12 +51,12 @@ The WallMote Quad is also a security Z-Wave device and supports Over The Air (OT
   <!-- Configuration Parameters -->
   <CommandClass id="112">
     <Value genre="config" index="1" instance="1" label="Touch sound" max="1" min="0" size="1" type="list" value="1">
-      <Help>This will enable or disable the sound effects when you press or touch  the sensing area</Help>
+      <Help>This will enable or disable the sound effects when you press or touch the sensing area</Help>
       <Item label="Disable" value="0"/>
       <Item label="Enable" value="1"/>
     </Value>
     <Value genre="config" index="2" instance="1" label="Touch vibration" max="1" min="0" size="1" type="list" value="1">
-      <Help>This will enable or disable the vibration effects when you press or  touch the sensing area</Help>
+      <Help>This will enable or disable the vibration effects when you press or touch the sensing area</Help>
       <Item label="Disable" value="0"/>
       <Item label="Enable" value="1"/>
     </Value>
@@ -73,26 +73,27 @@ The WallMote Quad is also a security Z-Wave device and supports Over The Air (OT
     </Value>
     <Value genre="config" index="5" label="Color when button is pressed" type="int" units="" value="65280">
       <Help>
-                To configure which color will be displayed when the button is pressed.
-                Value 1: (msb) Red.
-                Value 2: Green.
-                Value 3: Blue.
-                Value 4: Reserved
-            </Help>
+        To configure which color will be displayed when the button is pressed.
+        Value 1: (msb) Red.
+        Value 2: Green.
+        Value 3: Blue.
+        Value 4: Reserved
+      </Help>
     </Value>
     <Value genre="config" index="33" label="Test the LED, buzzer and vibrator" read_only="true" type="int" units="" value="0">
       <Help>
-                Get the LED Strip color value
-                Value 1: (msb) Red.
-                Value 2: Green.
-                Value 3: Blue.
-                Value 4: buzzer and vibrator. (1=ON, 0=OFF)
-            </Help>
+        Get the LED Strip color value
+        Value 1: (msb) Red.
+        Value 2: Green.
+        Value 3: Blue.
+        Value 4: buzzer and vibrator. (1=ON, 0=OFF)
+      </Help>
     </Value>
     <Value genre="config" index="39" label="Set the low battery value" max="50" min="10" type="byte" units="%" value="20">
       <Help>
-                Set the low battery value.
-                Range: 10% - 50%.</Help>
+        Set the low battery value.
+        Range: 10% - 50%.
+      </Help>
     </Value>
     <Value genre="config" index="255" label="Reset To Factory Defaults" size="4" type="list" value="1" write_only="true">
       <Help>Reset to factory defaults</Help>
@@ -112,12 +113,11 @@ The WallMote Quad is also a security Z-Wave device and supports Over The Air (OT
     </Associations>
   </CommandClass>
   <CommandClass id="96">
-    	<Compatibility>
-  		<RemoveCC index="91">true</RemoveCC>
-  	</Compatibility>
+    <Compatibility>
+      <RemoveCC index="91">true</RemoveCC>
+    </Compatibility>
   </CommandClass>
 
 
-
-    <!--<CommandClass id="142" ForceInstances="true"/>-->
+  <!--<CommandClass id="142" ForceInstances="true"/>-->
 </Product>

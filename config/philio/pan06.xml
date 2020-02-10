@@ -7,19 +7,20 @@
     <MetaDataItem name="Name">In-Wall Switch Module</MetaDataItem>
     <MetaDataItem id="0004" name="FrequencyName" type="0001">CEPT (Europe) / U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem name="Description">Features:
-- World first two relay Z-wave 400 series module in a very slim case.
-- Input voltage AC100~240V / DC24~60V.
-- Adopt Z-Wave protocol to secure the success of wireless two way communication.
-- Slim design, easy install.
-- Adopt newest Z-wave 400series chip, support multichannel operation and higher data rate (9.6/40/100kbps).
-- Resistive load 1500W X 2.
-- Two dry contact relay.
-- Z-Wave V6.02
-- Very low electricity consumption, meet Europe year 2012 energy-related products requirement directive 2009/125/EC no. 1275/2008.
-- LVD:EN 60669-2-1:2004+A1:2009+A12:2010,
-- EN 60669-2-2 :2006
-- EN 60669-1:1999+A1:2002+A2:2008+IS1:2009
-- R&amp;TTE: EN 301489, EN 300200,</MetaDataItem>
+      - World first two relay Z-wave 400 series module in a very slim case.
+      - Input voltage AC100~240V / DC24~60V.
+      - Adopt Z-Wave protocol to secure the success of wireless two way communication.
+      - Slim design, easy install.
+      - Adopt newest Z-wave 400series chip, support multichannel operation and higher data rate (9.6/40/100kbps).
+      - Resistive load 1500W X 2.
+      - Two dry contact relay.
+      - Z-Wave V6.02
+      - Very low electricity consumption, meet Europe year 2012 energy-related products requirement directive 2009/125/EC no. 1275/2008.
+      - LVD:EN 60669-2-1:2004+A1:2009+A12:2010,
+      - EN 60669-2-2 :2006
+      - EN 60669-1:1999+A1:2002+A2:2008+IS1:2009
+      - R&amp;TTE: EN 301489, EN 300200,
+    </MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/822/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/854/xml</Entry>
@@ -57,7 +58,7 @@
       <Item label="Switch On" value="3"/>
     </Value>
     <Value genre="config" index="6" instance="1" label="Existence of endpoint 3 Action" size="1" type="list" value="1">
-      <Help>The endpoint3 of Multi-Channel Command Class is related to relay1 and relay2. It may be redundant for the need to control relay1 or relay2 individually. When the Existence of Endpoint3 is set as 0, the endpoint3 of Multi-Channel Command Class will be disabled.  Default setting: Endpoint3 disable</Help>
+      <Help>The endpoint3 of Multi-Channel Command Class is related to relay1 and relay2. It may be redundant for the need to control relay1 or relay2 individually. When the Existence of Endpoint3 is set as 0, the endpoint3 of Multi-Channel Command Class will be disabled. Default setting: Endpoint3 disable</Help>
       <Item label="Endpoint3 disable" value="0"/>
       <Item label="Endpoint3 exists" value="1"/>
     </Value>

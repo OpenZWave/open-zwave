@@ -4,32 +4,32 @@
     <MetaDataItem name="ProductPic">images/fibaro/fgsd002.png</MetaDataItem>
     <MetaDataItem id="1002" name="ZWProductPage" type="0C02">https://products.z-wavealliance.org/products/1273/</MetaDataItem>
     <MetaDataItem name="InclusionDescription">1) Install the battery. Visual indicator will signal the Z-Wave network adding status (green - device added, red - device not added).
-2) Make sure the device is located within direct range of the Z-Wave controller.
-3) Set the main controller in add mode (see main controller’s operating manual).
-4) Quickly, triple click the B-button, located on FIBARO Smoke Sensor enclosure.
-5) FIBARO Smoke Sensor will be detected and added to the Z-Wave network.
-</MetaDataItem>
+      2) Make sure the device is located within direct range of the Z-Wave controller.
+      3) Set the main controller in add mode (see main controller’s operating manual).
+      4) Quickly, triple click the B-button, located on FIBARO Smoke Sensor enclosure.
+      5) FIBARO Smoke Sensor will be detected and added to the Z-Wave network.
+    </MetaDataItem>
     <MetaDataItem name="ResetDescription">Please use this procedure only in the event that the system primary controller is missing or otherwise inoperable.
-FIBARO Smoke Sensor reset procedure:
-1) Make sure the device is powered.
-2) Press and hold the B-button for 3 seconds. Visual indicator will glow white.
-3) You will hear a short signal.
-4) Release the B-button.
-</MetaDataItem>
+      FIBARO Smoke Sensor reset procedure:
+      1) Make sure the device is powered.
+      2) Press and hold the B-button for 3 seconds. Visual indicator will glow white.
+      3) You will hear a short signal.
+      4) Release the B-button.
+    </MetaDataItem>
     <MetaDataItem id="1002" name="Identifier" type="0C02">FGSD-002</MetaDataItem>
     <MetaDataItem name="Description">The FIBARO Smoke Sensor is a universal, ultra-light, perfectly designed, optical Z-Wave smoke detector. Fire alarm is signalled by sound, visual indicator blinking and alarm reports sent to the other devices within Z-wave network. The optical sensor detects smoke at an early stage of fire, often before flames appear and temperature starts to rise significantly. Moreover, the device has a built-in temperature sensor, which is adjustable to allow detection of fire by exceeding given temperature threshold. The FIBARO Smoke Sensor is a battery powered device designed to be placed on the wall or ceiling. Visual indicator signals fire, operating mode and it is used to check if the device is within the Z-wave network using a built-in Z-Wave range tester. The Smoke Sensor is designed to operate in confined spaces, under normal conditions (lacking of smoke, dust or condensed water vapor).
 
-Product video: 
-https://www.youtube.com/watch?v=50QGfkdUtns
-</MetaDataItem>
+      Product video:
+      https://www.youtube.com/watch?v=50QGfkdUtns
+    </MetaDataItem>
     <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/2837/FGSD-002-EN-A-v1.1.pdf</MetaDataItem>
-    <MetaDataItem name="WakeupDescription">The Smoke Sensor will wake up at defined time interval and will ALWAYS try to communicate with the main controller.  There is a possibility to wake the device up manually by triple-clicking the B-button.</MetaDataItem>
+    <MetaDataItem name="WakeupDescription">The Smoke Sensor will wake up at defined time interval and will ALWAYS try to communicate with the main controller. There is a possibility to wake the device up manually by triple-clicking the B-button.</MetaDataItem>
     <MetaDataItem name="Name">FIBARO Smoke Sensor</MetaDataItem>
     <MetaDataItem id="1002" name="FrequencyName" type="0C02">CEPT (Europe)</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">1) Make sure there is a battery installed.
-2) Set the main controller in remove mode (see main controller’s operating manual).
-3) Quickly, triple click the B-button, located on FIBARO Smoke Sensor enclosure.
-</MetaDataItem>
+      2) Set the main controller in remove mode (see main controller’s operating manual).
+      3) Quickly, triple click the B-button, located on FIBARO Smoke Sensor enclosure.
+    </MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="08 May 2019" revision="5">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1273/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="6">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2837/xml</Entry>
@@ -96,14 +96,15 @@ https://www.youtube.com/watch?v=50QGfkdUtns
     </Value>
     <Value genre="config" index="14" instance="1" label="Associations in Z-Wave network security mode" max="15" min="0" size="1" type="byte" value="0">
       <Help>This parameter defines how commands are sent in specified association groups: as secure or non-secure. Parameter is active only in Z-Wave network security mode. It doesn't apply to 1st Lifeline group.
-				Available settings: 0 - 15
-				0 - all groups sent as non-secure
-				1 - 2nd group sent as secure
-				2 - 3rd group sent as secure
-				4 - 4th group sent as secure
-				8 - 5th group sent as secure
-				Parameter values may be combined, e.g. 1+2=3 means that 2nd and 3rd group are sent as secure.
-				Default setting: 15 (all groups sent as secure)</Help>
+        Available settings: 0 - 15
+        0 - all groups sent as non-secure
+        1 - 2nd group sent as secure
+        2 - 3rd group sent as secure
+        4 - 4th group sent as secure
+        8 - 5th group sent as secure
+        Parameter values may be combined, e.g. 1+2=3 means that 2nd and 3rd group are sent as secure.
+        Default setting: 15 (all groups sent as secure)
+      </Help>
     </Value>
     <Value genre="config" index="20" instance="1" label="Temperature report interval" max="8640" min="0" type="short" value="1">
       <Help>Time interval between consecutive temperature reports. Report is sent when new temperature value is different from the one previously reported - according to the set hysteresis (parameter 21). Available settings: 0,1-8640 (multiply by 10 seconds) [10s-24h]. Default setting: 1 (10s)</Help>

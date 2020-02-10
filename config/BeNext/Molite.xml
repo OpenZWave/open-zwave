@@ -3,17 +3,17 @@
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/008A:0100:0003</MetaDataItem>
     <MetaDataItem name="ProductPic">images/BeNext/Molite.png</MetaDataItem>
     <MetaDataItem id="0100" name="ZWProductPage" type="0003">https://products.z-wavealliance.org/products/76/</MetaDataItem>
-    <MetaDataItem name="ProductPage">http://www.benext.eu/en/products/molite-sensor/ </MetaDataItem>
-    <MetaDataItem name="Description">With the Molite Sensor it is possible to measure movement, light and temperature. Utilize the MoLite Sensor for a variety of BeNext system features such as 
+    <MetaDataItem name="ProductPage">http://www.benext.eu/en/products/molite-sensor/</MetaDataItem>
+    <MetaDataItem name="Description">With the Molite Sensor it is possible to measure movement, light and temperature. Utilize the MoLite Sensor for a variety of BeNext system features such as
 
-- Security 
-- Personal Comfort 
-- Lighting
-- General Automation
+      - Security
+      - Personal Comfort
+      - Lighting
+      - General Automation
 
-Visit our website for a full description
-http://www.benext.eu/en/products/molite-sensor/ 
-</MetaDataItem>
+      Visit our website for a full description
+      http://www.benext.eu/en/products/molite-sensor/
+    </MetaDataItem>
     <MetaDataItem name="ProductSupport">info@benext.eu</MetaDataItem>
     <MetaDataItem name="Name">MoLiTe Sensor</MetaDataItem>
     <MetaDataItem id="0100" name="FrequencyName" type="0003">CEPT (Europe)</MetaDataItem>

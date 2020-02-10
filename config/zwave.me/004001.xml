@@ -4,20 +4,22 @@
     <MetaDataItem name="ProductPic">images/zwave.me/004001.png</MetaDataItem>
     <MetaDataItem id="0201" name="ZWProductPage" type="0100">https://products.z-wavealliance.org/products/1405/</MetaDataItem>
     <MetaDataItem name="Description">This products consists of a standard photo electric Smoke detector with a pluggable Z-Wave wireless interface module.
-The Smoke detector will also work as a stand alone product and is certified by VDS according to EN 14604. The
-smoke chamber of the detector has a stainless steel reel with antistatic plastic chamber.
-A button allows on-device test of smoke chamber, electronics and battery. The device also offers a built-in self test and
-an electronic smoke chamber test to avoid the use of test aerosol. A low battery warning will last for 30 days but full
-function of the detector is guaranteed during this time.
-The Z-Wave module allows to report the smoke and low battery alarm wirelessly to a central controller. The detector can
-also be used as a wireless siren for alarm system or other applications. The wireless module is operated by the 9V battery
-of the smoke detector. An optional external power supply allows external powering the unit.
-According to VdS 3515 (Smoke Detectors with Wireless Communication) this device will send alarm signals to all other
-smoke detectors registered in association group 2 to turn on their siren. This function ensures that all smoke detectors
-will issue noise if one of them detected a smoke.</MetaDataItem>
+      The Smoke detector will also work as a stand alone product and is certified by VDS according to EN 14604. The
+      smoke chamber of the detector has a stainless steel reel with antistatic plastic chamber.
+      A button allows on-device test of smoke chamber, electronics and battery. The device also offers a built-in self test and
+      an electronic smoke chamber test to avoid the use of test aerosol. A low battery warning will last for 30 days but full
+      function of the detector is guaranteed during this time.
+      The Z-Wave module allows to report the smoke and low battery alarm wirelessly to a central controller. The detector can
+      also be used as a wireless siren for alarm system or other applications. The wireless module is operated by the 9V battery
+      of the smoke detector. An optional external power supply allows external powering the unit.
+      According to VdS 3515 (Smoke Detectors with Wireless Communication) this device will send alarm signals to all other
+      smoke detectors registered in association group 2 to turn on their siren. This function ensures that all smoke detectors
+      will issue noise if one of them detected a smoke.
+    </MetaDataItem>
     <MetaDataItem id="0201" name="Identifier" type="0100">004001</MetaDataItem>
     <MetaDataItem name="ResetDescription">To reset the device keep the button pushed for 10 seconds. After 5 seconds the led starts flashing and after another 5
-seconds there is a short beep signaling the successful reset back to factory defaults. Use this procedure only when the network primary controller is missing or otherwise inoperable.</MetaDataItem>
+      seconds there is a short beep signaling the successful reset back to factory defaults. Use this procedure only when the network primary controller is missing or otherwise inoperable.
+    </MetaDataItem>
     <MetaDataItem name="ExclusionDescription">Hit the little button on the wireless module for 1 second</MetaDataItem>
     <MetaDataItem name="Name">Smoke Detector and Siren</MetaDataItem>
     <MetaDataItem name="InclusionDescription">Hit the little button on the wireless module for 1 second</MetaDataItem>

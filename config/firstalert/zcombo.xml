@@ -12,7 +12,7 @@
     </ChangeLog>
   </MetaData>
   <!-- First Alert ZCombo Smoke and Carbon Monoxide Detector -->
- 
+
   <!-- Configuration -->
   <CommandClass id="112">
     <Value genre="config" index="1" instance="1" label="Send double alarm messages" size="1" type="list" value="0">

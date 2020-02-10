@@ -1,7 +1,8 @@
 <!--
 Simon S100 Socket iO
 https://products.z-wavealliance.org/products/1869
---><Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+-->
+<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0267:0000:0001</MetaDataItem>
     <MetaDataItem name="ProductPic">images/simon/10002034-13X.png</MetaDataItem>
@@ -11,23 +12,26 @@ https://products.z-wavealliance.org/products/1869
     <MetaDataItem name="Name">S100 Switch IO (China)</MetaDataItem>
     <MetaDataItem name="Description">Simon Electronic Switch IO integrated by Electronic Switch that provides power Switch and Rocker that provides Z-Wave communication attributes.</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">When the pushbutton is released after a press of (2sec&lt;T&lt;20sec) the device will send a NIF to exclude from Z-Wave network or perform an association with other Z-Wave device.
-Main LED will Blink with 0,3 sec period to inform that NIF can be send after release of pushbutton.
+      Main LED will Blink with 0,3 sec period to inform that NIF can be send after release of pushbutton.
 
-This process does not perform a default reset of configurations.
+      This process does not perform a default reset of configurations.
 
-Main LED will Blink with 0,3 sec period to inform that NIF can be send after release of pushbutton. </MetaDataItem>
+      Main LED will Blink with 0,3 sec period to inform that NIF can be send after release of pushbutton.
+    </MetaDataItem>
     <MetaDataItem id="0000" name="FrequencyName" type="0001">China</MetaDataItem>
     <MetaDataItem name="ResetDescription">When the pushbutton is released after a press of (20sec&lt;T) the device will perform a factory default values operation, excluding it from network and resetíng the configuration parameters.
 
-Main LED will perform 1 Blink with 5 sec.
+      Main LED will perform 1 Blink with 5 sec.
 
-Please use this procedure only when the network primary controller is missing or otherwise inoperable.</MetaDataItem>
+      Please use this procedure only when the network primary controller is missing or otherwise inoperable.
+    </MetaDataItem>
     <MetaDataItem name="InclusionDescription">When the pushbutton is released after a press of (2sec&lt;T&lt;20sec) the device will send a NIF to include from Z-Wave network or perform an association with other Z-Wave device.
-Main LED will Blink with 0,3 sec period to inform that NIF can be send after release of pushbutton.
+      Main LED will Blink with 0,3 sec period to inform that NIF can be send after release of pushbutton.
 
-This process does not perform a default reset of configurations.
+      This process does not perform a default reset of configurations.
 
-Main LED will Blink with 0,3 sec period to inform that NIF can be send after release of pushbutton. </MetaDataItem>
+      Main LED will Blink with 0,3 sec period to inform that NIF can be send after release of pushbutton.
+    </MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 Jun 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/3279/xml</Entry>
     </ChangeLog>
@@ -42,26 +46,26 @@ Main LED will Blink with 0,3 sec period to inform that NIF can be send after rel
   <CommandClass id="112">
     <Value genre="config" index="9" instance="1" label="Association LED" max="1" min="255" size="1" type="list" value="1">
       <Help>
-				Used during Association process by Simon Shortcut Switch IO to turn ON the main LED of all devices already associated to this shortcut.
-			</Help>
+        Used during Association process by Simon Shortcut Switch IO to turn ON the main LED of all devices already associated to this shortcut.
+      </Help>
       <Item label="Turns the main LED OFF" value="0"/>
       <Item label="Turns the main LED ON" value="255"/>
     </Value>
     <Value genre="config" index="10" instance="1" label="Delay ON" max="254" min="0" type="byte" value="0">
       <Help>
-				This parameter allows to choose delay from activation request until load activation.
-				Value 0 - Instantly (default).
-				Values from 1 to 127 - 1 second to 127 seconds in 1 second resolution.
-				Values from 128 to 254 - 1 minute to 127 minutes in 1 minute resolution.
-			</Help>
+        This parameter allows to choose delay from activation request until load activation.
+        Value 0 - Instantly (default).
+        Values from 1 to 127 - 1 second to 127 seconds in 1 second resolution.
+        Values from 128 to 254 - 1 minute to 127 minutes in 1 minute resolution.
+      </Help>
     </Value>
     <Value genre="config" index="11" instance="1" label="Activation Time" max="254" min="0" type="byte" value="0">
       <Help>
-				This parameter allows to chose the time that load performs activated after complete an activation process.
-				Value 0 - Instantly (default).
-				Values from 1 to 127 - 1 second to 127 seconds in 1 second resolution.
-				Values from 128 to 254 - 1 minute to 127 minutes in 1 minute resolution.
-			</Help>
+        This parameter allows to chose the time that load performs activated after complete an activation process.
+        Value 0 - Instantly (default).
+        Values from 1 to 127 - 1 second to 127 seconds in 1 second resolution.
+        Values from 128 to 254 - 1 minute to 127 minutes in 1 minute resolution.
+      </Help>
     </Value>
     <Value genre="config" index="12" instance="1" label="Behavior of LED in Repose" max="255" min="0" size="1" type="list" value="0">
       <Help>This parameter allows to choose operating for Main LED as identification at 20%..</Help>
@@ -79,11 +83,11 @@ Main LED will Blink with 0,3 sec period to inform that NIF can be send after rel
     </Value>
     <Value genre="config" index="11" instance="1" label="Activation Time" max="254" min="0" type="byte" value="0">
       <Help>
-				This parameter allows to chose the time that load performs activated after complete an activation process.
-				Value 0 - Instantly (default).
-				Values from 1 to 127 - 1 second to 127 seconds in 1 second resolution.
-				Values from 128 to 254 - 1 minute to 127 minutes in 1 minute resolution.
-			</Help>
+        This parameter allows to chose the time that load performs activated after complete an activation process.
+        Value 0 - Instantly (default).
+        Values from 1 to 127 - 1 second to 127 seconds in 1 second resolution.
+        Values from 128 to 254 - 1 minute to 127 minutes in 1 minute resolution.
+      </Help>
     </Value>
   </CommandClass>
   <!-- -->

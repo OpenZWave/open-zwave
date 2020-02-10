@@ -13,11 +13,11 @@
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="5">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1017/xml</Entry>
     </ChangeLog>
   </MetaData>
-  <!-- 
-Aeotec DSD37-ZWUS Repeater 
+  <!--
+Aeotec DSD37-ZWUS Repeater
 https://aeotec.freshdesk.com/helpdesk/attachments/6009584515
 -->
-    <!-- Configuration -->
+  <!-- Configuration -->
   <CommandClass id="112">
     <Value genre="config" index="200" label="Partner ID" max="1" min="0" size="1" type="list" value="0">
       <Help>Partner ID</Help>

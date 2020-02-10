@@ -4,7 +4,7 @@
     <MetaDataItem name="ProductPic">images/quby/qb2.png</MetaDataItem>
     <MetaDataItem id="0001" name="ZWProductPage" type="0001">https://products.z-wavealliance.org/products/683/</MetaDataItem>
     <MetaDataItem name="Name">Quby QB2 Energy Display</MetaDataItem>
-    <MetaDataItem name="Description">QEDII </MetaDataItem>
+    <MetaDataItem name="Description">QEDII</MetaDataItem>
     <MetaDataItem id="0001" name="FrequencyName" type="0001">Australia / New Zealand</MetaDataItem>
     <MetaDataItem id="0001" name="Identifier" type="0001">QB2</MetaDataItem>
     <ChangeLog>

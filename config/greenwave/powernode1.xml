@@ -21,7 +21,8 @@
   <CommandClass id="112">
     <Value genre="config" index="0" instance="1" label="Power delta" max="100" min="1" type="byte" units="%" value="10">
       <Help>Consumer variation required to send notification.
-        From 1 to 100, default 10</Help>
+        From 1 to 100, default 10
+      </Help>
     </Value>
     <Value genre="config" index="1" instance="1" label="No communication light" max="255" min="1" type="byte" value="2">
       <Help>After how many minutes the GreenWave device should start flashing if the controller didn't communicate with this device</Help>

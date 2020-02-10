@@ -3,17 +3,18 @@
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0086:0058:0101</MetaDataItem>
     <MetaDataItem name="ProductPic">images/aeotec/zw088.png</MetaDataItem>
     <MetaDataItem id="0058" name="ZWProductPage" type="0101">https://products.z-wavealliance.org/products/1165/</MetaDataItem>
-    <MetaDataItem name="WakeupDescription">Press and hold the "Learn" for 3 seconds will trigger sending the Wake up notification command. </MetaDataItem>
+    <MetaDataItem name="WakeupDescription">Press and hold the "Learn" for 3 seconds will trigger sending the Wake up notification command.</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">Short press the “Exclude” button on the Key Fob, it will go into exclusion state and its red LED will blink slowly to wait excluding other slave Z-Wave devices from its network.</MetaDataItem>
     <MetaDataItem name="ResetDescription">Use this procedure only in the event that the primary controller is missing or otherwise inoperable.
 
-Press and hold the “Mode” button and “Learn” button for 20 seconds and then release.</MetaDataItem>
-    <MetaDataItem name="Description">Key Fob Gen5 is a fully functional Z-wave remote controller, which can include, exclude and control the other Z-Wave certified devices.  It also can be acted a secondary controller in a network.  
+      Press and hold the “Mode” button and “Learn” button for 20 seconds and then release.
+    </MetaDataItem>
+    <MetaDataItem name="Description">Key Fob Gen5 is a fully functional Z-wave remote controller, which can include, exclude and control the other Z-Wave certified devices. It also can be acted a secondary controller in a network.
 
-It is a four buttons design. You can use each button to control your home’s Z-Wave devices and build a Z-Wave network for them. 
+      It is a four buttons design. You can use each button to control your home’s Z-Wave devices and build a Z-Wave network for them.
 
-Products that are Z-Wave certified can be used and communicate with other Z-Wave certified devices.
-</MetaDataItem>
+      Products that are Z-Wave certified can be used and communicate with other Z-Wave certified devices.
+    </MetaDataItem>
     <MetaDataItem id="0058" name="Identifier" type="0101">ZW088-A</MetaDataItem>
     <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/1178/Instructions - Aeon Labs Key Fob Gen5 MCert.pdf</MetaDataItem>
     <MetaDataItem name="Name">Key Fob Gen5</MetaDataItem>

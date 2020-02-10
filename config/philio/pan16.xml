@@ -5,26 +5,28 @@
     <MetaDataItem id="0029" name="ZWProductPage" type="0001">https://products.z-wavealliance.org/products/3168/</MetaDataItem>
     <MetaDataItem id="0029" name="Identifier" type="0001">PAN16-4</MetaDataItem>
     <MetaDataItem name="Name">Smart energy plug in switch</MetaDataItem>
-    <MetaDataItem name="InclusionDescription">1. Put your Z-Wave controller into inclusion mode by following the instructions provided by the controller manufacturer. 
-2. Pressing On/Off button three times within 2 seconds will enter inclusion mode. </MetaDataItem>
+    <MetaDataItem name="InclusionDescription">1. Put your Z-Wave controller into inclusion mode by following the instructions provided by the controller manufacturer.
+      2. Pressing On/Off button three times within 2 seconds will enter inclusion mode.
+    </MetaDataItem>
     <MetaDataItem id="0029" name="FrequencyName" type="0001">CEPT (Europe)</MetaDataItem>
-    <MetaDataItem name="ExclusionDescription">1. Put your Z-Wave controller into exclusion mode by following the instructions provided by the controller manufacturer. 
-2. Pressing On/Off button three times within 2 seconds will enter exclusion mode. 
-</MetaDataItem>
-    <MetaDataItem name="ResetDescription">Use this procedure only in the event that the primary controller is lost or otherwise inoperable. 
-1.  Pressing On/Off button three times within 2 seconds will enter inclusion mode. 
-2.  Within 1 second, press On/Off button again for 5 seconds. 
-3.  IDs are excluded. </MetaDataItem>
+    <MetaDataItem name="ExclusionDescription">1. Put your Z-Wave controller into exclusion mode by following the instructions provided by the controller manufacturer.
+      2. Pressing On/Off button three times within 2 seconds will enter exclusion mode.
+    </MetaDataItem>
+    <MetaDataItem name="ResetDescription">Use this procedure only in the event that the primary controller is lost or otherwise inoperable.
+      1. Pressing On/Off button three times within 2 seconds will enter inclusion mode.
+      2. Within 1 second, press On/Off button again for 5 seconds.
+      3. IDs are excluded.
+    </MetaDataItem>
     <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/3168/PAN16manual.pdf</MetaDataItem>
-    <MetaDataItem name="Description">This plug-in ON/OFF switch PAN16 is a security enabled Z-Wave Plus product, based on Z-Wave Plus technology. The device will enable security mode automatically if the controller supports security mode, too. Z-Wave PlusTM enabled devices displaying the Z-Wave PlusTM logo can also be used with it regardless of the manufacturer, and can also be used in other manufacturer’s Z-WaveTM enabled networks. Remote On/Off control of the connected load is possible with other manufacturer’s wireless Controller. Each switch is designed to act as a repeater. Repeaters will re-transmit the RF signal to ensure that the signal is received by its intended destination by routing the signal around obstacles and radio dead spots. Because PAN16 supports Security Command Class, it can learn with a Secured enabled Z-Wave controller to fully utilize the device. Its functionality and supported command classes is identical when included as a secure and non-secure device. 
-This  plug-in  ON/OFF  switch  is  able  to  detect  instance  wattage  (3000W/230Vac) (13Ampere)  and  overload  current  (14.5A  with  resistive  load) of connected lights or appliances. When detecting overload state, the Switch will be disabled and its On/Off button will be lockout of which LED will flash quickly.  However, unplug and re-connect the switch will reset its overload condition to normal status. 
-Adding to Z-WaveTM Network 
-In the front casing, there is an On/Off button with LED indicator which is used to toggle switch on and off or carry out inclusion, exclusion, reset or association. When first power is applied, its LED flashes on and off alternately and repeatedly at 0.5 second intervals. It implies that it has not been assigned a node ID and start auto inclusion.   
-Auto Inclusion 
-The function of auto inclusion will be executed as long as the switch does not have Node ID and just plug the switch into a wall outlet. 
-Note: Auto inclusion timeout is 2 minute during which the node information of explorer frame will be emitted once several seconds. Unlike “inclusion” function as shown in the table below, the execution of auto inclusion is free from pressing the On/Off button on the Switch. 
+    <MetaDataItem name="Description">This plug-in ON/OFF switch PAN16 is a security enabled Z-Wave Plus product, based on Z-Wave Plus technology. The device will enable security mode automatically if the controller supports security mode, too. Z-Wave PlusTM enabled devices displaying the Z-Wave PlusTM logo can also be used with it regardless of the manufacturer, and can also be used in other manufacturer’s Z-WaveTM enabled networks. Remote On/Off control of the connected load is possible with other manufacturer’s wireless Controller. Each switch is designed to act as a repeater. Repeaters will re-transmit the RF signal to ensure that the signal is received by its intended destination by routing the signal around obstacles and radio dead spots. Because PAN16 supports Security Command Class, it can learn with a Secured enabled Z-Wave controller to fully utilize the device. Its functionality and supported command classes is identical when included as a secure and non-secure device.
+      This plug-in ON/OFF switch is able to detect instance wattage (3000W/230Vac) (13Ampere) and overload current (14.5A with resistive load) of connected lights or appliances. When detecting overload state, the Switch will be disabled and its On/Off button will be lockout of which LED will flash quickly. However, unplug and re-connect the switch will reset its overload condition to normal status.
+      Adding to Z-WaveTM Network
+      In the front casing, there is an On/Off button with LED indicator which is used to toggle switch on and off or carry out inclusion, exclusion, reset or association. When first power is applied, its LED flashes on and off alternately and repeatedly at 0.5 second intervals. It implies that it has not been assigned a node ID and start auto inclusion.
+      Auto Inclusion
+      The function of auto inclusion will be executed as long as the switch does not have Node ID and just plug the switch into a wall outlet.
+      Note: Auto inclusion timeout is 2 minute during which the node information of explorer frame will be emitted once several seconds. Unlike “inclusion” function as shown in the table below, the execution of auto inclusion is free from pressing the On/Off button on the Switch.
 
-</MetaDataItem>
+    </MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="2">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2001/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 Jun 2019" revision="3">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/3162/xml</Entry>
@@ -37,7 +39,7 @@ Note: Auto inclusion timeout is 2 minute during which the node information of ex
     http://products.z-wavealliance.org/products/2001
     -->
 
-    <!-- Configuration  -->
+  <!-- Configuration  -->
   <CommandClass id="112">
     <Value genre="config" index="1" instance="1" label="Watt Meter Report Period" max="32767" min="1" type="short" units="5 seconds" value="720">
       <Help>The interval at which the device reports its instant power consumption to Group 1 nodes. Unit: 5 secs, Min: 1, Max: 32767, Default: 720 (= 1 hr)</Help>
@@ -64,27 +66,27 @@ Note: Auto inclusion timeout is 2 minute during which the node information of ex
     </Value>
     <Value genre="config" index="7" instance="1" label="LED indication mode" max="3" min="1" size="1" type="list" value="1">
       <Help>Controls the light indicator in the device
-                Switch State: When switch is on, LED is on. When switch is off, LED is off. (default)
-                Night mode: When switch is on, LED is off. When switch is off, LED is on.
-                One flash: When the device changes state, the LED illuminates for one second.
-            </Help>
+        Switch State: When switch is on, LED is on. When switch is off, LED is off. (default)
+        Night mode: When switch is on, LED is off. When switch is off, LED is on.
+        One flash: When the device changes state, the LED illuminates for one second.
+      </Help>
       <Item label="Switch state" value="1"/>
       <Item label="Night mode" value="2"/>
       <Item label="One flash" value="3"/>
     </Value>
     <Value genre="config" index="8" instance="1" label="Auto off timer" max="32767" min="0" type="short" units="seconds" value="0">
       <Help>Controls the auto-off timer
-                0: The auto off timer is disabled (default)
-                1-32767: After switching on, the device will automatically switch off after this time
-            </Help>
+        0: The auto off timer is disabled (default)
+        1-32767: After switching on, the device will automatically switch off after this time
+      </Help>
     </Value>
     <Value genre="config" index="9" instance="1" label="RF off command mode" max="3" min="0" size="1" type="list" value="0">
       <Help>Controls how the device reacts to the SWITCH_ALL_OFF command
-                Off: The device switches off (default)
-                Ignore: The switch off command is ignored
-                Toggle: It switches to the inverse of current state
-                On: The device switches on
-            </Help>
+        Off: The device switches off (default)
+        Ignore: The switch off command is ignored
+        Toggle: It switches to the inverse of current state
+        On: The device switches on
+      </Help>
       <Item label="Off" value="0"/>
       <Item label="Ignore" value="1"/>
       <Item label="Toggle" value="2"/>

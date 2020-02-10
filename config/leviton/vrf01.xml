@@ -5,11 +5,11 @@
     <MetaDataItem id="0334" name="ZWProductPage" type="1001">https://products.z-wavealliance.org/products/807/</MetaDataItem>
     <MetaDataItem id="0334" name="FrequencyName" type="1001">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem name="Description">› Preset On Level option sets the fan speed when the device is turned on, regardless of the previous setting
-› Off-Low-Medium-High speed settings
-› Microprocessor-controlled "kick start" allows fan to go directly from OFF to any speed setting
-› LED Locator and fan speed display
-› Requires the Vizia RF + Handheld Remote - VRCPG for programming and control of the Vizia RF + System (sold separately)
-</MetaDataItem>
+      › Off-Low-Medium-High speed settings
+      › Microprocessor-controlled "kick start" allows fan to go directly from OFF to any speed setting
+      › LED Locator and fan speed display
+      › Requires the Vizia RF + Handheld Remote - VRCPG for programming and control of the Vizia RF + System (sold separately)
+    </MetaDataItem>
     <MetaDataItem name="Name">Scene Capable Quiet Fan Speed Control</MetaDataItem>
     <MetaDataItem id="0334" name="Identifier" type="1001">VRF01</MetaDataItem>
     <ChangeLog>

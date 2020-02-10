@@ -16,26 +16,26 @@
   <CommandClass id="112">
     <Value genre="config" index="2" label="Panic ON time" max="255" min="1" type="byte" units="seconds" value="0">
       <Help>
-		  The amount of time in seconds the switch will turn on for when panic mode is trigered.  The configuration value is a signed single byte number. This value may represent a value with no units or may represent a value such as time. 0 to 127 (decimal) represents 0 to 127 seconds of time. -128 to -1 (negative decimal numbers) represents 128 to 255 seconds as calculated by this formula.  Config value = desired time in seconds (or desired value) -256 For an example of 172 seconds: config value = 172 - 256 = -84 (decimal) or 0xAC (hex) 
-		  </Help>
+        The amount of time in seconds the switch will turn on for when panic mode is trigered. The configuration value is a signed single byte number. This value may represent a value with no units or may represent a value such as time. 0 to 127 (decimal) represents 0 to 127 seconds of time. -128 to -1 (negative decimal numbers) represents 128 to 255 seconds as calculated by this formula. Config value = desired time in seconds (or desired value) -256 For an example of 172 seconds: config value = 172 - 256 = -84 (decimal) or 0xAC (hex)
+      </Help>
     </Value>
     <Value genre="config" index="3" label="Panic OFF time" max="255" min="1" type="byte" units="seconds" value="0">
       <Help>
-		  The amount of time in seconds the switch will turn off for when panic mode is triggered.  The configuration value is a signed single byte number. This value may represent a value with no units or may represent a value such as time. 0 to 127 (decimal) represents 0 to 127 seconds of time. -128 to -1 (negative decimal numbers) represents 128 to 255 seconds as calculated by this formula.  Config value = desired time in seconds (or desired value) -256 For an example of 172 seconds: config value = 172 - 256 = -84 (decimal) or 0xAC (hex) 
-		  </Help>
+        The amount of time in seconds the switch will turn off for when panic mode is triggered. The configuration value is a signed single byte number. This value may represent a value with no units or may represent a value such as time. 0 to 127 (decimal) represents 0 to 127 seconds of time. -128 to -1 (negative decimal numbers) represents 128 to 255 seconds as calculated by this formula. Config value = desired time in seconds (or desired value) -256 For an example of 172 seconds: config value = 172 - 256 = -84 (decimal) or 0xAC (hex)
+      </Help>
     </Value>
     <Value genre="config" index="5" label="Power Up State" max="3" min="1" size="1" type="list" units="" value="3">
       <Help>
-		    Power up state of the device
-		  </Help>
+        Power up state of the device
+      </Help>
       <Item label="OFF" value="1"/>
       <Item label="ON" value="2"/>
       <Item label="Last state" value="3"/>
     </Value>
     <Value genre="config" index="6" label="Panic mode enable" max="1" min="0" size="1" type="list" units="" value="0">
       <Help>
-		    Enables this device to participate in panic mode
-		  </Help>
+        Enables this device to participate in panic mode
+      </Help>
       <Item label="OFF" value="0"/>
       <Item label="ON" value="1"/>
     </Value>

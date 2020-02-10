@@ -1,4 +1,5 @@
-<!-- QEES RETO Dimmer Plus 2013 --><Product Revision="8" xmlns="https://github.com/OpenZWave/open-zwave">
+<!-- QEES RETO Dimmer Plus 2013 -->
+<Product Revision="8" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0095:0001:3101</MetaDataItem>
     <MetaDataItem name="ProductPic">images/qees/reto-dimmer-plus.png</MetaDataItem>
@@ -8,14 +9,15 @@
     <MetaDataItem id="0001" name="FrequencyName" type="3101">U.S. / Canada / Mexico / CEPT (Europe) / CEPT (Europe)</MetaDataItem>
     <MetaDataItem name="Name">QEES P311B dimmer with power meter</MetaDataItem>
     <MetaDataItem name="Description">QEES RETO Shell Dimmer Plus is a highly aesthetic Z-Wave-controlled (EU frequency) 400W universal dimmer for any kind of dimmable load: Energy saving, halogen, LED and incandescent light bulbs.
- 
-QEES RETO Shell Dimmer Plus is a wirelessly controlled universal dimmer for retrofit installation. It can be operated locally by pushing the top cover; this action will dim the local load. The device also monitors the power consumption of the load.
 
-QEES RETO Shell Dimmer Plus’s software can be upgraded “over the air”, allowing the device to receive additional features and bug fixes through firmware updates and software apps. This is a unique feature of all QEES products and it facilitates a future-proof, contemporary and flexible infrastructure solution for the building.
+      QEES RETO Shell Dimmer Plus is a wirelessly controlled universal dimmer for retrofit installation. It can be operated locally by pushing the top cover; this action will dim the local load. The device also monitors the power consumption of the load.
 
-QEES RETO Shell Dimmer Plus is compatible with all Z-Wave certified devices from other manufacturers. It also acts as a repeater inside your Z-Wave network increasing the range for your remote control.
+      QEES RETO Shell Dimmer Plus’s software can be upgraded “over the air”, allowing the device to receive additional features and bug fixes through firmware updates and software apps. This is a unique feature of all QEES products and it facilitates a future-proof, contemporary and flexible infrastructure solution for the building.
 
-Like all QEES products, QEES RETO Shell Dimmer Plus has a self-calibrating built-in power meter and can switch off devices that otherwise would consume power when not needed.</MetaDataItem>
+      QEES RETO Shell Dimmer Plus is compatible with all Z-Wave certified devices from other manufacturers. It also acts as a repeater inside your Z-Wave network increasing the range for your remote control.
+
+      Like all QEES products, QEES RETO Shell Dimmer Plus has a self-calibrating built-in power meter and can switch off devices that otherwise would consume power when not needed.
+    </MetaDataItem>
     <MetaDataItem name="ProductPage">http://www.qees.eu/products/z-wave/plus-retofit-series/turtle-shells/turtle-shell-dimmer-eu/product/76/98/Plus-Retofit-Series/Plus-RETO-Shell/qees-reto-shell-dimmer-plus-eu</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="5">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/594/xml</Entry>

@@ -5,9 +5,10 @@
     <MetaDataItem id="0001" name="ZWProductPage" type="0110">https://products.z-wavealliance.org/products/1825/</MetaDataItem>
     <MetaDataItem name="ResetDescription">Hold Service button for five seconds, then press Service button three times.
 
-Use this procedure only if your controller is missing or inoperable.
+      Use this procedure only if your controller is missing or inoperable.
 
-Note that the user sketch is not erased during exclusion or reset process.</MetaDataItem>
+      Note that the user sketch is not erased during exclusion or reset process.
+    </MetaDataItem>
     <MetaDataItem name="WakeupDescription">Press Service button three times</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">Press Service button three times</MetaDataItem>
     <MetaDataItem name="Name">Z-Uno</MetaDataItem>
@@ -17,20 +18,21 @@ Note that the user sketch is not erased during exclusion or reset process.</Meta
     <MetaDataItem id="0001" name="FrequencyName" type="0110">CEPT (Europe)</MetaDataItem>
     <MetaDataItem name="Description">Z-Uno is the first and only easy to use developer board that allows you to create your own Z-Wave device without deep knowledge of Z-Wave protocol or programming. Z-Uno is a mix of Z-Wave home automation radio protocol power and Arduino simplicity. Being inspired by Arduino project Z-Uno inherits all concepts of easy-to-use hardware and software solutions, keeping maximum flexibility.
 
-Z-Uno is a fully DIY product. It is made for those who are limited by existing choice of Z-Wave products and wants to extend their smart homes with more sensors and actuators: connect LEDs, buttons, switches, motors or any low voltage sensor including most of Arduino compatible sensors.
+      Z-Uno is a fully DIY product. It is made for those who are limited by existing choice of Z-Wave products and wants to extend their smart homes with more sensors and actuators: connect LEDs, buttons, switches, motors or any low voltage sensor including most of Arduino compatible sensors.
 
-Z-Uno programming is done by writing sketch in simplified C language and loaded into Z-Uno using Arduino IDE. Many examples and comprehensive tutorials will help you to make your own project.
+      Z-Uno programming is done by writing sketch in simplified C language and loaded into Z-Uno using Arduino IDE. Many examples and comprehensive tutorials will help you to make your own project.
 
-This is one of the two officially certified sketches.
+      This is one of the two officially certified sketches.
 
-Certified 10 Channels sketch
-http://z-uno.z-wave.me/examples/Certified10Channels/</MetaDataItem>
+      Certified 10 Channels sketch
+      http://z-uno.z-wave.me/examples/Certified10Channels/
+    </MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="24 May 2019" revision="4">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1825/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Z-Uno -->
-    <!-- COMMAND_CLASS_CONFIGURATION. Configuration Parameters -->
+  <!-- COMMAND_CLASS_CONFIGURATION. Configuration Parameters -->
   <CommandClass id="112">
     <Value genre="config" index="1" label="Debug mode" max="1" min="0" size="1" type="list" units="" value="0">
       <Help>Debug mode to apply channels, associations and power mode changes on the fly without exclusion-inclusion sequence. Use for debugging only!</Help>

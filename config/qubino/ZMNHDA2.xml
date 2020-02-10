@@ -13,7 +13,7 @@
   </MetaData>
   <!-- Qubino: ZMNHDA2 Flush Dimmer -->
 
-	<!-- Configuration -->
+  <!-- Configuration -->
   <CommandClass id="112">
     <Value genre="config" index="1" instance="1" label="Input 1 switch type" max="1" min="0" size="1" type="list" value="0">
       <Help/>

@@ -9,43 +9,43 @@
     <MetaDataItem id="1000" name="FrequencyName" type="1f01">CEPT (Europe)</MetaDataItem>
     <MetaDataItem id="1000" name="Identifier" type="1f01">FGWOE/F-11</MetaDataItem>
     <MetaDataItem name="Description">FIBARO Walli Outlet is a smart electrical outlet designed to control electrical devices via Z-Wave network.
-It measures active power and energy consumed by the controlled load.
-You can install it with provided cover plate and socket cover or other compatible.
+      It measures active power and energy consumed by the controlled load.
+      You can install it with provided cover plate and socket cover or other compatible.
 
-Main features of FIBARO Walli Outlet:
-- Can turn ON/OFF plugged device remotely.
-- Available in two versions for plug types:
-  o Type E,
-  o Type F.
-- Can be used with provided cover plate or one of the following:
-  o GIRA - System 55 (Standard 55, E2, Event, Event Clear),
-  o Legrand - Celiane
-  o Schneider - Odace.
-- Active power and energy consumption metering.
-- Displays current load using multicolour LED frame (with FIBARO cover plate).
-- Supports Z-Wave network Security Modes: S0 with AES-128 encryption and S2 Authenticated with PRNG-based encryption.
-- Works as Z-Wave signal repeater (all non-battery operated devices within the network will act as repeaters to increase reliability of the network).
-- May be used with all devices certified with the Z-Wave Plus certificate and should be compatible with such devices produced by other manufacturers.
-</MetaDataItem>
+      Main features of FIBARO Walli Outlet:
+      - Can turn ON/OFF plugged device remotely.
+      - Available in two versions for plug types:
+      o Type E,
+      o Type F.
+      - Can be used with provided cover plate or one of the following:
+      o GIRA - System 55 (Standard 55, E2, Event, Event Clear),
+      o Legrand - Celiane
+      o Schneider - Odace.
+      - Active power and energy consumption metering.
+      - Displays current load using multicolour LED frame (with FIBARO cover plate).
+      - Supports Z-Wave network Security Modes: S0 with AES-128 encryption and S2 Authenticated with PRNG-based encryption.
+      - Works as Z-Wave signal repeater (all non-battery operated devices within the network will act as repeaters to increase reliability of the network).
+      - May be used with all devices certified with the Z-Wave Plus certificate and should be compatible with such devices produced by other manufacturers.
+    </MetaDataItem>
     <MetaDataItem name="WakeupDescription">FIBARO Walli Outlet is powered using DC power supply unit so it is always awake.</MetaDataItem>
     <MetaDataItem name="InclusionDescription">To add the device to the Z-Wave network manually:
-1. Power the device.
-2. Set the main controller in (Security/non-Security Mode) add mode (see the controller's manual).
-3. Quickly, three times click one of the buttons.
-4. If you are adding in Security S2 Authenticated, scan the DSK QR code or input the underlined part of the DSK (on the device label).
-5. LED will start blinking yellow, wait for the adding process to end.
-6. Adding result will be confirmed by the Z-Wave controller's message and the LED frame:
-   - Green - successful (non-secure, S0, S2 non-authenticated),
-   - Magenta - successful (Security S2 Authenticated),
-   - Red - not successful.
-</MetaDataItem>
+      1. Power the device.
+      2. Set the main controller in (Security/non-Security Mode) add mode (see the controller's manual).
+      3. Quickly, three times click one of the buttons.
+      4. If you are adding in Security S2 Authenticated, scan the DSK QR code or input the underlined part of the DSK (on the device label).
+      5. LED will start blinking yellow, wait for the adding process to end.
+      6. Adding result will be confirmed by the Z-Wave controller's message and the LED frame:
+      - Green - successful (non-secure, S0, S2 non-authenticated),
+      - Magenta - successful (Security S2 Authenticated),
+      - Red - not successful.
+    </MetaDataItem>
     <MetaDataItem name="ExclusionDescription">To remove the device from the Z-Wave network:
-1. Power the device.
-2. Set the main controller into remove mode (see the controller's manual).
-3. Quickly, three times click the button.
-4. LED will start blinking yellow, wait for the removing process to end.
-5. Successful removing will be confirmed by the Z-Wave controller's message and red LED colour.
-</MetaDataItem>
+      1. Power the device.
+      2. Set the main controller into remove mode (see the controller's manual).
+      3. Quickly, three times click the button.
+      4. LED will start blinking yellow, wait for the removing process to end.
+      5. Successful removing will be confirmed by the Z-Wave controller's message and red LED colour.
+    </MetaDataItem>
     <ChangeLog>
       <Entry author="Jorge Schrauwen" date="06 Aug 2019" revision="1">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/3220/xml</Entry>
     </ChangeLog>
@@ -59,17 +59,19 @@ Main features of FIBARO Walli Outlet:
     </Value>
     <Value type="int" index="2" genre="config" label="Overload safety switch" value="0" min="0" max="36800">
       <Help>This function allows to turn off the controlled device in case of exceeding the defined power. Controlled device can be turned back on via button or sending a control frame.
-0: function disabled, 10-36800: (1.0-3680.0W, step 0.1W) power threshold
-</Help>
+        0: function disabled, 10-36800: (1.0-3680.0W, step 0.1W) power threshold
+      </Help>
     </Value>
     <Value type="int" index="10" genre="config" label="LED frame - power limit" value="36800" min="500" max="36800">
       <Help>This parameter determines maximum active power. Exceeding it results in the LED frame flashing violet. Function is active only when parameter 11 is set to 8 or 9.
-500-36800 (50.0-3680.0W, step 0.1W) - power threshold</Help>
+        500-36800 (50.0-3680.0W, step 0.1W) - power threshold
+      </Help>
     </Value>
     <Value type="list" index="11" genre="config" label="LED frame - colour when ON" size="1" value="8">
       <Help>This parameter defines the LED colour when the device is ON.
 
-When set to 8 or 9, LED frame colour will change depending on the measured power and parameter 10. Other colours are set permanently and do not depend on power consumption.</Help>
+        When set to 8 or 9, LED frame colour will change depending on the measured power and parameter 10. Other colours are set permanently and do not depend on power consumption.
+      </Help>
       <Item label="LED disabled" value="0"/>
       <Item label="White" value="1"/>
       <Item label="Red" value="2"/>
@@ -199,39 +201,39 @@ When set to 8 or 9, LED frame colour will change depending on the measured power
       <Item label="brightness inversely proportional to measured power" value="102"/>
     </Value>
     <Value type="int" index="30" genre="config" label="Alarm configuration - 1st slot" value="0" min="0" max="4294967295">
-        <Help>This parameter determines to which alarm frames and how the device should react. The parameters consist of 4 bytes, three most significant bytes are set according to the official Z-Wave protocol specification.
-1B:  [MSB] Notification Type, 2B:  Notification Status, 3B: Event/State Parameters, 4B: [LSB] action
-0xX0: no action on output, 0xX1: turn ON, 0xX2: turn OFF, 0xX3: turn ON/OFF continuously, 0x0X: no action on LED frame, 0x1X: LED frame blinks red, 0x2X: LED frame blinks green, 0x4X: LED frame blinks blue, 0x8X: disable LED frame, 0xFX: LED frame LAPD signal (red-white-blue)
-</Help>
+      <Help>This parameter determines to which alarm frames and how the device should react. The parameters consist of 4 bytes, three most significant bytes are set according to the official Z-Wave protocol specification.
+        1B: [MSB] Notification Type, 2B: Notification Status, 3B: Event/State Parameters, 4B: [LSB] action
+        0xX0: no action on output, 0xX1: turn ON, 0xX2: turn OFF, 0xX3: turn ON/OFF continuously, 0x0X: no action on LED frame, 0x1X: LED frame blinks red, 0x2X: LED frame blinks green, 0x4X: LED frame blinks blue, 0x8X: disable LED frame, 0xFX: LED frame LAPD signal (red-white-blue)
+      </Help>
     </Value>
     <Value type="int" index="31" genre="config" label="Alarm configuration - 2nd slot" value="0" min="0" max="4294967295">
-        <Help>This parameter determines to which alarm frames and how the device should react. The parameters consist of 4 bytes, three most significant bytes are set according to the official Z-Wave protocol specification.
-1B:  [MSB] Notification Type, 2B:  Notification Status, 3B: Event/State Parameters, 4B: [LSB] action
-0xX0: no action on output, 0xX1: turn ON, 0xX2: turn OFF, 0xX3: turn ON/OFF continuously, 0x0X: no action on LED frame, 0x1X: LED frame blinks red, 0x2X: LED frame blinks green, 0x4X: LED frame blinks blue, 0x8X: disable LED frame, 0xFX: LED frame LAPD signal (red-white-blue)
-</Help>
+      <Help>This parameter determines to which alarm frames and how the device should react. The parameters consist of 4 bytes, three most significant bytes are set according to the official Z-Wave protocol specification.
+        1B: [MSB] Notification Type, 2B: Notification Status, 3B: Event/State Parameters, 4B: [LSB] action
+        0xX0: no action on output, 0xX1: turn ON, 0xX2: turn OFF, 0xX3: turn ON/OFF continuously, 0x0X: no action on LED frame, 0x1X: LED frame blinks red, 0x2X: LED frame blinks green, 0x4X: LED frame blinks blue, 0x8X: disable LED frame, 0xFX: LED frame LAPD signal (red-white-blue)
+      </Help>
     </Value>
     <Value type="int" index="32" genre="config" label="Alarm configuration - 3rd slot" value="0" min="0" max="4294967295">
-        <Help>This parameter determines to which alarm frames and how the device should react. The parameters consist of 4 bytes, three most significant bytes are set according to the official Z-Wave protocol specification.
-1B:  [MSB] Notification Type, 2B:  Notification Status, 3B: Event/State Parameters, 4B: [LSB] action
-0xX0: no action on output, 0xX1: turn ON, 0xX2: turn OFF, 0xX3: turn ON/OFF continuously, 0x0X: no action on LED frame, 0x1X: LED frame blinks red, 0x2X: LED frame blinks green, 0x4X: LED frame blinks blue, 0x8X: disable LED frame, 0xFX: LED frame LAPD signal (red-white-blue)
-</Help>
+      <Help>This parameter determines to which alarm frames and how the device should react. The parameters consist of 4 bytes, three most significant bytes are set according to the official Z-Wave protocol specification.
+        1B: [MSB] Notification Type, 2B: Notification Status, 3B: Event/State Parameters, 4B: [LSB] action
+        0xX0: no action on output, 0xX1: turn ON, 0xX2: turn OFF, 0xX3: turn ON/OFF continuously, 0x0X: no action on LED frame, 0x1X: LED frame blinks red, 0x2X: LED frame blinks green, 0x4X: LED frame blinks blue, 0x8X: disable LED frame, 0xFX: LED frame LAPD signal (red-white-blue)
+      </Help>
     </Value>
     <Value type="int" index="33" genre="config" label="Alarm configuration - 4th slot" value="0" min="0" max="4294967295">
-        <Help>This parameter determines to which alarm frames and how the device should react. The parameters consist of 4 bytes, three most significant bytes are set according to the official Z-Wave protocol specification.
-1B:  [MSB] Notification Type, 2B:  Notification Status, 3B: Event/State Parameters, 4B: [LSB] action
-0xX0: no action on output, 0xX1: turn ON, 0xX2: turn OFF, 0xX3: turn ON/OFF continuously, 0x0X: no action on LED frame, 0x1X: LED frame blinks red, 0x2X: LED frame blinks green, 0x4X: LED frame blinks blue, 0x8X: disable LED frame, 0xFX: LED frame LAPD signal (red-white-blue)
-</Help>
+      <Help>This parameter determines to which alarm frames and how the device should react. The parameters consist of 4 bytes, three most significant bytes are set according to the official Z-Wave protocol specification.
+        1B: [MSB] Notification Type, 2B: Notification Status, 3B: Event/State Parameters, 4B: [LSB] action
+        0xX0: no action on output, 0xX1: turn ON, 0xX2: turn OFF, 0xX3: turn ON/OFF continuously, 0x0X: no action on LED frame, 0x1X: LED frame blinks red, 0x2X: LED frame blinks green, 0x4X: LED frame blinks blue, 0x8X: disable LED frame, 0xFX: LED frame LAPD signal (red-white-blue)
+      </Help>
     </Value>
     <Value type="int" index="34" genre="config" label="Alarm configuration - 5th slot" value="0" min="0" max="4294967295">
-        <Help>This parameter determines to which alarm frames and how the device should react. The parameters consist of 4 bytes, three most significant bytes are set according to the official Z-Wave protocol specification.
-1B:  [MSB] Notification Type, 2B:  Notification Status, 3B: Event/State Parameters, 4B: [LSB] action
-0xX0: no action on output, 0xX1: turn ON, 0xX2: turn OFF, 0xX3: turn ON/OFF continuously, 0x0X: no action on LED frame, 0x1X: LED frame blinks red, 0x2X: LED frame blinks green, 0x4X: LED frame blinks blue, 0x8X: disable LED frame, 0xFX: LED frame LAPD signal (red-white-blue)
-</Help>
+      <Help>This parameter determines to which alarm frames and how the device should react. The parameters consist of 4 bytes, three most significant bytes are set according to the official Z-Wave protocol specification.
+        1B: [MSB] Notification Type, 2B: Notification Status, 3B: Event/State Parameters, 4B: [LSB] action
+        0xX0: no action on output, 0xX1: turn ON, 0xX2: turn OFF, 0xX3: turn ON/OFF continuously, 0x0X: no action on LED frame, 0x1X: LED frame blinks red, 0x2X: LED frame blinks green, 0x4X: LED frame blinks blue, 0x8X: disable LED frame, 0xFX: LED frame LAPD signal (red-white-blue)
+      </Help>
     </Value>
     <Value type="short" index="35" genre="config" label="Alarm configuration - duration" value="600" min="0" max="32400">
-        <Help>This parameter defines duration of alarm sequence. When time set in this parameter elapses, alarm is cancelled, LED frame and relay restore normal operation, but do not recover state from before the alarm.
+      <Help>This parameter defines duration of alarm sequence. When time set in this parameter elapses, alarm is cancelled, LED frame and relay restore normal operation, but do not recover state from before the alarm.
         0: Infinite, 1-32400: (1s-9h, 1s step) - Duration
-        </Help>
+      </Help>
     </Value>
     <Value type="list" index="45" genre="config" label="Associations - 2nd group" size="1" value="3" min="1" max="3">
       <Help>This parameter determines which actions will result in sending control frames to devices associated in 2nd group.</Help>
@@ -241,8 +243,8 @@ When set to 8 or 9, LED frame colour will change depending on the measured power
     </Value>
     <Value type="int" index="46" genre="config" label="Associations - UP threshold" value="500" min="100" max="36800">
       <Help>This parameter determines upper power threshold for 2nd association group (paramter 45). Exceeding it will result in sending value set in parameter 47. Cannot be lower than DOWN threshold (parameter 48).
-100-36800: (10-3680W, 0.1W step) - power threshold
-</Help>
+        100-36800: (10-3680W, 0.1W step) - power threshold
+      </Help>
     </Value>
     <Value type="list" index="47" genre="config" label="Associations - UP threshold frame value" value="255" min="0" max="255" size="2">
       <Help>This parameter defines value sent to devices in 2nd association group when power exceeds UP threshold set in parameter 46 (using Basic Command Class).</Help>
@@ -351,8 +353,8 @@ When set to 8 or 9, LED frame colour will change depending on the measured power
     </Value>
     <Value type="int" index="48" genre="config" label="Associations - DOWN threshold" value="300" min="0" max="36700">
       <Help>This parameter determines lower power threshold for 2nd association group (parameter 45). Exceeding it will result in sending value set in parameter 49.
-0-36700: (0-3670W, 0.1W step) - power threshold
-</Help>
+        0-36700: (0-3670W, 0.1W step) - power threshold
+      </Help>
     </Value>
     <Value type="short" index="49" genre="config" label="Associations - DOWN threshold frame value" value="255" min="0" max="255" size="2">
       <Help>This parameter defines value sent to devices in 2nd association group when power exceeds UP threshold set in parameter 46 (using Basic Command Class).</Help>
@@ -466,19 +468,23 @@ When set to 8 or 9, LED frame colour will change depending on the measured power
     </Value>
     <Value type="short" index="61" genre="config" label="Power reports - on change" value="15" min="0" max="500">
       <Help>This parameter defines minimal change (from the last reported) in measured power that results in sending new report. For loads under 50W the parameter is irrelevant, reports are sent every 5W change.
-0: reporting on change disabled, 1-500: (1-500%, 1% step) minimal change</Help>
+        0: reporting on change disabled, 1-500: (1-500%, 1% step) minimal change
+      </Help>
     </Value>
     <Value type="short" index="62" genre="config" label="Power reports - periodic" value="3600" min="0" max="32400">
       <Help>This parameter defines reporting interval for measured power. Periodic reports are independent from changes in value (parameter 61).
-0: periodic reports disabled, 30-32400: (30s-9h, 1s step) time interval</Help>
+        0: periodic reports disabled, 30-32400: (30s-9h, 1s step) time interval
+      </Help>
     </Value>
     <Value type="short" index="65" genre="config" label="Energy reports - on change" value="10" min="0" max="500">
       <Help>This parameter defines minimal change (from the last reported) in measured energy that results in sending new report.
-0: reporting on change disabled, 1-500: (0.01-5kWh, 0.01kWh step) minimal change</Help>
+        0: reporting on change disabled, 1-500: (0.01-5kWh, 0.01kWh step) minimal change
+      </Help>
     </Value>
     <Value type="short" index="66" genre="config" label="Energy reports - periodic" value="3600" min="0" max="32400">
       <Help>This parameter defines reporting interval for measured energy. Periodic reports are independent from changes in value (parameter 65).
-0: periodic reports disabled, 30-32400: (30s-9h, 1s step) time interval</Help>
+        0: periodic reports disabled, 30-32400: (30s-9h, 1s step) time interval
+      </Help>
     </Value>
   </CommandClass>
   <!-- Association Groups -->

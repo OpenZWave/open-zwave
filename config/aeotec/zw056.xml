@@ -1,7 +1,8 @@
 <!--
 Aeotec ZW056 Doorbell Gen5
 https://aeotec.freshdesk.com/helpdesk/attachments/6009584693
---><Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
+-->
+<Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0086:0038:0104</MetaDataItem>
     <MetaDataItem name="ProductPic">images/aeotec/zw056.png</MetaDataItem>
@@ -12,10 +13,11 @@ https://aeotec.freshdesk.com/helpdesk/attachments/6009584693
     <MetaDataItem name="Name">Doorbell Gen5</MetaDataItem>
     <MetaDataItem name="InclusionDescription">Turn the primary controller of Z-Wave network into inclusion mode, short press the product’s Action button that you can find on the product's housing.</MetaDataItem>
     <MetaDataItem name="Description">Aeon Labs Doorbell supports playing MP3 music files with a press of this doorbell. It has a 128MB flash memory that can store up to 800 ringtones. The volume can be adjusted manually via short press on the Volume Button, also you can switch the doorbell sound to the next via long press on the Volume Button. You may change/update your doorbell ringtone at any point in time you want by connecting your Doorbell to your PC to update the sound track on your Doorbell’s flash memory.
-There is a small Wireless Button, which can trigger the doorbell on the other side of the wall to play the selected doorbell music when pressed.
-It also act as a repeater that forward Z-Wave command messages to destination nodes if the originating controller is out of range from the destination node.
-By taking advantage of the Z-Wave mesh network, commands can be routed to their destination via intermediary “listening” Z-Wave products. Products that are Z-Wave certified can be used and communicate with other Z-Wave certified devices.
-Also a tool that can be programmed, scheduled, controlled and communicated with from anywhere in the world.</MetaDataItem>
+      There is a small Wireless Button, which can trigger the doorbell on the other side of the wall to play the selected doorbell music when pressed.
+      It also act as a repeater that forward Z-Wave command messages to destination nodes if the originating controller is out of range from the destination node.
+      By taking advantage of the Z-Wave mesh network, commands can be routed to their destination via intermediary “listening” Z-Wave products. Products that are Z-Wave certified can be used and communicate with other Z-Wave certified devices.
+      Also a tool that can be programmed, scheduled, controlled and communicated with from anywhere in the world.
+    </MetaDataItem>
     <MetaDataItem id="0038" name="Identifier" type="0104">ZW056-A</MetaDataItem>
     <MetaDataItem id="0038" name="FrequencyName" type="0104">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/1583/Aeon Labs Doorbell Gen5 manual.pdf</MetaDataItem>
@@ -35,27 +37,27 @@ Also a tool that can be programmed, scheduled, controlled and communicated with 
   <CommandClass id="112">
     <Value genre="config" index="2" label="doorbell ringtone repetitions" max="255" min="1" type="byte" units="" value="2">
       <Help>
-                Set the repetitions for playing doorbell ringtone.
-                Value=1 to 255, the range of repetition is 1 to 100.
-                Note: If the time of playing doorbell ringtone is more than 20s,
-                the volume of ringtone will reduce to silence no matter how
-                many repetitions of doorbell ringtone are set.
-            </Help>
+        Set the repetitions for playing doorbell ringtone.
+        Value=1 to 255, the range of repetition is 1 to 100.
+        Note: If the time of playing doorbell ringtone is more than 20s,
+        the volume of ringtone will reduce to silence no matter how
+        many repetitions of doorbell ringtone are set.
+      </Help>
     </Value>
     <Value genre="config" index="5" label="Default Doorbell Ringtone" max="100" min="1" type="byte" units="" value="1">
       <Help>
-                Set the default doorbell ringtone.
-                Value=1-100, Specify the ringtone as default.
-            </Help>
+        Set the default doorbell ringtone.
+        Value=1-100, Specify the ringtone as default.
+      </Help>
     </Value>
     <Value genre="user" index="6" label="Play Ringtone" max="255" min="0" type="byte" units="" value="0" write_only="true">
       <Help>
-                Select a ringtone to play.
-                Value=0, stop playing.
-                Value=1-100, play the specified ringtone.
-                Value=255, play the default ringtone.
-                Value=other, ignore.
-            </Help>
+        Select a ringtone to play.
+        Value=0, stop playing.
+        Value=1-100, play the specified ringtone.
+        Value=255, play the default ringtone.
+        Value=other, ignore.
+      </Help>
     </Value>
     <Value genre="user" index="7" label="Control" size="1" type="list" units="" value="2">
       <Help>Playback Control</Help>
@@ -70,17 +72,17 @@ Also a tool that can be programmed, scheduled, controlled and communicated with 
     </Value>
     <Value genre="config" index="10" label="Swap Buttons" max="1" min="0" size="1" type="list" units="" value="0">
       <Help>
-                Define functions of "Button -" and "Button+".
-                Button - is previous, Button+ is next.
-            </Help>
+        Define functions of "Button -" and "Button+".
+        Button - is previous, Button+ is next.
+      </Help>
       <Item label="Standard" value="0"/>
       <Item label="Reversed" value="1"/>
     </Value>
     <Value genre="config" index="11" label="Button Short/Long Press Function" max="1" min="0" size="1" type="list" units="" value="0">
       <Help>
-                Define functions of "Button -" and "Button+" when short
-                pressing and long pressing it.
-            </Help>
+        Define functions of "Button -" and "Button+" when short
+        pressing and long pressing it.
+      </Help>
       <Item label="Short Press - Volume, Long Press - RingTone" value="0"/>
       <Item label="Short Press - RingTone, Long Press - Volume" value="1"/>
     </Value>
@@ -102,20 +104,20 @@ Also a tool that can be programmed, scheduled, controlled and communicated with 
     </Value>
     <Value genre="config" index="241" label="Pair Wireless Button" size="4" type="list" units="" value="0">
       <Help>
-                Pair the Wireless Button with Doorbell.
-                Value=0x55555555, Start the Wireless Button pairing mode and
-                the blue Led will blink slowly, short press the Wireless Button
-                once, if the blue Led change to be solid, which means the pairing
-                is successful. Otherwise, repeat the steps.
-                It will automatically exit the pairing mode after 8s if there is no
-                pressing action of the Wireless Button.
-                Note:
-                You can send this configuration Get CC to ask the pairing result:
-                If configuration report value=0x00000000, which means the
-                pairing is failed.
-                If configuration report value =0xFFFFFFFF, which means the
-                pairing is successful.
-            </Help>
+        Pair the Wireless Button with Doorbell.
+        Value=0x55555555, Start the Wireless Button pairing mode and
+        the blue Led will blink slowly, short press the Wireless Button
+        once, if the blue Led change to be solid, which means the pairing
+        is successful. Otherwise, repeat the steps.
+        It will automatically exit the pairing mode after 8s if there is no
+        pressing action of the Wireless Button.
+        Note:
+        You can send this configuration Get CC to ask the pairing result:
+        If configuration report value=0x00000000, which means the
+        pairing is failed.
+        If configuration report value =0xFFFFFFFF, which means the
+        pairing is successful.
+      </Help>
       <Item label="Start Pairing/Paired" value="0xFFFFFFFF"/>
       <Item label="Not Pairing/Unpaired" value="0"/>
     </Value>

@@ -18,33 +18,33 @@
   <CommandClass id="112">
     <Value genre="config" index="1" label="Basic Set Level" max="99" min="0" type="byte" units="%" value="99">
       <Help>
-				Defines the level in the Basic Set event sent to group 2 when the sensor is triggered.  Default is 99 (full brightness for a Z-Wave dimmer). 0 disables.
-			</Help>
+        Defines the level in the Basic Set event sent to group 2 when the sensor is triggered. Default is 99 (full brightness for a Z-Wave dimmer). 0 disables.
+      </Help>
     </Value>
     <Value genre="config" index="2" label="Lux On Trigger" max="1000" min="0" type="short" units="LUX" value="300">
       <Help>
-				Lux level to trigger when a ON command is sent out. 0 will clear the value.
-			</Help>
+        Lux level to trigger when a ON command is sent out. 0 will clear the value.
+      </Help>
     </Value>
     <Value genre="config" index="3" label="Lux Off Trigger" max="1000" min="0" type="short" units="LUX" value="500">
       <Help>
-				Lux level to trigger when an OFF command is sent out. 0 will clear the value.
-			</Help>
+        Lux level to trigger when an OFF command is sent out. 0 will clear the value.
+      </Help>
     </Value>
     <Value genre="config" index="4" label="Lux Timer Off Trigger" max="480" min="1" type="short" units="minutes" value="240">
       <Help>
-				Set Lux timer trigger to send an OFF command. 0 will clear the value.
-			</Help>
+        Set Lux timer trigger to send an OFF command. 0 will clear the value.
+      </Help>
     </Value>
     <Value genre="config" index="5" label="Auto Report Time" max="1439" min="0" type="short" units="minutes" value="0">
       <Help>
-				Sets the auto report time interval. 0 disables.
-			</Help>
+        Sets the auto report time interval. 0 disables.
+      </Help>
     </Value>
     <Value genre="config" index="6" label="Auto Report Lux" max="1000" min="30" type="short" units="LUX" value="0">
       <Help>
-				Sets the auto report Lux interval. 0 disabled.
-			</Help>
+        Sets the auto report Lux interval. 0 disabled.
+      </Help>
     </Value>
   </CommandClass>
   <!-- COMMAND_CLASS_ALARM doesn't respond -->

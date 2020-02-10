@@ -1,7 +1,7 @@
 <Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
   <!-- Qubino: ZMNHJD1 Flush Pilot Wire Dimmer -->
 
-	<!-- Configuration -->
+  <!-- Configuration -->
   <CommandClass id="112">
     <Value genre="config" index="1" instance="1" label="Input 1 switch type" max="1" min="0" size="1" type="list" value="1">
       <Help/>

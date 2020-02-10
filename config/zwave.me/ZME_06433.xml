@@ -4,25 +4,26 @@
     <MetaDataItem name="ProductPic">images/zwave.me/ZME_06433.png</MetaDataItem>
     <MetaDataItem id="0002" name="ZWProductPage" type="1000">https://products.z-wavealliance.org/products/19/</MetaDataItem>
     <MetaDataItem id="0002" name="FrequencyName" type="1000">CEPT (Europe)</MetaDataItem>
-    <MetaDataItem name="Description">This Z-Wave.Me dimming Flush-Mountable is intended to control lamps, both with resistive or inductive load.  
-A pattress box is needed for installation. The insert has two buttons. In order to use them for local control the Flush-Mountable needs to be completed with a switching paddle and a mounting frame of one of DUWIs switching series “Everlux” or “Arcada”.  The device is a conventional leading-edge phase control dimmer with support for inductive loads such as transformers. Additionally conventional resistive loads such as incandescent lamps or 230 V halogen lamps can be dimmed as well.
+    <MetaDataItem name="Description">This Z-Wave.Me dimming Flush-Mountable is intended to control lamps, both with resistive or inductive load.
+      A pattress box is needed for installation. The insert has two buttons. In order to use them for local control the Flush-Mountable needs to be completed with a switching paddle and a mounting frame of one of DUWIs switching series “Everlux” or “Arcada”. The device is a conventional leading-edge phase control dimmer with support for inductive loads such as transformers. Additionally conventional resistive loads such as incandescent lamps or 230 V halogen lamps can be dimmed as well.
 
 
-Technical Data:
-•	Power rating: 230V, 50 Hz
-•	Wiring: 2-wire-system
-•	Maximum loads: 
-  -	  Incandescent lamps: 40...300W
-  -	  230V (HV) halogen: 40...300W
-  -	  Low voltage halogen with standard transformer (inductive load): 30...300VA
-  -	  Low voltage halogen with switched power supply (reactive load): no
-  -	  Fluorescent light: 30…300VA, only dimmable lamps
-•	Installation: in pattress box
-•	Distance: up to 30 m in buildings
-•	Display: Multicolour-LED
-•	Interaction: two buttons to be completed with switching paddle for local operation
-•	Power supply: via 230 V power
-•	Dimensions: 48mmx48mmx23mm</MetaDataItem>
+      Technical Data:
+      • Power rating: 230V, 50 Hz
+      • Wiring: 2-wire-system
+      • Maximum loads:
+        - Incandescent lamps: 40...300W
+        - 230V (HV) halogen: 40...300W
+        - Low voltage halogen with standard transformer (inductive load): 30...300VA
+        - Low voltage halogen with switched power supply (reactive load): no
+        - Fluorescent light: 30…300VA, only dimmable lamps
+      • Installation: in pattress box
+      • Distance: up to 30 m in buildings
+      • Display: Multicolour-LED
+      • Interaction: two buttons to be completed with switching paddle for local operation
+      • Power supply: via 230 V power
+      • Dimensions: 48mmx48mmx23mm
+    </MetaDataItem>
     <MetaDataItem name="ProductPage">http://www.pepper1.net/zwavedb/device/122</MetaDataItem>
     <MetaDataItem name="ProductSupport">http://en.z-wave.me/content/z-wave-hardware</MetaDataItem>
     <MetaDataItem name="Name">Z-Wave.Me Flush-Mountable Dimmer</MetaDataItem>
@@ -32,15 +33,15 @@ Technical Data:
     </ChangeLog>
   </MetaData>
   <!-- Configuration Parameters -->
-	<!--IMPORTANT: Controllers may only allow to configure signed values. 
-	    In order to set values in the range  128?255 for parameters 4,  5 and 6 the
-	    value sent in the application shall be the desired value minus 256. 
-	    For example: to set parameter 4 in Window Blind to 200? sit may be  needed
-	    to set a value of 200?256=?56.
-	    Similar rule applies to parameter 2: to set values in range 32768?65535
-	    use value equal to desired value minus 65536. For example, to set auto
-	    switch off period to 10 hours =36000s it may be needed to set a value
-	    36000?65536=?29536.-->
+  <!--IMPORTANT: Controllers may only allow to configure signed values.
+      In order to set values in the range  128?255 for parameters 4,  5 and 6 the
+      value sent in the application shall be the desired value minus 256.
+      For example: to set parameter 4 in Window Blind to 200? sit may be  needed
+      to set a value of 200?256=?56.
+      Similar rule applies to parameter 2: to set values in range 32768?65535
+      use value equal to desired value minus 65536. For example, to set auto
+      switch off period to 10 hours =36000s it may be needed to set a value
+      36000?65536=?29536.-->
   <CommandClass id="112">
     <Value genre="config" index="1" label="Set LED indication mode" size="1" type="list" value="3">
       <Item label="Disabled" value="0"/>
@@ -76,10 +77,10 @@ Technical Data:
       <Item label="Always" value="2"/>
     </Value>
     <Value genre="config" index="8" label="Baby Dimming Time" max="255" min="0" type="byte" units="minutes" value="0">
-      <Help>Time to dim on double click Off  button for Baby- Dim function. This function works only if the load is operated by single press and hold button action. If enabled, the device will wait for a click timeout to see if the second click would be pressed. This will introduce a small delay for single click commands, unprotected.</Help>
+      <Help>Time to dim on double click Off button for Baby- Dim function. This function works only if the load is operated by single press and hold button action. If enabled, the device will wait for a click timeout to see if the second click would be pressed. This will introduce a small delay for single click commands, unprotected.</Help>
     </Value>
     <Value genre="config" index="9" label="Target Dimming Level for Baby Dimming" max="99" min="0" type="byte" units="dimmer level %" value="0">
-      <Help>Target level on which to stop while executing Baby Dimming. Can be 0 to completely switch off the light. </Help>
+      <Help>Target level on which to stop while executing Baby Dimming. Can be 0 to completely switch off the light.</Help>
     </Value>
     <Value genre="config" index="10" label="Typical click timeout" max="100" min="1" type="byte" units="x 10 milliseconds" value="50">
       <Help>Typical time used to differentiate click, hold, double and triple clicks.</Help>
@@ -89,7 +90,7 @@ Technical Data:
       <Item label="Yes" value="1"/>
     </Value>
     <Value genre="config" index="12" label="Switch by buttons" size="1" type="list" value="1">
-      <Help>If disabled, the local operations by buttons will not switch the load, but only send commands to On/Off association group. In  this mode buttons are not linked with the switch anymore. They can be used separately: buttons to control remote device, switch will operate by RF commands only. </Help>
+      <Help>If disabled, the local operations by buttons will not switch the load, but only send commands to On/Off association group. In this mode buttons are not linked with the switch anymore. They can be used separately: buttons to control remote device, switch will operate by RF commands only.</Help>
       <Item label="No" value="0"/>
       <Item label="By single press and hold (default)" value="1"/>
       <Item label="By double press and hold" value="2"/>

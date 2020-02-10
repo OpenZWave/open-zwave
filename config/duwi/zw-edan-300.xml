@@ -6,7 +6,7 @@
     <MetaDataItem name="Name">ZW-EDAN-300 - Flush-mount Z-Wave dimmer</MetaDataItem>
     <MetaDataItem id="0000" name="FrequencyName" type="0001">CEPT (Europe)</MetaDataItem>
     <MetaDataItem id="0000" name="Identifier" type="0001">ZW-EDAN-300</MetaDataItem>
-    <MetaDataItem name="Description">For wireless dimming of: light bulbs, HV and LV halogen lamps  with conventional transformer. Combinable with all Z-Wave transmitters and remote controls. For installation in splash-proof junction box IP 44, can be selectively installed in flush-mounted power points and canopies or triggered directly via wireless rockers.</MetaDataItem>
+    <MetaDataItem name="Description">For wireless dimming of: light bulbs, HV and LV halogen lamps with conventional transformer. Combinable with all Z-Wave transmitters and remote controls. For installation in splash-proof junction box IP 44, can be selectively installed in flush-mounted power points and canopies or triggered directly via wireless rockers.</MetaDataItem>
     <MetaDataItem name="ProductSupport">http://www.duewi.de/index.php?productid=29184</MetaDataItem>
     <MetaDataItem name="ProductPage">http://www.duewi.de/index.php?productid=37321</MetaDataItem>
     <ChangeLog>

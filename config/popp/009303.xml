@@ -3,17 +3,19 @@
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0154:0101:0100</MetaDataItem>
     <MetaDataItem name="ProductPic">images/popp/009303.png</MetaDataItem>
     <MetaDataItem id="0101" name="ZWProductPage" type="0100">https://products.z-wavealliance.org/products/2110/</MetaDataItem>
-    <MetaDataItem name="InclusionDescription">Place your primary controller in inclusion mode by following the manufacturer's instructions, then activate inclusion on the wall controller by pressing any one of the four buttons for one second.  Inclusion mode is indicated by the red/green blinking of the LEDs until the timeout occurs after 10 seconds.</MetaDataItem>
+    <MetaDataItem name="InclusionDescription">Place your primary controller in inclusion mode by following the manufacturer's instructions, then activate inclusion on the wall controller by pressing any one of the four buttons for one second. Inclusion mode is indicated by the red/green blinking of the LEDs until the timeout occurs after 10 seconds.</MetaDataItem>
     <MetaDataItem name="Description">The Wall Scene Controller is a Z-Wave device that can both control other Z-Wave devices and activate scenes. Although it is controlling other devices, the Wall Controller cannot act as Z-Wave network controller (primary or secondary) and will always need a Z-Wave network controller to be included into a Z-Wave network. The device can be used in different modes that are selected by configuration parameters:
 
-Control of groups of other Z-Wave devices using 'ON', 'OFF' and Dim commands. Activation of predefined scenes in Gateways or other Z-Wave devices. This device support secure communication when included by a controller that also supports secure communication. </MetaDataItem>
+      Control of groups of other Z-Wave devices using 'ON', 'OFF' and Dim commands. Activation of predefined scenes in Gateways or other Z-Wave devices. This device support secure communication when included by a controller that also supports secure communication.
+    </MetaDataItem>
     <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/2110/WallSceneControllerPopp.pdf</MetaDataItem>
     <MetaDataItem id="0101" name="Identifier" type="0100">POPE009303</MetaDataItem>
-    <MetaDataItem name="WakeupDescription"> (1) Turn the device into Management Mode by keeping all four buttons pushed for 5 seconds, (2) click on Button 2. </MetaDataItem>
-    <MetaDataItem name="ExclusionDescription">Re-Inclusion and Exclusion are performed by pushing button 1 in management mode.  Pushing all four buttons for 5 sec. turns the device into management mode (indicated by blinking green LED).</MetaDataItem>
+    <MetaDataItem name="WakeupDescription">(1) Turn the device into Management Mode by keeping all four buttons pushed for 5 seconds, (2) click on Button 2.</MetaDataItem>
+    <MetaDataItem name="ExclusionDescription">Re-Inclusion and Exclusion are performed by pushing button 1 in management mode. Pushing all four buttons for 5 sec. turns the device into management mode (indicated by blinking green LED).</MetaDataItem>
     <MetaDataItem id="0101" name="FrequencyName" type="0100">CEPT (Europe)</MetaDataItem>
-    <MetaDataItem name="ResetDescription">Use this procedure only if the primary controller is missing or otherwise inoperable. 
-(1) Turn the device into Management Mode by keeping all four buttons pushed for 5 seconds, (2) click on Button 3, (3) keep button 4 pushed for 4 seconds.</MetaDataItem>
+    <MetaDataItem name="ResetDescription">Use this procedure only if the primary controller is missing or otherwise inoperable.
+      (1) Turn the device into Management Mode by keeping all four buttons pushed for 5 seconds, (2) click on Button 3, (3) keep button 4 pushed for 4 seconds.
+    </MetaDataItem>
     <MetaDataItem name="Name">Wall Scene Controller</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="2">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2110/xml</Entry>
@@ -21,7 +23,7 @@ Control of groups of other Z-Wave devices using 'ON', 'OFF' and Dim commands. Ac
   </MetaData>
   <!-- Popp 009303 Z-Wave Plus Battery Wall Controller -->
 
-	<!-- Configuration Parameters -->
+  <!-- Configuration Parameters -->
   <CommandClass id="112">
     <Value genre="config" index="1" label="Button 1 and 3 pair mode" max="2" min="0" size="1" type="list" units="" value="1">
       <Help>In separate mode button 1 works with group A, button 3 with groups C. Click is On, Hold is dimming Up, Double click is Off, Click-Hold is dimming Down. In pair button 1/3 are Up/Down correspondingly. Click is On/Off, Hold is dimming Up/Down. Single clicks works with group A, double click with group C.</Help>

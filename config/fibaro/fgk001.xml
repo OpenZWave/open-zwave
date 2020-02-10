@@ -1,4 +1,5 @@
-<!-- Fibaro: FGK101 Door Opening Sensor --><Product Revision="6" xmlns="https://github.com/OpenZWave/open-zwave">
+<!-- Fibaro: FGK101 Door Opening Sensor -->
+<Product Revision="6" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/010F:1000:0700</MetaDataItem>
     <MetaDataItem name="ProductPic">images/fibaro/fgk001.png</MetaDataItem>
@@ -44,7 +45,8 @@
     </Value>
     <Value genre="config" index="7" instance="1" label="Forced Level of Dimming group 1" max="255" min="1" type="byte" value="255">
       <Help>Value of the parameter specifying the forced level of dimming / opening sun blinds when comes "switch on" / "open" command to devices from association group no. 1.
-			  In the case of alarm frames the alarm priority is specified. Possible parameter settings: (1 - 99) and 255. Value of 255 makes it possible to activate the device when using the Dimmer module it means activating the device and setting it to the previous stored condition, e.g. when Dimmer is set to 30%, then deactivated, and then reactivated using command 255, it will automatically be set to the previous condition, i.e. 30%.</Help>
+        In the case of alarm frames the alarm priority is specified. Possible parameter settings: (1 - 99) and 255. Value of 255 makes it possible to activate the device when using the Dimmer module it means activating the device and setting it to the previous stored condition, e.g. when Dimmer is set to 30%, then deactivated, and then reactivated using command 255, it will automatically be set to the previous condition, i.e. 30%.
+      </Help>
     </Value>
     <Value genre="config" index="9" instance="1" label="Deactivate transmission of frame cancelling alarm" size="1" type="list" value="0">
       <Help>Deactivating transmission of the frame cancelling the alarm or the control frame deactivating the device (Basic). It allows for disabling the deactivation function or the alarm cancellation function for devices associated with the appropriate input of the Fibaro Sensor. NOTE: Information concerning alarm violation or activation commands for devices from association groups are always sent.</Help>
@@ -60,13 +62,14 @@
     </Value>
     <Value genre="config" index="12" instance="1" label="Insensitiveness to temperature changes" max="255" min="0" type="byte" value="8">
       <Help>Insensitiveness to temperature changes. This is the maximum acceptable difference between the last reported temperature and the current temperature taken from the sensor. If the temperatures differ by the set value or more, then a report with the current temperature value is sent to the device assigned to association group no. 3. Intervals between taking readings from sensors are specified by parameter no. 10.
-			  Possible parameter settings:0 - 255 [0oC to 16oC] [0 oF - 28.8oF]
-			  In order to set the appropriate value of the parameter, the following formula should be used:
-			  x = delta T x 16 - for Celsius
-			  x = delta T x 80 / 9 - for Fahrenheit
-			  x - parameter value
-			  delta T - maximum acceptable temperature gradient in Celsius or Fahrenheit
-			  If the value is set to 0, then information about the temperature will be sent every time, immediately once the readings have been taken from the sensor.</Help>
+        Possible parameter settings:0 - 255 [0oC to 16oC] [0 oF - 28.8oF]
+        In order to set the appropriate value of the parameter, the following formula should be used:
+        x = delta T x 16 - for Celsius
+        x = delta T x 80 / 9 - for Fahrenheit
+        x - parameter value
+        delta T - maximum acceptable temperature gradient in Celsius or Fahrenheit
+        If the value is set to 0, then information about the temperature will be sent every time, immediately once the readings have been taken from the sensor.
+      </Help>
     </Value>
     <Value genre="config" index="13" instance="1" label="Transmitting the alarm or control frame broadcast mode" size="1" type="list" value="0">
       <Help>Transmitting the alarm or control frame in "broadcast" mode (i.e. to all devices within range), information sent in this mode is not repeated by the mesh network. NOTE: If the broadcast mode of information transmission is activated for a given channel, then transmission of information in singlecast mode to devices assigned to the association group of this channel is deactivated.</Help>

@@ -23,16 +23,16 @@
         Defines if the internal magnet sensor or the external terminal input is detected and used to issue alarm notification. There is always one input active only. The other sensor input the deactivated.
         Default Value: Internal Magnet Sensor Used
       </Help>
-      <Item label="Internal Magnet Sensor Used" value="0" />
-      <Item label="External Terminal Inputs Used" value="1" />
+      <Item label="Internal Magnet Sensor Used" value="0"/>
+      <Item label="External Terminal Inputs Used" value="1"/>
     </Value>
     <Value type="list" index="2" genre="config" label="Sensor State Polarity" units="" min="0" max="1" value="0" size="1">
       <Help>
         Defines the polarity of the magnet sensor.
         Default Value: Closed when Magnet in proximity
       </Help>
-      <Item label="Closed when Magnet in proximity" value="0" />
-      <Item label="Opened when Magnet in proximity" value="1" />
+      <Item label="Closed when Magnet in proximity" value="0"/>
+      <Item label="Opened when Magnet in proximity" value="1"/>
     </Value>
     <Value type="byte" index="3" genre="config" label="Visual LED Indications" units="" min="0" max="255" value="7" size="1">
       <Help>
@@ -50,26 +50,26 @@
         Allows to enable the activation of a Z-Wave range test with double clicking the tamper switch.
         Default Value: Disabled
       </Help>
-      <Item label="Disabled" value="0" />
-      <Item label="Enabled" value="1" />
+      <Item label="Disabled" value="0"/>
+      <Item label="Enabled" value="1"/>
     </Value>
     <Value type="list" index="5" genre="config" label="2nd Association Group Trigger" units="" min="0" max="2" value="0" size="1">
       <Help>
         Defines the status of the magnet switch that causes sending a BASIC command to all devices of Association Group 2.
         Default Value: Switch after Open and Close
       </Help>
-      <Item label="Switch after Open and Close" value="0" />
-      <Item label="Switch after Open" value="1" />
-      <Item label="Switch after Close" value="2" />
+      <Item label="Switch after Open and Close" value="0"/>
+      <Item label="Switch after Open" value="1"/>
+      <Item label="Switch after Close" value="2"/>
     </Value>
     <Value type="list" index="6" genre="config" label="Defines which commands is sent to 2nd Association Group" units="" min="0" max="2" value="2" size="1">
       <Help>
         Defines which commands is sent to 2nd Association Group.
         Default Value: On and Off
       </Help>
-      <Item label="On" value="0" />
-      <Item label="Off" value="1" />
-      <Item label="On and Off" value="2" />
+      <Item label="On" value="0"/>
+      <Item label="Off" value="1"/>
+      <Item label="On and Off" value="2"/>
     </Value>
     <Value type="byte" index="7" genre="config" label="BASIC command value sent to 2nd Association Group on On event" units="" min="0" max="255" value="255" size="1">
       <Help>
@@ -108,33 +108,33 @@
         Defines if the alarm cancellation event is reported.
         Default Value: Send Report
       </Help>
-      <Item label="Do not send Report" value="0" />
-      <Item label="Send Report" value="1" />
+      <Item label="Do not send Report" value="0"/>
+      <Item label="Send Report" value="1"/>
     </Value>
     <Value type="list" index="13" genre="config" label="Central Scene Event Functionality" units="" min="0" max="1" value="0" size="1">
       <Help>
         Enables/disables the central scene function.
         Default Value: Disabled
       </Help>
-      <Item label="Disabled" value="0" />
-      <Item label="Enabled" value="1" />
+      <Item label="Disabled" value="0"/>
+      <Item label="Enabled" value="1"/>
     </Value>
     <Value type="list" index="14" genre="config" label="Tilt Sensor Functionality" units="" min="0" max="1" value="1" size="1">
       <Help>
         Enables/disables tilt function.
         Default Value: Enabled
       </Help>
-      <Item label="Disabled" value="0" />
-      <Item label="Enabled" value="1" />
+      <Item label="Disabled" value="0"/>
+      <Item label="Enabled" value="1"/>
     </Value>
   </CommandClass>
-  <!-- Association Groups -->   
+  <!-- Association Groups -->
   <CommandClass id="133">
     <Associations num_groups="4">
-       <Group index="1" max_associations="5" label="Lifeline" />
-       <Group index="2" max_associations="5" label="Control devices when magnet or external dry contacts trips" />
-       <Group index="3" max_associations="5" label="Sends our alarm message when magnet controlled or external dry sensor trips" />
-       <Group index="4" max_associations="5" label="Sends alarm messages when tamper is tripped" />
+      <Group index="1" max_associations="5" label="Lifeline"/>
+      <Group index="2" max_associations="5" label="Control devices when magnet or external dry contacts trips"/>
+      <Group index="3" max_associations="5" label="Sends our alarm message when magnet controlled or external dry sensor trips"/>
+      <Group index="4" max_associations="5" label="Sends alarm messages when tamper is tripped"/>
     </Associations>
   </CommandClass>
 </Product>

@@ -13,8 +13,8 @@
       <Entry author="Justin Hammond - Justin@dynam.ac" date="08 May 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1288/xml</Entry>
     </ChangeLog>
   </MetaData>
-  <!-- 
-Aeon Labs Panic Button Gen5 
+  <!--
+Aeon Labs Panic Button Gen5
 https://aeotec.freshdesk.com/helpdesk/attachments/6009584530
 -->
   <!-- Basic and SwitchMultiLevel are for when the KeyFob is in Group Mode.

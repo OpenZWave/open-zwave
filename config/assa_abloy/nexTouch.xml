@@ -7,27 +7,31 @@
     <MetaDataItem id="0B00" name="Identifier" type="8003">NTB620-ZW2</MetaDataItem>
     <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/2440/nexTouch TS Manual for Cert.pdf</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">1. Enter the 4-8 digit master PIN code followed by the gear key.
-2. Press the 7 key followed by the gear key.
-3. Press the 3 key followed by the gear key.</MetaDataItem>
+      2. Press the 7 key followed by the gear key.
+      3. Press the 3 key followed by the gear key.
+    </MetaDataItem>
     <MetaDataItem id="0B00" name="FrequencyName" type="8003">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem name="ResetDescription">Please use this procedure only when the network primary controller is missing or otherwise inoperable.
-1. Remove the inside lever with the lever removal tool.
-2. Remove battery cover using hex wrench provided with lock.
-3. Remove four (4) AA batteries.
-4. Remove the 10-32 x 3/4" pan head screw from the center of the battery housing into the barrel nut of the outside assembly.
-5. Remove inside escutcheon. Cables may stay connected.
-6. Reinstall batteries 
-7. On the back of the PC board, push and hold the Reset Button with the lever removal tool for 3 seconds.
-8. While continuing the press the reset button, temporarily remove one AA battery.
-9. Reinstall the battery
-10. Release reset button and wait 15 seconds. Speaker will announce "Welcome to Yale"
-11. Reassemble escutcheon</MetaDataItem>
+      1. Remove the inside lever with the lever removal tool.
+      2. Remove battery cover using hex wrench provided with lock.
+      3. Remove four (4) AA batteries.
+      4. Remove the 10-32 x 3/4" pan head screw from the center of the battery housing into the barrel nut of the outside assembly.
+      5. Remove inside escutcheon. Cables may stay connected.
+      6. Reinstall batteries
+      7. On the back of the PC board, push and hold the Reset Button with the lever removal tool for 3 seconds.
+      8. While continuing the press the reset button, temporarily remove one AA battery.
+      9. Reinstall the battery
+      10. Release reset button and wait 15 seconds. Speaker will announce "Welcome to Yale"
+      11. Reassemble escutcheon
+    </MetaDataItem>
     <MetaDataItem name="Description">Yale nexTouch™ provides small business owners a wireless access management solution with the security of commercial grade locks and the convenience and cost-efficiency of wireless installation. The nexTouch product is a keypad access lock designed to meet most small business applications, both interior and exterior. The lock can be paired with a Z-Wave system for easy integration into new and existing alarm and automation platforms.
 
-Yale nexTouch offers many benefits for the small business owner, including easy management of employee access rights and attendance, seeing to unattended deliveries, monitoring of business hours, managing remote locations, and increased security. Lock features may vary based on the chosen integration system, but typically include accommodation of up to 500 users, real-time notifications, audit trail, scheduling of access rights and remote access. To meet small business security needs Yale nexTouch locks are ANSI/BHMA Grade 1 certified, UL listed for use on fire doors and windstorm listed. The product is designed for standard commercial doors, ideal for employee, delivery or back entrances. The lock is available with a backlit push button or touchscreen keypad, the latter offering low battery and tamper alarm indicators on the device.</MetaDataItem>
+      Yale nexTouch offers many benefits for the small business owner, including easy management of employee access rights and attendance, seeing to unattended deliveries, monitoring of business hours, managing remote locations, and increased security. Lock features may vary based on the chosen integration system, but typically include accommodation of up to 500 users, real-time notifications, audit trail, scheduling of access rights and remote access. To meet small business security needs Yale nexTouch locks are ANSI/BHMA Grade 1 certified, UL listed for use on fire doors and windstorm listed. The product is designed for standard commercial doors, ideal for employee, delivery or back entrances. The lock is available with a backlit push button or touchscreen keypad, the latter offering low battery and tamper alarm indicators on the device.
+    </MetaDataItem>
     <MetaDataItem name="InclusionDescription">1. Enter the 4-8 digit master PIN code followed by the gear key.
-2. Press the 7 key followed by the gear key.
-3. Press the 1 key followed by the gear key.</MetaDataItem>
+      2. Press the 7 key followed by the gear key.
+      3. Press the 1 key followed by the gear key.
+    </MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="24 May 2019" revision="2">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1857/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="24 May 2019" revision="3">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1970/xml</Entry>
@@ -42,7 +46,7 @@ Yale nexTouch offers many benefits for the small business owner, including easy 
     http://products.z-wavealliance.org/products/1857
     http://products.z-wavealliance.org/products/1970
     -->
-    <!-- Configuration -->
+  <!-- Configuration -->
   <CommandClass id="112">
     <Value genre="config" index="1" instance="1" label="Silent Mode" size="1" type="list" value="3">
       <Help>Disable the door sensor alarm function.</Help>
@@ -60,9 +64,9 @@ Yale nexTouch offers many benefits for the small business owner, including easy 
     </Value>
     <Value genre="config" index="4" instance="1" label="Wrong Code Entry Limit" max="7" min="1" size="1" type="list" value="5">
       <Help>
-                The number of invalid code entries lock will accept before sending TAMPER Alarm.
-                When number of wrong code entries is exceeded, lock will disable keypad for the time specified by Shutdown Time parameter. (5 = default)
-            </Help>
+        The number of invalid code entries lock will accept before sending TAMPER Alarm.
+        When number of wrong code entries is exceeded, lock will disable keypad for the time specified by Shutdown Time parameter. (5 = default)
+      </Help>
       <Item label="3" value="3"/>
       <Item label="4" value="4"/>
       <Item label="5" value="5"/>
@@ -74,9 +78,9 @@ Yale nexTouch offers many benefits for the small business owner, including easy 
     </Value>
     <Value genre="config" index="5" instance="1" label="Language" max="3" min="1" size="1" type="list" value="1">
       <Help>
-                The number of invalid code entries lock will accept before sending TAMPER Alarm.
-                When number of wrong code entries is exceeded, lock will disable keypad for the time specified by Shutdown Time parameter. (5 = default)
-            </Help>
+        The number of invalid code entries lock will accept before sending TAMPER Alarm.
+        When number of wrong code entries is exceeded, lock will disable keypad for the time specified by Shutdown Time parameter. (5 = default)
+      </Help>
       <Item label="English" value="1"/>
       <Item label="Spanish" value="2"/>
       <Item label="French" value="3"/>
@@ -86,9 +90,9 @@ Yale nexTouch offers many benefits for the small business owner, including easy 
     </Value>
     <Value genre="config" index="8" instance="1" label="Operating Mode" max="2" min="0" size="1" type="list" value="1">
       <Help>
-                The number of invalid code entries lock will accept before sending TAMPER Alarm.
-                When number of wrong code entries is exceeded, lock will disable keypad for the time specified by Shutdown Time parameter. (5 = default)
-            </Help>
+        The number of invalid code entries lock will accept before sending TAMPER Alarm.
+        When number of wrong code entries is exceeded, lock will disable keypad for the time specified by Shutdown Time parameter. (5 = default)
+      </Help>
       <Item label="Normal" value="0"/>
       <Item label="Vacation" value="1"/>
       <Item label="Privacy" value="2"/>

@@ -5,48 +5,49 @@
     <MetaDataItem id="0002" name="ZWProductPage" type="6600">https://products.z-wavealliance.org/products/2535/</MetaDataItem>
     <MetaDataItem name="Description">Features:
 
-Control Via Smartphone - Configure, Control and unlock your Smart Door Lock from your smartphone via our secure Bluetooth App.
+      Control Via Smartphone - Configure, Control and unlock your Smart Door Lock from your smartphone via our secure Bluetooth App.
 
-Keyless - Say goodbye to keys, Open your Smart Door lock via your smartphone, Key Card or Key Tag.
+      Keyless - Say goodbye to keys, Open your Smart Door lock via your smartphone, Key Card or Key Tag.
 
-Simple to Fit - Engineered for easy installation.
+      Simple to Fit - Engineered for easy installation.
 
-Connectivity - Compatible with the Yale Smart Home system. (Yale module sold separately)
+      Connectivity - Compatible with the Yale Smart Home system. (Yale module sold separately)
 
-Security as standard - Built in tamper alarm, PAS24 accredited.
+      Security as standard - Built in tamper alarm, PAS24 accredited.
 
-Battery Operated - Powered by 4 AA batteries and a warning when they're running low.
+      Battery Operated - Powered by 4 AA batteries and a warning when they're running low.
 
-Battery Backup - A 9v battery connection port can be used to power the Smart door lock in the event of flat batteries.
+      Battery Backup - A 9v battery connection port can be used to power the Smart door lock in the event of flat batteries.
 
-Secure Push &amp; Turn Thumbturn - Engineered to give additional convenience and security to your door</MetaDataItem>
+      Secure Push &amp; Turn Thumbturn - Engineered to give additional convenience and security to your door
+    </MetaDataItem>
     <MetaDataItem id="0002" name="FrequencyName" type="6600">CEPT (Europe)</MetaDataItem>
     <MetaDataItem id="0002" name="Identifier" type="6600">SD-L1000-CH</MetaDataItem>
     <MetaDataItem name="InclusionDescription">Put the Z-Wave controller into add or learn mode
 
-Press the R button on the lock 3 times quickly (within 1.5 seconds)
+      Press the R button on the lock 3 times quickly (within 1.5 seconds)
 
-Refer to the operation manual of the Z-Wave controller to complete the learn in process
+      Refer to the operation manual of the Z-Wave controller to complete the learn in process
 
-For more information on this please visit:
-www.yale.co.uk/smart-living
-</MetaDataItem>
+      For more information on this please visit:
+      www.yale.co.uk/smart-living
+    </MetaDataItem>
     <MetaDataItem name="ResetDescription">Only use this when the existing Z-Wave controller is missing or inoperable
 
- Lift up the lever handle
+      Lift up the lever handle
 
-While holding the handle up, press the R button 3 times within 1.5 seconds
-</MetaDataItem>
+      While holding the handle up, press the R button 3 times within 1.5 seconds
+    </MetaDataItem>
     <MetaDataItem name="ExclusionDescription">Put the existing Z-Wave controller into Remove Mode
 
-Press the R button on the lock 3 times quickly (within 1.5 secs)
+      Press the R button on the lock 3 times quickly (within 1.5 secs)
 
-The lock is now ready to be added to a new Z-Wave controller
+      The lock is now ready to be added to a new Z-Wave controller
 
-For more information on this please visit:
-www.yale.co.uk/smart-living
+      For more information on this please visit:
+      www.yale.co.uk/smart-living
 
-</MetaDataItem>
+    </MetaDataItem>
     <MetaDataItem name="Name">Conexis L1</MetaDataItem>
     <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/2535/Instruction Manual V2a.pdf</MetaDataItem>
     <ChangeLog>
@@ -54,10 +55,10 @@ www.yale.co.uk/smart-living
     </ChangeLog>
   </MetaData>
   <!-- Yale Conexis L1 (SD-L1000-CH)
-http://ozw.my-ho.st/Yale/Yale%20ZWave%20Developer%20Guide.pdf 
+http://ozw.my-ho.st/Yale/Yale%20ZWave%20Developer%20Guide.pdf
 https://products.z-wavealliance.org/products/2535/configs
 -->
-	<!-- Configuration -->
+  <!-- Configuration -->
   <CommandClass id="112">
     <Value genre="config" index="1" instance="1" label="Volume" size="1" type="list" value="3">
       <Help>Volume of the keypad tones and any voice prompts (default = 3, high)</Help>
@@ -75,9 +76,9 @@ https://products.z-wavealliance.org/products/2535/configs
     </Value>
     <Value genre="config" index="4" instance="1" label="Wrong Tag Limit" max="20" min="1" size="1" type="list" value="5">
       <Help>
-		    Number of incorrect tags before lock will accept before sending TAMPER Alarm. 
-			When number of wrong code entries is exceeded, lock will disable for the time specified by Wrong tag timeout parameter. (5 = default)
-			</Help>
+        Number of incorrect tags before lock will accept before sending TAMPER Alarm.
+        When number of wrong code entries is exceeded, lock will disable for the time specified by Wrong tag timeout parameter. (5 = default)
+      </Help>
       <Item label="1" value="1"/>
       <Item label="2" value="2"/>
       <Item label="3" value="3"/>

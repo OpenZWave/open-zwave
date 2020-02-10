@@ -1,4 +1,5 @@
-<!-- FortrezZ: WWA-02 Water and Temperature Alarm --><Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+<!-- FortrezZ: WWA-02 Water and Temperature Alarm -->
+<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0084:0109:0023</MetaDataItem>
     <MetaDataItem name="ProductPic">images/fortrezz/wwa02.png</MetaDataItem>
@@ -8,7 +9,8 @@
     <MetaDataItem name="Name">WWA-02 - Wireless Water &amp; Temperature Alarm</MetaDataItem>
     <MetaDataItem name="Description">Wireless Water Alarm WWA-02AA. This product will provide you with peace of mind and the protection you expect. Water damages are caused by leaking pipes, corroded water heaters, water storage tanks, fixtures in bathrooms, laundry rooms, refrigerator drip pans etc.
 
-•Wireless Water Alarm WWA-02AA is a Z-Wave enabled device and is fully compatible with any Z-Wave enabled network. Inclusion of this WWA-02AA into a Z-WaveTM network allows remote status monitoring and alerts when the detector is triggered. Other Z-Wave nodes in the system also act as repeaters if they support that function.</MetaDataItem>
+      •Wireless Water Alarm WWA-02AA is a Z-Wave enabled device and is fully compatible with any Z-Wave enabled network. Inclusion of this WWA-02AA into a Z-WaveTM network allows remote status monitoring and alerts when the detector is triggered. Other Z-Wave nodes in the system also act as repeaters if they support that function.
+    </MetaDataItem>
     <MetaDataItem id="0109" name="Identifier" type="0023">WWA-02</MetaDataItem>
     <MetaDataItem id="0109" name="FrequencyName" type="0023">U.S. / Canada / Mexico</MetaDataItem>
     <ChangeLog>

@@ -39,7 +39,7 @@
     </Value>
     <Value genre="config" index="2" label="External input mode" max="2" min="0" size="1" type="list" units="" value="1">
       <Help>
-        External input mode.  The thermostat can be connected to an external device (like security system) dry output contacts and control the thermostat operating modes depending on the contacts state. If parameter value is 0 no action will be take (the input state is ignored by the thermostat logic). If parameter value is 1 the thermostat will be switched to the operating mode selected in Parameter 3 if the output was short-circuited. The thermostat will go back to previous mode as soon as the input is open. If parameter value is 2 the thermostat will be switched to the operating mode selected in Parameter 3 if the output was short-circuited. But the thermostat will not undertake any action if the input is open again.
+        External input mode. The thermostat can be connected to an external device (like security system) dry output contacts and control the thermostat operating modes depending on the contacts state. If parameter value is 0 no action will be take (the input state is ignored by the thermostat logic). If parameter value is 1 the thermostat will be switched to the operating mode selected in Parameter 3 if the output was short-circuited. The thermostat will go back to previous mode as soon as the input is open. If parameter value is 2 the thermostat will be switched to the operating mode selected in Parameter 3 if the output was short-circuited. But the thermostat will not undertake any action if the input is open again.
       </Help>
       <Item label="Ignore external input" value="0"/>
       <Item label="Trigger on input" value="1"/>
@@ -47,7 +47,7 @@
     </Value>
     <Value genre="config" index="3" label="Mode number" max="6" min="1" size="1" type="list" units="" value="2">
       <Help>
-        Mode number for EXT input action.  This parameter allows selecting which operating mode the thermostat should go to if the external input is short-circuited. 1=COM, 2=TIME, 3=DRY, 4=ECO, 5=VAC, 6=MAN. Note: When thermostat goes to MAN mode it will be in IDLE state till HEATING key is not pressed manually.
+        Mode number for EXT input action. This parameter allows selecting which operating mode the thermostat should go to if the external input is short-circuited. 1=COM, 2=TIME, 3=DRY, 4=ECO, 5=VAC, 6=MAN. Note: When thermostat goes to MAN mode it will be in IDLE state till HEATING key is not pressed manually.
       </Help>
       <Item label="COM" value="1"/>
       <Item label="TIME" value="2"/>

@@ -1,33 +1,37 @@
-<!-- GE(Jasco) 26933 Z-Wave Plus Smart Motion Dimmer --><Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
+<!-- GE(Jasco) 26933 Z-Wave Plus Smart Motion Dimmer -->
+<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0063:3034:494D</MetaDataItem>
     <MetaDataItem name="ProductPic">images/ge/26933-motion-dimmer.png</MetaDataItem>
     <MetaDataItem id="3034" name="ZWProductPage" type="494D">https://products.z-wavealliance.org/products/2108/</MetaDataItem>
     <MetaDataItem id="3034" name="Identifier" type="494D">26933</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">1. Follow the instructions for your Z-Wave certified
-controller to remove a device from the Z-Wave
-network.
-2. Once the controller is ready to remove your device,
-press and release the top button on the smart
-dimmer to remove it from the network.</MetaDataItem>
+      controller to remove a device from the Z-Wave
+      network.
+      2. Once the controller is ready to remove your device,
+      press and release the top button on the smart
+      dimmer to remove it from the network.
+    </MetaDataItem>
     <MetaDataItem id="3034" name="FrequencyName" type="494D">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem name="ResetDescription">Press and release the top button ten times within 5
-seconds. The LED will flash 3 times quickly confirming
-change.
-Note: This should only be used in the event your
-network’s primary controller is missing or otherwise
-inoperable</MetaDataItem>
+      seconds. The LED will flash 3 times quickly confirming
+      change.
+      Note: This should only be used in the event your
+      network’s primary controller is missing or otherwise
+      inoperable
+    </MetaDataItem>
     <MetaDataItem name="InclusionDescription">1. Follow the instructions for your Z-Wave certified
-controller to add the smart dimmer to the Z-Wave
-network.
-2. Once the controller is ready to add your smart
-dimmer, press and release the top or bottom
-button on the smart dimmer to include it in the
-network.</MetaDataItem>
+      controller to add the smart dimmer to the Z-Wave
+      network.
+      2. Once the controller is ready to add your smart
+      dimmer, press and release the top or bottom
+      button on the smart dimmer to include it in the
+      network.
+    </MetaDataItem>
     <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/2108/26933 EnFrSp QSG v1.3 and Parameters.pdf</MetaDataItem>
     <MetaDataItem name="Description">Transform any home into a smart home with the GE In-Wall Smart Motion Dimmer. This Z-Wave device replaces you current light switch using your existing wiring and provides Z-Wave wireless control of overhead lighting. The dimmer enables wireless control of On/Off functions of incandescent, LED, xenon, halogen and fluorescent lighting. Not only does it act as a dimmer but the GE In-Wall Smart Motion Dimmer has a built in PIR sensor which can control the local load and be set in occupancy or vacancy mode.
 
-</MetaDataItem>
+    </MetaDataItem>
     <MetaDataItem name="Name">In-Wall Smart Motion Dimmer</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2108/xml</Entry>
@@ -93,13 +97,13 @@ network.</MetaDataItem>
     </Value>
     <Value genre="config" index="15" label="Reset cycle" max="110" min="0" type="short" units="" value="2">
       <Help>0 = disable
-                  1 = 10 seconds
-                  2 = 20 seconds
-                  3 = 30 seconds
-                  4 = 45 seconds
-                  ...
-                  110 = 27 minutes 15 seconds 
-    	          </Help>
+        1 = 10 seconds
+        2 = 20 seconds
+        3 = 30 seconds
+        4 = 45 seconds
+        ...
+        110 = 27 minutes 15 seconds
+      </Help>
     </Value>
     <Value genre="config" index="16" label="Switch Mode" max="1" min="0" size="1" type="list" value="0">
       <Item label="Disabled" value="0"/>

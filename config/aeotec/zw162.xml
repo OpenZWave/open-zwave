@@ -1,56 +1,61 @@
 <!--
 ZW162 Doorbell 6
---><Product Revision="7" xmlns="https://github.com/OpenZWave/open-zwave">
+-->
+<Product Revision="7" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0371:00A2:0103</MetaDataItem>
     <MetaDataItem name="ProductPic">images/aeotec/zw162.png</MetaDataItem>
     <MetaDataItem id="00A2" name="ZWProductPage" type="0103">https://products.z-wavealliance.org/products/3218/</MetaDataItem>
     <MetaDataItem name="InclusionDescription">This product supports Security 2 Command Class. While a Security S2 enabled Controller is needed in order to fully use the security feature. This product can be included and operated in any Z-Wave network with other Z-Wave certified devices from other manufacturers and/or other applications. All non-battery operated nodes within the network will
-act as repeaters regardless of vendor to increase reliability of the network.
+      act as repeaters regardless of vendor to increase reliability of the network.
 
-1. Set your Z-Wave Controller into its 'Add Device' mode in order to add Chime into your Z-Wave system. Refer to the Controller's manual if you are unsure of how to perform this step.
+      1. Set your Z-Wave Controller into its 'Add Device' mode in order to add Chime into your Z-Wave system. Refer to the Controller's manual if you are unsure of how to perform this step.
 
-2. Power on Chime via the provided power adapter; its LED will be breathing white light all the time.
+      2. Power on Chime via the provided power adapter; its LED will be breathing white light all the time.
 
-3. Click Chime Action Button once, it will quickly flash white light for 30 seconds until Chime is added into the network. It will become constantly bright white light after being assigned a NodeID.
+      3. Click Chime Action Button once, it will quickly flash white light for 30 seconds until Chime is added into the network. It will become constantly bright white light after being assigned a NodeID.
 
-4. If your Z-Wave Controller supports S2 encryption, enter the first 5 digits of DSK into your Controller's interface if/when requested. The DSK is printed on Chime's housing.
+      4. If your Z-Wave Controller supports S2 encryption, enter the first 5 digits of DSK into your Controller's interface if/when requested. The DSK is printed on Chime's housing.
 
-5. If Adding fails, it will slowly flash white light 3 times and then become breathing white light; repeat steps 1 to 4. Contact us for further support if needed.
+      5. If Adding fails, it will slowly flash white light 3 times and then become breathing white light; repeat steps 1 to 4. Contact us for further support if needed.
 
-6. If Adding succeeds, it will quickly flash white light 3 times and then become off. Now, Chime is a part of your Z-Wave home control system. You can configure it and its automations via your Z-Wave system; please refer to your software's user guide for precise instructions.
+      6. If Adding succeeds, it will quickly flash white light 3 times and then become off. Now, Chime is a part of your Z-Wave home control system. You can configure it and its automations via your Z-Wave system; please refer to your software's user guide for precise instructions.
 
-Note:
-If Action Button is clicked again during the Learn Mode, the Learn Mode will exit. At the same time, Indicator Light will extinguish immediately, and then become breathing white light.</MetaDataItem>
+      Note:
+      If Action Button is clicked again during the Learn Mode, the Learn Mode will exit. At the same time, Indicator Light will extinguish immediately, and then become breathing white light.
+    </MetaDataItem>
     <MetaDataItem id="00A2" name="FrequencyName" type="0103">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem name="Name">Doorbell 6</MetaDataItem>
     <MetaDataItem name="Description">- S2 Security.
-- Not only a doorbell, but also can be used as a siren via setting.
-- Can be wireless controlled by more Button, up to 3.
-- Longer Button control distance, up to 120m.
-- Built-in multiple tones, up to 30.
-- Built-in multiple adjustable Light Effect.</MetaDataItem>
-    <MetaDataItem name="WakeupDescription"> </MetaDataItem>
+      - Not only a doorbell, but also can be used as a siren via setting.
+      - Can be wireless controlled by more Button, up to 3.
+      - Longer Button control distance, up to 120m.
+      - Built-in multiple tones, up to 30.
+      - Built-in multiple adjustable Light Effect.
+    </MetaDataItem>
+    <MetaDataItem name="WakeupDescription"></MetaDataItem>
     <MetaDataItem name="ExclusionDescription">1. Set your Z-Wave Controller into its ' Remove Device' mode in order to remove Chime from your Z-Wave system. Refer to the Controller's manual if you are unsure of how to perform this step.
 
-2. Power on Chime via the provided power adapter; its LED will be off.
+      2. Power on Chime via the provided power adapter; its LED will be off.
 
-3. Click Chime Action Button 6 times quickly; it will bright white light, up to 2s.
+      3. Click Chime Action Button 6 times quickly; it will bright white light, up to 2s.
 
-4. If Removing fails, it will keep off; repeat steps 1 to 3. Contact us for further support if needed.
+      4. If Removing fails, it will keep off; repeat steps 1 to 3. Contact us for further support if needed.
 
-5. If Removing succeeds, it will quickly flash white light 3 times and then become breathing white light. Now, Chime is removed from Z-Wave network successfully.</MetaDataItem>
+      5. If Removing succeeds, it will quickly flash white light 3 times and then become breathing white light. Now, Chime is removed from Z-Wave network successfully.
+    </MetaDataItem>
     <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/3292/Doorbell 6 product manual.pdf</MetaDataItem>
     <MetaDataItem name="ResetDescription">If the primary controller is missing or inoperable, you may need to reset the device to factory settings.
 
-Make sure the Chime is powered. To complete the reset process manually, press and hold the Action Button for at least 20s. The LED indicator will quickly flash white light 3 times and then become breathing white light, which indicates the reset operation is successful. Otherwise, please try again. Contact us for further support if needed.
+      Make sure the Chime is powered. To complete the reset process manually, press and hold the Action Button for at least 20s. The LED indicator will quickly flash white light 3 times and then become breathing white light, which indicates the reset operation is successful. Otherwise, please try again. Contact us for further support if needed.
 
-Note:
-1. This procedure should only be used when the primary controller is missing or inoperable.
-2. Factory Reset Chime will:
-(a) Remove Chime from Z-Wave network;
-(b) Delete the Association setting;
-(c) Restore the configuration settings to the default.(Except configuration parameter 51/52/53/54)</MetaDataItem>
+      Note:
+      1. This procedure should only be used when the primary controller is missing or inoperable.
+      2. Factory Reset Chime will:
+      (a) Remove Chime from Z-Wave network;
+      (b) Delete the Association setting;
+      (c) Restore the configuration settings to the default.(Except configuration parameter 51/52/53/54)
+    </MetaDataItem>
     <MetaDataItem id="00A2" name="Identifier" type="0103">ZW162-A</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 Jun 2019" revision="4">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/3218/xml</Entry>
@@ -113,12 +118,14 @@ Note:
       <BitSet id="19">
         <Label>List Random Playback</Label>
         <Help>If you’re not sure which tone to use, you can configure the value of Tone Play Mode to be 3. Then send Basic Set 0xFF to Endpoint 1 or Root Device to trigger auto-selecting tone function. Chime will play built-in tones randomly and the Default Tone Identifier will be changed each time a new tone is played. When send Basic Set 0x00 to Endpoint 1 or Root Device to stop playing tone, the Default Tone Identifier will store, which means the tone has been selected.
-Please note that the Tone Play Mode needs to be configured to be 0 or 1 after the tone is selected, otherwise the automatic selection tone function will be retriggered when the Endpoint 1 or Root Device is triggered to play tone and light again.</Help>
+          Please note that the Tone Play Mode needs to be configured to be 0 or 1 after the tone is selected, otherwise the automatic selection tone function will be retriggered when the Endpoint 1 or Root Device is triggered to play tone and light again.
+        </Help>
       </BitSet>
       <BitSet id="18">
         <Label>List Loop Playback</Label>
         <Help>If you’re not sure which tone to use, you can configure the value of Tone Play Mode to be 2. Then send Basic Set 0xFF to Endpoint 1 or Root Device to trigger auto-selecting tone function. Chime will play built-in tones in order and the Default Tone Identifier will be changed each time a new tone is played. When send Basic Set 0x00 to Endpoint 1 or Root Device to stop playing tone, the Default Tone Identifier will store, which means the tone has been selected.
-Please note that the Tone Play Mode needs to be configured to be 0 or 1 after the tone is selected, otherwise the automatic selection tone function will be retriggered when the Endpoint 1 or Root Device is triggered to play tone and light again.</Help>
+          Please note that the Tone Play Mode needs to be configured to be 0 or 1 after the tone is selected, otherwise the automatic selection tone function will be retriggered when the Endpoint 1 or Root Device is triggered to play tone and light again.
+        </Help>
       </BitSet>
       <BitSet id="17">
         <Label>Single Loop Playback</Label>
@@ -293,12 +300,12 @@ Please note that the Tone Play Mode needs to be configured to be 0 or 1 after th
   </CommandClass>
   <CommandClass id="20">
     <Compatibility>
-    	<GetSupported>false</GetSupported>
+      <GetSupported>false</GetSupported>
     </Compatibility>
   </CommandClass>
   <CommandClass id="96">
     <Compatibility>
-        <MapRootToEndpoint>true</MapRootToEndpoint>
+      <MapRootToEndpoint>true</MapRootToEndpoint>
     </Compatibility>
     <Instance index="1" label="Browse"/>
     <Instance index="2" label="Tampering"/>

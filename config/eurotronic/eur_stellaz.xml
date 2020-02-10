@@ -34,8 +34,8 @@
     <Compatibility>
       <Base>0</Base>
     </Compatibility>
-  
-  				
-               <!-- <Value instance="1" index="7" action="remove" />-->
-        </CommandClass>
+
+
+    <!-- <Value instance="1" index="7" action="remove" />-->
+  </CommandClass>
 </Product>

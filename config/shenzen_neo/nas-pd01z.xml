@@ -4,35 +4,39 @@
     <MetaDataItem name="ProductPic">images/shenzen_neo/nas-pd01z.png</MetaDataItem>
     <MetaDataItem id="0083" name="ZWProductPage" type="0003">https://products.z-wavealliance.org/products/1671/</MetaDataItem>
     <MetaDataItem id="0083" name="FrequencyName" type="0003">U.S. / Canada / Mexico</MetaDataItem>
-    <MetaDataItem name="ExclusionDescription">1.Remove the device cover. 
+    <MetaDataItem name="ExclusionDescription">1.Remove the device cover.
 
-2.Make sure the sensor is powered. 
+      2.Make sure the sensor is powered.
 
-3.Set Z‐Wave controller or Z‐Wave gateway into exclusion mode (Refer to the controller or gateway operating manual) 
-4.Press the button three times within 1.5 second, the device will enter exclusion mode. </MetaDataItem>
+      3.Set Z‐Wave controller or Z‐Wave gateway into exclusion mode (Refer to the controller or gateway operating manual)
+      4.Press the button three times within 1.5 second, the device will enter exclusion mode.
+    </MetaDataItem>
     <MetaDataItem name="ResetDescription">Reset procedure will delete all information on the Z‐Wave network and Z‐Wave controller or Z‐Wave Gateway, and restore the sensor to factory default settings.
-1.Remove the device cover. 
+      1.Remove the device cover.
 
-2.Make sure the sensor is powered. 
+      2.Make sure the sensor is powered.
 
-3.Press and hold the button for 10 seconds, Led will blink once. 
+      3.Press and hold the button for 10 seconds, Led will blink once.
 
-4.Release the button. 
+      4.Release the button.
 
-Note: to use the reset procedure only when the primary controller is missing or inoperable.</MetaDataItem>
+      Note: to use the reset procedure only when the primary controller is missing or inoperable.
+    </MetaDataItem>
     <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/1920/Motion Detector User Guide EU V3.3.pdf</MetaDataItem>
     <MetaDataItem name="Name">Motion Sensor (PIR)</MetaDataItem>
-    <MetaDataItem name="InclusionDescription">1.Remove the sensor cover. 
+    <MetaDataItem name="InclusionDescription">1.Remove the sensor cover.
 
-2.Make sure the sensor is powered. 
+      2.Make sure the sensor is powered.
 
-3.Set Z‐Wave controller or Z‐Wave gateway into inclusion mode (Refer to the controller or gateway operating manual) 
-4.Press the button three times within 1.5 second, the device will enter inclusion mode. And the LED will flash on and off alternately five times. </MetaDataItem>
+      3.Set Z‐Wave controller or Z‐Wave gateway into inclusion mode (Refer to the controller or gateway operating manual)
+      4.Press the button three times within 1.5 second, the device will enter inclusion mode. And the LED will flash on and off alternately five times.
+    </MetaDataItem>
     <MetaDataItem name="Description">This product can be included and operated in any Z‐Wave network with other Z‐Wave certified devices from other manufacturers and/or other applications. All non‐battery operated nodes within the network will act as repeaters regardless of vendor to increase reliability of the network.
 
-In the Back casing, there is a button that is used to carry out include, exclude, wake up device or reset factory default settings.
+      In the Back casing, there is a button that is used to carry out include, exclude, wake up device or reset factory default settings.
 
-When power is first supplied, the LED will flash on and off alternately at one second intervals within 5 seconds if the detector has not been added a Z‐Wave network. Please get familiar with the terms below before starting the operations.</MetaDataItem>
+      When power is first supplied, the LED will flash on and off alternately at one second intervals within 5 seconds if the detector has not been added a Z‐Wave network. Please get familiar with the terms below before starting the operations.
+    </MetaDataItem>
     <MetaDataItem id="0083" name="Identifier" type="0003">NAS-PD01Z</MetaDataItem>
     <MetaDataItem name="WakeupDescription">You can press the button once to wake up the device and send wakeup notification to controller. If press successfully, the LED will blink one time</MetaDataItem>
     <ChangeLog>
@@ -96,7 +100,8 @@ When power is first supplied, the LED will flash on and off alternately at one s
     </Value>
     <Value genre="config" index="8" instance="1" label="Lux Level Function Enable" size="1" type="list" value="0">
       <Help>If this parameter is set to Enable, and when Lux level less than the value define by parameter #5, PIR detector will send a BASIC_SET command frame(i.e. BASIC_SET (value = parameter 3) to an associated device and activate it.
-        If Lux Level greater than the value define by parameter #5, PIR detector will not send a BASIC_SET command frame.</Help>
+        If Lux Level greater than the value define by parameter #5, PIR detector will not send a BASIC_SET command frame.
+      </Help>
       <Item label="Disable" value="0"/>
       <Item label="Enable" value="1"/>
     </Value>
@@ -104,7 +109,7 @@ When power is first supplied, the LED will flash on and off alternately at one s
       <Help>This parameter defines by how much Lux Level must change, in lux, to be reported to the main controller.</Help>
     </Value>
     <Value genre="config" index="10" instance="1" label="Led Blink Enable" size="1" type="list" value="1">
-      <Help>This parameter can enabled or disable the PIR led blinking function. </Help>
+      <Help>This parameter can enabled or disable the PIR led blinking function.</Help>
       <Item label="Disable" value="0"/>
       <Item label="Enable" value="1"/>
     </Value>

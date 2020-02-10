@@ -1,19 +1,22 @@
 <!-- Honeywell(Jasco) 39348 / ZW4008 In-Wall Smart Switch-->
-<Product Revision="1" 
-  xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="1"
+         xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <!--<MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/</MetaDataItem>-->
     <MetaDataItem name="ProductPic">images/honeywell/39348-ZW4008.png</MetaDataItem>
     <MetaDataItem id="3135" name="ZWProductPage" type="4952">https://products.z-wavealliance.org/products/3599/</MetaDataItem>
     <MetaDataItem id="3135" name="Identifier" type="4952">39348 / ZW4008</MetaDataItem>
     <MetaDataItem name="InclusionDescription">1. Follow the instructions for your Z-Wave certified controller to add a device to the Z-Wave network.
-2. Once the controller is ready to add your device, press and release the top or bottom of the wireless smart switch (rocker) to add it in the network.
+      2. Once the controller is ready to add your device, press and release the top or bottom of the wireless smart switch (rocker) to add it in the network.
 
-If prompted by the controller to enter the S2 security code, refer to the QR code/security number on the back of the box, or the QR code label on the product.</MetaDataItem>
+      If prompted by the controller to enter the S2 security code, refer to the QR code/security number on the back of the box, or the QR code label on the product.
+    </MetaDataItem>
     <MetaDataItem name="ResetDescription">Quickly press ON (top) button 3 times, then, immediately press the OFF (bottom) button 3 times. The LED will flash ON/OFF 5 times when completed successfully.
-Note: This should only be used in the event your network’s primary controller is missing or otherwise inoperable.</MetaDataItem>
+      Note: This should only be used in the event your network’s primary controller is missing or otherwise inoperable.
+    </MetaDataItem>
     <MetaDataItem name="ExclusionDescription">1. Follow the instructions for your Z-Wave certified controller to remove a device from the Z-Wave network.
-2. Once the controller is ready to remove your device, press and release the top or bottom of the wireless smart switch (rocker) to remove it from the network.</MetaDataItem>
+      2. Once the controller is ready to remove your device, press and release the top or bottom of the wireless smart switch (rocker) to remove it from the network.
+    </MetaDataItem>
     <MetaDataItem name="Name">In-Wall Smart Switch</MetaDataItem>
     <MetaDataItem id="3135" name="FrequencyName" type="4952">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem name="Description">In-Wall Smart Switch with QuickFit and SimpleWire enhancements. Revolutionary QuickFit design features a housing depth that is up to 20 percent smaller than the previous Z-Wave models. This reduced size coupled with the elimination of heat taps provides a better fit in older style boxes and multi-gang configurations. SimpleWire technology allows line and load to automatically be configured with auto-sensing line-load terminals. All of this is coupled with Z-Wave S2 and Smart Start allows for effortless installation while being safer than ever!</MetaDataItem>
@@ -32,8 +35,9 @@ Note: This should only be used in the event your network’s primary controller 
       <Item label="LED always on" value="3"/>
     </Value>
     <Value genre="config" index="19" label="Alternate Exclusion" max="1" size="1" type="list" value="0">
-      <Help>0 (default) - Press any button on the device 
-1 - Press 2 times ON button and then 2 times OFF button, LED will flash 5 times if done successful</Help>
+      <Help>0 (default) - Press any button on the device
+        1 - Press 2 times ON button and then 2 times OFF button, LED will flash 5 times if done successful
+      </Help>
       <Item label="Any button" value="0"/>
       <Item label="2x ON button, 2x OFF button" value="1"/>
     </Value>

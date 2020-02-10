@@ -16,9 +16,9 @@
       4. If you are adding in Security S2 Authenticated, scan the DSK QR code or input the underlined part of the DSK (label on the bottom of the box).
       5. LED will start blinking yellow, wait for the adding process to end.
       6. Adding result will be confirmed by the Z-Wave controller's message and the LED frame:
-        - Green: successful (non-secure, S0, S2 non-authenticated),
-        - Magenta: successful (Security S2 Authenticated),
-        - Red: not successful.
+      - Green: successful (non-secure, S0, S2 non-authenticated),
+      - Magenta: successful (Security S2 Authenticated),
+      - Red: not successful.
     </MetaDataItem>
     <MetaDataItem name="ExclusionDescription">
       To remove the device from the Z-Wave network:
@@ -77,7 +77,7 @@
       </Help>
     </Value>
 
-    <Value genre="config" index="24" label="Buttons orientation" max="1" min="0"  size="1" type="list" value="0">
+    <Value genre="config" index="24" label="Buttons orientation" max="1" min="0" size="1" type="list" value="0">
       <Help>
         This parameter allows reversing the operation of the buttons.
 
@@ -88,7 +88,7 @@
       <Item label="Reversed" value="1"/>
     </Value>
 
-    <Value genre="config" index="25" label="Outputs orientation" max="1" min="0"  size="1" type="list" value="0">
+    <Value genre="config" index="25" label="Outputs orientation" max="1" min="0" size="1" type="list" value="0">
       <Help>
         This parameter allows reversing the operation of Q1 and Q2 without changing the wiring (e.g. in case of invalid motor connection).
 
@@ -108,15 +108,15 @@
         2B - Notification Status
         3B - Event/State Parameters
         4B [LSB] - action:
-          0x00 - no action,
-          0xX1 - open,
-          0xX2 - close,
-          0x0X - no action on LED frame,
-          0x1X - LED frame blinks red,
-          0x2X - LED frame blinks green,
-          0x4X - LED frame blinks blue,
-          0x8X - dis- able LED frame,
-          0xFX - LED frame LAPD signal (red-white-blue)
+        0x00 - no action,
+        0xX1 - open,
+        0xX2 - close,
+        0x0X - no action on LED frame,
+        0x1X - LED frame blinks red,
+        0x2X - LED frame blinks green,
+        0x4X - LED frame blinks blue,
+        0x8X - dis- able LED frame,
+        0xFX - LED frame LAPD signal (red-white-blue)
 
         Default value: [0x00, 0x00, 0x00, 0x00] (disabled)
       </Help>
@@ -131,15 +131,15 @@
         2B – Notification Status
         3B – Event/State Parameters
         4B [LSB] – action:
-          0x00 - no action,
-          0xX1 - open,
-          0xX2 - close,
-          0x0X - no action on LED frame,
-          0x1X - LED frame blinks red,
-          0x2X - LED frame blinks green,
-          0x4X - LED frame blinks blue,
-          0x8X - dis- able LED frame,
-          0xFX - LED frame LAPD signal (red-white-blue)
+        0x00 - no action,
+        0xX1 - open,
+        0xX2 - close,
+        0x0X - no action on LED frame,
+        0x1X - LED frame blinks red,
+        0x2X - LED frame blinks green,
+        0x4X - LED frame blinks blue,
+        0x8X - dis- able LED frame,
+        0xFX - LED frame LAPD signal (red-white-blue)
 
         Default value: [0x05, 0xFF, 0x00, 0x00] (Water Alarm, any notification, no action)
       </Help>
@@ -154,15 +154,15 @@
         2B - Notification Status
         3B - Event/State Parameters
         4B [LSB] - action:
-          0x00 - no action,
-          0xX1 - open,
-          0xX2 - close,
-          0x0X - no action on LED frame,
-          0x1X - LED frame blinks red,
-          0x2X - LED frame blinks green,
-          0x4X - LED frame blinks blue,
-          0x8X - dis- able LED frame,
-          0xFX - LED frame LAPD signal (red-white-blue)
+        0x00 - no action,
+        0xX1 - open,
+        0xX2 - close,
+        0x0X - no action on LED frame,
+        0x1X - LED frame blinks red,
+        0x2X - LED frame blinks green,
+        0x4X - LED frame blinks blue,
+        0x8X - dis- able LED frame,
+        0xFX - LED frame LAPD signal (red-white-blue)
 
         Default value: [0x01, 0xFF, 0x00, 0x00] (Smoke Alarm, any notification, no action)
       </Help>
@@ -177,15 +177,15 @@
         2B - Notification Status
         3B - Event/State Parameters
         4B [LSB] - action:
-          0x00 - no action,
-          0xX1 - open,
-          0xX2 - close,
-          0x0X - no action on LED frame,
-          0x1X - LED frame blinks red,
-          0x2X - LED frame blinks green,
-          0x4X - LED frame blinks blue,
-          0x8X - dis- able LED frame,
-          0xFX - LED frame LAPD signal (red-white-blue)
+        0x00 - no action,
+        0xX1 - open,
+        0xX2 - close,
+        0x0X - no action on LED frame,
+        0x1X - LED frame blinks red,
+        0x2X - LED frame blinks green,
+        0x4X - LED frame blinks blue,
+        0x8X - dis- able LED frame,
+        0xFX - LED frame LAPD signal (red-white-blue)
 
         Default value: [0x02, 0xFF, 0x00, 0x00] (CO Alarm, any notification, no action)
       </Help>
@@ -200,15 +200,15 @@
         2B - Notification Status
         3B - Event/State Parameters
         4B [LSB] - action:
-          0x00 - no action,
-          0xX1 - open,
-          0xX2 - close,
-          0x0X - no action on LED frame,
-          0x1X - LED frame blinks red,
-          0x2X - LED frame blinks green,
-          0x4X - LED frame blinks blue,
-          0x8X - dis- able LED frame,
-          0xFX - LED frame LAPD signal (red-white-blue)
+        0x00 - no action,
+        0xX1 - open,
+        0xX2 - close,
+        0x0X - no action on LED frame,
+        0x1X - LED frame blinks red,
+        0x2X - LED frame blinks green,
+        0x4X - LED frame blinks blue,
+        0x8X - dis- able LED frame,
+        0xFX - LED frame LAPD signal (red-white-blue)
 
         Default value: [0x02, 0xFF, 0x00, 0x00] (CO Alarm, any notification, no action)
       </Help>

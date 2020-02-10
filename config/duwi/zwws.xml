@@ -6,7 +6,7 @@
     <MetaDataItem id="0000" name="FrequencyName" type="5002">CEPT (Europe)</MetaDataItem>
     <MetaDataItem name="ProductPage">http://www.duewi.de/index.php?productid=37276</MetaDataItem>
     <MetaDataItem name="ProductSupport">http://www.duewi.de/index.php?productid=29184</MetaDataItem>
-    <MetaDataItem name="Description">For wireless switching, resp. control of: all Z-Wave wireless switch inserts and wireless intermediate plugs, existing installations can also  be expanded without flush-mounted power point,  high flexibility with installation due to extremely flat design, to stick or screw on to various substrates, for installation in existing switch box or clipping-in in multiple combinations.</MetaDataItem>
+    <MetaDataItem name="Description">For wireless switching, resp. control of: all Z-Wave wireless switch inserts and wireless intermediate plugs, existing installations can also be expanded without flush-mounted power point, high flexibility with installation due to extremely flat design, to stick or screw on to various substrates, for installation in existing switch box or clipping-in in multiple combinations.</MetaDataItem>
     <MetaDataItem name="Name">ZWWS - Z-Wave wall-mounted Wall Switch</MetaDataItem>
     <MetaDataItem id="0000" name="Identifier" type="5002">ZWWS</MetaDataItem>
     <ChangeLog>

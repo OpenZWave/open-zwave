@@ -5,10 +5,11 @@
     <MetaDataItem id="0334" name="ZWProductPage" type="0301">https://products.z-wavealliance.org/products/814/</MetaDataItem>
     <MetaDataItem id="0334" name="Identifier" type="0301">VRS15</MetaDataItem>
     <MetaDataItem name="Description">- Manual and remote ON/OFF control of connected loads
-- LED Display options control the length of time they remain lit
-- Push pad always returns to a neutral position whether switch is on or off so it maintains a consistent appearance when mixed in a multi-switch wall box
-- Compatible with Decora Plus screwless wallplates and Decora wallplates
-- Requires the Vizia RF + Handheld Remote - VRCPG for programming and control of the Vizia RF + System (sold separately)</MetaDataItem>
+      - LED Display options control the length of time they remain lit
+      - Push pad always returns to a neutral position whether switch is on or off so it maintains a consistent appearance when mixed in a multi-switch wall box
+      - Compatible with Decora Plus screwless wallplates and Decora wallplates
+      - Requires the Vizia RF + Handheld Remote - VRCPG for programming and control of the Vizia RF + System (sold separately)
+    </MetaDataItem>
     <MetaDataItem id="0334" name="FrequencyName" type="0301">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem name="Name">Wall Switch, 15A</MetaDataItem>
     <ChangeLog>

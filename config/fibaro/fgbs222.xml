@@ -5,59 +5,59 @@
     <MetaDataItem id="1000" name="ZWProductPage" type="0502">https://products.z-wavealliance.org/products/3285/</MetaDataItem>
     <MetaDataItem id="1000" name="Identifier" type="0502">FGBS-222</MetaDataItem>
     <MetaDataItem name="Description">FIBARO Smart Implant allows to enhance the functionality of wired sensors and other devices by adding Z-Wave network communication.
-You can connect binary sensors, analog sensors, DS18B20 temperature sensors or DHT22 humidity and temperature sensor to report their readings to the Z-Wave controller.
-It can also control devices by opening/closing output contacts independently of the inputs.
+      You can connect binary sensors, analog sensors, DS18B20 temperature sensors or DHT22 humidity and temperature sensor to report their readings to the Z-Wave controller.
+      It can also control devices by opening/closing output contacts independently of the inputs.
 
-Main features of FIBARO Smart Implant:
-- Compatible with any Z-Wave or Z-Wave+ Controller,
-- Supports Z-Wave network Security Modes: S0 with AES-128 encryption and S2 with PRNG-based encryption,
-- Allows for connecting sensors:
-   o	6 DS18B20 sensors, 
-   o	1 DHT sensor,
-   o	2 2-wire analog sensor,
-   o	2 3-wire analog sensor,
-   o	2 binary sensors. 
-- Works as a Z-Wave signal repeater,
-- Built-in temperature sensor.
-</MetaDataItem>
+      Main features of FIBARO Smart Implant:
+      - Compatible with any Z-Wave or Z-Wave+ Controller,
+      - Supports Z-Wave network Security Modes: S0 with AES-128 encryption and S2 with PRNG-based encryption,
+      - Allows for connecting sensors:
+      o 6 DS18B20 sensors,
+      o 1 DHT sensor,
+      o 2 2-wire analog sensor,
+      o 2 3-wire analog sensor,
+      o 2 binary sensors.
+      - Works as a Z-Wave signal repeater,
+      - Built-in temperature sensor.
+    </MetaDataItem>
     <MetaDataItem name="ExclusionDescription">To remove the device from the Z-Wave network:
-1.	Power the device.
-2.	Set the main controller into remove mode (see the controller’s manual).
-3.	Quickly, triple click button on the device housing or switch connected to IN1 or IN2.
-4.	LED will start blinking yellow, wait for the removing process to end.
-5.	Successful removing will be confirmed by the Z-Wave controller’s message.
-</MetaDataItem>
+      1. Power the device.
+      2. Set the main controller into remove mode (see the controller’s manual).
+      3. Quickly, triple click button on the device housing or switch connected to IN1 or IN2.
+      4. LED will start blinking yellow, wait for the removing process to end.
+      5. Successful removing will be confirmed by the Z-Wave controller’s message.
+    </MetaDataItem>
     <MetaDataItem name="WakeupDescription">FIBARO Smart Implant is powered using DC power supply unit so it is always awake.</MetaDataItem>
     <MetaDataItem name="Name">Smart Implant</MetaDataItem>
     <MetaDataItem name="InclusionDescription">To add the device to the Z-Wave network manually:
-1.	Power the device.
-2.	Set the main controller in (Security/non-Security Mode) add mode (see the controller’s manual).
-3.	Quickly, triple click button on the device housing or switch connected to IN1 or IN2.
-4.	If you are adding in Security S2 Authenticated, scan the DSK QR code or input the 5-digit PIN code (label on the bottom of the box).
-5.	LED will start blinking yellow, wait for the adding process to end.
-6.	Successful adding will be confirmed by the Z-Wave controller’s message.
- 
-To add the device to the Z-Wave network using Smart Start:
-1.	Set the main controller in Security S2 Authenticated add mode (see the controller’s manual). 
-2.	Scan the DSK QR code or input the 5-digit PIN code (label on the bottom of the box).
-3.	Power the device.
-4.	LED will start blinking yellow, wait for the adding process to end.
-5.	Successful adding will be confirmed by the Z-Wave controller’s message.
-</MetaDataItem>
+      1. Power the device.
+      2. Set the main controller in (Security/non-Security Mode) add mode (see the controller’s manual).
+      3. Quickly, triple click button on the device housing or switch connected to IN1 or IN2.
+      4. If you are adding in Security S2 Authenticated, scan the DSK QR code or input the 5-digit PIN code (label on the bottom of the box).
+      5. LED will start blinking yellow, wait for the adding process to end.
+      6. Successful adding will be confirmed by the Z-Wave controller’s message.
+
+      To add the device to the Z-Wave network using Smart Start:
+      1. Set the main controller in Security S2 Authenticated add mode (see the controller’s manual).
+      2. Scan the DSK QR code or input the 5-digit PIN code (label on the bottom of the box).
+      3. Power the device.
+      4. LED will start blinking yellow, wait for the adding process to end.
+      5. Successful adding will be confirmed by the Z-Wave controller’s message.
+    </MetaDataItem>
     <MetaDataItem id="1000" name="FrequencyName" type="0502">CEPT (Europe)</MetaDataItem>
     <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/3285/FGBS-222-EN-T-v1.2c.pdf</MetaDataItem>
     <MetaDataItem name="ResetDescription">Reset procedure allows to restore the device back to its factory settings, which means all information about the Z-Wave controller and user configuration will be deleted.
 
-Resetting the device is not the recommended way of
-removing the device from the Z-Wave network. Use this procedure only when the network primary controller is missing or inoperable. Certain device removal can be achieved by the procedure of removing described.
+      Resetting the device is not the recommended way of
+      removing the device from the Z-Wave network. Use this procedure only when the network primary controller is missing or inoperable. Certain device removal can be achieved by the procedure of removing described.
 
-1.	Press and hold the button to enter the menu.
-2.	Release button when the device glows yellow.
-3.	Quickly click the button to confirm.
-4.	After few seconds the device will be restarted, which is signalled with the red colour.
+      1. Press and hold the button to enter the menu.
+      2. Release button when the device glows yellow.
+      3. Quickly click the button to confirm.
+      4. After few seconds the device will be restarted, which is signalled with the red colour.
 
 
-</MetaDataItem>
+    </MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 Jun 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/3195/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 Jun 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/3285/xml</Entry>
@@ -73,7 +73,7 @@ removing the device from the Z-Wave network. Use this procedure only when the ne
   <CommandClass id="112">
     <Value genre="config" index="20" instance="1" label="Input 1 operating mode" size="1" type="list" value="2">
       <Help>
-        This parameter allows to choose mode of 1st input (IN1). 
+        This parameter allows to choose mode of 1st input (IN1).
         Change it depending on connected device.
       </Help>
       <Item label="Normally closed alarm input" value="0"/>
@@ -85,7 +85,7 @@ removing the device from the Z-Wave network. Use this procedure only when the ne
     </Value>
     <Value genre="config" index="21" instance="1" label="Input 2 operating mode" size="1" type="list" value="2">
       <Help>
-        This parameter allows to choose mode of 2nd input (IN2). 
+        This parameter allows to choose mode of 2nd input (IN2).
         Change it depending on connected device.
       </Help>
       <Item label="Normally closed alarm input" value="0"/>
@@ -97,7 +97,7 @@ removing the device from the Z-Wave network. Use this procedure only when the ne
     </Value>
     <Value genre="config" index="24" instance="1" label="Inputs orientation" size="1" type="list" value="0">
       <Help>
-        This parameter allows reversing operation of IN1 and IN2 inputs without changing the wiring. 
+        This parameter allows reversing operation of IN1 and IN2 inputs without changing the wiring.
         Use in case of incorrect wiring.
       </Help>
       <Item label="Default (IN1 - 1st input, IN2 - 2nd input)" value="0"/>
@@ -105,7 +105,7 @@ removing the device from the Z-Wave network. Use this procedure only when the ne
     </Value>
     <Value genre="config" index="25" instance="1" label="Outputs orientation" size="1" type="list" value="0">
       <Help>
-        This parameter allows reversing operation of OUT1 and OUT2 inputs without changing the wiring. 
+        This parameter allows reversing operation of OUT1 and OUT2 inputs without changing the wiring.
         Use in case of incorrect wiring.
       </Help>
       <Item label="Default (OUT1 - 1st output, OUT2 - 2nd output)" value="0"/>
@@ -113,7 +113,7 @@ removing the device from the Z-Wave network. Use this procedure only when the ne
     </Value>
     <Value genre="config" index="40" instance="1" label="Input 1 sent scenes" size="1" type="byte" value="0">
       <Help>
-        This parameter defines which actions result in sending scene ID and attribute assigned to them. 
+        This parameter defines which actions result in sending scene ID and attribute assigned to them.
         Parameter is relevant only if parameter 20 is set to 2 or 3. bitmask.
         0 => No scenes sent.
         1 => Key pressed 1 time.
@@ -124,7 +124,7 @@ removing the device from the Z-Wave network. Use this procedure only when the ne
     </Value>
     <Value genre="config" index="41" instance="1" label="Input 2 sent scenes" size="1" type="byte" value="0">
       <Help>
-        This parameter defines which actions result in sending scene ID and attribute assigned to them. 
+        This parameter defines which actions result in sending scene ID and attribute assigned to them.
         Parameter is relevant only if parameter 21 is set to 2 or 3. bitmask.
         0 => No scenes sent.
         1 => Key pressed 1 time.
@@ -164,7 +164,7 @@ removing the device from the Z-Wave network. Use this procedure only when the ne
     <Value genre="config" index="150" instance="1" label="Input 1 sensitivity" max="100" min="1" type="byte" units="10ms" value="10">
       <Help>
         This parameter defines the inertia time of IN1 input in alarm modes.
-        Adjust this parameter to prevent bouncing or signal disruptions. 
+        Adjust this parameter to prevent bouncing or signal disruptions.
         Parameter is relevant only if parameter 20 is set to 0 or 1 (alarm mode).
         Available settings: 1-100 (10ms-1000ms, 10ms step).
         Default setting: 10 (100ms).
@@ -180,21 +180,21 @@ removing the device from the Z-Wave network. Use this procedure only when the ne
     </Value>
     <Value genre="config" index="152" instance="1" label="Input 1 delay of alarm cancellation" max="3600" min="0" type="short" units="seconds" value="0">
       <Help>
-        This parameter defines additional delay of cancelling the alarm on IN1 input. 
+        This parameter defines additional delay of cancelling the alarm on IN1 input.
         Parameter is relevant only if parameter 20 is set to 0 or 1 (alarm mode).
         Available settings:
-          0 - no delay.
-          1-3600s.
+        0 - no delay.
+        1-3600s.
         Default setting: 0 (no delay).
       </Help>
     </Value>
     <Value genre="config" index="153" instance="1" label="Input 2 delay of alarm cancellation" max="3600" min="0" type="short" units="seconds" value="0">
       <Help>
-        This parameter defines additional delay of cancelling the alarm on IN2 input. 
+        This parameter defines additional delay of cancelling the alarm on IN2 input.
         Parameter is relevant only if parameter 21 is set to 0 or 1 (alarm mode).
         Available settings:
-          0 - no delay.
-          1-3600s.
+        0 - no delay.
+        1-3600s.
         Default setting: 0 (no delay).
       </Help>
     </Value>
@@ -212,8 +212,8 @@ removing the device from the Z-Wave network. Use this procedure only when the ne
       <Help>
         This parameter defines time after which OUT1 will be automatically deactivated.
         Available settings:
-          0 - auto off disabled.
-          1-27000 (0.1s-45min, 0.1s step).
+        0 - auto off disabled.
+        1-27000 (0.1s-45min, 0.1s step).
         Default setting: 0 (auto off disabled).
       </Help>
     </Value>
@@ -221,8 +221,8 @@ removing the device from the Z-Wave network. Use this procedure only when the ne
       <Help>
         This parameter defines time after which OUT2 will be automatically deactivated.
         Available settings:
-          0 - auto off disabled.
-          1-27000 (0.1s-45min, 0.1s step).
+        0 - auto off disabled.
+        1-27000 (0.1s-45min, 0.1s step).
         Default setting: 0 (auto off disabled).
       </Help>
     </Value>
@@ -232,8 +232,8 @@ removing the device from the Z-Wave network. Use this procedure only when the ne
         analog input value that results in sending new report. Parameter is
         relevant only for analog inputs (parameter 20 or 21 set to 4 or 5).
         Available settings:
-          0 - (reporting on change disabled).
-          1-100 (0.1-10V, 0.1V step).
+        0 - (reporting on change disabled).
+        1-100 (0.1-10V, 0.1V step).
         Default setting: 5 (0.5V).
       </Help>
     </Value>
@@ -243,8 +243,8 @@ removing the device from the Z-Wave network. Use this procedure only when the ne
         Periodical reports are independent from changes in value (parameter 63). Parameter is relevant only for analog inputs (parameter
         20 or 21 set to 4 or 5).
         Available settings:
-          0 (periodical reports disabled).
-          60-32400 (60s-9h).
+        0 (periodical reports disabled).
+        60-32400 (60s-9h).
         Default setting: 0 (periodical reports disabled).
       </Help>
     </Value>
@@ -254,8 +254,8 @@ removing the device from the Z-Wave network. Use this procedure only when the ne
         of internal temperature sensor value that results in sending new
         report.
         Available settings:
-          0 - (reporting on change disabled).
-          1-255 (0.1-25.5C).
+        0 - (reporting on change disabled).
+        1-255 (0.1-25.5C).
         Default setting: 5 (0.5C).
       </Help>
     </Value>
@@ -265,8 +265,8 @@ removing the device from the Z-Wave network. Use this procedure only when the ne
         sensor value. Periodical reports are independent from changes in
         value (parameter 65).
         Available settings:
-          0 (periodical reports disabled).
-          60-32400 (60s-9h).
+        0 (periodical reports disabled).
+        60-32400 (60s-9h).
         Default setting: 0 (periodical reports disabled).
       </Help>
     </Value>
@@ -277,8 +277,8 @@ removing the device from the Z-Wave network. Use this procedure only when the ne
         report. Parameter is relevant only for connected DS18B20 or DHT22
         sensors.
         Available settings:
-          0 - (reporting on change disabled).
-          1-255 (0.1-25.5 units).
+        0 - (reporting on change disabled).
+        1-255 (0.1-25.5 units).
         Default setting: 5 (0.5 units)
       </Help>
     </Value>
@@ -288,8 +288,8 @@ removing the device from the Z-Wave network. Use this procedure only when the ne
         Periodical reports are independent from changes in value (parameter 67).
         Parameter is relevant only for connected DS18B20 or DHT22 sensors.
         Available settings:
-          0 - (periodical reports disabled).
-          60-32400 (60s-9h).
+        0 - (periodical reports disabled).
+        60-32400 (60s-9h).
         Default setting: 0 (periodical reports disabled).
       </Help>
     </Value>

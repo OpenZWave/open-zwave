@@ -12,7 +12,7 @@
     </ChangeLog>
   </MetaData>
   <!-- Swiidinter (Z-Wave Cord Switch) -->
-    <!-- Configuration -->
+  <!-- Configuration -->
   <CommandClass id="112">
     <Value genre="config" index="1" instance="1" label="Switch All" max="255" min="0" size="1" type="list" value="255">
       <Help>Enable/Disable ALL ON/OFF</Help>

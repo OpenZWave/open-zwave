@@ -6,7 +6,8 @@
     <MetaDataItem id="0002" name="Identifier" type="0001">GS1110-1-GR-1</MetaDataItem>
     <MetaDataItem name="Description">The GreenWave Reality Home Energy Management service provides robust monitoring and control of devices in the home. The initial installation typically includes a Gateway, intelligent power strips (PowerNodes), and integration with third-party smart thermostats. Consumers can extend conservation efforts and further simplify their lives by creating easy-to-configure Smart Controls that can be executed by the push of a button – or at scheduled times – to turn devices or entire rooms on or off.
 
-GreenWave Reality’s focus on the consumer begins with a guided out-of-box experience that includes videos, an Energy Coach and a range of patented technologies that enable users to quickly get up and running on their own. After connecting the Gateway and plugging devices into the PowerNodes, the DeviceDNA feature automatically helps identify the type of each device for simple configuration of the system.</MetaDataItem>
+      GreenWave Reality’s focus on the consumer begins with a guided out-of-box experience that includes videos, an Energy Coach and a range of patented technologies that enable users to quickly get up and running on their own. After connecting the Gateway and plugging devices into the PowerNodes, the DeviceDNA feature automatically helps identify the type of each device for simple configuration of the system.
+    </MetaDataItem>
     <MetaDataItem name="ProductPage">http://www.greenwavereality.com/</MetaDataItem>
     <MetaDataItem name="Name">OneGateway</MetaDataItem>
     <MetaDataItem id="0002" name="FrequencyName" type="0001">CEPT (Europe)</MetaDataItem>

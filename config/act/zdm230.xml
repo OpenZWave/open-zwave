@@ -7,13 +7,14 @@
     <MetaDataItem id="3330" name="FrequencyName" type="444D">CEPT (Europe)</MetaDataItem>
     <MetaDataItem name="Description">The ZDM230 is a dual switch design, where the first switch controls the connected load and also serve as a transmitter using multiple switch taps (one group of 5 Z-Wave modules), and the second switch used as a transmitter only (controls two groups of 5 Z-Wave modules).
 
-ZDM230 replaces an existing wall switch, and can add 3-way capability.
+      ZDM230 replaces an existing wall switch, and can add 3-way capability.
 
-ZDM230 can be programmed as a routing slave to establish firm signal routes and can be "associated" with other Z-wave devices in order to control them.
+      ZDM230 can be programmed as a routing slave to establish firm signal routes and can be "associated" with other Z-wave devices in order to control them.
 
-ZDM230 has automatic Static Update Controller (SUC) capability.  A Static Controller is one that is not moved after its addition to the network.  The Static Controller can act as a gateway in the system, since other nodes always know its position.  The “always listening” advantage of the Static Controller is that other nodes can transmit information frames to it whenever needed.
+      ZDM230 has automatic Static Update Controller (SUC) capability. A Static Controller is one that is not moved after its addition to the network. The Static Controller can act as a gateway in the system, since other nodes always know its position. The “always listening” advantage of the Static Controller is that other nodes can transmit information frames to it whenever needed.
 
-ZDM230 can be configured to Control Shades or Window Coverings via Z-Wave network</MetaDataItem>
+      ZDM230 can be configured to Control Shades or Window Coverings via Z-Wave network
+    </MetaDataItem>
     <MetaDataItem id="3330" name="Identifier" type="444D">ZDM230</MetaDataItem>
     <MetaDataItem name="ProductPage">http://www.smarthome-products.com/p-638-homepro-zdm230-z-wave-500-watt-dimmer-3-way-3-wire-euro.aspx</MetaDataItem>
     <ChangeLog>

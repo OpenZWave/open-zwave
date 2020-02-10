@@ -2,7 +2,8 @@
 Aeotec ZW111 Nano Dimmer, base on Engineering Spec 3/6/2018 V2.02
 Product Type ID: EU=0x00, US=0x01, AU=0x02 CN=0x1D
 https://aeotec.freshdesk.com/helpdesk/attachments/6048080397
---><Product Revision="6" xmlns="https://github.com/OpenZWave/open-zwave">
+-->
+<Product Revision="6" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0086:006F:0103</MetaDataItem>
     <MetaDataItem name="ProductPic">images/aeotec/zw111.png</MetaDataItem>
@@ -10,8 +11,9 @@ https://aeotec.freshdesk.com/helpdesk/attachments/6048080397
     <MetaDataItem name="ResetDescription">Press and hold the Action button that you can find on the product's housing for 20 seconds and then release. This procedure should only be used when the primary controller is inoperable.</MetaDataItem>
     <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/2149/Aeon Labs Nano Dimmer manual.pdf</MetaDataItem>
     <MetaDataItem name="Description">Aeotec Nano Dimmer is a Z-Wave Smart Dimmer specifically used to enable Z-Wave command and control (on/off/dim) of any wall switches. It can report immediate wattage consumption or kWh energy usage over a period of time. In the event of power failure, non-volatile memory retains all programmed information relating to the unit’s operating status.
-It can connect to 2 external manual switches to control the load ON/OFF independently. Its surface has a pin socket, which can be used for connecting to the touch panel, so you can also use the touch panel to control the Nano Dimmer.
-The Nano Dimmer is also a security Z-Wave plus device and supports Over The Air (OTA) feature for the products firmware upgrade.</MetaDataItem>
+      It can connect to 2 external manual switches to control the load ON/OFF independently. Its surface has a pin socket, which can be used for connecting to the touch panel, so you can also use the touch panel to control the Nano Dimmer.
+      The Nano Dimmer is also a security Z-Wave plus device and supports Over The Air (OTA) feature for the products firmware upgrade.
+    </MetaDataItem>
     <MetaDataItem name="InclusionDescription">Turn the primary controller of Z-Wave network into inclusion mode, short press the product’s Action button that you can find on the product's housing.</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">Turn the primary controller of Z-Wave network into exclusion mode, short press the product’s Action button that you can find on the product's housing.</MetaDataItem>
     <MetaDataItem name="Name">Nano Dimmer</MetaDataItem>
@@ -49,76 +51,76 @@ The Nano Dimmer is also a security Z-Wave plus device and supports Over The Air 
     </Value>
     <Value genre="config" index="21" label="WallSwipe IR sensor" type="int" value="80">
       <Help>
-				Enable/disable the IR sensor of WallSwipe.
-				(LSB) Value 1.
-				Value 1 = 0, disable the IR Sensor.
-				Value 1 = 1, enable the IR Sensor.
-				Value 2 = 0, Wave Option 1 is selected.
-				Value 2 = 1, Wave Option 2 is selected.
-				Value 3 = 0, disable the scene control functionality for Left/Right wave.
-				Value 3 = 1, enable the scene control functionality for Left/Right wave
-				Value 4 = 0, disable the scene control functionality for all wave actions.
-				Value 4 = 1, enable the scene control functionality for all wave actions.
-			</Help>
+        Enable/disable the IR sensor of WallSwipe.
+        (LSB) Value 1.
+        Value 1 = 0, disable the IR Sensor.
+        Value 1 = 1, enable the IR Sensor.
+        Value 2 = 0, Wave Option 1 is selected.
+        Value 2 = 1, Wave Option 2 is selected.
+        Value 3 = 0, disable the scene control functionality for Left/Right wave.
+        Value 3 = 1, enable the scene control functionality for Left/Right wave
+        Value 4 = 0, disable the scene control functionality for all wave actions.
+        Value 4 = 1, enable the scene control functionality for all wave actions.
+      </Help>
     </Value>
     <Value genre="config" index="64" label="WallSwipe button color" type="int" value="184549375">
       <Help>
-				Set the button color of WallSwipe.
-				Value 1= Level.
-				Value 2= the color value of Red.
-				Value 3= the color value of Green.
-				Value 4= the color value of Blue.
-			</Help>
+        Set the button color of WallSwipe.
+        Value 1= Level.
+        Value 2= the color value of Red.
+        Value 3= the color value of Green.
+        Value 4= the color value of Blue.
+      </Help>
     </Value>
     <Value genre="config" index="65" label="WallSwipe LED Up gesture action" type="int" value="855638015">
       <Help>
-				Set the LED indication color of WallSwipe when the gesture action is UP.
-				Value 1= Reserved.
-				Value 2= the color value of Red.
-				Value 3= the color value of Green.
-				Value 4= the color value of Blue.
-			</Help>
+        Set the LED indication color of WallSwipe when the gesture action is UP.
+        Value 1= Reserved.
+        Value 2= the color value of Red.
+        Value 3= the color value of Green.
+        Value 4= the color value of Blue.
+      </Help>
     </Value>
     <Value genre="config" index="66" label="WallSwipe LED Down gesture action" type="int" value="855638015">
       <Help>
-				Set the LED indication color of WallSwipe when the gesture action is Down.
-				Value 1= Level.
-				Value 2= the color value of Red.
-				Value 3= the color value of Green.
-				Value 4= the color value of Blue.
-			</Help>
+        Set the LED indication color of WallSwipe when the gesture action is Down.
+        Value 1= Level.
+        Value 2= the color value of Red.
+        Value 3= the color value of Green.
+        Value 4= the color value of Blue.
+      </Help>
     </Value>
     <Value genre="config" index="67" label="WallSwipe LED Left gesture action" type="int" value="855638015">
       <Help>
-				Set the LED indication color of WallSwipe when the gesture action is Left.
-				Value 1= Level.
-				Value 2= the color value of Red.
-				Value 3= the color value of Green.
-				Value 4= the color value of Blue.
-			</Help>
+        Set the LED indication color of WallSwipe when the gesture action is Left.
+        Value 1= Level.
+        Value 2= the color value of Red.
+        Value 3= the color value of Green.
+        Value 4= the color value of Blue.
+      </Help>
     </Value>
     <Value genre="config" index="68" label="WallSwipe LED Right gesture action" type="int" value="855638015">
       <Help>
-				Set the LED indication color of WallSwipe when the gesture action is Right.
-				Value 1= Level.
-				Value 2= the color value of Red.
-				Value 3= the color value of Green.
-				Value 4= the color value of Blue.
-			</Help>
+        Set the LED indication color of WallSwipe when the gesture action is Right.
+        Value 1= Level.
+        Value 2= the color value of Red.
+        Value 3= the color value of Green.
+        Value 4= the color value of Blue.
+      </Help>
     </Value>
     <Value genre="config" index="69" label="WallSwipe Night light" type="int" value="184483840">
       <Help>
-				Set the LED indication color of WallSwipe when it is in Night light state.
-				Value 1= Level.
-				Value 2= the color value of Red.
-				Value 3= the color value of Green.
-				Value 4= the color value of Blue.
-			</Help>
+        Set the LED indication color of WallSwipe when it is in Night light state.
+        Value 1= Level.
+        Value 2= the color value of Red.
+        Value 3= the color value of Green.
+        Value 4= the color value of Blue.
+      </Help>
     </Value>
     <Value genre="config" index="71" label="WallSwipe sensitivity" type="short" value="0">
       <Help>
-				Set the sensitivity of WallSwipe.
-			</Help>
+        Set the sensitivity of WallSwipe.
+      </Help>
     </Value>
     <Value genre="config" index="80" label="Notification report association group 1" size="1" type="list" units="" value="3">
       <Help>To set which notification would be sent to the associated nodes in association group 1 when the state of output load is changed</Help>
@@ -148,30 +150,30 @@ The Nano Dimmer is also a security Z-Wave plus device and supports Over The Air 
     </Value>
     <Value genre="config" index="84" label="Time set for Night light mode" type="int" value="301991936">
       <Help>
-				Value1: Hour of ON.
-				Value2: Minute of ON.
-				Value3: Hour of OFF.
-				Value4: Minute of OFF.
-				E.g. The default setting is the Night light mode is enabled at 12: 00 and disabled at 8:00 0x12000800.
-			</Help>
+        Value1: Hour of ON.
+        Value2: Minute of ON.
+        Value3: Hour of OFF.
+        Value4: Minute of OFF.
+        E.g. The default setting is the Night light mode is enabled at 12: 00 and disabled at 8:00 0x12000800.
+      </Help>
     </Value>
     <Value genre="config" index="85" label="State appointment 1" type="int" value="1179747">
       <Help>State appointment
-                Set the ON time of output load.
-                Value1 = 0, disable or = non zero, enable (day, bit0 - bit6 represent Mon to Sun).
-                Value2 = ON (hour)
-                Value3 = ON (minute)
-                Value4 = ON (brightness level)
-            </Help>
+        Set the ON time of output load.
+        Value1 = 0, disable or = non zero, enable (day, bit0 - bit6 represent Mon to Sun).
+        Value2 = ON (hour)
+        Value3 = ON (minute)
+        Value4 = ON (brightness level)
+      </Help>
     </Value>
     <Value genre="config" index="86" label="State appointment 2" type="int" value="1507328">
       <Help>State appointment
-                Set the ON time of output load.
-                Value1 = 0, disable or = non zero, enable (day, bit0 - bit6 represent Mon to Sun).
-                Value2 = ON (hour)
-                Value3 = ON (minute)
-                Value4 = ON (brightness level)
-            </Help>
+        Set the ON time of output load.
+        Value1 = 0, disable or = non zero, enable (day, bit0 - bit6 represent Mon to Sun).
+        Value2 = ON (hour)
+        Value3 = ON (minute)
+        Value4 = ON (brightness level)
+      </Help>
     </Value>
     <Value genre="config" index="90" label="Enable/disable the parameter 91 and 92" size="1" type="list" units="" value="0">
       <Help>Enables/disables parameter 91 and 92</Help>
@@ -189,54 +191,54 @@ The Nano Dimmer is also a security Z-Wave plus device and supports Over The Air 
     </Value>
     <Value genre="config" index="101" label="Report type sent in Reporting Group 1" type="int" units="" value="0">
       <Help>
-                Defines the type of report sent for reporting group 1.
-                1 is meter report for voltage.
-                2 is meter report for current.
-                4 is meter report for watts.
-                8 is meter report for kilowatts.
-                Value 1 (msb) Reserved
-                Value 2 Reserved
-                Value 3 Reserved
-                Value 4 (lsb) bits 7-4 reserved
-                bit 3 kWh
-                bit 2 watt
-                bit 1 current
-                bit 0 voltage
-            </Help>
+        Defines the type of report sent for reporting group 1.
+        1 is meter report for voltage.
+        2 is meter report for current.
+        4 is meter report for watts.
+        8 is meter report for kilowatts.
+        Value 1 (msb) Reserved
+        Value 2 Reserved
+        Value 3 Reserved
+        Value 4 (lsb) bits 7-4 reserved
+        bit 3 kWh
+        bit 2 watt
+        bit 1 current
+        bit 0 voltage
+      </Help>
     </Value>
     <Value genre="config" index="102" label="Report type sent in Reporting Group 2" type="int" units="" value="0">
       <Help>
-                Defines the type of report sent for reporting group 2.
-                1 is meter report for voltage.
-                2 is meter report for current.
-                4 is meter report for watts.
-                8 is meter report for kilowatts.
-                Value 1 (msb) Reserved
-                Value 2 Reserved
-                Value 3 Reserved
-                Value 4 (lsb) bits 7-4 reserved
-                bit 3 kWh
-                bit 2 watt
-                bit 1 current
-                bit 0 voltage
-            </Help>
+        Defines the type of report sent for reporting group 2.
+        1 is meter report for voltage.
+        2 is meter report for current.
+        4 is meter report for watts.
+        8 is meter report for kilowatts.
+        Value 1 (msb) Reserved
+        Value 2 Reserved
+        Value 3 Reserved
+        Value 4 (lsb) bits 7-4 reserved
+        bit 3 kWh
+        bit 2 watt
+        bit 1 current
+        bit 0 voltage
+      </Help>
     </Value>
     <Value genre="config" index="103" label="Report type sent in Reporting Group 3" type="int" units="" value="0">
       <Help>
-                Defines the type of report sent for reporting group 3.
-                1 is meter report for voltage.
-                2 is meter report for current.
-                4 is meter report for watts.
-                8 is meter report for kilowatts.
-                Value 1 (msb) Reserved
-                Value 2 Reserved
-                Value 3 Reserved
-                Value 4 (lsb) bits 7-4 reserved
-                bit 3 kWh
-                bit 2 watt
-                bit 1 current
-                bit 0 voltage
-            </Help>
+        Defines the type of report sent for reporting group 3.
+        1 is meter report for voltage.
+        2 is meter report for current.
+        4 is meter report for watts.
+        8 is meter report for kilowatts.
+        Value 1 (msb) Reserved
+        Value 2 Reserved
+        Value 3 Reserved
+        Value 4 (lsb) bits 7-4 reserved
+        bit 3 kWh
+        bit 2 watt
+        bit 1 current
+        bit 0 voltage
+      </Help>
     </Value>
     <Value affects="111,112,113" genre="config" index="110" label="Set 111-113 to default" type="button" units="" value="0" write_only="true">
       <Help>Set time interval for sending reports for groups 1, 2 and 3 to default.</Help>
@@ -312,27 +314,27 @@ The Nano Dimmer is also a security Z-Wave plus device and supports Over The Air 
     </Value>
     <Value genre="config" index="247" label="Working way for S1/S2" type="byte" value="0">
       <Help>
-                Set the working way for S1/S2 when the Switch mode is 2 state switch mode.
-                Bit 0 =0, S1 is a toggle switch.
-                Bit 0 =1, S1 is an On/Off switch, the out load state and S1 switch state would be in sync when using S1 to control the output load.
-                Bit 1 =0, S2 is a toggle switch.
-                Bit 1 =1, S2 is an On/Off switch, the out load state and S2 switch state would be in sync when using S2 to control the output load.
-                Bit 2- Bit 7, reserved.
-            </Help>
+        Set the working way for S1/S2 when the Switch mode is 2 state switch mode.
+        Bit 0 =0, S1 is a toggle switch.
+        Bit 0 =1, S1 is an On/Off switch, the out load state and S1 switch state would be in sync when using S1 to control the output load.
+        Bit 1 =0, S2 is a toggle switch.
+        Bit 1 =1, S2 is an On/Off switch, the out load state and S2 switch state would be in sync when using S2 to control the output load.
+        Bit 2- Bit 7, reserved.
+      </Help>
     </Value>
     <Value genre="config" index="248" label="Function of S1/S2" type="byte" value="131">
       <Help>
-                Set the function of S1/S2.
-                Bit 0 = 0, the function of sending NIF is disabled.
-                Bit 0 = 1, the function of sending NIF is enabled.
-                Bit 1 = 0, the function of entering RF power level test mode is disabled.
-                Bit 1 = 1, the function of entering RF power level test mode is enabled.
-                Bit 2 = 0, the function of factory reset is disabled.
-                Bit 2 = 1, the function of factory reset is enabled.
-                Bit 3- Bit 6 = reserved.
-                Bit 7 = 0, the setting for Bit 0 -Bit 2 are ineffective.
-                Bit 7 = 1, the setting for Bit 0 -Bit 2 are effective.
-            </Help>
+        Set the function of S1/S2.
+        Bit 0 = 0, the function of sending NIF is disabled.
+        Bit 0 = 1, the function of sending NIF is enabled.
+        Bit 1 = 0, the function of entering RF power level test mode is disabled.
+        Bit 1 = 1, the function of entering RF power level test mode is enabled.
+        Bit 2 = 0, the function of factory reset is disabled.
+        Bit 2 = 1, the function of factory reset is enabled.
+        Bit 3- Bit 6 = reserved.
+        Bit 7 = 0, the setting for Bit 0 -Bit 2 are ineffective.
+        Bit 7 = 1, the setting for Bit 0 -Bit 2 are effective.
+      </Help>
     </Value>
     <Value genre="config" index="249" label="Recognition way of load" max="2" min="0" size="1" type="list" units="" value="2">
       <Help>Set the recognition way of load</Help>

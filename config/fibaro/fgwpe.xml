@@ -7,14 +7,14 @@
     <MetaDataItem id="1000" name="FrequencyName" type="0600">CEPT (Europe)</MetaDataItem>
     <MetaDataItem name="ProductSupport">http://www.fibaro.com/manuals/en/FGWPE_F-101-Wall-Plug/FGWPE_F-101-Wall-Plug-en-2.1-2.3.pdf</MetaDataItem>
     <MetaDataItem id="1000" name="Identifier" type="0600">FGWPE/F-101</MetaDataItem>
-    <MetaDataItem name="Description">Fibaro Wall Plug is a universal, Z-Wave compatible, relay switch in 
-the form of a socket adapter. The Plug may be used to operate any 
-device up to 2,500W power output. The Plug features power 
-consumption measuring and uses a crystal LED ring to visualize the 
-current load by color changing illumination.
-Fibaro Wall Plug may be operated using the service button located 
-on its casing, or via any Z-Wave compatible controller.
-</MetaDataItem>
+    <MetaDataItem name="Description">Fibaro Wall Plug is a universal, Z-Wave compatible, relay switch in
+      the form of a socket adapter. The Plug may be used to operate any
+      device up to 2,500W power output. The Plug features power
+      consumption measuring and uses a crystal LED ring to visualize the
+      current load by color changing illumination.
+      Fibaro Wall Plug may be operated using the service button located
+      on its casing, or via any Z-Wave compatible controller.
+    </MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="6">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/993/xml</Entry>
     </ChangeLog>
@@ -61,16 +61,16 @@ on its casing, or via any Z-Wave compatible controller.
       <Help>Parameter defines by how much power load must change, in percents, to be reported to the main controller, with the highest priority in the Z-Wave network. By default, Fibaro Wall Plug immediately sends power report if the power load changes by 80%. Default setting: 80 (%)</Help>
     </Value>
     <Value genre="config" index="42" instance="1" label="Standard power load reporting" max="100" min="0" size="1" type="byte" value="15">
-      <Help>Parameter defines by how much power load must change, in percents, to be reported to the main controller. By default, Fibaro Wall Plug sends power report if the power load changes by 15%.  By default such changes in power load may be reported up to 5 times per 30 seconds. Wall Plug sends 5 reports during time period specified in paramater 43. Default setting: 15 (%)</Help>
+      <Help>Parameter defines by how much power load must change, in percents, to be reported to the main controller. By default, Fibaro Wall Plug sends power report if the power load changes by 15%. By default such changes in power load may be reported up to 5 times per 30 seconds. Wall Plug sends 5 reports during time period specified in paramater 43. Default setting: 15 (%)</Help>
     </Value>
     <Value genre="config" index="43" instance="1" label="Power reporting frequency" max="255" min="1" size="1" type="byte" value="30">
-      <Help>This parameter defines how frequently standard power reports (parameter 42) will be sent. By default Wall Plug sends up to 5 reports each 30 seconds, provided the power load changes by 15%.  Default setting: 30 (s)</Help>
+      <Help>This parameter defines how frequently standard power reports (parameter 42) will be sent. By default Wall Plug sends up to 5 reports each 30 seconds, provided the power load changes by 15%. Default setting: 30 (s)</Help>
     </Value>
     <Value genre="config" index="45" instance="1" label="Reporting changes in energy consumed by controlled devices" max="255" min="1" size="1" type="byte" value="10">
       <Help>New, reported energy value is calculated based on last reported value. Default setting: 10 (0,1 kWh). Available settings: 1 - 254 (0,01kWh - 2,54kWh). Value of 255 - changes in consumed energy will not be reported. Reports will be sent only in case of polling. Default Setting: 10 (0,1 kWh)</Help>
     </Value>
     <Value genre="config" index="47" instance="1" label="Time period between reports on power load and energy consumption." size="2" type="short" value="3600">
-      <Help>Parameter defines time period between reports sent when changes in power load have not been recorded. By default, if power load changes have not been recorded, reports are sent every hour.  Default setting: 3 600 (s), Available settings: 1 - 65534 (s). Value of 65535 - no periodic reports. Reports will be sent only in case of power load / energy consumption changes (parameters 40, 42, 43,45) or in case of polling. Default setting: 3600</Help>
+      <Help>Parameter defines time period between reports sent when changes in power load have not been recorded. By default, if power load changes have not been recorded, reports are sent every hour. Default setting: 3 600 (s), Available settings: 1 - 65534 (s). Value of 65535 - no periodic reports. Reports will be sent only in case of power load / energy consumption changes (parameters 40, 42, 43,45) or in case of polling. Default setting: 3600</Help>
     </Value>
     <Value genre="config" index="49" instance="1" label="Metering energy consumed by the Wall Plug itself" size="1" type="list" value="0">
       <Help>This parameter determines whether energy metering should include the amount of energy consumed by the Wall Plug itself. Results are being added to energy consumed by controlled device. Default setting: 0</Help>
@@ -84,7 +84,7 @@ on its casing, or via any Z-Wave compatible controller.
       <Help>Upper power threshold, used in parameter 52. Default setting: 500 (50W) Available settings: 1 - 25000 (0,1W - 2500W) UP value cannot be lower than a value specified in parameter 50. Default setting: 500 (50W)</Help>
     </Value>
     <Value genre="config" index="52" instance="1" label="Action in case of exceeding defined power values" size="1" type="list" value="6">
-      <Help>Parameter deifines the way 2nd association group devices are controlled, depending on the current power load.  Default setting: 6. Available settings: 0 - function inactive, 1 - turn the associated devices on, once the power drops below DOWN value (parameter 50), 2 - turn the associated devices off, once the power drops below DOWN value (parameter 50), 3 - turn the associated devices on, once the power rises above UP value (parameter 51), 4 - turn the associated devices off, once the power rises above UP value (parameter 51), 5 - 1 and 4 combined. Turn the associated devices on, once the power drops below DOWN value (parameter 50). Turn the associated devices off, once the power rises above UP value (parameter 51).  6 - 2 and 3 combined. Turn the associated devices off, once the power drops below DOWN value (parameter 50). Turn the associated devices on, once the power rises above UP value (parameter 51). Default setting: 6</Help>
+      <Help>Parameter deifines the way 2nd association group devices are controlled, depending on the current power load. Default setting: 6. Available settings: 0 - function inactive, 1 - turn the associated devices on, once the power drops below DOWN value (parameter 50), 2 - turn the associated devices off, once the power drops below DOWN value (parameter 50), 3 - turn the associated devices on, once the power rises above UP value (parameter 51), 4 - turn the associated devices off, once the power rises above UP value (parameter 51), 5 - 1 and 4 combined. Turn the associated devices on, once the power drops below DOWN value (parameter 50). Turn the associated devices off, once the power rises above UP value (parameter 51). 6 - 2 and 3 combined. Turn the associated devices off, once the power drops below DOWN value (parameter 50). Turn the associated devices on, once the power rises above UP value (parameter 51). Default setting: 6</Help>
       <Item label="Function inactive" value="0"/>
       <Item label="Turn the associated devices on,Power below DOWN" value="1"/>
       <Item label="Turn the associated devices off,Power below DOWN" value="2"/>
@@ -135,7 +135,7 @@ on its casing, or via any Z-Wave compatible controller.
       <Item label="illumination turned off completely" value="9"/>
     </Value>
     <Value genre="config" index="70" instance="1" label="Overload safety switch" size="2" type="short" value="65535">
-      <Help>This function allows for turning off the controlled device in case of exceeding the defined power. Controlled device will be turned off even if "always on" function is active (parameter 1). Controlled device can be turned back on via B-button or sending a control frame. By default this function is inactive.  Default setting: 65535 (6553,5W) Available settings: 10 - 65535 (1W - 6553,5W).  Value higher than 32000 (3200W) turns the overload safety switch off, i.e. this functionality is turned off by default. Default setting: 65535 (6553,5W)</Help>
+      <Help>This function allows for turning off the controlled device in case of exceeding the defined power. Controlled device will be turned off even if "always on" function is active (parameter 1). Controlled device can be turned back on via B-button or sending a control frame. By default this function is inactive. Default setting: 65535 (6553,5W) Available settings: 10 - 65535 (1W - 6553,5W). Value higher than 32000 (3200W) turns the overload safety switch off, i.e. this functionality is turned off by default. Default setting: 65535 (6553,5W)</Help>
     </Value>
   </CommandClass>
   <!-- Association Groups -->

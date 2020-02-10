@@ -5,27 +5,30 @@
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0063:3235:4944</MetaDataItem>
     <MetaDataItem name="ProductPic">images/ge/46203-dimmer.png</MetaDataItem>
     <MetaDataItem id="3235" name="ZWProductPage" type="4944">https://products.z-wavealliance.org/products/3323/</MetaDataItem>
-    <MetaDataItem name="Name">In-Wall Smart Dimmer </MetaDataItem>
+    <MetaDataItem name="Name">In-Wall Smart Dimmer</MetaDataItem>
     <MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&amp;filename=MarketCertificationFiles/3323/14294.46203.ZW3010%20Binder.pdf</MetaDataItem>
     <MetaDataItem id="3235" name="FrequencyName" type="4944">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem name="ResetDescription">Quickly press ON (Top) button three (3) times then immediately
-press the OFF (Bottom) button three (3) times. The LED will flash
-ON/OFF 5 times when completed successfully.
-NOTE: This should only be used in the event your network’s
-primary controller is missing or otherwise inoperable.</MetaDataItem>
+      press the OFF (Bottom) button three (3) times. The LED will flash
+      ON/OFF 5 times when completed successfully.
+      NOTE: This should only be used in the event your network’s
+      primary controller is missing or otherwise inoperable.
+    </MetaDataItem>
     <MetaDataItem name="InclusionDescription">1. Follow the instructions for your Z-Wave certified controller to
-include a device to the Z-Wave network.
-2. Once the controller is ready to add your device,
-press and release the top or bottom of the wireless smart
-switch (rocker) to add it in the network.
-Please reference the controller’s manual for instructions.</MetaDataItem>
+      include a device to the Z-Wave network.
+      2. Once the controller is ready to add your device,
+      press and release the top or bottom of the wireless smart
+      switch (rocker) to add it in the network.
+      Please reference the controller’s manual for instructions.
+    </MetaDataItem>
     <MetaDataItem name="Description">In-Wall Smart Dimmer with QuickFit and SimpleWire enhancements. Revolutionary QuickFit design features a housing depth that is up to 20 percent smaller than the previous Z-Wave models. This reduced size coupled with the elimination of heat taps provides a better fit in older style boxes and multi-gang configurations. SimpleWire technology allows line and load to automatically be configured with auto-sensing line-load terminals. All of this is coupled with Z-Wave S2 and Smart Start allows for effortless installation while being safer than ever!</MetaDataItem>
     <MetaDataItem id="3235" name="Identifier" type="4944">46203/ZW3010</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">1. Follow the instructions for your Z-Wave certified controller to
-remove a device from the Z-Wave network.
-2. Once the controller is ready to Exclude your device, press
-and release the top or bottom of the wireless smart dimmer
-(rocker) to remove it from the network.</MetaDataItem>
+      remove a device from the Z-Wave network.
+      2. Once the controller is ready to Exclude your device, press
+      and release the top or bottom of the wireless smart dimmer
+      (rocker) to remove it from the network.
+    </MetaDataItem>
     <ChangeLog>
       <Entry author="Radovan Bauer - radovan.bauer@gmail.com" date="07 Dec 2019" revision="1">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/3323/xml</Entry>
     </ChangeLog>
@@ -48,7 +51,7 @@ and release the top or bottom of the wireless smart dimmer
       <Item label="Disable normal operation" value="0"/>
       <Item label="Enable switch mode" value="1"/>
     </Value>
-    <Value genre="config" index="19" label="Alternate Exclusion"  max="1" min="0" size="1" type="list" value="0">
+    <Value genre="config" index="19" label="Alternate Exclusion" max="1" min="0" size="1" type="list" value="0">
       <Help>Never accidentally remove a device during with alternate exclusion</Help>
       <Item label="Normal operation, press any button on the device" value="0"/>
       <Item label="Press two times ON button and two times OFF button, LED will flash 5 times if exclusion is successful" value="1"/>

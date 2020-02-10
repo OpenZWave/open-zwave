@@ -18,8 +18,8 @@
   <CommandClass id="112">
     <Value genre="config" index="1" label="Basic Set Level" max="99" min="0" type="byte" units="%" value="99">
       <Help>
-				Defines the level in the Basic Set event sent to group 2 when the sensor is triggered.  Default is 99 (full brightness for a Z-Wave dimmer). 0 disables.
-			</Help>
+        Defines the level in the Basic Set event sent to group 2 when the sensor is triggered. Default is 99 (full brightness for a Z-Wave dimmer). 0 disables.
+      </Help>
     </Value>
   </CommandClass>
   <!-- COMMAND_CLASS_ASSOCIATION. Groups -->

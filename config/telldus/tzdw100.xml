@@ -1,4 +1,5 @@
-<!-- Telldus: TZDW-100 Door Opening Sensor --><Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
+<!-- Telldus: TZDW-100 Door Opening Sensor -->
+<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0176:0001:0005</MetaDataItem>
     <MetaDataItem name="ProductPic">images/telldus/tzdw100.png</MetaDataItem>
@@ -6,17 +7,19 @@
     <MetaDataItem name="ExclusionDescription">Start the exclusion mode on the Z-Wave controller. Press the button on the device three times fast. The device will now be removed from the Z-Wave-network.</MetaDataItem>
     <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/1455/Quickguide_Sensor_Switch_107x153mm_PMS.pdf</MetaDataItem>
     <MetaDataItem name="InclusionDescription">Automatically add device to network
-When a battery is inserted, the device is in automatical add mode for one minute (Network Wide Inclusion, NWI). This means that the device is added automatically when the Z-Wave controller enters add mode. 
+      When a battery is inserted, the device is in automatical add mode for one minute (Network Wide Inclusion, NWI). This means that the device is added automatically when the Z-Wave controller enters add mode.
 
-Manual add device to network
-Start the add mode on the Z-Wave controller. Press the button on the device three times fast. The device will now be added into the Z-Wave-network.</MetaDataItem>
-    <MetaDataItem name="WakeupDescription">Press the button on the sensor one time short to wake up the device. </MetaDataItem>
+      Manual add device to network
+      Start the add mode on the Z-Wave controller. Press the button on the device three times fast. The device will now be added into the Z-Wave-network.
+    </MetaDataItem>
+    <MetaDataItem name="WakeupDescription">Press the button on the sensor one time short to wake up the device.</MetaDataItem>
     <MetaDataItem name="Name">Door/window sensor</MetaDataItem>
     <MetaDataItem name="ResetDescription">Press and hold the button until the LED starts flashing (approx. 6 seconds).
-Press the button once more, short. 
-The device will now reset to factory defaults. The LED will now flash, indicating that it’s no longer added in any Z-Wave network.
+      Press the button once more, short.
+      The device will now reset to factory defaults. The LED will now flash, indicating that it’s no longer added in any Z-Wave network.
 
-Please note! Only use the reset procedure when the primary controller is missing or inoperable.</MetaDataItem>
+      Please note! Only use the reset procedure when the primary controller is missing or inoperable.
+    </MetaDataItem>
     <MetaDataItem id="0001" name="FrequencyName" type="0005">CEPT (Europe)</MetaDataItem>
     <MetaDataItem id="0001" name="Identifier" type="0005">TZDW-100</MetaDataItem>
     <MetaDataItem name="Description">This magnet sensor contains the latest Z-Wave technology with the ability to remotely control other Z-Wave units available in your network. The fact that it is battery operated and so small you can virtually place it anywhere you want – on doors, windows or drawers, without the need of wiring. Screw or tape up the holder and then click the sensor in place. Done! The sensor is designed to be seen as little as possible and we have made it significantly smaller than other sensors. It consists of two parts that will merge into a stylish unit when the sensor is closed.</MetaDataItem>

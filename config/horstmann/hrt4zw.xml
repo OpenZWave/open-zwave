@@ -6,24 +6,25 @@
     <MetaDataItem id="0003" name="FrequencyName" type="0001">CEPT (Europe)</MetaDataItem>
     <MetaDataItem name="Description">ThermostatThe innovative Horstmann CentaurPlus ZW combined wireless room stat and time control offers installers and householders the opportunity to easily and cost effectively update existing combi boiler controls.
 
-The CentaurPlus has an integral transmitter and receiver, enabling wireless communication with the latest generation Horstmann HRT4-ZW TPI room thermostat.
+      The CentaurPlus has an integral transmitter and receiver, enabling wireless communication with the latest generation Horstmann HRT4-ZW TPI room thermostat.
 
-Suitable for combi boilers
-Volt free contacts
-Automatic BST /GMT time change
-Back lit display
-Boost and Advance
-Helps to meet Part L1 of 2010 Building Regs for existing installations
-Built in Z Wave receiver
-Industry Standard 6 terminal wall plate
-ZW wireless technology
-TPI energy saving software
-Clear backlit display
-Temperature range 5-30°C
-Battery operated for wire free installation</MetaDataItem>
+      Suitable for combi boilers
+      Volt free contacts
+      Automatic BST /GMT time change
+      Back lit display
+      Boost and Advance
+      Helps to meet Part L1 of 2010 Building Regs for existing installations
+      Built in Z Wave receiver
+      Industry Standard 6 terminal wall plate
+      ZW wireless technology
+      TPI energy saving software
+      Clear backlit display
+      Temperature range 5-30°C
+      Battery operated for wire free installation
+    </MetaDataItem>
     <MetaDataItem name="Name">Secure SRT321 Zwave Stat (Tx)</MetaDataItem>
     <MetaDataItem name="ProductPage">http://www.securetogether.eu/</MetaDataItem>
-    <MetaDataItem id="0003" name="Identifier" type="0001">SRT321 </MetaDataItem>
+    <MetaDataItem id="0003" name="Identifier" type="0001">SRT321</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="4">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/115/xml</Entry>
     </ChangeLog>

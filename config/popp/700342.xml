@@ -20,7 +20,7 @@
       <Help>This value is sent as BASIC Set to Association Group 3 when an Smoke Alarm occurs.</Help>
     </Value>
     <Value genre="config" index="4" instance="1" label="Value of Off-Command" max="99" min="0" size="1" type="byte" value="99">
-      <Help>This value is sent as BASIC Set to Association Group 3 when an Smoke Alarm is cleared. </Help>
+      <Help>This value is sent as BASIC Set to Association Group 3 when an Smoke Alarm is cleared.</Help>
     </Value>
   </CommandClass>
   <!-- Association Groups -->

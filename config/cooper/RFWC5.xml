@@ -23,11 +23,11 @@ http://www.cooperindustries.com/content/dam/public/wiringdevices/products/docume
     </Value>
   </CommandClass>
   <!-- Used to map Scenes to Groups, but not advertised by the device -->
-	<!-- CommandClass id="46" name="COMMAND_CLASS_SCENE_CONTROLLER_CONF" version="1" request_flags="4" innif="true"/-->
+  <!-- CommandClass id="46" name="COMMAND_CLASS_SCENE_CONTROLLER_CONF" version="1" request_flags="4" innif="true"/-->
 
-	<!-- Used to set a device into Panic Mode (On-Off flashing at time intervals determined in the device configuration),
-	     To turn ON send a ALARM_REPORT command to the device with an Alarm Type of 1 and a value of 255.
-	     To turn OFF send a ALARM_REPORT command with an Alarm Type of 1 and a value of 0.-->
+  <!-- Used to set a device into Panic Mode (On-Off flashing at time intervals determined in the device configuration),
+       To turn ON send a ALARM_REPORT command to the device with an Alarm Type of 1 and a value of 255.
+       To turn OFF send a ALARM_REPORT command with an Alarm Type of 1 and a value of 0.-->
   <CommandClass id="113">
     <Compatibility/>
   </CommandClass>

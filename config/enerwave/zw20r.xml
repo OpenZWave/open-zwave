@@ -1,4 +1,5 @@
-<!-- Enerwave ZW20R --><Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
+<!-- Enerwave ZW20R -->
+<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/011A:0603:0101</MetaDataItem>
     <MetaDataItem name="ProductPic">images/enerwave/zw20r.png</MetaDataItem>

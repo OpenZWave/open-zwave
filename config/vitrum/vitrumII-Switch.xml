@@ -10,19 +10,20 @@
     <MetaDataItem name="ProductPage">http://www.ivitrum.com/index.php?file=prodotti&amp;form_id_products=13&amp;qt=1</MetaDataItem>
     <MetaDataItem name="Description">2 channel Switch - 503 BOX - ZWave. Smart Switch II
 
-Two buttons Smart Glass Switch 
-Switch Device for Modbus System
-with two switches for lighting control 
-or alternatively, sequential 
-pre-programmed settings
-Configurable aural feedback 
+      Two buttons Smart Glass Switch
+      Switch Device for Modbus System
+      with two switches for lighting control
+      or alternatively, sequential
+      pre-programmed settings
+      Configurable aural feedback
 
 
-Available in British Standard &amp; European Standard;
-Dimensions:BS 95x95mm; EU 125x95mm; 
-On/Off by "One Touch"
-Dimming is by the "iPod ®-like" touch control
-Capacitive technology to adjust lighting level</MetaDataItem>
+      Available in British Standard &amp; European Standard;
+      Dimensions:BS 95x95mm; EU 125x95mm;
+      On/Off by "One Touch"
+      Dimming is by the "iPod ®-like" touch control
+      Capacitive technology to adjust lighting level
+    </MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/87/xml</Entry>
     </ChangeLog>

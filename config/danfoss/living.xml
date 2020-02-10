@@ -8,15 +8,16 @@
     <MetaDataItem name="Description">living connect is an electronic radiator thermostat for homes. Wireless temperature control – all around the house.
 
 
-For total control of your indoor environment, living connect radiator thermostats work wirelessly with Danfoss Link, bringing you the highest performance in home heating control. living connect thermostats have all the smart features of the living eco model, plus they can be wirelessly controlled from a single Danfoss Link control screen centrally placed in the home. This means you can set all living connect thermostats at once, and heating can still be controlled room-by-room. A user-friendly interface with a colourful touchscreen make operating a Danfoss Link simple. It is one of the most immediate, most convenient and most cost-effective ways to improve your home's energy efficiency.
-Product Name:	living connect
-Brand Name:	Danfoss
-Product Line:	Radiator Thermostat	
-Battery Type:	AAA
-Battery Count:	2
-Description:	Radiator Thermostat
-Inclusion Note:	Short push middle button
-Wakeup Note:	Short push middle button</MetaDataItem>
+      For total control of your indoor environment, living connect radiator thermostats work wirelessly with Danfoss Link, bringing you the highest performance in home heating control. living connect thermostats have all the smart features of the living eco model, plus they can be wirelessly controlled from a single Danfoss Link control screen centrally placed in the home. This means you can set all living connect thermostats at once, and heating can still be controlled room-by-room. A user-friendly interface with a colourful touchscreen make operating a Danfoss Link simple. It is one of the most immediate, most convenient and most cost-effective ways to improve your home's energy efficiency.
+      Product Name: living connect
+      Brand Name: Danfoss
+      Product Line: Radiator Thermostat
+      Battery Type: AAA
+      Battery Count: 2
+      Description: Radiator Thermostat
+      Inclusion Note: Short push middle button
+      Wakeup Note: Short push middle button
+    </MetaDataItem>
     <MetaDataItem id="0001" name="FrequencyName" type="8005">CEPT (Europe)</MetaDataItem>
     <MetaDataItem name="ProductPage">http://www.danfoss.com/businessareas/heating/products/literature/he/radiator-thermostats/radiator-sensors/living-by-danfoss/living-connect/b7bea5b9-eb96-45d5-b229-02739a4779c2.html</MetaDataItem>
     <MetaDataItem name="ProductSupport">http://heating.danfoss.com/PCMPDF/Z_wave_living_connect_VDHMB202.pdf</MetaDataItem>

@@ -1,5 +1,5 @@
-<Product Revision="1" 
-  xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="1"
+         xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="Name">Z-Wave Wall Controller</MetaDataItem>
     <MetaDataItem name="Description">The Wall controller is a Security Enabled Z-Wave Plus device that can both control other Z-Wave devices and activate scenes in Gateways.</MetaDataItem>

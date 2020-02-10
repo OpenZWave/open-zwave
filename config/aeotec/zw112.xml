@@ -1,4 +1,5 @@
-<!-- Aeon Labs Door/Window Sensor 6 --><Product Revision="6" xmlns="https://github.com/OpenZWave/open-zwave">
+<!-- Aeon Labs Door/Window Sensor 6 -->
+<Product Revision="6" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0086:0070:0102</MetaDataItem>
     <MetaDataItem name="ProductPic">images/aeotec/zw112.png</MetaDataItem>
@@ -8,9 +9,10 @@
     <MetaDataItem name="WakeupDescription">Press the Action Button once, which will trigger sending out the Wake up notification command, press and hold the Action Button for 3 seconds, which will toggle on/off the Sensor be waked up for 10 minutes.</MetaDataItem>
     <MetaDataItem id="0070" name="FrequencyName" type="0102">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem name="InclusionDescription">Turn the primary controller into inclusion mode, short press the product’s Action Button that you can find in the back of the product.</MetaDataItem>
-    <MetaDataItem name="Description">Aeon Labs Door/ Window Sensor 6 is a smart Z-Wave sensor that can detect the status of door/window's open/close in real time. 
-It’s a security Z-Wave device that supports security encryption. Also it supports the “Over the Air Firmware Updating” that allows you wirelessly update its firmware if needs. 
-It can be included and operated in any Z-Wave network with other Z-Wave certified devices from manufacturers and/or other applications.</MetaDataItem>
+    <MetaDataItem name="Description">Aeon Labs Door/ Window Sensor 6 is a smart Z-Wave sensor that can detect the status of door/window's open/close in real time.
+      It’s a security Z-Wave device that supports security encryption. Also it supports the “Over the Air Firmware Updating” that allows you wirelessly update its firmware if needs.
+      It can be included and operated in any Z-Wave network with other Z-Wave certified devices from manufacturers and/or other applications.
+    </MetaDataItem>
     <MetaDataItem name="Name">Door/ Window Sensor 6</MetaDataItem>
     <MetaDataItem name="ResetDescription">Press the Action Button once that you can find in the back of the product for 20 seconds and then release. This procedure should only be used when the primary controller is inoperable.</MetaDataItem>
     <MetaDataItem id="0070" name="Identifier" type="0102">ZW112-A</MetaDataItem>
@@ -45,13 +47,13 @@ It can be included and operated in any Z-Wave network with other Z-Wave certifie
     </Value>
     <Value genre="config" index="111" instance="1" label="Interval time of low battery checking" max="2147483647" min="0" size="4" type="int" value="86640">
       <Help>
-				The minimum interval is 4 minutes
-			</Help>
+        The minimum interval is 4 minutes
+      </Help>
     </Value>
     <Value genre="config" index="121" instance="1" label="Report Type to Send" max="3" min="0" size="1" type="list" value="1">
       <Help>
-                Configure which sensor report will be sent when the door is Opened/Closed
-            </Help>
+        Configure which sensor report will be sent when the door is Opened/Closed
+      </Help>
       <Item label="Disabled" value="0"/>
       <Item label="Basic Set" value="1"/>
       <Item label="Sensor Binary Report" value="2"/>

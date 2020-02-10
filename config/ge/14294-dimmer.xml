@@ -1,32 +1,37 @@
 <!-- GE(Jasco) 14294 Z-Wave Plus Dimmer Switch --><!-- Configuration Parameters - per
-             http://products.z-wavealliance.org/products/1442 --><Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
+             http://products.z-wavealliance.org/products/1442 -->
+<Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0063:3038:4944</MetaDataItem>
     <MetaDataItem name="ProductPic">images/ge/14294-dimmer.png</MetaDataItem>
     <MetaDataItem id="3038" name="ZWProductPage" type="4944">https://products.z-wavealliance.org/products/2105/</MetaDataItem>
-    <MetaDataItem name="Name">In-Wall Smart 1000W Dimmer </MetaDataItem>
+    <MetaDataItem name="Name">In-Wall Smart 1000W Dimmer</MetaDataItem>
     <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/2168/Binder1.pdf</MetaDataItem>
     <MetaDataItem id="3038" name="FrequencyName" type="4944">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem name="ResetDescription">Quickly press ON (Top) button three (3) times then immediately
-press the OFF (Bottom) button three (3) times. The LED will flash
-ON/OFF 5 times when completed successfully.
-NOTE: This should only be used in the event your network’s
-primary controller is missing or otherwise inoperable.</MetaDataItem>
+      press the OFF (Bottom) button three (3) times. The LED will flash
+      ON/OFF 5 times when completed successfully.
+      NOTE: This should only be used in the event your network’s
+      primary controller is missing or otherwise inoperable.
+    </MetaDataItem>
     <MetaDataItem name="InclusionDescription">1. Follow the instructions for your Z-Wave certified controller to
-include a device to the Z-Wave network.
-2. Once the controller is ready to add your device,
-press and release the top or bottom of the wireless smart
-switch (rocker) to add it in the network.
-Please reference the controller’s manual for instructions.</MetaDataItem>
-    <MetaDataItem name="Description">Transform any home into a smart home with the GE Z-Wave  Smart 1000W Dimmer. The In-Wall Smart 1000W Dimmer can easily replace any standard in-wall switch and remotely controls a light in your home. Your home will be equipped with ultimate flexibility with the GE Z-Wave Smart 1000W Dimmer, capable of being used by itself or with up to four add-on switches. Screw terminal installation provides improved space efficiency when replacing existing switches and the integrated LED indicator light allows you to easily locate the switch in a dark room. The GE Z-Wave In-Wall Smart 1000W Dimmer is compatible with any Z-Wave certified gateway, providing access to many popular home automation systems. Take control of your home lighting with GE Z-Wave Smart Lighting Controls! 
+      include a device to the Z-Wave network.
+      2. Once the controller is ready to add your device,
+      press and release the top or bottom of the wireless smart
+      switch (rocker) to add it in the network.
+      Please reference the controller’s manual for instructions.
+    </MetaDataItem>
+    <MetaDataItem name="Description">Transform any home into a smart home with the GE Z-Wave Smart 1000W Dimmer. The In-Wall Smart 1000W Dimmer can easily replace any standard in-wall switch and remotely controls a light in your home. Your home will be equipped with ultimate flexibility with the GE Z-Wave Smart 1000W Dimmer, capable of being used by itself or with up to four add-on switches. Screw terminal installation provides improved space efficiency when replacing existing switches and the integrated LED indicator light allows you to easily locate the switch in a dark room. The GE Z-Wave In-Wall Smart 1000W Dimmer is compatible with any Z-Wave certified gateway, providing access to many popular home automation systems. Take control of your home lighting with GE Z-Wave Smart Lighting Controls!
 
-Z-Wave is the world’s largest ecosystem of inter operable smart home products. Z-Wave lighting controls provide an easy-to-install and affordable system to control lighting and small appliances in your home. Add GE Z-Wave lighting controls to a Z-Wave certified gateway to access and control your home from anywhere in the world using your smartphone, tablet or computer as a home automation command center. Never worry if you accidentally left the lights on because you can turn them off remotely or program your lights to go on/off at specific times. Create customized lighting scenes for any occasion such as a “go to sleep” scene or a “movie night” scene. Give the illusion that someone is home by programming the lights to turn on/off while you are away—perfect for deterring crime and adding additional security!"</MetaDataItem>
+      Z-Wave is the world’s largest ecosystem of inter operable smart home products. Z-Wave lighting controls provide an easy-to-install and affordable system to control lighting and small appliances in your home. Add GE Z-Wave lighting controls to a Z-Wave certified gateway to access and control your home from anywhere in the world using your smartphone, tablet or computer as a home automation command center. Never worry if you accidentally left the lights on because you can turn them off remotely or program your lights to go on/off at specific times. Create customized lighting scenes for any occasion such as a “go to sleep” scene or a “movie night” scene. Give the illusion that someone is home by programming the lights to turn on/off while you are away—perfect for deterring crime and adding additional security!"
+    </MetaDataItem>
     <MetaDataItem id="3038" name="Identifier" type="4944">14294/ZW3005</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">1. Follow the instructions for your Z-Wave certified controller to
-remove a device from the Z-Wave network.
-2. Once the controller is ready to Exclude your device, press
-and release the top or bottom of the wireless smart dimmer
-(rocker) to remove it from the network.</MetaDataItem>
+      remove a device from the Z-Wave network.
+      2. Once the controller is ready to Exclude your device, press
+      and release the top or bottom of the wireless smart dimmer
+      (rocker) to remove it from the network.
+    </MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="08 May 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1442/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2105/xml</Entry>

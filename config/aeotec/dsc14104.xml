@@ -11,7 +11,7 @@
       <Entry author="Justin Hammond - Justin@dynam.ac" date="24 May 2019" revision="4">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1623/xml</Entry>
     </ChangeLog>
   </MetaData>
-  <!-- 
+  <!--
 Aeotec DSC14104 Micro Motor Controller
 https://aeotec.freshdesk.com/helpdesk/attachments/6009584516
  -->
@@ -22,15 +22,17 @@ https://aeotec.freshdesk.com/helpdesk/attachments/6009584516
     </Value>
     <Value genre="config" index="5" label="Opening time" size="2" type="short" units="ms" value="5000">
       <Help>
-	  Total time from endpoint of close go to endpoint of opening (ms).
-	  This value set 0x00000000, will use the time of last calibration.
-	  Default 5 seconds</Help>
+        Total time from endpoint of close go to endpoint of opening (ms).
+        This value set 0x00000000, will use the time of last calibration.
+        Default 5 seconds
+      </Help>
     </Value>
     <Value genre="config" index="6" label="Closing time" size="2" type="short" units="ms" value="5000">
       <Help>
-	  Total time from endpoint of opening go to endpoint of close (ms).
-	  This value set 0x00000000, will use the time of last calibration.
-	  Default 5 seconds</Help>
+        Total time from endpoint of opening go to endpoint of close (ms).
+        This value set 0x00000000, will use the time of last calibration.
+        Default 5 seconds
+      </Help>
     </Value>
     <Value genre="config" index="7" label="Motor status after power on" max="2" min="0" size="1" type="list" units="" value="0">
       <Help>Motor status after power on</Help>
@@ -40,9 +42,9 @@ https://aeotec.freshdesk.com/helpdesk/attachments/6009584516
     </Value>
     <Value genre="config" index="8" label="Set count of External Button/Switch" max="1" min="0" size="1" type="list" units="" value="0">
       <Help>
-	  Set count of External Button/Switch
-	  Note: Single External Button must connect to ST and COM port.
-	  </Help>
+        Set count of External Button/Switch
+        Note: Single External Button must connect to ST and COM port.
+      </Help>
       <Item label="0=Three External Button/Switch (Default)" value="0"/>
       <Item label="Single External Button" value="1"/>
     </Value>

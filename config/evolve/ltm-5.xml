@@ -8,19 +8,20 @@
     <MetaDataItem name="ProductPage">http://www.eguestcontrols.com/products/lighting-devices/ltm-5/</MetaDataItem>
     <MetaDataItem name="Description">LTM-5 Wall Mounted Transmitter
 
-The LTM-5 Wall Mounted Transmitter is a component of the Evolve lighting control system. As it controls no load directly, wire the transmitter anywhere power is available according to the diagram above. Inclusion of the LTM-5 Wall Mounted Transmitter allows remote ON/OFF control and dimming of lights controlled by associated modules.
+      The LTM-5 Wall Mounted Transmitter is a component of the Evolve lighting control system. As it controls no load directly, wire the transmitter anywhere power is available according to the diagram above. Inclusion of the LTM-5 Wall Mounted Transmitter allows remote ON/OFF control and dimming of lights controlled by associated modules.
 
-This Wall Mounted Transmitter is designed to work with other Evolve enabled devices. Evolve nodes of other types can be included in the network and will also act as repeaters to increase the range of the network.
+      This Wall Mounted Transmitter is designed to work with other Evolve enabled devices. Evolve nodes of other types can be included in the network and will also act as repeaters to increase the range of the network.
 
-Power Requirements
-120 VAC, 60 Hz
-Specifications
-Signal (Frequency) – 908.42 MHz
-Range – Up to 100 feet line of sight between the Controller and /or the closest Z-Wave Device.
-Z-Wave Version 4.52
-Network Inclusion
-Scene – Command Class
-Security Compatible</MetaDataItem>
+      Power Requirements
+      120 VAC, 60 Hz
+      Specifications
+      Signal (Frequency) – 908.42 MHz
+      Range – Up to 100 feet line of sight between the Controller and /or the closest Z-Wave Device.
+      Z-Wave Version 4.52
+      Network Inclusion
+      Scene – Command Class
+      Security Compatible
+    </MetaDataItem>
     <MetaDataItem name="ProductSupport">http://www.eguestcontrols.com/products/lighting-devices/lt</MetaDataItem>
     <MetaDataItem name="Name">LTM-5 - Wall mounted Z-Wave transmitter</MetaDataItem>
     <ChangeLog>
