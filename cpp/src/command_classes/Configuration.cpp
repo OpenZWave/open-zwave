@@ -292,7 +292,7 @@ namespace OpenZWave
 					uint16 paramNo = (_data[1] << 8) + _data[2];
 					bool reportsToFollow = (_data[3] > 0);
 					if (m_ConfigParams.find(paramNo) != m_ConfigParams.end()) {
-						for (int i = 4; i <= (_length -1); i++) {
+						for (uint32 i = 4; i <= (_length -1); i++) {
 							m_ConfigParams.at(paramNo).name += _data[i];
 						}
 						if (reportsToFollow)
@@ -309,7 +309,7 @@ namespace OpenZWave
 					uint16 paramNo = (_data[1] << 8) + _data[2];
 					bool reportsToFollow = (_data[3] > 0);
 					if (m_ConfigParams.find(paramNo) != m_ConfigParams.end()) { 
-						for (int i = 4; i <= (_length -1); i++) {
+						for (uint32 i = 4; i <= (_length -1); i++) {
 							m_ConfigParams.at(paramNo).help += _data[i];
 						}
 						if (reportsToFollow)
