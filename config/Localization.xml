@@ -807,7 +807,7 @@
 			<Label>Test Powerlevel</Label>
 		</Value>
 		<Value index="5">
-			<Help>How Many Messages to send to the Note for the Test</Help>
+			<Help>How Many Messages to send to the Node for the Test</Help>
 			<Label>Frame Count</Label>
 		</Value>
 		<Value index="6">
