@@ -93,7 +93,7 @@ namespace OpenZWave
 						CC_Param_Format_Signed = 0x00,
 						CC_Param_Format_Unsigned = 0x01,
 						CC_Param_Format_List = 0x02,
-						CC_param_Format_BitSet = 0x03
+						CC_Param_Format_BitSet = 0x03
 					};
 					enum CC_Param_Size {
 						CC_Param_Size_Unassigned = 0x00,
@@ -103,6 +103,7 @@ namespace OpenZWave
 					};
 
 					uint32 getField(const uint8 *data, CC_Param_Size size, uint8 &pos);
+					bool processConfigParams();
 
 					class ConfigParam {
 						public:
@@ -113,7 +114,14 @@ namespace OpenZWave
 							uint32 min;
 							uint32 max;
 							uint32 defaultval;
+							CC_Param_Size size;
 							CC_Param_Format format;
+							uint8 flags;
+					};
+					enum ConfigParamFlags {
+						ConfigParamFlags_Info_Done = 0x01,
+						ConfigParamFlags_Name_Done = 0x02,
+						ConfigParamFlags_Help_Done = 0x04,
 					};
 					std::map<uint16, ConfigParam> m_ConfigParams;
 

@@ -115,7 +115,14 @@ namespace OpenZWave
 					{
 						return m_max;
 					}
-
+					void SetMin(int32 min) 
+					{
+						m_min = min;
+					}
+					void SetMax(int32 max) 
+					{
+						m_max = max;
+					}
 					void SetChangeVerified(bool _verify)
 					{
 						m_verifyChanges = _verify;

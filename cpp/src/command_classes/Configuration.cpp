@@ -192,7 +192,6 @@ namespace OpenZWave
 					CC_Param_Size paramSize = (CC_Param_Size)(_data[3] & 0x07);
 					if (paramSize == CC_Param_Size::CC_Param_Size_Unassigned) {
 						/* this is a non-existant Param, but the "next param" field holds the next Param Number. Go Get it... */
-						//uint16 nextParam = (_data[4] << 8) + _data[5];
 						Log::Write(LogLevel_Info, GetNodeId(), "First Configuration CC Param to Query is %d", ((_data[4] << 8) + _data[5]));
 						{
 							Msg* msg = new Msg("ConfigurationCmd_Properties_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
@@ -240,7 +239,8 @@ namespace OpenZWave
 					param.max = getField(_data, paramSize, position);
 					param.defaultval = getField(_data, paramSize, position);
 					param.format = paramFormat;
-					m_ConfigParams[paramNo] =  param;
+					param.flags |= ConfigParamFlags_Info_Done;
+					m_ConfigParams[paramNo] = param;
 					uint16 nextParam = getField(_data, CC_Param_Size::CC_Param_Size_Short, position);
 					Log::Write(LogLevel_Warning, GetNodeId(), "Param %d Format: %d Size: %d Min: %d Max: %d Default %d Next %d", param.paramNo, param.format, paramSize, param.min, param.max, param.defaultval, nextParam);
 					
@@ -279,7 +279,10 @@ namespace OpenZWave
 							msg->Append(GetDriver()->GetTransmitOptions());
 							GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
 						}
-
+						return true;
+					} else {
+						/* No More Params - Lets process what we have */
+						return processConfigParams();
 					}
 					return true;
 
@@ -287,10 +290,13 @@ namespace OpenZWave
 				else if (ConfigurationCmd_Name_Report == (ConfigurationCmd) _data[0])
 				{
 					uint16 paramNo = (_data[1] << 8) + _data[2];
+					bool reportsToFollow = (_data[3] > 0);
 					if (m_ConfigParams.find(paramNo) != m_ConfigParams.end()) {
 						for (int i = 4; i <= (_length -1); i++) {
 							m_ConfigParams.at(paramNo).name += _data[i];
 						}
+						if (reportsToFollow)
+							m_ConfigParams.at(paramNo).flags |= ConfigParamFlags_Name_Done;
 						uint8 moreInfo = (_data[3]);
 						Log::Write(LogLevel_Warning, GetNodeId(), "Param %d Name: %s (moreInfo %d)", paramNo, m_ConfigParams.at(paramNo).name.c_str(), moreInfo);
 					} else {
@@ -301,10 +307,13 @@ namespace OpenZWave
 				else if (ConfigurationCmd_Info_Report == (ConfigurationCmd) _data[0])
 				{
 					uint16 paramNo = (_data[1] << 8) + _data[2];
+					bool reportsToFollow = (_data[3] > 0);
 					if (m_ConfigParams.find(paramNo) != m_ConfigParams.end()) { 
 						for (int i = 4; i <= (_length -1); i++) {
 							m_ConfigParams.at(paramNo).help += _data[i];
 						}
+						if (reportsToFollow)
+							m_ConfigParams.at(paramNo).flags |= ConfigParamFlags_Info_Done;
 						uint8 moreInfo = (_data[3]);
 						Log::Write(LogLevel_Warning, GetNodeId(), "Param %d Help: %s (moreInfo: %d)", paramNo, m_ConfigParams.at(paramNo).help.c_str(), moreInfo);
 					} else {
@@ -461,6 +470,108 @@ namespace OpenZWave
 				msg->Append((uint8) (_value & 0xff));
 				msg->Append(GetDriver()->GetTransmitOptions());
 				GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
+			}
+//-----------------------------------------------------------------------------
+// <Configuration::processConfigParams>
+// Process the Config Params we got from the device and compare to what
+// out config file specifies. Fill in the blanks...
+//-----------------------------------------------------------------------------
+			bool Configuration::processConfigParams() 
+			{
+				for (std::map<uint16, ConfigParam>::iterator it = m_ConfigParams.begin(); it != m_ConfigParams.end(); it++) {
+					if (it->second.flags != (ConfigParamFlags::ConfigParamFlags_Name_Done + ConfigParamFlags::ConfigParamFlags_Info_Done + ConfigParamFlags_Help_Done))
+					{
+						Log::Write(LogLevel_Warning, GetNodeId(), "Config Param %d is incomplete: %d", it->first, it->second.flags);
+						continue;
+					}					
+					/* see if we have a Value for this Param No */
+					if (Internal::VC::Value *var = GetValue(1, it->first))
+					{
+						/* value Exists.. */
+						Log::Write(LogLevel_Info, GetNodeId(), "Config Param %d (%s) already exists as a %s (%s)", it->first, it->second.name.c_str(), var->GetID().GetTypeAsString().c_str(), var->GetLabel().c_str());
+						/* what, if any sanity checks should we do? size? */
+						continue;
+					} else {
+						/* value doesn't exist */
+						if (Node* node = GetNodeUnsafe())
+						{
+							switch (it->second.format) {
+								case CC_Param_Format::CC_Param_Format_Signed:
+								case CC_Param_Format::CC_Param_Format_Unsigned:
+								{
+									switch (it->second.size) {
+										case CC_Param_Size::CC_Param_Size_Byte:
+										{
+											node->CreateValueByte(ValueID::ValueGenre_Config, GetCommandClassId(), 1, it->first, it->second.name, "", false, false, (uint8) it->second.defaultval, 0);
+											if (Internal::VC::ValueByte *vb = static_cast<Internal::VC::ValueByte*>(GetValue(1, it->first))) {
+												vb->SetHelp(it->second.help);
+												vb->SetMin(it->second.min);
+												vb->SetMax(it->second.max);
+											}
+
+											break;
+										}
+										case CC_Param_Size::CC_Param_Size_Short:
+										{
+											node->CreateValueShort(ValueID::ValueGenre_Config, GetCommandClassId(), 1, it->first, it->second.name, "", false, false, (int16) it->second.defaultval, 0);
+											if (Internal::VC::ValueShort *vs = static_cast<Internal::VC::ValueShort*>(GetValue(1, it->first))) {
+												vs->SetHelp(it->second.help);
+												vs->SetMin(it->second.min);
+												vs->SetMax(it->second.max);
+											}
+											break;
+										}
+										case CC_Param_Size::CC_Param_Size_Int:
+										{
+											node->CreateValueInt(ValueID::ValueGenre_Config, GetCommandClassId(), 1, it->first, it->second.name, "", false, false, (int32) it->second.defaultval, 0);
+											if (Internal::VC::ValueInt *vi = static_cast<Internal::VC::ValueInt*>(GetValue(1, it->first))) {
+												vi->SetHelp(it->second.help);
+												vi->SetMin(it->second.min);
+												vi->SetMax(it->second.max);
+											}
+											break;
+										}
+										case CC_Param_Size_Unassigned: 
+										{
+											/* do nothing. */
+											Log::Write(LogLevel_Warning, GetNodeId(), "Got a Config Param %d with Size 0!", it->first);
+											break;
+										}
+									}
+									break;
+								}
+								case CC_Param_Format::CC_Param_Format_BitSet:
+								{
+									node->CreateValueBitSet(ValueID::ValueGenre_Config, GetCommandClassId(), 1, it->first, it->second.name, "", false, false, it->second.defaultval, 0);
+									if (Internal::VC::ValueBitSet *vbs = static_cast<Internal::VC::ValueBitSet *>(GetValue(1, it->first)))
+									{
+										vbs->SetHelp(it->second.help);
+										vbs->SetBitMask(it->second.max);
+										/* I think we need to create the BitFields. */
+									}
+									break;
+								}
+								case CC_Param_Format::CC_Param_Format_List:
+								{
+									/* I have no idea?!?!?!?!?:
+									 * CC:0070.03.0F.11.00A:
+									 * If the parameter format is “Enumerated”, the parameter MUST be treated as an unsigned integer. A graphical configuration tool SHOULD present this parameter as a series of radio buttons [11].
+									 * 
+									 * ehhhh... how? 
+									 * 
+									 * Maybe its Bit Positions... 1, 2, 4, 8, 16?
+									 */
+									Log::Write(LogLevel_Warning, GetNodeId(), "ConfigParam List TODO?");
+									break;
+								}
+							}
+							Log::Write(LogLevel_Info, GetNodeId(), "Created a new Config Param %d (%s) as a %d", it->first, it->second.name.c_str(), it->second.format);
+						} else {
+							Log::Write(LogLevel_Warning, GetNodeId(), "Cant Get Node to Create Config Param");
+						}
+					}
+				}
+				return true;
 			}
 		} // namespace CC
 	} // namespace Internal
