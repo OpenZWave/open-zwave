@@ -807,6 +807,7 @@ DISTFILES =	.gitignore \
 	config/images/telldus/tzwp100.png \
 	config/images/telldus/tzwp102.png \
 	config/images/there/800z.png \
+	config/images/thermofloor/Heatit-Z-Push-button-8-white.png \
 	config/images/thermofloor/heatit021.png \
 	config/images/thermofloor/heatit056.png \
 	config/images/thermofloor/heatit_zdim.png \
@@ -1108,6 +1109,7 @@ DISTFILES =	.gitignore \
 	config/thermofloor/heatit-zdim.xml \
 	config/thermofloor/heatit021.xml \
 	config/thermofloor/heatit056.xml \
+	config/thermofloor/heatitz8.xml \
 	config/trane/TZEMT400AB32MAA.xml \
 	config/trane/TZEMT400BB32MAA.xml \
 	config/trane/TZEMT524AA21MA.xml \
