@@ -1296,7 +1296,8 @@
     <Product config="popp/solar-siren.xml" id="0002" name="Solar Powered Outdoor Siren" type="0004"/>
     <Product config="popp/004407.xml" id="0003" name="004407 CO Detector" type="0004"/>
     <Product config="popp/009402.xml" id="0004" name="009402 10-Year Smoke Detector with Siren" type="0004"/>
-    <Product config="popp/700342.xml" id="000d" name="700342 10-Year Smoke Detector" type="0004"/>	  
+    <Product config="popp/700342.xml" id="000d" name="700342 10-Year Smoke Detector" type="0004"/>
+    <Product config="popp/700342.xml" id="0010" name="700342 10-Year Smoke Detector" type="0004"/>	  
     <Product config="popp/009501.xml" id="0003" name="009501 Flow Stop" type="0005"/>
     <Product config="popp/700168.xml" id="0011" name="Popp Z-Rain Rain Sensor" type="0004"/>
     <Product config="popp/012501.xml" id="0001" name="012501 Strike Lock Control" type="0005"/>
@@ -1610,6 +1611,7 @@
     <Product config="thermofloor/heatit021.xml" id="0001" name="Heatit Thermostat TF 021" type="0001"/>
     <Product config="thermofloor/heatit056.xml" id="0202" name="Heatit Thermostat TF 056" type="0003"/>
     <Product config="thermofloor/heatit-zdim.xml" id="2200" name="Heatit ZDim" type="0003"/>
+    <Product config="thermofloor/heatitz8.xml" id="0xa305" name="Heatit Z-Push Button 8" type="0x0300"/>
   </Manufacturer>
   <Manufacturer id="0317" name="Think Simple srl"></Manufacturer>
   <Manufacturer id="022A" name="TIMEVALVE"></Manufacturer>

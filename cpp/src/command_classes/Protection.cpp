@@ -62,7 +62,7 @@ namespace OpenZWave
 			{
 				if (_requestFlags & RequestFlag_Session)
 				{
-					return RequestValue(_requestFlags, 0, _instance, _queue);
+					return RequestValue(_requestFlags, ValueID_Index_Protection::Protection, _instance, _queue);
 				}
 
 				return false;

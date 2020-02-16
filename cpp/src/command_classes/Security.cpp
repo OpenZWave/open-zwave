@@ -46,7 +46,7 @@ namespace OpenZWave
 		{
 
 			Security::Security(uint32 const _homeId, uint8 const _nodeId) :
-					CommandClass(_homeId, _nodeId), m_schemeagreed(false), m_secured(false)
+					CommandClass(_homeId, _nodeId), m_schemeagreed(false)
 
 			{
 				/* We don't want the Driver to route "Security" messages back to us for Encryption,
@@ -55,7 +55,8 @@ namespace OpenZWave
 				 * in the SecurityCmd_SupportedReport from the device - Which some devices do)
 				 */
 				ClearSecureSupport();
-
+				for (int i = 0; i < 255; i++)
+					m_secured[i] = false;
 			}
 
 			Security::~Security()
@@ -154,10 +155,10 @@ namespace OpenZWave
 						 * Command Classes created after the Discovery Phase is completed!
 						 */
 						Log::Write(LogLevel_Info, GetNodeId(), "Received SecurityCmd_SupportedReport from node %d (instance %d)", GetNodeId(), _instance);
-						m_secured = true;
+						m_secured[_instance] = true;
 						if (Internal::VC::ValueBool* value = static_cast<Internal::VC::ValueBool*>(GetValue(_instance, ValueID_Index_Security::Secured)))
 						{
-							value->OnValueRefreshed(m_secured);
+							value->OnValueRefreshed(m_secured[_instance]);
 							value->Release();
 						}
 						HandleSupportedReport(&_data[2], _length - 3, _instance);
@@ -261,6 +262,12 @@ namespace OpenZWave
 				if (Node* node = GetNodeUnsafe())
 				{
 					node->CreateValueBool(ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_Security::Secured, "Secured", "", true, false, false, 0);
+					if (Internal::VC::ValueBool* value = static_cast<Internal::VC::ValueBool*>(GetValue(_instance, ValueID_Index_Security::Secured)))
+					{
+						value->OnValueRefreshed(m_secured[_instance]);
+						value->Release();
+					}
+
 				}
 			}
 		} // namespace CC

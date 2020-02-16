@@ -93,7 +93,7 @@ namespace OpenZWave
 					if (_requestFlags & RequestFlag_Static)
 					{
 						{
-							Msg* msg = new Msg("ManufacturerSpecificCmd_DeviceGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
+							Msg* msg = new Msg("ManufacturerSpecificCmd_DeviceGet_DeviceIDType_FactoryDefault", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
 							msg->SetInstance(this, _instance);
 							msg->Append(GetNodeId());
 							msg->Append(3);
@@ -104,7 +104,7 @@ namespace OpenZWave
 							GetDriver()->SendMsg(msg, _queue);
 						}
 						{
-							Msg* msg = new Msg("ManufacturerSpecificCmd_DeviceGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
+							Msg* msg = new Msg("ManufacturerSpecificCmd_DeviceGet_DeviceIDType_SerialNumber", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
 							msg->SetInstance(this, _instance);
 							msg->Append(GetNodeId());
 							msg->Append(3);
@@ -119,26 +119,10 @@ namespace OpenZWave
 					}
 				}
 
-				if ((_requestFlags & RequestFlag_Static) && HasStaticRequest(StaticRequest_Values))
-				{
-					res |= RequestValue(_requestFlags, 0, _instance, _queue);
-				}
-
 				return res;
 			}
 
-//-----------------------------------------------------------------------------
-// <ManufacturerSpecific::RequestValue>
-// Request current value from the device
-//-----------------------------------------------------------------------------
-			bool ManufacturerSpecific::RequestValue(uint32 const _requestFlags, uint16 const _dummy1,	// = 0 (not used)
-					uint8 const _instance, Driver::MsgQueue const _queue)
-			{
-				if (_instance != 1)
-				{
-					// This command class doesn't work with multiple instances
-					return false;
-				}
+			bool ManufacturerSpecific::Init() {
 				if (m_com.GetFlagBool(COMPAT_FLAG_GETSUPPORTED))
 				{
 					Msg* msg = new Msg("ManufacturerSpecificCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
@@ -147,7 +131,7 @@ namespace OpenZWave
 					msg->Append(GetCommandClassId());
 					msg->Append(ManufacturerSpecificCmd_Get);
 					msg->Append(GetDriver()->GetTransmitOptions());
-					GetDriver()->SendMsg(msg, _queue);
+					GetDriver()->SendMsg(msg, Driver::MsgQueue_Query);
 					return true;
 				}
 				else
@@ -257,12 +241,15 @@ namespace OpenZWave
 						Internal::VC::ValueString *default_value = static_cast<Internal::VC::ValueString*>(GetValue(_instance, ValueID_Index_ManufacturerSpecific::DeviceID));
 						default_value->OnValueRefreshed(deviceID);
 						default_value->Release();
+						Log::Write(LogLevel_Info, GetNodeId(), "Got ManufacturerSpecific FactoryDefault: %s", deviceID.c_str());
 					}
 					else if (deviceIDType == DeviceSpecificGet_DeviceIDType_SerialNumber)
 					{
 						Internal::VC::ValueString *serial_value = static_cast<Internal::VC::ValueString*>(GetValue(_instance, ValueID_Index_ManufacturerSpecific::SerialNumber));
 						serial_value->OnValueRefreshed(deviceID);
 						serial_value->Release();
+						Log::Write(LogLevel_Info, GetNodeId(), "Got ManufacturerSpecific SerialNumber: %s", deviceID.c_str());
+
 					}
 					return true;
 				}

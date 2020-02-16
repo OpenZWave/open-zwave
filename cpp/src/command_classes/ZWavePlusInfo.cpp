@@ -115,6 +115,8 @@ namespace OpenZWave
 					uint16 installerIcon = (_data[4] << 8) | _data[5];
 					uint16 deviceType = (_data[6] << 8) | _data[7];
 
+					Log::Write(LogLevel_Info, GetNodeId(), "ZW+ Info - Version %d, Role %d, NodeType %d, InstallerIcon %d, deviceType %d", version, role, nodeType, installerIcon, deviceType);
+
 					/* Only set the role, NodeType and DeviceType on Instance 1 Reports. The other instances
 					 * Just have unique Icons for each endpoint */
 					if (_instance == 1)
