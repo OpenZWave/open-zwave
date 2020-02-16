@@ -1,5 +1,5 @@
 <!--
-Aeotec ZW141 Nano Shutter, based on Engineering Spec 1/4/2018
+Aeotec ZW141 Nano Shutter, based on Engineering Spec 8/22/2019
 Product Type ID: EU=0x00, US=0x01, AU=0x02 CN=0x1D
 
 -->
@@ -64,16 +64,16 @@ Product Type ID: EU=0x00, US=0x01, AU=0x02 CN=0x1D
     <Value genre="config" index="35" label="Curtain trip time" size="2" max="32767" min="500" type="decimal" units="0.01 seconds" value="15000">
       <Help>Set the run time of the curtain. Details can be found in section 4.2 of Advanced information Product Manual.</Help>
     </Value>
-    <Value genre="config" index="36" label="Enter/exit calibration mode" size="1" type="list" units="" value="0">
+    <Value genre="config" index="36" label="Enter/exit calibration mode" size="1" type="list" units="" value="0" write_only="true"> 
       <Help>Set to enter/exit calibration mode</Help>
-      <Item label="Exit calibration mode" value="0" />
-      <Item label="Enter shutter mode calibration" value="1" />
-      <Item label="Enter Venetian mode calibration" value="2" />
+      <Item label="Set: Exit calibration mode/Report: Not in calibration mode" value="0" />
+      <Item label="Set: Enter shutter mode calibration/Report: in shutter mode calibration" value="1" />
+      <Item label="Set: Enter Venetian mode calibration/Report: in Venetian mode calibration" value="2" />
     </Value>
     <Value genre="config" index="37" label="User confirmation for calibration" size="1" type="list" units="" value="0" write_only="true">
       <Help>Set user confirmation for calibration</Help>
     </Value>
-    <Value genre="config" index="38" label="Calibration mode status report" size="1" type="list" units="" value="0">
+    <Value genre="config" index="38" label="Calibration mode status report" size="1" type="list" units="" value="0" read_only="true">
       <Help>Get calibration mode status report</Help>
       <Item label="Calibration mode complete" value="0" />
       <Item label="Start calibration mode, going to reference point A" value="1" />
@@ -86,26 +86,39 @@ Product Type ID: EU=0x00, US=0x01, AU=0x02 CN=0x1D
       <Help>Set the curtain mode operation</Help>
       <Item label="Shutter mode" value="0" />
       <Item label="Venetian mode" value="1" />
-      </Value>
+    </Value>
     <Value genre="config" index="40" label="Repositioning" size="1" type="list" units="" value="1" write_only="true">
       <Help>Set to begin repositioning</Help>
     </Value>		
-    <Value genre="config" index="41" label="Repositioning status report" size="1" type="list" units="" value="0">
+    <Value genre="config" index="41" label="Repositioning status report" size="1" type="list" units="" value="0" read_only="true">
       <Help>Get repositioning status report</Help>
       <Item label="Repositioning complete" value="0" />
       <Item label="In repositioning" value="1" />
     </Value>
-    <Value genre="config" index="42" label="Lock calibration" size="1" type="list" max="2" min="0" units="" value="1">
-      <Help>Enable/disable locking of calibration</Help>
+    <Value genre="config" index="42" label="Calibration lock" size="1" type="list" units="" value="1">
+      <Help>Enable/disable calibration lock</Help>
       <Item label="Disable calibration" value="0" />
-      <Item label="Enable action button for calibration" value="1" />
-      <Item label="Enable action button / S1 / S2 for calibration" value="2" />
-    </Value>		
+      <Item label="Enable calibration" value="1" />
+    </Value>
+    <Value genre="config" index="48" label="S1 scene activation" size="1" type="list" units="" value="0">
+      <Help>Set S1 scene activation</Help>
+      <Item label="Enable S1 'Key pressed one time'" value="1" />
+      <Item label="Enable S1 'Key released'" value="2" />
+      <Item label="Enable S1 'Key held down'" value="4" />
+      <Item label="Enable S1 'Key pressed two times'" value="8" />
+    </Value>  
+    <Value genre="config" index="49" label="S2 scene activation" size="1" type="list" units="" value="0">
+      <Help>Set S1 scene activation</Help>
+      <Item label="Enable S2 'Key pressed one time'" value="1" />
+      <Item label="Enable S2 'Key released'" value="2" />
+      <Item label="Enable S2 'Key held down'" value="4" />
+      <Item label="Enable S2 'Key pressed two times'" value="8" />
+    </Value>      		
     <Value genre="config" index="80" label="Type of status report" size="1" type="list" units="" value="2">
       <Help>Select which report to send when switch status changes</Help>
       <Item label="No report" value="0"/>
       <Item label="Basic report" value="1"/>
-      <Item label="Switch multilevel report" value="1"/>
+      <Item label="Switch multilevel report" value="2"/>
     </Value>
     <Value genre="config" index="85" label="External button mode operation" size="1" type="list" units="" value="0">
       <Help>
@@ -116,7 +129,7 @@ Product Type ID: EU=0x00, US=0x01, AU=0x02 CN=0x1D
       <Item label="Operation Mode 1" value="0"/>
       <Item label="Operation Mode 2" value="1"/>
     </Value>
-    <Value genre="config" index="120" label="Set external switch mode for S1" max="4" min="0" size="1" type="list" units="" value="0">
+    <Value genre="config" index="120" label="Set external switch mode for S1" size="1" type="list" units="" value="0">
       <Help>When the mode is determined, this mode value will not be reset after exclusion</Help>
       <Item label="Unidentified" value="0"/>
       <Item label="2-state switch" value="1"/>
@@ -124,7 +137,7 @@ Product Type ID: EU=0x00, US=0x01, AU=0x02 CN=0x1D
       <Item label="Push button" value="3"/>
       <Item label="Automatic identification mode" value="4"/>
     </Value>  
-    <Value genre="config" index="121" label="Set external switch mode for S2" max="4" min="0" size="1" type="list" units="" value="0">
+    <Value genre="config" index="121" label="Set external switch mode for S2" size="1" type="list" units="" value="0">
       <Help>When the mode is determined, this mode value will not be reset after exclusion</Help>
       <Item label="Unidentified" value="0"/>
       <Item label="2-state switch" value="1"/>
@@ -132,6 +145,9 @@ Product Type ID: EU=0x00, US=0x01, AU=0x02 CN=0x1D
       <Item label="Push button" value="3"/>
       <Item label="Automatic identification mode" value="4"/>
     </Value>
+    <Value genre="config" index="243" label="DSK" size="16" type="string" units="" value="0" read_only="true">
+      <Help>Get the DSK from the product</Help>
+    </Value>   
     <Value genre="config" index="248" label="S1 and S2 operation" size="1" type="list" units="" value="1">
       <Help>Set the operation of external switches S1 and S2</Help>
       <Item label="Enable network inclusion/exclusion" value="1"/>
