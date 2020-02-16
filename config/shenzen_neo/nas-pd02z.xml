@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="3">
   <MetaData>
     <!--
   Neo (Coolcam) NAS-PD02Z Motion Sensor (PIR) Version 2 aka NAS-PD02ZT
@@ -17,10 +17,10 @@
   <CommandClass id="112">
     <Value type="list" genre="config" instance="1" index="1" label="Motion detection sensitivity" value="12" min="8" max="255" size="1">
       <Help>Adapt the sensitivity of the motion detection.</Help>
-      <Item label="High Sensitivity" value="8" />
-      <Item label="Normal Sensitivity" value="12" />
-      <Item label="Lower Sensitivity" value="128" />
-      <Item label="Lowest Sensitivity" value="255" />
+      <Item label="High Sensitivity" value="8"/>
+      <Item label="Normal Sensitivity" value="12"/>
+      <Item label="Lower Sensitivity" value="128"/>
+      <Item label="Lowest Sensitivity" value="255"/>
     </Value>
 
     <Value type="short" genre="config" instance="1" index="2" label="Motion detection ON time" units="second" value="30" min="5" max="600" size="2">
@@ -44,8 +44,8 @@
         Enable the motion detection (PIR) function.
         This parameter does not effect the luminance reporting.
       </Help>
-      <Item label="Disable" value="0" />
-      <Item label="Enable" value="255" />
+      <Item label="Disable" value="0"/>
+      <Item label="Enable" value="255"/>
     </Value>
 
     <Value type="short" genre="config" instance="1" index="5" label="Ambient Illumination Lux Level" units="lux" value="100" min="0" max="1000" size="2">
@@ -76,8 +76,8 @@
       <Help>
         Enable the function to switch on a associated device (group 2) once motion has been detected and the illumination level will be less than the value specified in 'Illumination switch ON level'.
       </Help>
-      <Item label="Disable" value="0" />
-      <Item label="Enable" value="1" />
+      <Item label="Disable" value="0"/>
+      <Item label="Enable" value="1"/>
     </Value>
 
     <Value type="byte" genre="config" instance="1" index="9" label="Illumination report threshold" units="lux" value="25" min="0" max="255" size="1">
@@ -89,15 +89,15 @@
     </Value>
 
     <Value type="list" genre="config" instance="1" index="11" label="Led Blink Enable (temperature reporting version)" value="1" size="1">
-      <Help>This parameter can enabled or disable the PIR led blinking function. </Help>
-      <Item label="Disable" value="0" />
-      <Item label="Enable" value="1" />
+      <Help>This parameter can enabled or disable the PIR led blinking function.</Help>
+      <Item label="Disable" value="0"/>
+      <Item label="Enable" value="1"/>
     </Value>
 
     <Value type="list" genre="config" instance="1" index="12" label="Motion Event Report One Time Enable (temperature reporting version)" value="1" size="1">
-      <Help>The motion detected event can be sent multiple times/only once until device report motion cleared event. </Help>
-      <Item label="multiple times" value="0" />
-      <Item label="only once" value="1" />
+      <Help>The motion detected event can be sent multiple times/only once until device report motion cleared event.</Help>
+      <Item label="multiple times" value="0"/>
+      <Item label="only once" value="1"/>
     </Value>
 
     <Value type="short" genre="config" instance="1" index="99" label="Ambient Light Intensity Calibration" value="1000" min="1" max="65536" size="2">
@@ -108,10 +108,10 @@
   <!-- Association Groups -->
   <CommandClass id="133">
     <Associations num_groups="4">
-      <Group index="1" max_associations="4" label="Lifeline" />
-      <Group index="2" max_associations="4" label="Control Commands BASIC_SET" />
-      <Group index="3" max_associations="4" label="Send Notification Report" />
-      <Group index="4" max_associations="4" label="Send Sensor Binary Report" />
+      <Group index="1" max_associations="4" label="Lifeline"/>
+      <Group index="2" max_associations="4" label="Control Commands BASIC_SET"/>
+      <Group index="3" max_associations="4" label="Send Notification Report"/>
+      <Group index="4" max_associations="4" label="Send Sensor Binary Report"/>
     </Associations>
   </CommandClass>
 </Product>

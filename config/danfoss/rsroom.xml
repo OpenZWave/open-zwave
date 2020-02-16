@@ -1,4 +1,4 @@
-<Product Revision="9" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="10" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0002:8010:0003</MetaDataItem>
     <MetaDataItem name="ProductPic">images/danfoss/rsroom.png</MetaDataItem>
@@ -29,7 +29,7 @@
   <CommandClass id="112">
     <Value genre="config" index="1" label="Temperature Threshold" max="100" min="1" type="short" value="5">
       <Help>
-       Temperature Report threshold (1=0.1C)
+        Temperature Report threshold (1=0.1C)
       </Help>
     </Value>
     <Value genre="config" index="2" label="Setpoint resolution" max="100" min="1" type="short" value="5">
@@ -39,31 +39,31 @@
     </Value>
     <Value genre="config" index="3" label="Min/Override Setpoint" max="40" min="0" type="short" value="12">
       <Help>
-       Min Set-point and override limit
+        Min Set-point and override limit
       </Help>
     </Value>
     <Value genre="config" index="4" label="Max/Override Setpoint" max="40" min="0" type="short" value="28">
       <Help>
-       Max Set-point and override limit
+        Max Set-point and override limit
       </Help>
     </Value>
     <Value genre="config" index="6" label="Setpoint control function" size="1" type="list" value="1">
       <Help>
-       Setpoint control function
+        Setpoint control function
       </Help>
       <Item label="Disabled" value="0"/>
       <Item label="Enabled" value="1"/>
     </Value>
     <Value genre="config" index="7" label="Temporarily override scheduler" size="1" type="list" value="1">
       <Help>
-       Temporarily override scheduler
+        Temporarily override scheduler
       </Help>
       <Item label="Disabled" value="0"/>
       <Item label="Enabled" value="1"/>
     </Value>
     <Value genre="config" index="8" label="Setpoint type" size="1" type="list" value="1">
       <Help>
-       Setpoint type in thermostat setpoint_reports
+        Setpoint type in thermostat setpoint_reports
       </Help>
       <Item label="Heating" value="1"/>
       <Item label="Cooling" value="2"/>
@@ -71,22 +71,22 @@
     </Value>
     <Value genre="config" index="9" label="Led on time" max="5" min="1" type="byte" value="1">
       <Help>
-       Led on time (1=100ms)
+        Led on time (1=100ms)
       </Help>
     </Value>
     <Value genre="config" index="5" label="Led Flash Period" max="65535" min="0" type="short" value="1">
       <Help>
-       Led Flash Period (0 to 65535 seconds)
+        Led Flash Period (0 to 65535 seconds)
       </Help>
     </Value>
     <Value genre="config" index="10" label="Number of flash" max="255" min="0" type="byte" value="5">
       <Help>
-       Number of led flashes (duration)
+        Number of led flashes (duration)
       </Help>
     </Value>
     <Value genre="config" index="11" label="Led Color" size="1" type="list" value="1">
       <Help>
-       Led Color
+        Led Color
       </Help>
       <Item label="Green" value="1"/>
       <Item label="Red" value="2"/>

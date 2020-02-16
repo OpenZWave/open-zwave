@@ -1,7 +1,7 @@
-<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
   <!-- Polycontrol: Danalock Keypad -->
 
-	<!-- COMMAND_CLASS_BASIC does not respond to requests -->
+  <!-- COMMAND_CLASS_BASIC does not respond to requests -->
   <CommandClass id="32">
     <Compatibility>
       <SetAsReport>true</SetAsReport>

@@ -1,4 +1,4 @@
-<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0138:0002:0001</MetaDataItem>
     <MetaDataItem name="ProductPic">images/firstalert/zcombo.png</MetaDataItem>
@@ -12,7 +12,7 @@
     </ChangeLog>
   </MetaData>
   <!-- First Alert ZCombo Smoke and Carbon Monoxide Detector -->
- 
+
   <!-- Configuration -->
   <CommandClass id="112">
     <Value genre="config" index="1" instance="1" label="Send double alarm messages" size="1" type="list" value="0">

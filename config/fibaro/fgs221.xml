@@ -1,4 +1,4 @@
-<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
   <!-- Configuration -->
   <CommandClass id="112">
     <Value genre="config" index="1" instance="1" label="Enable/Disable ALL ON/OFF" size="1" type="list" value="255">
@@ -10,7 +10,8 @@
     </Value>
     <Value genre="config" index="3" instance="1" label="Auto off relay after specified time" size="1" type="list" value="0">
       <Help>Auto off relay after specified time, with the possibility of manual override - immediate Off after button push.
-      Default value: 0 Manual override disabled</Help>
+        Default value: 0 Manual override disabled
+      </Help>
       <Item label="Manual override disabled" value="0"/>
       <Item label="Manual override enabled" value="1"/>
     </Value>
@@ -44,7 +45,8 @@
     </Value>
     <Value genre="config" index="15" instance="1" label="Dimmer/Roller shutter control" size="1" type="list" value="0">
       <Help>Enable/Disable operation of dimmer or roller shutter devices associated to group 1.
-        Available only when using mono-stable inputs (buttons) - Hold button 1 or double-tap for operation (only mono-stable input (button)). Default setting: 0</Help>
+        Available only when using mono-stable inputs (buttons) - Hold button 1 or double-tap for operation (only mono-stable input (button)). Default setting: 0
+      </Help>
       <Item label="Disable Dimmer/Roller shutter control" value="0"/>
       <Item label="Enable Dimmer/Roller shutter control" value="1"/>
     </Value>

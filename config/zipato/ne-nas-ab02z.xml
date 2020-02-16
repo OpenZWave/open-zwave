@@ -1,4 +1,4 @@
-<Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="Name">Indoor Siren</MetaDataItem>
     <MetaDataItem name="Description">The indoor siren is an intelligent device that can be controlled remotely by the Z-wave network. The indoor siren is battery powered, small and easily installed. When the siren is triggered, an LED light will flash, and there will be an alarm sound at the same time. The sound level is at least 115 dB.</MetaDataItem>
@@ -39,7 +39,7 @@
 
     <Value genre="config" index="2" label="Alarm duration time" max="127" min="0" size="1" type="list" value="2">
       <Help>This Parameter defines the alarm duration time when siren receives an alarm sensor notification report or an alarm command from controller.</Help>
-      <Item label="Siren is not on" value="0"/>      
+      <Item label="Siren is not on" value="0"/>
       <Item label="30 Seconds" value="1"/>
       <Item label="1 Minute" value="2"/>
       <Item label="5 Minutes" value="3"/>
@@ -48,8 +48,8 @@
 
     <Value genre="config" index="8" label="Alarm LED" max="1" min="0" size="1" type="list" value="1">
       <Help>This parameter defines the default led enable status when siren is on for alarm</Help>
-      <Item label="Disable" value="0" />
-      <Item label="Enable" value="1" />
+      <Item label="Disable" value="0"/>
+      <Item label="Enable" value="1"/>
     </Value>
 
     <Value genre="config" index="4" label="Doorbell volume" max="3" min="1" size="1" type="list" value="2">
@@ -60,7 +60,7 @@
     </Value>
 
     <Value genre="config" index="6" label="Doorbell sound index" max="10" min="1" type="byte" units="" value="9">
-      <Help>This parameter defines the doorbell music index so siren can play different music when an alarm occurs. </Help>
+      <Help>This parameter defines the doorbell music index so siren can play different music when an alarm occurs.</Help>
     </Value>
 
     <Value genre="config" index="3" label="Doorbell duration time" max="127" min="0" type="byte" units="" value="1">
@@ -69,8 +69,8 @@
 
     <Value genre="config" index="9" label="Doorbell LED" max="1" min="0" size="1" type="list" value="0">
       <Help>This parameter defines the default led enable status when siren is on for doorbell</Help>
-      <Item label="Disable" value="0" />
-      <Item label="Enable" value="1" />
+      <Item label="Disable" value="0"/>
+      <Item label="Enable" value="1"/>
     </Value>
   </CommandClass>
 

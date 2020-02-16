@@ -1,4 +1,4 @@
-<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0315:3034:4447</MetaDataItem>
     <MetaDataItem name="ProductPic">images/zwp/WD-100.png</MetaDataItem>
@@ -8,22 +8,24 @@
     <MetaDataItem id="3034" name="Identifier" type="4447">WD-100</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">Place your Z-Wave controller in "Exclusion" mode. Then tap either the top or bottom paddle once to initiation Exclusion.</MetaDataItem>
     <MetaDataItem name="ResetDescription">1. Turn the connected light ON with the rocker
-2. Quickly tap the topside of the rocker 3 times
-3. Then quickly tap the bottom side of the rocker 3 times
-If you see the lights turn OFF then ON it means that the module has been rest successfully.
+      2. Quickly tap the topside of the rocker 3 times
+      3. Then quickly tap the bottom side of the rocker 3 times
+      If you see the lights turn OFF then ON it means that the module has been rest successfully.
 
-Please use this procedure only when the network primary controller is missing or otherwise inoperable.</MetaDataItem>
+      Please use this procedure only when the network primary controller is missing or otherwise inoperable.
+    </MetaDataItem>
     <MetaDataItem id="3034" name="FrequencyName" type="4447">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem name="InclusionDescription">Place your Z-Wave controller in "Inclusion" mode. Then tap either the top or bottom paddle once to initiation Inclusion.</MetaDataItem>
     <MetaDataItem name="Description">ZLINK’s WD-100 is a Z-Wave Plus certified device with S2 security and SmartStart features. You can now add this device securely and with ease using QR code on the product with compatible gateways supporting S2 and Smart Start. The elegant WD-100, with 7 LED dim level lights, communicates with other Z-Wave certified devices and updates your home into a smart home. WD-100 replaces a standard in-wall light switch turning it into a Z-Wave controlled network device with manual and remote control dimming and On/Off light control. ZLINK WD-100 supports, “Instant Feedback” of manual status to compatible gateways as well as Central Scene to allow setting multiple scene control throughout the home, with gateways supporting Central Scene. Each Z-Wave device serves as a node to repeat the signal in the network, thus, extending the overall Z-Wave mesh wireless network range.
-Additional Features:
-• Power 120 VAC, 60Hz, up to 600 watts
-• Region US: 908.4, 916 MHz
-• Works w/ most incandescent, dimmable CFL &amp; LED lights
-• 7 segment LED dim level indicator
-• Remotely or manually turns ON or OFF, or DIM lights
-• Fits standard wall plates (wall plate not included)
-• Works with any certified gateway supporting Z-Wave</MetaDataItem>
+      Additional Features:
+      • Power 120 VAC, 60Hz, up to 600 watts
+      • Region US: 908.4, 916 MHz
+      • Works w/ most incandescent, dimmable CFL &amp; LED lights
+      • 7 segment LED dim level indicator
+      • Remotely or manually turns ON or OFF, or DIM lights
+      • Fits standard wall plates (wall plate not included)
+      • Works with any certified gateway supporting Z-Wave
+    </MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="2">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2299/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="3">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2808/xml</Entry>

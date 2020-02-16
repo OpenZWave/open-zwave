@@ -2,7 +2,7 @@
 Devolo Smoke Detector MT 2651
 https://products.z-wavealliance.org/products/2230
  -->
- <Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
   <!-- the Device Doesn't support Get for Alarm Class -->
   <CommandClass id="113">
     <Compatibility>

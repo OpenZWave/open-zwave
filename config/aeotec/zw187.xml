@@ -1,5 +1,5 @@
 <!-- Aeotec Recessed Door Sensor 7-->
-<Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0371:00bb:0002</MetaDataItem>
     <MetaDataItem name="ProductPic">images/aeotec/zw187.png</MetaDataItem>
@@ -19,15 +19,15 @@
     <MetaDataItem name="ResetDescription">Press and hold the Z-Wave button that you can find in back of the product for 20 seconds and then release. This procedure should only be used when the primary controller is inoperable.</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">Turn the primary controller of Z-Wave network into exclusion mode, short press the product’s Z-Wave button that you can find in back of the product.</MetaDataItem>
     <MetaDataItem name="Description">The Aeotec Recessed Door Sensor 7 is a door sensor that can detect the state of the door's open/close. It will report the door state to your controller/ gateway/associated nodes in real time when the state of your door has a change.
-It’s a security Z-Wave device that supports security encryption. Also it supports the “Over the Air Firmware Updating” that allows you wirelessly update its firmware if needs. 
-It can be included and operated in any Z-Wave network with other Z-Wave certified devices from manufacturers and/or other applications.
-</MetaDataItem>
+      It’s a security Z-Wave device that supports security encryption. Also it supports the “Over the Air Firmware Updating” that allows you wirelessly update its firmware if needs.
+      It can be included and operated in any Z-Wave network with other Z-Wave certified devices from manufacturers and/or other applications.
+    </MetaDataItem>
     <ChangeLog>
       <Entry author="Jean-Francois Auger - nechry@gmail.com" date="05 nov 2019" revision="1">Initial version</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration -->
-    <!-- Alarm CC isn't supported on this device -->
+  <!-- Alarm CC isn't supported on this device -->
   <CommandClass action="remove" id="113"/>
   <CommandClass id="112">
     <Value genre="config" index="1" instance="1" label="Sensor Binary Report" max="1" min="0" size="1" type="list" value="0">
@@ -52,23 +52,23 @@ It can be included and operated in any Z-Wave network with other Z-Wave certifie
     </Value>
     <Value genre="config" index="4" label="Application Layer Retry" max="1535" min="0" size="2" type="short" value="0">
       <Help>
-          Configure retry number and wait time.
-          The device supports an application retry mechanism when the application of the device has detected a transmission error when Basic Set, Sensor Binary Report or Notification Report (Access Control) message is sent out but fails to result in an ACK or a Supervision Report.
-          The Byte 1 is used to configure the number of retries. The valid value is 0-5. 0 means disable retry.
-          The Byte 2 is used to configure the wait time between retries. The valid value is 0-255. Unit is 100ms.
+        Configure retry number and wait time.
+        The device supports an application retry mechanism when the application of the device has detected a transmission error when Basic Set, Sensor Binary Report or Notification Report (Access Control) message is sent out but fails to result in an ACK or a Supervision Report.
+        The Byte 1 is used to configure the number of retries. The valid value is 0-5. 0 means disable retry.
+        The Byte 2 is used to configure the wait time between retries. The valid value is 0-255. Unit is 100ms.
       </Help>
     </Value>
     <Value genre="config" index="5" label="Supervision Report Wait Time" max="50" min="1" size="1" type="byte" units="0.1s" value="15">
       <Help>
-          Configure Supervision Report Wait Time.
-          Unit is 100ms.
-          Note: Issuing Basic Set, Sensor Binary Report or Notification Report(Access Control) via association groups uses Supervision encapsulation only if sending commands with S2(or higher security) encapsulation.
-          In other word, this parameter can be configured in any network, but works only in S2 (or higher security) network.
+        Configure Supervision Report Wait Time.
+        Unit is 100ms.
+        Note: Issuing Basic Set, Sensor Binary Report or Notification Report(Access Control) via association groups uses Supervision encapsulation only if sending commands with S2(or higher security) encapsulation.
+        In other word, this parameter can be configured in any network, but works only in S2 (or higher security) network.
       </Help>
     </Value>
     <Value genre="config" index="81" label="Led Indicator" min="0" max="3" size="1" type="list" value="3">
       <Help>
-          Control LED Indicator. Determine whether the LED flash or not when sending Basic Set, Sensor Binary Report, Notification Report (Access Control) or Wake Up Notification.
+        Control LED Indicator. Determine whether the LED flash or not when sending Basic Set, Sensor Binary Report, Notification Report (Access Control) or Wake Up Notification.
       </Help>
       <Item label="Completely disable LED" value="0"/>
       <Item label="LED quickly flashes only when sending Basic Set, Sensor Binary Report or Notification Report" value="1"/>

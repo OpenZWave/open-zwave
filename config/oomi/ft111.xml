@@ -1,7 +1,8 @@
 <!--
 Oomi FT111 Nano Dimmer
 https://products.z-wavealliance.org/products/2765
---><Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
+-->
+<Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/016A:006F:0103</MetaDataItem>
     <MetaDataItem name="ProductPic">images/oomi/ft111.png</MetaDataItem>
@@ -10,8 +11,9 @@ https://products.z-wavealliance.org/products/2765
     <MetaDataItem name="InclusionDescription">Turn the primary controller of Z-Wave network into inclusion mode, short press the product’s Action button that you can find on the product's housing.</MetaDataItem>
     <MetaDataItem name="ResetDescription">Press and hold the Action button that you can find on the product's housing for 20 seconds and then release. This procedure should only be used when the primary controller is inoperable.</MetaDataItem>
     <MetaDataItem name="Description">Oomi In-Wall Dimmer is a Z-Wave Smart Dimmer specifically used to enable Z-Wave command and control (on/off/dim) of any wall switches. It can report immediate wattage consumption or kWh energy usage over a period of time. In the event of power failure, non-volatile memory retains all programmed information relating to the unit’s operating status.
-It can connect to 2 external manual switches to control the load ON/OFF independently. Its surface has a pin socket, which can be used for connecting to the touch panel, so you can also use the touch panel to control the Nano Dimmer.
-The In-Wall Dimmer is also a security Z-Wave plus device and supports Over The Air (OTA) feature for the products firmware upgrade.</MetaDataItem>
+      It can connect to 2 external manual switches to control the load ON/OFF independently. Its surface has a pin socket, which can be used for connecting to the touch panel, so you can also use the touch panel to control the Nano Dimmer.
+      The In-Wall Dimmer is also a security Z-Wave plus device and supports Over The Air (OTA) feature for the products firmware upgrade.
+    </MetaDataItem>
     <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/2765/Oomi In-Wall Dimmer manual (FT111-K) - 2.pdf</MetaDataItem>
     <MetaDataItem id="006F" name="FrequencyName" type="0103">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem id="006F" name="Identifier" type="0103">FT111-A</MetaDataItem>
@@ -66,21 +68,21 @@ The In-Wall Dimmer is also a security Z-Wave plus device and supports Over The A
     </Value>
     <Value genre="config" index="85" label="State appointment 1" type="int" value="2566920192">
       <Help>State appointment
-                Set the ON time of output load.
-                Value1 = 0, disable or = non zero, enable (day, bit0 - bit6 represent Mon to Sun).
-                Value2 = ON (hour)
-                Value3 = ON (minute)
-                Value4 = ON (brightness level)
-            </Help>
+        Set the ON time of output load.
+        Value1 = 0, disable or = non zero, enable (day, bit0 - bit6 represent Mon to Sun).
+        Value2 = ON (hour)
+        Value3 = ON (minute)
+        Value4 = ON (brightness level)
+      </Help>
     </Value>
     <Value genre="config" index="86" label="State appointment 2" type="int" value="8960">
       <Help>State appointment
-                Set the ON time of output load.
-                Value1 = 0, disable or = non zero, enable (day, bit0 - bit6 represent Mon to Sun).
-                Value2 = ON (hour)
-                Value3 = ON (minute)
-                Value4 = ON (brightness level)
-            </Help>
+        Set the ON time of output load.
+        Value1 = 0, disable or = non zero, enable (day, bit0 - bit6 represent Mon to Sun).
+        Value2 = ON (hour)
+        Value3 = ON (minute)
+        Value4 = ON (brightness level)
+      </Help>
     </Value>
     <Value genre="config" index="90" label="Enable/disable the parameter 91 and 92" size="1" type="list" units="" value="0">
       <Help>Enables/disables parameter 91 and 92</Help>
@@ -98,54 +100,54 @@ The In-Wall Dimmer is also a security Z-Wave plus device and supports Over The A
     </Value>
     <Value genre="config" index="101" label="Report type sent in Reporting Group 1" type="int" units="" value="0">
       <Help>
-                Defines the type of report sent for reporting group 1.
-                1 is meter report for voltage.
-                2 is meter report for current.
-                4 is meter report for watts.
-                8 is meter report for kilowatts.
-                Value 1 (msb) Reserved
-                Value 2 Reserved
-                Value 3 Reserved
-                Value 4 (lsb) bits 7-4 reserved
-                bit 3 current
-                bit 2 voltage
-                bit 1 watt
-                bit 0 kWh
-            </Help>
+        Defines the type of report sent for reporting group 1.
+        1 is meter report for voltage.
+        2 is meter report for current.
+        4 is meter report for watts.
+        8 is meter report for kilowatts.
+        Value 1 (msb) Reserved
+        Value 2 Reserved
+        Value 3 Reserved
+        Value 4 (lsb) bits 7-4 reserved
+        bit 3 current
+        bit 2 voltage
+        bit 1 watt
+        bit 0 kWh
+      </Help>
     </Value>
     <Value genre="config" index="102" label="Report type sent in Reporting Group 2" type="int" units="" value="0">
       <Help>
-                Defines the type of report sent for reporting group 2.
-                1 is meter report for voltage.
-                2 is meter report for current.
-                4 is meter report for watts.
-                8 is meter report for kilowatts.
-                Value 1 (msb) Reserved
-                Value 2 Reserved
-                Value 3 Reserved
-                Value 4 (lsb) bits 7-4 reserved
-                bit 3 current
-                bit 2 voltage
-                bit 1 watt
-                bit 0 kWh
-            </Help>
+        Defines the type of report sent for reporting group 2.
+        1 is meter report for voltage.
+        2 is meter report for current.
+        4 is meter report for watts.
+        8 is meter report for kilowatts.
+        Value 1 (msb) Reserved
+        Value 2 Reserved
+        Value 3 Reserved
+        Value 4 (lsb) bits 7-4 reserved
+        bit 3 current
+        bit 2 voltage
+        bit 1 watt
+        bit 0 kWh
+      </Help>
     </Value>
     <Value genre="config" index="103" label="Report type sent in Reporting Group 3" type="int" units="" value="0">
       <Help>
-                Defines the type of report sent for reporting group 3.
-                1 is meter report for voltage.
-                2 is meter report for current.
-                4 is meter report for watts.
-                8 is meter report for kilowatts.
-                Value 1 (msb) Reserved
-                Value 2 Reserved
-                Value 3 Reserved
-                Value 4 (lsb) bits 7-4 reserved
-                bit 3 current
-                bit 2 voltage
-                bit 1 watt
-                bit 0 kWh
-            </Help>
+        Defines the type of report sent for reporting group 3.
+        1 is meter report for voltage.
+        2 is meter report for current.
+        4 is meter report for watts.
+        8 is meter report for kilowatts.
+        Value 1 (msb) Reserved
+        Value 2 Reserved
+        Value 3 Reserved
+        Value 4 (lsb) bits 7-4 reserved
+        bit 3 current
+        bit 2 voltage
+        bit 1 watt
+        bit 0 kWh
+      </Help>
     </Value>
     <Value affects="111,112,113" genre="config" index="110" label="Set 111-113 to default" type="button" units="" value="0" write_only="true">
       <Help>Set time interval for sending reports for groups 1, 2 and 3 to default.</Help>

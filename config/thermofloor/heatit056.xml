@@ -1,37 +1,42 @@
-<!-- 
-Heatit Z-Wave Thermostat Z-TRM2fx TF 056 
+<!--
+Heatit Z-Wave Thermostat Z-TRM2fx TF 056
 https://products.z-wavealliance.org/products/3065
---><Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+-->
+<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/019B:0202:0003</MetaDataItem>
     <MetaDataItem name="ProductPic">images/thermofloor/heatit056.png</MetaDataItem>
     <MetaDataItem id="0202" name="ZWProductPage" type="0003">https://products.z-wavealliance.org/products/3065/</MetaDataItem>
     <MetaDataItem name="InclusionDescription">Adding the device:
-To add the thermostat to your home automation gateway, press Center (confirm) for 10 seconds. The display will show OFF. Press Right (down) 4 times till you see Con in the display. Now start add device in your home automation software. Start adding mode by pressing Center (confirm) button for approximately 2 seconds. The icon will appear in the display. Adding Mode is indicated in the display by some “circling” LED segments in the display until the timeout occurs after 20 seconds or the module has been added in the network. Confirmation will show Inc/EcL in the display. If adding fails, Err (error) will appear.</MetaDataItem>
+      To add the thermostat to your home automation gateway, press Center (confirm) for 10 seconds. The display will show OFF. Press Right (down) 4 times till you see Con in the display. Now start add device in your home automation software. Start adding mode by pressing Center (confirm) button for approximately 2 seconds. The icon will appear in the display. Adding Mode is indicated in the display by some “circling” LED segments in the display until the timeout occurs after 20 seconds or the module has been added in the network. Confirmation will show Inc/EcL in the display. If adding fails, Err (error) will appear.
+    </MetaDataItem>
     <MetaDataItem id="0202" name="Identifier" type="0003">Z-TRM2fx</MetaDataItem>
     <MetaDataItem name="Description">Heatit Z-TRM2fx is equipped with a single pole switch and it fits most System 55 frames (Elko RS16, Schneider Exxact, Gira, Jung etc.). The thermostat can withstand a load of max 13A /2900W at 230V. At higher loads the thermostat must control a contactor. The thermostat may be connected to two wired external sensors.
-The thermostat has the capacity of up to 8 associations (relays, wall plugs etc.).
-The thermostat is designed for electrical heating.
-FEATURES
-Floor sensor
-External room sensor
-Temperature limiter
-Weekly program/setback via gateway or pilot wire
-Multilevel sensor command class
-Firmware updates (OTA)
-Power metering
-LED-diode
-Can be used in connection with different NTC-sensors
-Lock mode/child lock
-Calibration
-8 associations
-Supports encryption mode: S0, S2 Authenticated Class, S2 Unauthenticated Class</MetaDataItem>
+      The thermostat has the capacity of up to 8 associations (relays, wall plugs etc.).
+      The thermostat is designed for electrical heating.
+      FEATURES
+      Floor sensor
+      External room sensor
+      Temperature limiter
+      Weekly program/setback via gateway or pilot wire
+      Multilevel sensor command class
+      Firmware updates (OTA)
+      Power metering
+      LED-diode
+      Can be used in connection with different NTC-sensors
+      Lock mode/child lock
+      Calibration
+      8 associations
+      Supports encryption mode: S0, S2 Authenticated Class, S2 Unauthenticated Class
+    </MetaDataItem>
     <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/3065/Manual_Heatit_Z-TRM2fx_ENG_3.1.pdf</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">Removing the device:
-To remove the thermostat to your home automation gateway, press Center (confirm) for 10 seconds. The display will show OFF. Press Right (down) 4 times till you see Con in the display. Now start remove device in your home automation software. Start removing mode by pressing Center (confirm) button for approximately 2 seconds. The icon will appear in the display. Removing Mode is indicated in the display by some “circling” LED segments in the display until the timeout occurs after 20 seconds or the module has been removed in the network. Confirmation will show Inc/EcL in the display. If removing fails, Err (error) will appear.</MetaDataItem>
+      To remove the thermostat to your home automation gateway, press Center (confirm) for 10 seconds. The display will show OFF. Press Right (down) 4 times till you see Con in the display. Now start remove device in your home automation software. Start removing mode by pressing Center (confirm) button for approximately 2 seconds. The icon will appear in the display. Removing Mode is indicated in the display by some “circling” LED segments in the display until the timeout occurs after 20 seconds or the module has been removed in the network. Confirmation will show Inc/EcL in the display. If removing fails, Err (error) will appear.
+    </MetaDataItem>
     <MetaDataItem id="0202" name="FrequencyName" type="0003">CEPT (Europe)</MetaDataItem>
     <MetaDataItem name="ResetDescription">By pressing buttons Right and Center (down and confirm) for 20 seconds, the thermostat will perform a complete factory reset.
-NB! Please use this procedure only when the primary controller/ gateway is missing or otherwise inoperable.</MetaDataItem>
+      NB! Please use this procedure only when the primary controller/ gateway is missing or otherwise inoperable.
+    </MetaDataItem>
     <MetaDataItem name="Name">Heatit Z-TRM2fx</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 Jun 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/3065/xml</Entry>
@@ -142,18 +147,18 @@ NB! Please use this procedure only when the primary controller/ gateway is missi
     </Value>
     <Value genre="config" index="19" instance="1" label="Temperature report interval" max="32767" min="0" size="2" type="short" value="60">
       <Help>
-				0 (Report disabled)
-				30-32767 (30-32767 seconds)
-			</Help>
+        0 (Report disabled)
+        30-32767 (30-32767 seconds)
+      </Help>
     </Value>
     <Value genre="config" index="20" instance="1" label="Temperature report hysteresis" max="100" min="1" size="1" type="byte" value="10">
       <Help>0-100 (0.1C - 10.0C) Default is 10 (1.0C)</Help>
     </Value>
     <Value genre="config" index="21" instance="1" label="Meter report interval" max="32767" min="0" size="2" type="short" value="60">
       <Help>
-				0 (Report disabled)
-				30-32767 (30-32767 seconds)
-			</Help>
+        0 (Report disabled)
+        30-32767 (30-32767 seconds)
+      </Help>
     </Value>
     <Value genre="config" index="22" instance="1" label="Meter report delta value" max="255" min="0" size="1" type="byte" value="10">
       <Help>0-127 A delta value of 0 - 12.7 kWh will result in a metering report. Default is 10 (1.0 kWh)</Help>

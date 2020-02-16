@@ -1,18 +1,18 @@
-<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0115:0001:0100</MetaDataItem>
     <MetaDataItem name="ProductPic">images/zwave.me/kfob.png</MetaDataItem>
     <MetaDataItem id="0001" name="ZWProductPage" type="0100">https://products.z-wavealliance.org/products/688/</MetaDataItem>
     <MetaDataItem id="0001" name="Identifier" type="0100">KFOB</MetaDataItem>
-    <MetaDataItem name="Description">The Z-Wave.Me Key Fob is a mobile Z-Wave device that can both control other Z-Wave devices and activate predefined scenes in an IP gateway. 
+    <MetaDataItem name="Description">The Z-Wave.Me Key Fob is a mobile Z-Wave device that can both control other Z-Wave devices and activate predefined scenes in an IP gateway.
 
-The Key Fob can be used in five different modes:
-1)	Direct Control of associated Devices with single Buttons 
-2)	Direct Control of associated Devices with two Buttons 
-3)	Scene Activation in IP Gateway 
-4)	Direct Activation of preconfigured Scenes 
-5)	Direct Control of Devices in proximity  
-</MetaDataItem>
+      The Key Fob can be used in five different modes:
+      1) Direct Control of associated Devices with single Buttons
+      2) Direct Control of associated Devices with two Buttons
+      3) Scene Activation in IP Gateway
+      4) Direct Activation of preconfigured Scenes
+      5) Direct Control of Devices in proximity 
+    </MetaDataItem>
     <MetaDataItem name="Name">Z-Wave.Me Key Fob</MetaDataItem>
     <MetaDataItem id="0001" name="FrequencyName" type="0100">Russia</MetaDataItem>
     <ChangeLog>
@@ -74,7 +74,7 @@ The Key Fob can be used in five different modes:
       <Item label="Control devices in proximity" value="6"/>
     </Value>
     <Value genre="config" index="20" label="Typical click timeout" max="100" min="1" size="1" type="byte" units="ms" value="50">
-      <Help> Typical time used to differentiate click, hold and double clicks 1-100 in 10 ms units (default is 50, that is equivalent to 500 ms)</Help>
+      <Help>Typical time used to differentiate click, hold and double clicks 1-100 in 10 ms units (default is 50, that is equivalent to 500 ms)</Help>
     </Value>
     <Value genre="config" index="21" label="Send the following Switch All commands" max="255" min="1" size="1" type="list" units="" value="1">
       <Help>Send the following Switch All ON/OFF commands</Help>
@@ -116,11 +116,11 @@ The Key Fob can be used in five different modes:
 	<CommandClass id="96" version="2"/>
 		-->
 
-	<!--COMMAND_CLASS_MULTI_CHANNEL_ASSOCIATION_V2
-	<CommandClass id="142" version="2"/>
-	-->
+  <!--COMMAND_CLASS_MULTI_CHANNEL_ASSOCIATION_V2
+  <CommandClass id="142" version="2"/>
+  -->
 
-	<!-- COMMAND_CLASS_ASSOCIATION -->
+  <!-- COMMAND_CLASS_ASSOCIATION -->
   <CommandClass id="133">
     <Associations num_groups="4">
       <Group auto="false" index="1" label="Controlled by button 1 or single clicks of buttons 1 and 3" max_associations="8"/>

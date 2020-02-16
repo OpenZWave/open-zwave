@@ -1,4 +1,4 @@
-<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0109:0C02:200C</MetaDataItem>
     <MetaDataItem name="ProductPic">images/vision/zl7431.png</MetaDataItem>
@@ -12,7 +12,7 @@
     </ChangeLog>
   </MetaData>
   <!-- Vision ZL7431 In-Wall Switch, Single Relay -->
-    <!-- Configuration Parameters -->
+  <!-- Configuration Parameters -->
   <CommandClass id="112">
     <Value genre="config" index="1" label="Behavior" max="2" min="1" size="1" type="list" value="2">
       <Help></Help>

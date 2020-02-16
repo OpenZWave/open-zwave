@@ -1,7 +1,8 @@
-<!-- 
-EVERSPRING AN163 PLUG-IN ON/OFF MODULE WITH METERING 
+<!--
+EVERSPRING AN163 PLUG-IN ON/OFF MODULE WITH METERING
 https://products.z-wavealliance.org/products/979
---><Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
+-->
+<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0060:0005:0004</MetaDataItem>
     <MetaDataItem name="ProductPic">images/everspring/an163.png</MetaDataItem>
@@ -18,26 +19,26 @@ https://products.z-wavealliance.org/products/979
   <CommandClass id="112">
     <Value genre="config" index="1" label="True Period" max="120" min="0" type="byte" units="100ms" value="10">
       <Help>
-	      This is the time the switching status needs to remain unchanged after a change to cause the device to send out a status message. 0 is Disabled.
+        This is the time the switching status needs to remain unchanged after a change to cause the device to send out a status message. 0 is Disabled.
       </Help>
     </Value>
     <Value genre="config" index="2" label="Send Out Basic Command" max="1" min="0" size="1" type="list" units="" value="0">
       <Help>
-	      Enable or Disable Send Basic Command to Group 2 when the local button press changes the switching state.
+        Enable or Disable Send Basic Command to Group 2 when the local button press changes the switching state.
       </Help>
       <Item label="Disable" value="0"/>
       <Item label="Enable" value="1"/>
     </Value>
     <Value genre="config" index="3" label="Meter Report Period (W)" max="3240" min="0" type="short" units="10s" value="3">
       <Help>
-	      The device will report its meter value within the interval set. 
-	      Set to 0 will disable the autoreporting function.
+        The device will report its meter value within the interval set.
+        Set to 0 will disable the autoreporting function.
       </Help>
     </Value>
     <Value genre="config" index="4" label="Meter Report Period (kWh)" max="3240" min="0" type="short" units="10s" value="1440">
       <Help>
-	      The device will report its meter value within the interval set. 
-	      Set to 0 will disable the autoreporting function.
+        The device will report its meter value within the interval set.
+        Set to 0 will disable the autoreporting function.
       </Help>
     </Value>
   </CommandClass>

@@ -1,4 +1,4 @@
-<Product Revision="6" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="7" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0095:0001:3103</MetaDataItem>
     <MetaDataItem name="ProductPic">images/qees/reto-plugin-switch.png</MetaDataItem>
@@ -6,16 +6,17 @@
     <MetaDataItem name="Description">QEES RETO Plug-in Dimmer Plus brings along comfort and elegance with an extremely easy setup and a unique design. With its help you can now wirelessly control all the dimmable loads you have inside your home.
 
 
-QEES RETO Plug-in Dimmer Plus is a Z-Wave-controlled 400W universal dimmer (US frequency) with schuko plug-in socket outlet, built-in power meter, multi-color LED feedback and one programmable group for retrofit installation.
+      QEES RETO Plug-in Dimmer Plus is a Z-Wave-controlled 400W universal dimmer (US frequency) with schuko plug-in socket outlet, built-in power meter, multi-color LED feedback and one programmable group for retrofit installation.
 
 
-QEES RETO Plug-in Dimmer Plus’s software can be upgraded “over the air”, allowing the device to receive additional features or bug fixes through firmware updates and software apps.This is a unique feature of all QEES products and it facilitates a future-proof, contemporary and flexible infrastructure solution for the building.
+      QEES RETO Plug-in Dimmer Plus’s software can be upgraded “over the air”, allowing the device to receive additional features or bug fixes through firmware updates and software apps.This is a unique feature of all QEES products and it facilitates a future-proof, contemporary and flexible infrastructure solution for the building.
 
 
-QEES RETO Plug-in Dimmer Plus is compatible with all Z-Wave certified devices from other manufacturers. It also acts as a repeater inside your Z-Wave network increasing the range for your remote control.
+      QEES RETO Plug-in Dimmer Plus is compatible with all Z-Wave certified devices from other manufacturers. It also acts as a repeater inside your Z-Wave network increasing the range for your remote control.
 
 
-Like all QEES products, QEES RETO Plug-in Dimmer Plus has a self-calibrating built-in power meter and can switch off the device that otherwise would consume power when not needed.</MetaDataItem>
+      Like all QEES products, QEES RETO Plug-in Dimmer Plus has a self-calibrating built-in power meter and can switch off the device that otherwise would consume power when not needed.
+    </MetaDataItem>
     <MetaDataItem name="ProductSupport">http://www.qees.eu/support</MetaDataItem>
     <MetaDataItem id="0001" name="FrequencyName" type="3103">U.S. / Canada / Mexico / CEPT (Europe) / CEPT (Europe)</MetaDataItem>
     <MetaDataItem name="Name">QEES P313B Plug-in dimmer</MetaDataItem>

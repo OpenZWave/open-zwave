@@ -1,6 +1,7 @@
 <!--
 Ecolink Z-Wave Sensor Z-Wave
---><Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
+-->
+<Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/014A:0003:0001</MetaDataItem>
     <MetaDataItem name="ProductPic">images/ecolink/tiltsensor.png</MetaDataItem>
@@ -8,13 +9,13 @@ Ecolink Z-Wave Sensor Z-Wave
     <MetaDataItem id="0003" name="Identifier" type="0001">TILTZWAVE1</MetaDataItem>
     <MetaDataItem name="Name">Ecolink Garage Door Tilt Sensor</MetaDataItem>
     <MetaDataItem id="0003" name="FrequencyName" type="0001">U.S. / Canada / Mexico</MetaDataItem>
-    <MetaDataItem name="Description">•	For indoor use only
-•	Operating frequency: 908.42 MHz
-•	Operating range: Up to 100 feet (30.5 meters) line-of-sight
-•	Operating temperature: 0˚C to 49˚C, 32˚F to 120˚F (ambient temperature)
-•	Battery type: 3V Lithium CR123A
-•	Battery life: 5 to 8 years depending upon operating conditions  
-</MetaDataItem>
+    <MetaDataItem name="Description">• For indoor use only
+      • Operating frequency: 908.42 MHz
+      • Operating range: Up to 100 feet (30.5 meters) line-of-sight
+      • Operating temperature: 0˚C to 49˚C, 32˚F to 120˚F (ambient temperature)
+      • Battery type: 3V Lithium CR123A
+      • Battery life: 5 to 8 years depending upon operating conditions
+    </MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/816/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="23 May 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1501/xml</Entry>
@@ -26,7 +27,7 @@ Ecolink Z-Wave Sensor Z-Wave
     <MetaDataItem name="InclusionDescription">Once the controller is in inclusion mode, remove the battery pull tab OR insert the battery to power up the sensor.</MetaDataItem>
     <MetaDataItem id="0003" name="FrequencyName" type="0004">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem id="0003" name="Identifier" type="0004">TILTZWAVE2.5-ECO</MetaDataItem>
-    <MetaDataItem name="ResetDescription">To reset the sensor to factory default, place the controller in exclusion mode and then insert the battery into the sensor to initiate power up.  Use this procedure only in the event that the network primary controller is missing or otherwise inoperable.</MetaDataItem>
+    <MetaDataItem name="ResetDescription">To reset the sensor to factory default, place the controller in exclusion mode and then insert the battery into the sensor to initiate power up. Use this procedure only in the event that the network primary controller is missing or otherwise inoperable.</MetaDataItem>
   </MetaData>
   <!-- Basic set as report-->
   <CommandClass id="32">

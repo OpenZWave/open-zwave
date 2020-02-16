@@ -1,35 +1,35 @@
-<Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/015F:5101:220A</MetaDataItem>
     <MetaDataItem name="ProductPic">images/mcohome/mhp220.png</MetaDataItem>
     <MetaDataItem id="5101" name="ZWProductPage" type="220A">https://products.z-wavealliance.org/products/3011/</MetaDataItem>
     <MetaDataItem id="5101" name="Identifier" type="220A">MH-P220</MetaDataItem>
     <MetaDataItem name="ResetDescription">Restoring Factory Settings:
-The default configuration can be restored by:
-*	Sending commands through controller/gateway (the command classes which support this function is Configuration Command Class). The parameter are as follows:
+      The default configuration can be restored by:
+      * Sending commands through controller/gateway (the command classes which support this function is Configuration Command Class). The parameter are as follows:
 
-Parameter Number	0xFF
-Size	1 BYTE
-Default value	N/A
-Configuration value	0x55
-Set 0xFF as 0x55 will restore Factory Settings.
+      Parameter Number 0xFF
+      Size 1 BYTE
+      Default value N/A
+      Configuration value 0x55
+      Set 0xFF as 0x55 will restore Factory Settings.
 
-*	Or press the inner button on the module 10 times in quick succession.Please use this procedure only when the network primary controller is missing or otherwise inoperable.
-</MetaDataItem>
+      * Or press the inner button on the module 10 times in quick succession.Please use this procedure only when the network primary controller is missing or otherwise inoperable.
+    </MetaDataItem>
     <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/3011/MH-P220UserManual.pdf</MetaDataItem>
     <MetaDataItem id="5101" name="FrequencyName" type="220A">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">Remove the device from Z-Wave network:
-1. Set controller into REMOVE mode. Follow the instructions provided by the controller/gateway manufacturer.
-2.	Press the momentary button on the device 3 times, or the connected external button S1 3 times in quick succession. 
-Note: If the REMOVE is successful, the INDICATION LED will blink 6 times. If not, INDICATION LED will be solid on or off depending on switch’s state.
-</MetaDataItem>
+      1. Set controller into REMOVE mode. Follow the instructions provided by the controller/gateway manufacturer.
+      2. Press the momentary button on the device 3 times, or the connected external button S1 3 times in quick succession.
+      Note: If the REMOVE is successful, the INDICATION LED will blink 6 times. If not, INDICATION LED will be solid on or off depending on switch’s state.
+    </MetaDataItem>
     <MetaDataItem name="Name">Micro Dimmer MHP-220</MetaDataItem>
-    <MetaDataItem name="Description">This in-wall module is with compact design as well as stable performance, which can suit for any of the installation box  and various operation situation.  It supports basic command class, and also can act as repeater regardless of vendor to increase reliability of the network.</MetaDataItem>
+    <MetaDataItem name="Description">This in-wall module is with compact design as well as stable performance, which can suit for any of the installation box and various operation situation. It supports basic command class, and also can act as repeater regardless of vendor to increase reliability of the network.</MetaDataItem>
     <MetaDataItem name="InclusionDescription">Add the device into Z-Wave network:
-1.	Set controller into ADD mode. Follow the instructions provided by the controller/gateway manufacturer.
-2.	Press the momentary button on the device 3 times, or the connected external button S1 3 times in quick succession. 
-Note: If the ADD is successful, the INDICATION LED will blink 6 times. If not, INDICATION LED will be solid on or off depending on switch’s state.
-</MetaDataItem>
+      1. Set controller into ADD mode. Follow the instructions provided by the controller/gateway manufacturer.
+      2. Press the momentary button on the device 3 times, or the connected external button S1 3 times in quick succession.
+      Note: If the ADD is successful, the INDICATION LED will blink 6 times. If not, INDICATION LED will be solid on or off depending on switch’s state.
+    </MetaDataItem>
     <ChangeLog>
       <Entry author="petergebruers - peter.gebruers@gmail.com" date="11 Jul 2019" revision="1">Initial Metadata Import from Z-Wave Alliance Database - file based on 1.4 version by @tonbor PR #1853</Entry>
     </ChangeLog>

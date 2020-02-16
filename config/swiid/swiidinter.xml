@@ -1,4 +1,4 @@
-<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0166:0100:0100</MetaDataItem>
     <MetaDataItem name="ProductPic">images/swiid/swiidinter.png</MetaDataItem>
@@ -12,7 +12,7 @@
     </ChangeLog>
   </MetaData>
   <!-- Swiidinter (Z-Wave Cord Switch) -->
-    <!-- Configuration -->
+  <!-- Configuration -->
   <CommandClass id="112">
     <Value genre="config" index="1" instance="1" label="Switch All" max="255" min="0" size="1" type="list" value="255">
       <Help>Enable/Disable ALL ON/OFF</Help>

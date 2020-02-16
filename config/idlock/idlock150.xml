@@ -1,11 +1,12 @@
-<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="Name">ID Lock 150 Z-Wave module</MetaDataItem>
     <MetaDataItem name="Description">A module enabling your ID Lock digital door lock to a Z-Wave Plus enabled digital door Lock.
 
-The module is compatible with ID Lock 101 and ID Lock 150.
+      The module is compatible with ID Lock 101 and ID Lock 150.
 
-It enables your ID Lock to operate in a Z-Wave network with numerous access control funtions and notifications.</MetaDataItem>
+      It enables your ID Lock to operate in a Z-Wave network with numerous access control funtions and notifications.
+    </MetaDataItem>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0373:0001:0003</MetaDataItem>
     <MetaDataItem name="ProductPage">https://idlock.no/z-wave/</MetaDataItem>
     <MetaDataItem name="ProductSupport">https://idlock.no/kundesenter/</MetaDataItem>
@@ -14,41 +15,44 @@ It enables your ID Lock to operate in a Z-Wave network with numerous access cont
     <MetaDataItem name="WakeupDescription">Activate by touching the touch panel with finger(s), the palm of the hand on the outside unit or by pushing the key button on the inside unit.</MetaDataItem>
     <MetaDataItem name="InclusionDescription">Inclusion – (Puts your device in inclusion mode)
 
-•	 Push and hold key button until all LEDs on touch panel activates (with ID Lock in an unlocked state).
-•	 Release button.
-•	 Enter Master PIN followed by * on touch panel.
-•	 Press digit "2" for settings followed by * on touch panel.
-•	 Press digit “5” on touch panel.
+      • Push and hold key button until all LEDs on touch panel activates (with ID Lock in an unlocked state).
+      • Release button.
+      • Enter Master PIN followed by * on touch panel.
+      • Press digit "2" for settings followed by * on touch panel.
+      • Press digit “5” on touch panel.
 
-Inclusion mode starts immediately. LED indicator below logo signals this by flashing blue.</MetaDataItem>
+      Inclusion mode starts immediately. LED indicator below logo signals this by flashing blue.
+    </MetaDataItem>
     <MetaDataItem name="ExclusionDescription">Exclusion – (Puts your device in exclusion mode)
 
-•	 Push and hold key button until all LEDs on touch panel activates (with ID Lock in an unlocked state).
-•	 Release button.
-•	 Enter Master PIN followed by * on touch panel.
-•	 Press digit "2" for settings followed by * on touch panel.
-•	 Press digit “5” on touch panel.
+      • Push and hold key button until all LEDs on touch panel activates (with ID Lock in an unlocked state).
+      • Release button.
+      • Enter Master PIN followed by * on touch panel.
+      • Press digit "2" for settings followed by * on touch panel.
+      • Press digit “5” on touch panel.
 
-Exclusion mode starts immediately. LED indicator below logo signals this by flashing blue.</MetaDataItem>
+      Exclusion mode starts immediately. LED indicator below logo signals this by flashing blue.
+    </MetaDataItem>
     <MetaDataItem name="ResetDescription">Device reset – (This will reset RF interface module to factory default settings)
-Warning: Please do only proceed with the following reset procedure, if primary network controller is missing or otherwise inoperable.
+      Warning: Please do only proceed with the following reset procedure, if primary network controller is missing or otherwise inoperable.
 
-RESET Z-WAVE MODULE:
+      RESET Z-WAVE MODULE:
 
-• Push and hold key button until all LEDs on touch panel activates (with ID Lock in an unlocked state).
-• Release button.
-• Enter Master PIN followed by * on keypad.
-• Press digit "2" for settings followed by * on keypad.
-• Press digit “0” on keypad.
+      • Push and hold key button until all LEDs on touch panel activates (with ID Lock in an unlocked state).
+      • Release button.
+      • Enter Master PIN followed by * on keypad.
+      • Press digit "2" for settings followed by * on keypad.
+      • Press digit “0” on keypad.
 
-If the Z-wave module is not included in a Z-wave network the door lock will also return to factory settings when following the above procedure.
+      If the Z-wave module is not included in a Z-wave network the door lock will also return to factory settings when following the above procedure.
 
-FACTORY RESET DOOR LOCK FIRMWARE:
+      FACTORY RESET DOOR LOCK FIRMWARE:
 
-•	 Push and hold inside lock/unlock button while inserting the fourth battery.
-•	 Receive reset sound.
-•	 Release button.
-•	 Receive confirmation sound.</MetaDataItem>
+      • Push and hold inside lock/unlock button while inserting the fourth battery.
+      • Receive reset sound.
+      • Release button.
+      • Receive confirmation sound.
+    </MetaDataItem>
     <MetaDataItem id="0001" name="ZWProductPage" type="0003">https://products.z-wavealliance.org/products/2780/</MetaDataItem>
     <MetaDataItem id="0001" name="FrequencyName" type="0003">CEPT (Europe)</MetaDataItem>
     <MetaDataItem id="0001" name="Identifier" type="0003">ID-150</MetaDataItem>
@@ -131,7 +135,7 @@ FACTORY RESET DOOR LOCK FIRMWARE:
       <Item label="Always valid" value="7"/>
       <Item label="12 Hours used" value="8"/>
       <Item label="24 Hours used" value="9"/>
-      <Item label="Disabled (PIN and Service PIN)" value="254" />
+      <Item label="Disabled (PIN and Service PIN)" value="254"/>
     </Value>
     <Value genre="config" index="7" label="Door Lock Model Type" max="150" min="101" read_only="true" type="byte" units="" value="150">
       <Help>

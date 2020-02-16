@@ -1,4 +1,5 @@
-<!-- GE(Jasco) 14295 Z-Wave Plus Toggle Dimmer Switch --><Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
+<!-- GE(Jasco) 14295 Z-Wave Plus Toggle Dimmer Switch -->
+<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0063:3130:4944</MetaDataItem>
     <MetaDataItem name="ProductPic">images/ge/14295-dimmer-toggle.png</MetaDataItem>
@@ -6,20 +7,24 @@
     <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/2048/14295 QSG v0.pdf</MetaDataItem>
     <MetaDataItem name="Name">In-Wall Smart Toggle Dimmer</MetaDataItem>
     <MetaDataItem name="InclusionDescription">1. Follow the instructions for your Z-Wave certified controller to
-include a device to the Z-Wave network.
-2. Once the controller is ready to include your device, press
-and release the top or bottom of the wireless smart dimmer
-(rocker) to include it in the network.</MetaDataItem>
+      include a device to the Z-Wave network.
+      2. Once the controller is ready to include your device, press
+      and release the top or bottom of the wireless smart dimmer
+      (rocker) to include it in the network.
+    </MetaDataItem>
     <MetaDataItem id="3130" name="FrequencyName" type="4944">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem id="3130" name="Identifier" type="4944">14295/ZW3004</MetaDataItem>
-    <MetaDataItem name="ResetDescription">1. Quickly press ON (up) button (3) times then immediately press the OFF (down) button (3) times. 
-Note: This should only be used in the even your network's primary controller is missing or otherwise inoperable. </MetaDataItem>
+    <MetaDataItem name="ResetDescription">1. Quickly press ON (up) button (3) times then immediately press the OFF (down) button (3) times.
+      Note: This should only be used in the even your network's primary controller is missing or otherwise inoperable.
+    </MetaDataItem>
     <MetaDataItem name="ExclusionDescription">1. Follow the instructions for your Z-Wave certified controller to
-exclude a device from the Z-Wave network.
-2. Once the controller is ready to Exclude your device, press
-and release the top or bottom of the wireless smart dimmer
-(rocker) to exclude it from the network.</MetaDataItem>
-    <MetaDataItem name="Description">Transform any home into a smart home with the GE Z-Wave In-Wall Smart Toggle Dimmer. The dimmer enables wireless control of on/off and dim functions of hard-wired dimmable LED/CFL and incandescent lighting. The dimmer replaces your current light switch, uses your existing wiring, and provides Z-Wave wireless and in-wall control of overhead lighting. Use the dimmer feature to customize the lighting output and create the perfect ambiance for any room. Providing ultimate flexibility, the In-Wall Smart Dimmer allows you to operate the switch by itself or easily integrate the switch three-way or four-way wiring configurations by adding the GE Add-On Switch. Single Pole wiring configuration controls the light from one location. Three-way wiring configuration controls the light from two separate locations. Four-way wiring configuration controls the light from three separate locations. The GE Add-On Switch is required for three-way or four-way installations. Take control of your home lighting with GE Z-Wave Wireless Lighting Controls!</MetaDataItem>
+      exclude a device from the Z-Wave network.
+      2. Once the controller is ready to Exclude your device, press
+      and release the top or bottom of the wireless smart dimmer
+      (rocker) to exclude it from the network.
+    </MetaDataItem>
+    <MetaDataItem name="Description">Transform any home into a smart home with the GE Z-Wave In-Wall Smart Toggle Dimmer. The dimmer enables wireless control of on/off and dim functions of hard-wired dimmable LED/CFL and incandescent lighting. The dimmer replaces your current light switch, uses your existing wiring, and provides Z-Wave wireless and in-wall control of overhead lighting. Use the dimmer feature to customize the lighting output and create the perfect ambiance for any room. Providing ultimate flexibility, the In-Wall Smart Dimmer allows you to operate the switch by itself or easily integrate the switch three-way or four-way wiring configurations by adding the GE Add-On Switch. Single Pole wiring configuration controls the light from one location. Three-way wiring configuration controls the light from two separate locations. Four-way wiring configuration controls the light from three separate locations. The GE Add-On Switch is required for three-way or four-way installations. Take control of your home lighting with GE Z-Wave Wireless Lighting Controls!
+    </MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="2">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2048/xml</Entry>
     </ChangeLog>

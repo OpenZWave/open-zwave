@@ -1,7 +1,7 @@
-<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
   <!-- Qubino: ZMNHIA2 Flush On Off thermostat -->
 
-	<!-- Configuration -->
+  <!-- Configuration -->
   <CommandClass id="112">
     <Value genre="config" index="1" instance="1" label="Input 1 switch type" max="1" min="0" size="1" type="list" value="1">
       <Help/>
@@ -27,21 +27,21 @@
     </Value>
     <Value genre="config" index="11" instance="1" label="Set point set by I2" max="65535" min="0" size="2" type="short" value="65535">
       <Help>
-				When I2 is pressed set point will be set according to the value of this parameter.
-				default value 65535
-				65535 - input I2 does not influence on the set point
-				From 0 to 990 - set point from 0.0 C to 99.0 C
-				From 1001 to 1150 - set point from -0.1 C to -15.0 C
-				</Help>
+        When I2 is pressed set point will be set according to the value of this parameter.
+        default value 65535
+        65535 - input I2 does not influence on the set point
+        From 0 to 990 - set point from 0.0 C to 99.0 C
+        From 1001 to 1150 - set point from -0.1 C to -15.0 C
+      </Help>
     </Value>
     <Value genre="config" index="12" instance="1" label="Set point set by I3" max="65535" min="0" size="2" type="short" value="65535">
       <Help>
-				When I3 is pressed set point will be set according to the value of this parameter.
-				default value 65535
-				65535 - input I2 does not influence on the set point
-				From 0 to 990 - set point from 0.0 C to 99.0 C
-				From 1001 to 1150 - set point from -0.1 C to -15.0 C
-				</Help>
+        When I3 is pressed set point will be set according to the value of this parameter.
+        default value 65535
+        65535 - input I2 does not influence on the set point
+        From 0 to 990 - set point from 0.0 C to 99.0 C
+        From 1001 to 1150 - set point from -0.1 C to -15.0 C
+      </Help>
     </Value>
     <Value genre="config" index="30" instance="1" label="Saving the state of the relay after a power failure" max="1" min="0" size="1" type="list" value="0">
       <Help/>
@@ -65,17 +65,17 @@
     </Value>
     <Value genre="config" index="60" instance="1" label="Minimum Temperature alarm" max="1000" min="1" size="2" type="short" value="50">
       <Help>
-				Default value 50 (Minimum Temperature alarm is 5.0C)
-				1 - 1000 = 0.1C - 100.0C, step is 0.1C.
-				Minimum temperature alarm is set by entered value. In case is set value out of this range, module is changing set value automatically to default value
-				</Help>
+        Default value 50 (Minimum Temperature alarm is 5.0C)
+        1 - 1000 = 0.1C - 100.0C, step is 0.1C.
+        Minimum temperature alarm is set by entered value. In case is set value out of this range, module is changing set value automatically to default value
+      </Help>
     </Value>
     <Value genre="config" index="61" instance="1" label="Maximum Temperature alarm" max="1000" min="1" size="2" type="short" value="700">
       <Help>
-				Default value 700 (Minimum Temperature alarm is 70.0C)
-				1 - 1000 = 0.1C - 100.0C, step is 0.1C.
-				Maximum temperature alarm is set by entered value. In case is set value out of this range, module is changing set value automatically to default value
-				</Help>
+        Default value 700 (Minimum Temperature alarm is 70.0C)
+        1 - 1000 = 0.1C - 100.0C, step is 0.1C.
+        Maximum temperature alarm is set by entered value. In case is set value out of this range, module is changing set value automatically to default value
+      </Help>
     </Value>
     <Value genre="config" index="63" instance="1" label="Switch selection" max="1" min="0" size="1" type="list" value="1">
       <Help>Set value means the type of the heating device that is connected to the relay output. The heating device type can be normally open (NO) or normally close (NC).</Help>

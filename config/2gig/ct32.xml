@@ -1,17 +1,17 @@
-<Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="6" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0098:0100:2002</MetaDataItem>
     <MetaDataItem name="ProductPic">images/2gig/ct32.png</MetaDataItem>
     <MetaDataItem id="0100" name="ZWProductPage" type="2002">https://products.z-wavealliance.org/products/1330/</MetaDataItem>
     <MetaDataItem name="WakeupDescription">When included into a Z-Wave network on battery power, this device is a FLiRS device. The Thermostat will wake up for communication when it receives a valid Z-Wave beam.</MetaDataItem>
-    <MetaDataItem id="0100" name="Identifier" type="2002">CT32 </MetaDataItem>
+    <MetaDataItem id="0100" name="Identifier" type="2002">CT32</MetaDataItem>
     <MetaDataItem id="0100" name="FrequencyName" type="2002">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/1330/RTZW-02_module_IB_11jun15_web.pdf</MetaDataItem>
     <MetaDataItem name="InclusionDescription">Go to Menu screen, and press INCLUDE icon.</MetaDataItem>
     <MetaDataItem name="Name">CT32</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">Go to Menu screen, and press EXCLUDE icon.</MetaDataItem>
     <MetaDataItem name="Description">The Z-Wave enabled CT32 thermostat is a compact, easy-to-use thermostat that is packed with functionality. The CT32 has a responsive touchscreen interface, easy-to-read backlight display, and 7-day programmability. It features a system lock to avoid unintentional changes for maximum efficiency, a filter change indicator to keep your HVAC system running efficiently, wide temperature operation range, and room temperature calibration for precise control.</MetaDataItem>
-    <MetaDataItem name="ResetDescription">In Main menu, put thermostat in OFF mode. Press and hold center digits.  Use the reset procedure only when the primary controller is missing or inoperable.</MetaDataItem>
+    <MetaDataItem name="ResetDescription">In Main menu, put thermostat in OFF mode. Press and hold center digits. Use the reset procedure only when the primary controller is missing or inoperable.</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1046/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="08 May 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1330/xml</Entry>
@@ -115,9 +115,9 @@
       <Item label="HVAC: Normal, Aux Stages: 2, Aux Setup: Elec, Heat Pump Stages: 2, Cool Stages: 2" value="19005954"/>
       <!-- 0x01,0x2,0x2,0x02,0x02 -->
       <Item label="HVAC: Heat Pump, Aux Stages: 2, Aux Setup: Elec, Heat Pump Stages: 2, Cool Stages: 2" value="35783170"/>
-    
-    
-    <!-- 0x02,0x2,0x2,0x02,0x02 -->
+
+
+      <!-- 0x02,0x2,0x2,0x02,0x02 -->
     </Value>
     <Value genre="config" index="3" label="Utility Lock" max="1" min="0" size="1" type="list" units="" value="0">
       <Help>

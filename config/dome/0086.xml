@@ -1,39 +1,41 @@
-<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/021F:0086:0003</MetaDataItem>
     <MetaDataItem name="ProductPic">images/dome/0086.png</MetaDataItem>
     <MetaDataItem id="0086" name="ZWProductPage" type="0003">https://products.z-wavealliance.org/products/1847/</MetaDataItem>
-    <MetaDataItem name="Description">The Dome™ Home Automation DMMZ1 Mouser is a powerful rodent electric trap with Z-Wave technology built-in. It kills mice, rats and other rodents quickly, cleanly and humanely with a powerful jolt of electricity. Simply set bait, turn on and place in desired location. When connected to Z-Wave Certified Hub, once the trap is full, it sends out a notification to your smarthome system. You can easily dispose of Mouser’s contents without ever having to touch them. Use the top handle and tip to dispose of caught rodents. Specially designed removable and washable bait tray will allow you to easily replace the bait and set it back up. It operates on 4 AA batteries (not included) and is optimised to last over 50 uses. Mouser features extra-long Z-Wave wireless range (up to 150 ft) and  Dome™ DMMZ1 Mouser comes with a 1-year limited warranty. Measurements in inches: 8.75 x 4.5 x 5. Dome™ Home Automation Z-Wave devices give your family peace of mind and security you can count on. With Dome™, you’re always connected and always covered.
-•	Humanely kills mice, rats and other rodents with a powerful electric shock and sends an alert to your smarthome system when the trap needs to be emptied
-•	Easy to use: set bait, turn on and place in desired location 
-Touch free: hold handle and tip to dispose of contents, then set it again
-•	Up to 150-foot Z-Wave range. Operating Temperature: 32°F - 112°F. Powered by 4 AA batteries (not included) enabling it to be triggered over 50 times  
-•	Z-Wave Plus Certified. Works as a stand alone electronic mouse trap  but requires a Z-Wave Certified Hub for notification functionality
-•	Tested to work with SmartThings, Vera, Staples Connect, HomeSeer, Nexia, Piper, URC, Harmony. Not supported by Wink, DSC, ADT Pulse, 2Gig, Napco, Interlogix, Honeywell (Dome is not associated with listed brands)
-</MetaDataItem>
-    <MetaDataItem name="InclusionDescription">Follow the instructions for your Z-Wave Certified controller to enter inclusion mode.  When prompted by the controller:
-1. Bring the Mouser to within 10’ of your Z-Wave controller for the inclusion process.  After successful pairing, the device can be brought to the desired location.
-2. Remove top cover by sliding it back and lifting up.
-3. Insert batteries.
-4. Press the CONNECT BUTTON quickly 3 times in a row.
-5. The LED INDICATOR will flash five times indicating inclusion
-</MetaDataItem>
-    <MetaDataItem name="ResetDescription">If needed, the Mouser can be reset locally by following these steps.  Only do this when your Z-Wave controller is disconnected or otherwise unreachable.  Beware that resetting your device will disconnect it from the system:
-1. Remove the TOP COVER and confirm that your Mouser is powered up.
-2. Press and hold the CONNECT BUTTON for at least 10 seconds then release.  A flashing LED INDICATOR indicates a successful factory reset. 
-3. The Mouser’s memory will be erased to factory settings.  
-</MetaDataItem>
+    <MetaDataItem name="Description">The Dome™ Home Automation DMMZ1 Mouser is a powerful rodent electric trap with Z-Wave technology built-in. It kills mice, rats and other rodents quickly, cleanly and humanely with a powerful jolt of electricity. Simply set bait, turn on and place in desired location. When connected to Z-Wave Certified Hub, once the trap is full, it sends out a notification to your smarthome system. You can easily dispose of Mouser’s contents without ever having to touch them. Use the top handle and tip to dispose of caught rodents. Specially designed removable and washable bait tray will allow you to easily replace the bait and set it back up. It operates on 4 AA batteries (not included) and is optimised to last over 50 uses. Mouser features extra-long Z-Wave wireless range (up to 150 ft) and Dome™ DMMZ1 Mouser comes with a 1-year limited warranty. Measurements in inches: 8.75 x 4.5 x 5. Dome™ Home Automation Z-Wave devices give your family peace of mind and security you can count on. With Dome™, you’re always connected and always covered.
+      • Humanely kills mice, rats and other rodents with a powerful electric shock and sends an alert to your smarthome system when the trap needs to be emptied
+      • Easy to use: set bait, turn on and place in desired location
+      Touch free: hold handle and tip to dispose of contents, then set it again
+      • Up to 150-foot Z-Wave range. Operating Temperature: 32°F - 112°F. Powered by 4 AA batteries (not included) enabling it to be triggered over 50 times
+      • Z-Wave Plus Certified. Works as a stand alone electronic mouse trap but requires a Z-Wave Certified Hub for notification functionality
+      • Tested to work with SmartThings, Vera, Staples Connect, HomeSeer, Nexia, Piper, URC, Harmony. Not supported by Wink, DSC, ADT Pulse, 2Gig, Napco, Interlogix, Honeywell (Dome is not associated with listed brands)
+    </MetaDataItem>
+    <MetaDataItem name="InclusionDescription">Follow the instructions for your Z-Wave Certified controller to enter inclusion mode. When prompted by the controller:
+      1. Bring the Mouser to within 10’ of your Z-Wave controller for the inclusion process. After successful pairing, the device can be brought to the desired location.
+      2. Remove top cover by sliding it back and lifting up.
+      3. Insert batteries.
+      4. Press the CONNECT BUTTON quickly 3 times in a row.
+      5. The LED INDICATOR will flash five times indicating inclusion
+    </MetaDataItem>
+    <MetaDataItem name="ResetDescription">If needed, the Mouser can be reset locally by following these steps. Only do this when your Z-Wave controller is disconnected or otherwise unreachable. Beware that resetting your device will disconnect it from the system:
+      1. Remove the TOP COVER and confirm that your Mouser is powered up.
+      2. Press and hold the CONNECT BUTTON for at least 10 seconds then release. A flashing LED INDICATOR indicates a successful factory reset.
+      3. The Mouser’s memory will be erased to factory settings.
+    </MetaDataItem>
     <MetaDataItem id="0086" name="Identifier" type="0003">DMMZ1</MetaDataItem>
-    <MetaDataItem name="WakeupDescription">If needed, the Mouser can be reset locally by following these steps.  Only do this when your Z-Wave controller is disconnected or otherwise unreachable.  Beware that resetting your device will disconnect it from the system:
-1. Remove the TOP COVER and confirm that your Mouser is powered up.
-2. Press and hold the CONNECT BUTTON for at least 10 seconds then release.  A flashing LED INDICATOR indicates a successful factory reset. 
-3. The Mouser’s memory will be erased to factory settings.  </MetaDataItem>
+    <MetaDataItem name="WakeupDescription">If needed, the Mouser can be reset locally by following these steps. Only do this when your Z-Wave controller is disconnected or otherwise unreachable. Beware that resetting your device will disconnect it from the system:
+      1. Remove the TOP COVER and confirm that your Mouser is powered up.
+      2. Press and hold the CONNECT BUTTON for at least 10 seconds then release. A flashing LED INDICATOR indicates a successful factory reset.
+      3. The Mouser’s memory will be erased to factory settings.
+    </MetaDataItem>
     <MetaDataItem id="0086" name="FrequencyName" type="0003">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">Follow the instructions for your Z-Wave Certified controller to enter exclusion mode.
-When prompted by the controller:
-1. Remove top cover by sliding it back and lifting up.
-2. Press the CONNECT BUTTON quickly 3 times in a row.
-The LED INDICATOR will flash five times indicating exclusion/disconnection.</MetaDataItem>
+      When prompted by the controller:
+      1. Remove top cover by sliding it back and lifting up.
+      2. Press the CONNECT BUTTON quickly 3 times in a row.
+      The LED INDICATOR will flash five times indicating exclusion/disconnection.
+    </MetaDataItem>
     <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/1847/Mouser API Manual.pdf</MetaDataItem>
     <MetaDataItem name="Name">Dome Mouser</MetaDataItem>
     <ChangeLog>

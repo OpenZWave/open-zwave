@@ -1,4 +1,4 @@
-<Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="6" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/008A:0200:0007</MetaDataItem>
     <MetaDataItem name="ProductPic">images/BeNext/TagReader500.png</MetaDataItem>
@@ -7,15 +7,16 @@
     <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/2478/Quickstart_Technical Manual_Tag_Reader500_US_v_0_12.pdf</MetaDataItem>
     <MetaDataItem name="ResetDescription">The Tag Reader 500 US has an option to reset it self to factory settings. Please use this procedure only when the network primary controller is missing or otherwise inoperable.
 
-To reset to factory settings please follow these steps:
-1.	Press the enter button for 2 seconds, release the enter button to start the remove routine (indication LED will blink 3 times every second).
-2.	During the remove routine press enter button 4 times within 1,5 seconds to reset the product.
-3.	If ‘back to factory settings’ was successful the indication LED will go in for 1 full second on the end of the remove routine. 
-4.	A DEVICE_RESET_LOCALLY_NOTIFICATION is sent to the nodes associated in the lifeline group. </MetaDataItem>
+      To reset to factory settings please follow these steps:
+      1. Press the enter button for 2 seconds, release the enter button to start the remove routine (indication LED will blink 3 times every second).
+      2. During the remove routine press enter button 4 times within 1,5 seconds to reset the product.
+      3. If ‘back to factory settings’ was successful the indication LED will go in for 1 full second on the end of the remove routine.
+      4. A DEVICE_RESET_LOCALLY_NOTIFICATION is sent to the nodes associated in the lifeline group.
+    </MetaDataItem>
     <MetaDataItem name="InclusionDescription">To include the Tag Reader 500 US press and hold the enter button for two seconds (indication LED blinks shortly). Release the enter button now to start the inclusion (during the inclusion routine the indication LED willblink twice per second).</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">To exclude the Tag Reader 500 US press and hold the enter button for two seconds (indication LED blinks shortly). Release the enter button now to start the exclusion (during the exclusion routine the indication LED willblink twice three times per 1,5 second).</MetaDataItem>
     <MetaDataItem name="WakeupDescription">Press and hold the button fpr 7 seconds, the indication LED will go on for 1 full second.</MetaDataItem>
-    <MetaDataItem name="Description">A Z-Wave security enabled entry control device. You can arm/disarm your house to home or away with the Tag Reader 500. With the use of a RFID tag or a numerical code the device can send an entry control message which can be handled by a supported gateway. In addition the Tag Reader supports the activation of scenes. </MetaDataItem>
+    <MetaDataItem name="Description">A Z-Wave security enabled entry control device. You can arm/disarm your house to home or away with the Tag Reader 500. With the use of a RFID tag or a numerical code the device can send an entry control message which can be handled by a supported gateway. In addition the Tag Reader supports the activation of scenes.</MetaDataItem>
     <MetaDataItem id="0200" name="Identifier" type="0007">80820702</MetaDataItem>
     <MetaDataItem id="0200" name="FrequencyName" type="0007">CEPT (Europe) / U.S. / Canada / Mexico</MetaDataItem>
     <ChangeLog>
@@ -32,21 +33,21 @@ To reset to factory settings please follow these steps:
     </Value>
     <Value genre="config" index="2" instance="1" label="Feedback Time" type="byte" units="seconds" value="15">
       <Help>To configure the time the beep is automatically turned off in seconds.
-                0x00: Disable, 0x01 - 0xFE: Value in seconds
-            </Help>
+        0x00: Disable, 0x01 - 0xFE: Value in seconds
+      </Help>
     </Value>
     <Value genre="config" index="3" instance="1" label="Feedback Timeout" type="byte" units="seconds" value="0">
       <Help>
-                To configure the timeout to wait for a WAKEUP_NO_MORE_INFORMATION before the error beep
-                is automatically sound. The error beeps are fixed 8 beeps shortly after each other.
-                0x00: Disabled, 0x01 - 0xFF: Value in seconds
-            </Help>
+        To configure the timeout to wait for a WAKEUP_NO_MORE_INFORMATION before the error beep
+        is automatically sound. The error beeps are fixed 8 beeps shortly after each other.
+        0x00: Disabled, 0x01 - 0xFF: Value in seconds
+      </Help>
     </Value>
     <Value genre="config" index="4" instance="1" label="Feedback beeps per second" type="byte" value="2">
       <Help>
-                To configure the number of beeps per second. Every beep is fixed about 10ms.
-                0x00 - 0xFF: Number of beeps per second
-            </Help>
+        To configure the number of beeps per second. Every beep is fixed about 10ms.
+        0x00 - 0xFF: Number of beeps per second
+      </Help>
     </Value>
     <Value genre="config" index="5" instance="1" label="Always awake mode" size="1" type="list" value="1">
       <Help>To configure the always awake mode.</Help>
@@ -60,10 +61,10 @@ To reset to factory settings please follow these steps:
     </Value>
     <Value genre="config" index="8" instance="1" label="Gateway confirmation" size="1" type="list" value="0">
       <Help>
-                In gateway mode it is possible to let the gateway decide if the Tag Reader 500 can arm to home or away.
-                If gateway indication is disabled the Tag Reader 500 automatically assumes that it can arm and will wait
-                for a user input of RFID TAG or numeric code.
-            </Help>
+        In gateway mode it is possible to let the gateway decide if the Tag Reader 500 can arm to home or away.
+        If gateway indication is disabled the Tag Reader 500 automatically assumes that it can arm and will wait
+        for a user input of RFID TAG or numeric code.
+      </Help>
       <Item label="Disabled" value="0"/>
       <Item label="Enabled" value="1"/>
     </Value>

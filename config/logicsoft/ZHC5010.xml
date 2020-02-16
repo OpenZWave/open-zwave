@@ -1,4 +1,4 @@
-<Product Revision="6" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="7" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0234:010A:0003</MetaDataItem>
     <MetaDataItem name="ProductPic">images/logicsoft/ZHC5010.png</MetaDataItem>
@@ -122,9 +122,9 @@
     </Value>
     <Value genre="config" index="17" instance="1" label="Scene notification offset" max="200" min="0" type="byte" value="1">
       <Help>
-			0     : Scene notifications are turned off.
-			1-200 : Button #1 will send scene [value], button #2 will send scene [value] + 1, button #3 will send scene [value] + 2, button #4 will send scene [value] + 3
-			</Help>
+        0 : Scene notifications are turned off.
+        1-200 : Button #1 will send scene [value], button #2 will send scene [value] + 1, button #3 will send scene [value] + 2, button #4 will send scene [value] + 3
+      </Help>
     </Value>
     <Value genre="config" index="18" instance="1" label="House Cleaning Mode" max="1" min="0" size="1" type="list" value="0">
       <Help>This parameter is able to enable or disable the so-called "House Cleaning Mode", where ZHC5010 is able send a dimming command in order to set the level of the lights to 100%.</Help>
@@ -133,55 +133,55 @@
     </Value>
     <Value genre="config" index="19" instance="1" label="Multilevel Switch on single press for button 1" size="4" type="int" value="33488896">
       <Help>
-			Byte 1: Enable / Disable
-				0: Disabled - When single pressing the button, nodes associated to group 6 won't be switched
-				1: Enabled - When single pressing the button, nodes associated to group 6 will be switched between the configured upper and lower switch values. (Default)
-			Byte 2: Upper Switch Value
-				0 - 99, 255 When single pressing the button for ON, a Multilevel Switch Set with this value will be send to devices in association group 6. (Default = 255)
-			Byte 3: Lower Switch Value
-				When single pressing the button for OFF, a Multilevel Switch Set with this value will be send to devices in association group 6. (Default = 0)
-			Byte 4: Not used - must be set to 0.
-			Default: 33488896
-			</Help>
+        Byte 1: Enable / Disable
+        0: Disabled - When single pressing the button, nodes associated to group 6 won't be switched
+        1: Enabled - When single pressing the button, nodes associated to group 6 will be switched between the configured upper and lower switch values. (Default)
+        Byte 2: Upper Switch Value
+        0 - 99, 255 When single pressing the button for ON, a Multilevel Switch Set with this value will be send to devices in association group 6. (Default = 255)
+        Byte 3: Lower Switch Value
+        When single pressing the button for OFF, a Multilevel Switch Set with this value will be send to devices in association group 6. (Default = 0)
+        Byte 4: Not used - must be set to 0.
+        Default: 33488896
+      </Help>
     </Value>
     <Value genre="config" index="20" instance="1" label="Multilevel Switch on single press for button 2" size="4" type="int" value="33488896">
       <Help>
-				Byte 1: Enable / Disable
-						0: Disabled - When single pressing the button, nodes associated to group 6 won't be switched
-						1: Enabled - When single pressing the button, nodes associated to group 6 will be switched between the configured upper and lower switch values. (Default)
-				Byte 2: Upper Switch Value
-						0 - 99, 255 When single pressing the button for ON, a Multilevel Switch Set with this value will be send to devices in association group 6. (Default = 255)
-				Byte 3: Lower Switch Value
-						When single pressing the button for OFF, a Multilevel Switch Set with this value will be send to devices in association group 6. (Default = 0)
-				Byte 4: Not used - must be set to 0.
-				Default: 33488896
-			</Help>
+        Byte 1: Enable / Disable
+        0: Disabled - When single pressing the button, nodes associated to group 6 won't be switched
+        1: Enabled - When single pressing the button, nodes associated to group 6 will be switched between the configured upper and lower switch values. (Default)
+        Byte 2: Upper Switch Value
+        0 - 99, 255 When single pressing the button for ON, a Multilevel Switch Set with this value will be send to devices in association group 6. (Default = 255)
+        Byte 3: Lower Switch Value
+        When single pressing the button for OFF, a Multilevel Switch Set with this value will be send to devices in association group 6. (Default = 0)
+        Byte 4: Not used - must be set to 0.
+        Default: 33488896
+      </Help>
     </Value>
     <Value genre="config" index="21" instance="1" label="Multilevel Switch on single press for button 3" size="4" type="int" value="33488896">
       <Help>
-				Byte 1: Enable / Disable
-						0: Disabled - When single pressing the button, nodes associated to group 6 won't be switched
-						1: Enabled - When single pressing the button, nodes associated to group 6 will be switched between the configured upper and lower switch values. (Default)
-				Byte 2: Upper Switch Value
-						0 - 99, 255 When single pressing the button for ON, a Multilevel Switch Set with this value will be send to devices in association group 6. (Default = 255)
-				Byte 3: Lower Switch Value
-						When single pressing the button for OFF, a Multilevel Switch Set with this value will be send to devices in association group 6. (Default = 0)
-				Byte 4: Not used - must be set to 0.
-				Default: 33488896
-			</Help>
+        Byte 1: Enable / Disable
+        0: Disabled - When single pressing the button, nodes associated to group 6 won't be switched
+        1: Enabled - When single pressing the button, nodes associated to group 6 will be switched between the configured upper and lower switch values. (Default)
+        Byte 2: Upper Switch Value
+        0 - 99, 255 When single pressing the button for ON, a Multilevel Switch Set with this value will be send to devices in association group 6. (Default = 255)
+        Byte 3: Lower Switch Value
+        When single pressing the button for OFF, a Multilevel Switch Set with this value will be send to devices in association group 6. (Default = 0)
+        Byte 4: Not used - must be set to 0.
+        Default: 33488896
+      </Help>
     </Value>
     <Value genre="config" index="22" instance="1" label="Multilevel Switch on single press for button 4" size="4" type="int" value="33488896">
       <Help>
-			Byte 1: Enable / Disable
-					0: Disabled - When single pressing the button, nodes associated to group 6 won't be switched
-					1: Enabled - When single pressing the button, nodes associated to group 6 will be switched between the configured upper and lower switch values. (Default)
-			Byte 2: Upper Switch Value
-					0 - 99, 255 When single pressing the button for ON, a Multilevel Switch Set with this value will be send to devices in association group 6. (Default = 255)
-			Byte 3: Lower Switch Value
-					When single pressing the button for OFF, a Multilevel Switch Set with this value will be send to devices in association group 6. (Default = 0)
-			Byte 4: Not used - must be set to 0.
-				Default: 33488896
-			</Help>
+        Byte 1: Enable / Disable
+        0: Disabled - When single pressing the button, nodes associated to group 6 won't be switched
+        1: Enabled - When single pressing the button, nodes associated to group 6 will be switched between the configured upper and lower switch values. (Default)
+        Byte 2: Upper Switch Value
+        0 - 99, 255 When single pressing the button for ON, a Multilevel Switch Set with this value will be send to devices in association group 6. (Default = 255)
+        Byte 3: Lower Switch Value
+        When single pressing the button for OFF, a Multilevel Switch Set with this value will be send to devices in association group 6. (Default = 0)
+        Byte 4: Not used - must be set to 0.
+        Default: 33488896
+      </Help>
     </Value>
     <Value genre="config" index="23" instance="1" label="Control of association groups for button 1" max="1" min="0" size="1" type="list" value="1">
       <Help>Enable or disable if received commands are relayed to the nodes in the association groups received by device 1.</Help>
@@ -206,94 +206,94 @@
     <!-- Index 27 is not in use -->
     <Value genre="config" index="28" instance="1" label="Threshold time for long-press" max="255" min="0" size="1" type="byte" value="50">
       <Help>
-			Decides the time for when a button is detected as long-pressed.
-			0     : Detection disabled. This is not recommended.
-			1-255 : Long-press detection time in 0.01 seconds, 50 equals 0.5 seconds.
-			</Help>
+        Decides the time for when a button is detected as long-pressed.
+        0 : Detection disabled. This is not recommended.
+        1-255 : Long-press detection time in 0.01 seconds, 50 equals 0.5 seconds.
+      </Help>
     </Value>
     <Value genre="config" index="29" instance="1" label="Threshold time for keypress detection of button 1" max="255" min="0" size="1" type="byte" value="30">
       <Help>
-			Specifies the detection time for single-press, double-press, etc. for button 1.
-			0       : Detection disabled. This is not recommended.
-			1 - 255 : Detection time in 0.01 seconds, 30 equals 0.3 seconds.
-				Default: 30
-			</Help>
+        Specifies the detection time for single-press, double-press, etc. for button 1.
+        0 : Detection disabled. This is not recommended.
+        1 - 255 : Detection time in 0.01 seconds, 30 equals 0.3 seconds.
+        Default: 30
+      </Help>
     </Value>
     <Value genre="config" index="30" instance="1" label="Threshold time for keypress detection of button 2" max="255" min="0" size="1" type="byte" value="30">
       <Help>
-			Specifies the detection time for single-press, double-press, etc. for button 2.
-			0       : Detection disabled. This is not recommended.
-			1 - 255 : Detection time in 0.01 seconds, 30 equals 0.3 seconds.
-				Default: 30
-			</Help>
+        Specifies the detection time for single-press, double-press, etc. for button 2.
+        0 : Detection disabled. This is not recommended.
+        1 - 255 : Detection time in 0.01 seconds, 30 equals 0.3 seconds.
+        Default: 30
+      </Help>
     </Value>
     <Value genre="config" index="31" instance="1" label="Threshold time for keypress detection of button 3" max="255" min="0" size="1" type="byte" value="30">
       <Help>
-			Specifies the detection time for single-press, double-press, etc. for button 3.
-			0       : Detection disabled. This is not recommended.
-			1 - 255 : Detection time in 0.01 seconds, 30 equals 0.3 seconds.
-				Default: 30
-			</Help>
+        Specifies the detection time for single-press, double-press, etc. for button 3.
+        0 : Detection disabled. This is not recommended.
+        1 - 255 : Detection time in 0.01 seconds, 30 equals 0.3 seconds.
+        Default: 30
+      </Help>
     </Value>
     <Value genre="config" index="32" instance="1" label="Threshold time for keypress detection of button 4" max="255" min="0" size="1" type="byte" value="30">
       <Help>
-			Specifies the detection time for single-press, double-press, etc. for button 4.
-			0       : Detection disabled. This is not recommended.
-			1 - 255 : Detection time in 0.01 seconds, 30 equals 0.3 seconds.
-				Default: 30
-			</Help>
+        Specifies the detection time for single-press, double-press, etc. for button 4.
+        0 : Detection disabled. This is not recommended.
+        1 - 255 : Detection time in 0.01 seconds, 30 equals 0.3 seconds.
+        Default: 30
+      </Help>
     </Value>
     <Value genre="config" index="33" instance="1" label="Non-secure commands for AG in logical device 1" max="255" min="0" size="1" type="byte" value="0">
       <Help>
-			If ZHC5010 is included secure, this parameter allows sending messages on keypresses to non-secure devices (e.g. pre-gen5 relays).
-			If ZHC5010 is included non-secure, this parameter has no function.
-			0         : No commands sent unencrypted (default)
-			1  (0x01) : Bit#1. Not used.
-			2  (0x02) : Bit#2. Send BASICREPORT to association group 2 unencrypted.
-			4  (0x04) : Bit#3. Send BASICSET to association group 3 unencrypted.
-			8  (0x08) : Bit#4. Send BINARYSWITCHSET to association group 4 unencrypted.
-			16 (0x10) : Bit#5. Send BINARYTOGGLESWITCHSET to association group 5 unencrypted.
-			32 (0x20) : Bit#6. Send MULTILEVELSWITCH to association group 6 unencrypted.
-			</Help>
+        If ZHC5010 is included secure, this parameter allows sending messages on keypresses to non-secure devices (e.g. pre-gen5 relays).
+        If ZHC5010 is included non-secure, this parameter has no function.
+        0 : No commands sent unencrypted (default)
+        1 (0x01) : Bit#1. Not used.
+        2 (0x02) : Bit#2. Send BASICREPORT to association group 2 unencrypted.
+        4 (0x04) : Bit#3. Send BASICSET to association group 3 unencrypted.
+        8 (0x08) : Bit#4. Send BINARYSWITCHSET to association group 4 unencrypted.
+        16 (0x10) : Bit#5. Send BINARYTOGGLESWITCHSET to association group 5 unencrypted.
+        32 (0x20) : Bit#6. Send MULTILEVELSWITCH to association group 6 unencrypted.
+      </Help>
     </Value>
     <Value genre="config" index="34" instance="1" label="Non-secure commands for AG in logical device 2" max="255" min="0" size="1" type="byte" value="0">
       <Help>
-			If ZHC5010 is included secure, this parameter allows sending messages on keypresses to non-secure devices (e.g. pre-gen5 relays).
-			If ZHC5010 is included non-secure, this parameter has no function.
-			0         : No commands sent unencrypted (default)
-			1  (0x01) : Bit#1. Not used.
-			2  (0x02) : Bit#2. Send BASICREPORT to association group 2 unencrypted.
-			4  (0x04) : Bit#3. Send BASICSET to association group 3 unencrypted.
-			8  (0x08) : Bit#4. Send BINARYSWITCHSET to association group 4 unencrypted.
-			16 (0x10) : Bit#5. Send BINARYTOGGLESWITCHSET to association group 5 unencrypted.
-			32 (0x20) : Bit#6. Send MULTILEVELSWITCH to association group 6 unencrypted.
-			</Help>
+        If ZHC5010 is included secure, this parameter allows sending messages on keypresses to non-secure devices (e.g. pre-gen5 relays).
+        If ZHC5010 is included non-secure, this parameter has no function.
+        0 : No commands sent unencrypted (default)
+        1 (0x01) : Bit#1. Not used.
+        2 (0x02) : Bit#2. Send BASICREPORT to association group 2 unencrypted.
+        4 (0x04) : Bit#3. Send BASICSET to association group 3 unencrypted.
+        8 (0x08) : Bit#4. Send BINARYSWITCHSET to association group 4 unencrypted.
+        16 (0x10) : Bit#5. Send BINARYTOGGLESWITCHSET to association group 5 unencrypted.
+        32 (0x20) : Bit#6. Send MULTILEVELSWITCH to association group 6 unencrypted.
+      </Help>
     </Value>
     <Value genre="config" index="35" instance="1" label="Non-secure commands for AG in logical device 3" max="255" min="0" size="1" type="byte" value="0">
       <Help>
-			If ZHC5010 is included secure, this parameter allows sending messages on keypresses to non-secure devices (e.g. pre-gen5 relays).
-			If ZHC5010 is included non-secure, this parameter has no function.
-			0         : No commands sent unencrypted (default)
-			1  (0x01) : Bit#1. Not used.
-			2  (0x02) : Bit#2. Send BASICREPORT to association group 2 unencrypted.
-			4  (0x04) : Bit#3. Send BASICSET to association group 3 unencrypted.
-			8  (0x08) : Bit#4. Send BINARYSWITCHSET to association group 4 unencrypted.
-			16 (0x10) : Bit#5. Send BINARYTOGGLESWITCHSET to association group 5 unencrypted.
-			32 (0x20) : Bit#6. Send MULTILEVELSWITCH to association group 6 unencrypted.
-			</Help>
+        If ZHC5010 is included secure, this parameter allows sending messages on keypresses to non-secure devices (e.g. pre-gen5 relays).
+        If ZHC5010 is included non-secure, this parameter has no function.
+        0 : No commands sent unencrypted (default)
+        1 (0x01) : Bit#1. Not used.
+        2 (0x02) : Bit#2. Send BASICREPORT to association group 2 unencrypted.
+        4 (0x04) : Bit#3. Send BASICSET to association group 3 unencrypted.
+        8 (0x08) : Bit#4. Send BINARYSWITCHSET to association group 4 unencrypted.
+        16 (0x10) : Bit#5. Send BINARYTOGGLESWITCHSET to association group 5 unencrypted.
+        32 (0x20) : Bit#6. Send MULTILEVELSWITCH to association group 6 unencrypted.
+      </Help>
     </Value>
     <Value genre="config" index="36" instance="1" label="Non-secure commands for AG in logical device 4" max="255" min="0" size="1" type="byte" value="0">
       <Help>
-			If ZHC5010 is included secure, this parameter allows sending messages on keypresses to non-secure devices (e.g. pre-gen5 relays).
-			If ZHC5010 is included non-secure, this parameter has no function.
-			0         : No commands sent unencrypted (default)
-			1  (0x01) : Bit#1. Not used.
-			2  (0x02) : Bit#2. Send BASICREPORT to association group 2 unencrypted.
-			4  (0x04) : Bit#3. Send BASICSET to association group 3 unencrypted.
-			8  (0x08) : Bit#4. Send BINARYSWITCHSET to association group 4 unencrypted.
-			16 (0x10) : Bit#5. Send BINARYTOGGLESWITCHSET to association group 5 unencrypted.
-			32 (0x20) : Bit#6. Send MULTILEVELSWITCH to association group 6 unencrypted.
-			</Help>
+        If ZHC5010 is included secure, this parameter allows sending messages on keypresses to non-secure devices (e.g. pre-gen5 relays).
+        If ZHC5010 is included non-secure, this parameter has no function.
+        0 : No commands sent unencrypted (default)
+        1 (0x01) : Bit#1. Not used.
+        2 (0x02) : Bit#2. Send BASICREPORT to association group 2 unencrypted.
+        4 (0x04) : Bit#3. Send BASICSET to association group 3 unencrypted.
+        8 (0x08) : Bit#4. Send BINARYSWITCHSET to association group 4 unencrypted.
+        16 (0x10) : Bit#5. Send BINARYTOGGLESWITCHSET to association group 5 unencrypted.
+        32 (0x20) : Bit#6. Send MULTILEVELSWITCH to association group 6 unencrypted.
+      </Help>
     </Value>
   </CommandClass>
   <!-- COMMAND_CLASS_SWITCH_ALL SwitchAllCmd_Get is not supported -->

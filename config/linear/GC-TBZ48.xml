@@ -1,4 +1,4 @@
-<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
   <CommandClass id="67">
     <Instance index="1"/>
     <Value genre="user" index="1" instance="1" label="Heating 1" read_only="false" type="decimal" write_only="false"/>
@@ -125,22 +125,22 @@
     </Value>
     <Value genre="config" index="23" label="Lifeline Association Group Report To Send" max="65535" min="0" size="4" type="int" value="8319">
       <Help>
-        Report to send to the Lifeline Association Group upon change in thermostat state. 
+        Report to send to the Lifeline Association Group upon change in thermostat state.
         Bitmask values:
-          1 = Temperature
-          2 = Heat Setpoint
-          4 = Cool Setpoint
-          8 = Thermostat Heat/Cooling Mode
-          16 = Fan Mode
-          32 = Fan State
-          64 = Operating State
-          128 = Schedule (send CC parameter 38)
-          256 = Setback (send CC parameter 40)
-          512 = Run Hold (send CC parameter 39)
-          1024 = Display Lock (send CC parameter 24)
-          8192 = Battery Level
-          16834 = Mechanical Relay State (send CC parameter 21)
-          32768 = Thermostat State Config (send CC parameter 22)        
+        1 = Temperature
+        2 = Heat Setpoint
+        4 = Cool Setpoint
+        8 = Thermostat Heat/Cooling Mode
+        16 = Fan Mode
+        32 = Fan State
+        64 = Operating State
+        128 = Schedule (send CC parameter 38)
+        256 = Setback (send CC parameter 40)
+        512 = Run Hold (send CC parameter 39)
+        1024 = Display Lock (send CC parameter 24)
+        8192 = Battery Level
+        16834 = Mechanical Relay State (send CC parameter 21)
+        32768 = Thermostat State Config (send CC parameter 22)
       </Help>
     </Value>
     <Value genre="config" index="24" label="Display Lock" max="1" min="1" size="1" type="list" units="" value="0">

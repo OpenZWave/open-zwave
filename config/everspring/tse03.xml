@@ -1,4 +1,4 @@
-<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0060:0001:0009</MetaDataItem>
     <MetaDataItem name="ProductPic">images/everspring/tse03.png</MetaDataItem>
@@ -6,15 +6,16 @@
     <MetaDataItem id="0001" name="Identifier" type="0009">TSE03-JOEL</MetaDataItem>
     <MetaDataItem name="Name">TSE03-JOEL - Z-Wave Bell</MetaDataItem>
     <MetaDataItem name="Description">Z-Wave Bell (EU)  300 Series UTSE03A Door Bell Set
-Features：
-◆Adopt Z-Wave protocol to secure the success of  wireless two way communication
-◆USB port to download 45 second of high quality voice files 
-◆Visal and audible alarm indications
-◆Low battery indication
-◆Small form factor
-◆IP44 for the push button
-◆Z-Wave V5.02
-◆Consist of TSE03 Doorbell and TAC06 push button</MetaDataItem>
+      Features：
+      ◆Adopt Z-Wave protocol to secure the success of wireless two way communication
+      ◆USB port to download 45 second of high quality voice files
+      ◆Visal and audible alarm indications
+      ◆Low battery indication
+      ◆Small form factor
+      ◆IP44 for the push button
+      ◆Z-Wave V5.02
+      ◆Consist of TSE03 Doorbell and TAC06 push button
+    </MetaDataItem>
     <MetaDataItem name="ProductSupport">http://www.everspring.com/Contact-Us.aspx</MetaDataItem>
     <MetaDataItem id="0001" name="FrequencyName" type="0009">CEPT (Europe)</MetaDataItem>
     <MetaDataItem name="ProductPage">http://www.everspring.com/UTSE03A.aspx</MetaDataItem>

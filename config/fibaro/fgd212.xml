@@ -1,4 +1,4 @@
-<Product Revision="14" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="15" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/010F:1000:0102</MetaDataItem>
     <MetaDataItem name="ProductPic">images/fibaro/fgd212.png</MetaDataItem>
@@ -6,56 +6,56 @@
     <MetaDataItem id="1000" name="Identifier" type="0102">FGD-212</MetaDataItem>
     <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/2836/FGD-212-EN-T-v1.3.pdf</MetaDataItem>
     <MetaDataItem name="ResetDescription">1) Disconnect the power supply, remove the Dimmer from the wall switch box, than connect the power supply.
-2) Locate the B-button on the housing.
-3) Click and hold the B-button to enter the menu mode.
-4) Release and click the B-button to choose "Device reset" option in the menu that is signalled with the yellow LED indicator colour.
-5) After few seconds the device will be restarted, which is signalled with the red LED indicator colour and entering the calibration mode. 
-Note! Resetting the device is not the recommended way of removing the device from the Z-Wave network. Use reset procedure only if the primary controller is missing or inoperable.
-</MetaDataItem>
+      2) Locate the B-button on the housing.
+      3) Click and hold the B-button to enter the menu mode.
+      4) Release and click the B-button to choose "Device reset" option in the menu that is signalled with the yellow LED indicator colour.
+      5) After few seconds the device will be restarted, which is signalled with the red LED indicator colour and entering the calibration mode.
+      Note! Resetting the device is not the recommended way of removing the device from the Z-Wave network. Use reset procedure only if the primary controller is missing or inoperable.
+    </MetaDataItem>
     <MetaDataItem name="InclusionDescription">1) Switch off the mains voltage.
-2) Open the wall switch box.
-3) Connect the Dimmer in accordance with one of the diagrams attached in the manual.
-4) Switch on the mains voltage.
-5) Wait for the calibration process to end. Light may blink. The device will be switched off once the process is completed.
-6) Set the main Z-Wave controller in add mode (see the controller’s manual).
-7) Quickly, three times press the B-button or key connected to the S1 terminal.
-8) Wait for the device to be added to system. Successful adding will be confirmed by the controller.
-9) Arrange the antenna and close the wall switch box.
-</MetaDataItem>
+      2) Open the wall switch box.
+      3) Connect the Dimmer in accordance with one of the diagrams attached in the manual.
+      4) Switch on the mains voltage.
+      5) Wait for the calibration process to end. Light may blink. The device will be switched off once the process is completed.
+      6) Set the main Z-Wave controller in add mode (see the controller’s manual).
+      7) Quickly, three times press the B-button or key connected to the S1 terminal.
+      8) Wait for the device to be added to system. Successful adding will be confirmed by the controller.
+      9) Arrange the antenna and close the wall switch box.
+    </MetaDataItem>
     <MetaDataItem id="1000" name="FrequencyName" type="0102">CEPT (Europe)</MetaDataItem>
     <MetaDataItem name="Description">FIBARO Dimmer 2 can switch or dim connected light source either through radio waves or through the wall switch connected directly to it. Dimmer 2 is equipped with a smart algorithm of light source detection which makes configuration easier and ensures high compatibility of the device. It may be used as a switch with non-dimmable light sources in 3-wire connection. Active power and energy consumption allows to monitor and reduce electricity bills. Dimmer 2 is compatible with any Z-Wave or Z-Wave Plus Controller.
 
-FIBARO Dimmer 2
-Product Identifier: FGD-212
-Brand Name: FIBARO
-Z-Wave Certification Number: ZC10-15090017
-Z-Wave Certification Date: 9/16/2015
-Z-Wave Protocol Implementation Conformance Statement:   View    Download
+      FIBARO Dimmer 2
+      Product Identifier: FGD-212
+      Brand Name: FIBARO
+      Z-Wave Certification Number: ZC10-15090017
+      Z-Wave Certification Date: 9/16/2015
+      Z-Wave Protocol Implementation Conformance Statement: View Download
 
-Remotely controlled light dimming module is designed to work with various types of light sources in 2 or 3-wire connection so it can operate with or without neutral lead. FIBARO Dimmer can switch or dim connected light source either through radio waves or through the wall switch connected directly to it. Dimmer 2 is equipped with a smart algorithm of light source detection which makes configuration easier and ensures high compatibility of the device. It may be used as a switch with non-dimmable light sources in 3-wire connection. Active power and energy consumption allows to monitor and reduce electricity bills. Dimmer 2 is compatible with any Z-Wave or Z-Wave Plus Controller.
+      Remotely controlled light dimming module is designed to work with various types of light sources in 2 or 3-wire connection so it can operate with or without neutral lead. FIBARO Dimmer can switch or dim connected light source either through radio waves or through the wall switch connected directly to it. Dimmer 2 is equipped with a smart algorithm of light source detection which makes configuration easier and ensures high compatibility of the device. It may be used as a switch with non-dimmable light sources in 3-wire connection. Active power and energy consumption allows to monitor and reduce electricity bills. Dimmer 2 is compatible with any Z-Wave or Z-Wave Plus Controller.
 
-As a dimmer it operates under the following loads:
-• 230V operated conventional incandescent and halogen light sources
-• ELV electronic transformers (12V operated halogen lamps and dimmable LED bulbs)
-• MLV ferromagnetic transformers with 12V operated halogen lamps
-• dimmable LED bulbs
-• dimmable compact fluorescent CFL tube lamps
-• supported dimmable light sources with minimal power of 5VA (power factor > 0.5) using FIBARO Bypass FGB-002
+      As a dimmer it operates under the following loads:
+      • 230V operated conventional incandescent and halogen light sources
+      • ELV electronic transformers (12V operated halogen lamps and dimmable LED bulbs)
+      • MLV ferromagnetic transformers with 12V operated halogen lamps
+      • dimmable LED bulbs
+      • dimmable compact fluorescent CFL tube lamps
+      • supported dimmable light sources with minimal power of 5VA (power factor > 0.5) using FIBARO Bypass FGB-002
 
-Without dimming function it may work with:
-• compact fluorescent lamps
-• fluorescent tube lamps with electronic ballast
-• LED bulbs (power factor > 0.7)
-• supported light sources with minimal power of 5VA (power factor > 0.5) using FIBARO Bypass FGB-002
+      Without dimming function it may work with:
+      • compact fluorescent lamps
+      • fluorescent tube lamps with electronic ballast
+      • LED bulbs (power factor > 0.7)
+      • supported light sources with minimal power of 5VA (power factor > 0.5) using FIBARO Bypass FGB-002
 
-https://www.youtube.com/watch?v=K35uFXoa5c0
-</MetaDataItem>
+      https://www.youtube.com/watch?v=K35uFXoa5c0
+    </MetaDataItem>
     <MetaDataItem name="Name">FIBARO Dimmer 2</MetaDataItem>
     <MetaDataItem name="WakeupDescription">The FIBARO Dimmer 2 is powered with mains voltage so it is always awake.</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">1) Set the main controller in remove mode (see the controller’s manual)
-2) Quickly, three times press the B-button or key connected to the S1 terminal.
-3) Wait for the device to be removed from the system. Successful removing will be confirmed by the controller.
-</MetaDataItem>
+      2) Quickly, three times press the B-button or key connected to the S1 terminal.
+      3) Wait for the device to be removed from the system. Successful removing will be confirmed by the controller.
+    </MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="08 May 2019" revision="8">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1348/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="23 May 2019" revision="9">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1504/xml</Entry>
@@ -69,7 +69,7 @@ https://www.youtube.com/watch?v=K35uFXoa5c0
     <MetaDataItem id="2000" name="FrequencyName" type="0102">U.S. / Canada / Mexico / CEPT (Europe)</MetaDataItem>
     <MetaDataItem id="2000" name="Identifier" type="0102">FGD-212</MetaDataItem>
   </MetaData>
-  <!-- 
+  <!--
   Fibaro FGD-212
   config based on http://manuals.fibaro.com/content/manuals/en/FGD-212/FGD-212-EN-T-v1.3.pdf
   -->
@@ -156,25 +156,27 @@ https://www.youtube.com/watch?v=K35uFXoa5c0
     </Value>
     <Value genre="config" index="24" instance="1" label="Command frames sent in 2-nd and 3-rd association groups (S1 associations)" type="byte" value="0">
       <Help>Parameter determines, which actions will not result in sending frames to association groups. Parameter values may be combined, e.g. 1+2=3 means that associations on switching on or off the Dimmer (single click) will not be sent.
-Available settings: 0-31
-0 - all actions send to association groups;
-1 - do not send when switching on the Dimmer (single click);
-2 - do not send when switching off the Dimmer (single click);
-4 - do not send when changing dimming level (holding and releasing);
-8 - do not send on double click;
-16 - send 0xFF value on double click;
-Default setting: 0</Help>
+        Available settings: 0-31
+        0 - all actions send to association groups;
+        1 - do not send when switching on the Dimmer (single click);
+        2 - do not send when switching off the Dimmer (single click);
+        4 - do not send when changing dimming level (holding and releasing);
+        8 - do not send on double click;
+        16 - send 0xFF value on double click;
+        Default setting: 0
+      </Help>
     </Value>
     <Value genre="config" index="25" instance="1" label="Command frames sent in 4-th and 5-th association groups (S2 associations)" type="byte" value="0">
       <Help>Parameter determines, which actions will not result in sending frames to association groups. Parameter values may be combined, e.g. 1+2=3 means that associations on switching on or off the Dimmer (single click) will not be sent.
-Available settings: 0-31
-0 - all actions send to association groups;
-1 - do not send when switching on the Dimmer (single click);
-2 - do not send when switching off the Dimmer (single click);
-4 - do not send when changing dimming level (holding and releasing);
-8 - do not send on double click;
-16 - send 0xFF value on double click;
-Default setting: 0</Help>
+        Available settings: 0-31
+        0 - all actions send to association groups;
+        1 - do not send when switching on the Dimmer (single click);
+        2 - do not send when switching off the Dimmer (single click);
+        4 - do not send when changing dimming level (holding and releasing);
+        8 - do not send on double click;
+        16 - send 0xFF value on double click;
+        Default setting: 0
+      </Help>
     </Value>
     <Value genre="config" index="26" instance="1" label="The function of 3-way switch" size="1" type="list" value="0">
       <Help>Switch no. 2 controls the Dimmer additionally (in 3-way switch mode). Function disabled for parameter 20 set to 2 (roller blind switch)</Help>
@@ -183,14 +185,15 @@ Default setting: 0</Help>
     </Value>
     <Value genre="config" index="27" instance="1" label="Associations in Z-Wave network security mode" type="byte" value="15">
       <Help>This parameter defines how commands are sent in specified association groups: as secure or non-secure. Parameter is active only in Z-Wave network security mode. It does not apply to 1st Lifeline group. Parameter values may be combined, e.g. 1+2=3 means that 2nd &amp; 3rd group are sent as secure.
-Available settings: 0-15
-0 - all groups (II-V) sent as non-secure;
-1 - 2nd group sent as secure;
-2 - 3rd group sent as secure;
-4 - 4th group sent as secure;
-8 - 5th group sent as secure;
-15 - all groups (II-V) sent as secure;
-Default setting: 15</Help>
+        Available settings: 0-15
+        0 - all groups (II-V) sent as non-secure;
+        1 - 2nd group sent as secure;
+        2 - 3rd group sent as secure;
+        4 - 4th group sent as secure;
+        8 - 5th group sent as secure;
+        15 - all groups (II-V) sent as secure;
+        Default setting: 15
+      </Help>
     </Value>
     <Value genre="config" index="28" instance="1" label="Scene activation functionality" size="1" type="list" value="0">
       <Help>SCENE ID depends on the switch type configurations. Default 0.</Help>
@@ -306,21 +309,24 @@ Default setting: 15</Help>
     </Value>
     <Value genre="config" index="50" instance="1" label="Active power reports" max="100" min="0" type="byte" units="%" value="10">
       <Help>The parameter defines the power level change that will result in a new power report being sent. The value is a percentage of the previous report. Available settings:
-0 - power reports disabled;
-1-100 (1-100%) - power report threshold;
-Default setting: 10 (10%)</Help>
+        0 - power reports disabled;
+        1-100 (1-100%) - power report threshold;
+        Default setting: 10 (10%)
+      </Help>
     </Value>
     <Value genre="config" index="52" instance="1" label="Periodic active power and energy reports" max="32767" min="0" type="short" units="sec" value="3600">
       <Help>Parameter 52 defines a time period between consecutive reports. Timer is reset and counted from zero after each report. Available settings:
-0 - periodic reports disabled;
-1-32767 (1-32767 seconds);
-Default setting: 3600 (3600s)</Help>
+        0 - periodic reports disabled;
+        1-32767 (1-32767 seconds);
+        Default setting: 3600 (3600s)
+      </Help>
     </Value>
     <Value genre="config" index="53" instance="1" label="Energy reports" max="255" min="0" type="short" units="kWh" value="10">
       <Help>Energy level change which will result in sending a new energy report. Available settings:
-0 - energy reports disabled; 
-1-255 (0,01 - 2,55 kWh) - report triggering threshold;
-Default setting: 10 (0,1 kWh)</Help>
+        0 - energy reports disabled;
+        1-255 (0,01 - 2,55 kWh) - report triggering threshold;
+        Default setting: 10 (0,1 kWh)
+      </Help>
     </Value>
     <Value genre="config" index="54" instance="1" label="Self-measurement" size="1" type="list" value="0">
       <Help>The Dimmer may include active power and energy consumed by itself in reports sent to the main controller.</Help>

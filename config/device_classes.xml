@@ -262,7 +262,7 @@
   <DeviceType key="0x1a00" label="Window Covering Position/Endpoint Aware" command_classes="0x5a,0x5e,0x59,0x72,0x73,0x85,0x86,0x26,0x25"/>
   <!--
   2019-05-24 add data, based on "Z-Wave Specification release 2019B": SDS13738 Z-Wave Plus Assigned Icon Types.xlsx
-  The DeviceType entries are based on Z-Wave Plus Info Report Command, field User Icon Type (16 bits). 
+  The DeviceType entries are based on Z-Wave Plus Info Report Command, field User Icon Type (16 bits).
   These new entries have no command classes assigned, as per spec SDS13782-10 4.43 Z-Wave Plus Info Command Class:
   "Icon types do not affect the operation of a product or how it is certified."
   -->

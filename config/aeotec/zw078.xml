@@ -1,7 +1,8 @@
 <!--
 Aeotec ZW078 Heavy Duty Smart Switch Gen5
 https://aeotec.freshdesk.com/helpdesk/attachments/6009584699
---><Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
+-->
+<Product Revision="6" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0086:004E:0103</MetaDataItem>
     <MetaDataItem name="ProductPic">images/aeotec/zw078.png</MetaDataItem>
@@ -11,9 +12,9 @@ https://aeotec.freshdesk.com/helpdesk/attachments/6009584699
     <MetaDataItem name="ExclusionDescription">Turn the primary controller of Z-Wave network into exclusion mode, short press the product’s Action button that you can find on the product's housing.</MetaDataItem>
     <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/1142/Heavy Duty Smart Switch Gen5 Manual.pdf</MetaDataItem>
     <MetaDataItem name="Description">Aeon Labs Heavy Duty Smart Switch is a Z-Wave device that can report the wattage energy usage and KWH usage to a Z-Wave Controller (especially a gateway), it can be controlled by other Z-Wave devices to turn on/off loads, it can bear up to 40A current of resister loads. It also acts as a repeater that forward Z-Wave command messages to destination nodes if the originating controller is out of range from the destination node.
-By taking advantage of the Z-Wave mesh network, commands can be routed to their destination via intermediary “listening” Z-Wave products. Products that are Z-Wave certified can be used and communicate with other Z-Wave certified devices.
+      By taking advantage of the Z-Wave mesh network, commands can be routed to their destination via intermediary “listening” Z-Wave products. Products that are Z-Wave certified can be used and communicate with other Z-Wave certified devices.
 
-</MetaDataItem>
+    </MetaDataItem>
     <MetaDataItem name="Name">Heavy Duty Smart Switch Gen5</MetaDataItem>
     <MetaDataItem id="004E" name="Identifier" type="0103">ZW078-A</MetaDataItem>
     <MetaDataItem id="004E" name="FrequencyName" type="0103">U.S. / Canada / Mexico</MetaDataItem>
@@ -36,9 +37,9 @@ By taking advantage of the Z-Wave mesh network, commands can be routed to their 
   <CommandClass id="112">
     <Value genre="config" index="3" label="Current Overload Protection" size="1" type="list" value="0">
       <Help>
-      Current Overload Protection. Load will be closed when
-      the Current more than 39.5A and the time more than 5
-      seconds
+        Current Overload Protection. Load will be closed when
+        the Current more than 39.5A and the time more than 5
+        seconds
       </Help>
       <Item label="Disable" value="0"/>
       <Item label="Enable" value="1"/>
@@ -51,7 +52,7 @@ By taking advantage of the Z-Wave mesh network, commands can be routed to their 
     </Value>
     <Value genre="config" index="80" label="Notification status" size="1" type="list" units="" value="0">
       <Help>
-	Enables automatic notifications to associated devices whenever there is a state change.
+        Enables automatic notifications to associated devices whenever there is a state change.
       </Help>
       <Item label="None" value="0"/>
       <Item label="Hail" value="1"/>
@@ -71,53 +72,53 @@ By taking advantage of the Z-Wave mesh network, commands can be routed to their 
     </Value>
     <Value genre="config" index="101" label="Report type sent in Reporting Group 1" type="int" units="" value="4">
       <Help>
-          Defines the type of report sent for reporting group 1.
-          1 is meter report for voltage.
-          2 is meter report for current.
-          4 is meter report for watts.
-          8 is meter report for kilowatts.
-	 Value 1 (msb) Reserved
-	 Value 2 Reserved
-	 Value 3 Reserved
-	 Value 4 (lsb) bits 7-4 reserved
-          bit 3 kWh
-          bit 2 watt
-          bit 1 current
-          bit 0 voltage
+        Defines the type of report sent for reporting group 1.
+        1 is meter report for voltage.
+        2 is meter report for current.
+        4 is meter report for watts.
+        8 is meter report for kilowatts.
+        Value 1 (msb) Reserved
+        Value 2 Reserved
+        Value 3 Reserved
+        Value 4 (lsb) bits 7-4 reserved
+        bit 3 kWh
+        bit 2 watt
+        bit 1 current
+        bit 0 voltage
       </Help>
     </Value>
     <Value genre="config" index="102" label="Report type sent in Reporting Group 2" type="int" units="" value="8">
       <Help>
-          Defines the type of report sent for reporting group 2.
-          1 is meter report for voltage.
-          2 is meter report for current.
-          4 is meter report for watts.
-          8 is meter report for kilowatts.
-	 Value 1 (msb) Reserved
-	 Value 2 Reserved
-	 Value 3 Reserved
-	 Value 4 (lsb) bits 7-4 reserved
-          bit 3 kWh
-          bit 2 watt
-          bit 1 current
-          bit 0 voltage
+        Defines the type of report sent for reporting group 2.
+        1 is meter report for voltage.
+        2 is meter report for current.
+        4 is meter report for watts.
+        8 is meter report for kilowatts.
+        Value 1 (msb) Reserved
+        Value 2 Reserved
+        Value 3 Reserved
+        Value 4 (lsb) bits 7-4 reserved
+        bit 3 kWh
+        bit 2 watt
+        bit 1 current
+        bit 0 voltage
       </Help>
     </Value>
     <Value genre="config" index="103" label="Report type sent in Reporting Group 3" type="int" units="" value="0">
       <Help>
-          Defines the type of report sent for reporting group 3.
-          1 is meter report for voltage.
-          2 is meter report for current.
-          4 is meter report for watts.
-          8 is meter report for kilowatts.
-	 Value 1 (msb) Reserved
-	 Value 2 Reserved
-	 Value 3 Reserved
-	 Value 4 (lsb) bits 7-4 reserved
-          bit 3 kWh
-          bit 2 watt
-          bit 1 current
-          bit 0 voltage
+        Defines the type of report sent for reporting group 3.
+        1 is meter report for voltage.
+        2 is meter report for current.
+        4 is meter report for watts.
+        8 is meter report for kilowatts.
+        Value 1 (msb) Reserved
+        Value 2 Reserved
+        Value 3 Reserved
+        Value 4 (lsb) bits 7-4 reserved
+        bit 3 kWh
+        bit 2 watt
+        bit 1 current
+        bit 0 voltage
       </Help>
     </Value>
     <Value affects="111,112,113" genre="config" index="110" label="Default Group Time" type="button" units="" value="0" write_only="true">

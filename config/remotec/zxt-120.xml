@@ -1,4 +1,4 @@
-<Product Revision="7" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="8" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/5254:8377:0101</MetaDataItem>
     <MetaDataItem name="ProductPic">images/remotec/zxt-120.png</MetaDataItem>
@@ -25,7 +25,7 @@
     <MetaDataItem id="8377" name="FrequencyName" type="0107">Israel</MetaDataItem>
   </MetaData>
   <!-- This thermostat's setpoint descriptions are 0 based, not 1 -->
-	<!-- COMMAND_CLASS_THERMOSTAT_SETPOINT get is not supported -->
+  <!-- COMMAND_CLASS_THERMOSTAT_SETPOINT get is not supported -->
   <CommandClass id="67">
     <Compatibility>
       <GetSupported>false</GetSupported>
@@ -59,9 +59,9 @@
   <CommandClass id="112">
     <Value genre="config" index="25" label="Indicate a location for IR code learning and start learning" max="22" min="0" size="1" type="list" value="0" write_only="true">
       <Help>
-				In case none of the code on the code list works for the targeted air conditioner, user can use IR code learning function.
-				See manual at section "IR Code Learning" for a description of the procedure. Value 0-22
-			</Help>
+        In case none of the code on the code list works for the targeted air conditioner, user can use IR code learning function.
+        See manual at section "IR Code Learning" for a description of the procedure. Value 0-22
+      </Help>
       <Item label="OFF" value="0"/>
       <Item label="ON (resume)" value="1"/>
       <Item label="cool 19 C" value="2"/>
@@ -87,10 +87,11 @@
     </Value>
     <Value genre="config" index="26" label="Learning status register" read_only="true" size="1" type="list">
       <Help>Note: The status value 0x01 and 0x04 will be reset to 0 when the ZXT-120 receive a get command to this parameter.
-				Idle - this IR channel is idle (default).
-				OK - the latest learning process successful and completed.
-				Learning - the ZXT- 120 is busy processing previous learning request.
-				Failed - the latest learning request failed.</Help>
+        Idle - this IR channel is idle (default).
+        OK - the latest learning process successful and completed.
+        Learning - the ZXT- 120 is busy processing previous learning request.
+        Failed - the latest learning request failed.
+      </Help>
       <Item label="Idle" value="0"/>
       <Item label="OK" value="1"/>
       <Item label="Learning" value="2"/>
@@ -106,9 +107,9 @@
     </Value>
     <Value genre="config" index="32" label="Surround IR control" size="1" type="list" value="255">
       <Help>
-				To avoid the IR interference by disabling the surrounding IR emitter if 2 air-conditioners in a room are used.
-				Extend the battery life by disabling the Surround IR Emitters
-			</Help>
+        To avoid the IR interference by disabling the surrounding IR emitter if 2 air-conditioners in a room are used.
+        Extend the battery life by disabling the Surround IR Emitters
+      </Help>
       <Item label="Disable" value="0"/>
       <Item label="Enable" value="255"/>
     </Value>
@@ -119,17 +120,17 @@
     </Value>
     <Value genre="config" index="35" label="Learn location status" read_only="true" size="1" type="byte">
       <Help>
-				Bit mask = 1, learn location has learn data.
-				Otherwise, Bit mask 0 See figure Learn location
-			</Help>
+        Bit mask = 1, learn location has learn data.
+        Otherwise, Bit mask 0 See figure Learn location
+      </Help>
     </Value>
     <Value genre="config" index="37" instance="1" label="Sensor temperature compensation" max="255" min="0" size="1" type="list" value="0">
       <Help>
-				This parameter is used to compensate the temperature error at temperature sensor.
-				Formula: Display temperature = sensor reading value + offset value
-				(unit = degree C)
-				0x00 = 0C (Default)
-			</Help>
+        This parameter is used to compensate the temperature error at temperature sensor.
+        Formula: Display temperature = sensor reading value + offset value
+        (unit = degree C)
+        0x00 = 0C (Default)
+      </Help>
       <Item label="0 C" value="0"/>
       <Item label="1 C" value="1"/>
       <Item label="2 C" value="2"/>

@@ -1,19 +1,19 @@
-<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
   <!-- Please refer to https://github.com/OpenZWave/open-zwave/wiki/Adding-Devices for instructions -->
   <MetaData>
     <MetaDataItem name="Name">P1 Dongle</MetaDataItem>
     <MetaDataItem name="Description">
 
-If your Internet Gateway is not in the vicinity of the smart meter, you can use a P1-dongle. The P1-dongle sends data wirelessly to the Internet Gateway. This data is shown in your BeNext application and online environment. Here you can get insight of your consumption and things like the overall yield of your solar panels.
+      If your Internet Gateway is not in the vicinity of the smart meter, you can use a P1-dongle. The P1-dongle sends data wirelessly to the Internet Gateway. This data is shown in your BeNext application and online environment. Here you can get insight of your consumption and things like the overall yield of your solar panels.
 
-Support:
-The P1-dongle can connect to smart meters that support DSMR (Dutch Smart Meter Reader Protocol). We support all smart meters* with a P1-connector.
-The following smart meter brands have this connection: Kaifa, Kamstrup, Landis &amp; Gyr, Elster and Iskra.
-* DSMR2, 4 and 5
+      Support:
+      The P1-dongle can connect to smart meters that support DSMR (Dutch Smart Meter Reader Protocol). We support all smart meters* with a P1-connector.
+      The following smart meter brands have this connection: Kaifa, Kamstrup, Landis &amp; Gyr, Elster and Iskra.
+      * DSMR2, 4 and 5
 
-For more information about smart meters: https://www.benext.eu/producten/slimme-meter/.
-Order a special adapter for DSMR2.x meters.
-</MetaDataItem>
+      For more information about smart meters: https://www.benext.eu/producten/slimme-meter/.
+      Order a special adapter for DSMR2.x meters.
+    </MetaDataItem>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/008A:0100:002F</MetaDataItem>
     <MetaDataItem name="ProductPage">https://www.benext.eu/en/products/p1-dongle/</MetaDataItem>
     <MetaDataItem name="ProductSupport">https://support.benext.eu/</MetaDataItem>

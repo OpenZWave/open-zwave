@@ -1,4 +1,4 @@
-<Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/008A:0100:0001</MetaDataItem>
     <MetaDataItem name="ProductPic">images/BeNext/mygate.png</MetaDataItem>
@@ -7,9 +7,10 @@
     <MetaDataItem name="ProductPage">http://www.benext.eu/en/products/internet-gateway/</MetaDataItem>
     <MetaDataItem name="ProductSupport">info@Benext.eu</MetaDataItem>
     <MetaDataItem name="Description">The Benext Internet Gateway is a static controller with Internet connection.
-It is configured with lifestyles and rules for different scenes and operates with the BeNext Framework.
+      It is configured with lifestyles and rules for different scenes and operates with the BeNext Framework.
 
-Connect the Internet Gateway onto your Smart meter and start reading out data, completely independent from your local power supplier. The Gateway gives you access to our famed free of charge online manager. In this online environment you can, among many other features, set up energy targets, read out and compare revenues from installed solar panels and manage your use of gas. The more BeNext products you will use and install on the Gateway the better you’ll be able to automate big savings and broaden luxury and safety features.</MetaDataItem>
+      Connect the Internet Gateway onto your Smart meter and start reading out data, completely independent from your local power supplier. The Gateway gives you access to our famed free of charge online manager. In this online environment you can, among many other features, set up energy targets, read out and compare revenues from installed solar panels and manage your use of gas. The more BeNext products you will use and install on the Gateway the better you’ll be able to automate big savings and broaden luxury and safety features.
+    </MetaDataItem>
     <MetaDataItem name="Name">Internet Gateway</MetaDataItem>
     <MetaDataItem id="0100" name="FrequencyName" type="0001">CEPT (Europe)</MetaDataItem>
     <ChangeLog>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--http://benext.eu/static/manual/2poleswitch.pdf-->
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="3">
   <!-- Configuration -->
   <CommandClass id="112">
 
@@ -21,7 +21,7 @@
     </Value>
 
   </CommandClass>
-  
+
   <!-- Association Groups -->
   <CommandClass id="133">
     <Associations num_groups="4">

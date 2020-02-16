@@ -1,8 +1,8 @@
-<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
   <!-- Taken from http://www.zwave.eu/api/pdf.php?type=manual&id=ZME_054436_en_long.html -->
-<!-- Z-Wave.Me: 064435 Wall Controller -->
+  <!-- Z-Wave.Me: 064435 Wall Controller -->
 
-	<!-- Configuration Parameters -->
+  <!-- Configuration Parameters -->
   <CommandClass id="112">
     <Value genre="config" index="10" label="Typical click timeout" max="100" min="1" type="byte" units="x 10 milliseconds" value="50">
       <Help>Typical time used to differentiate click, hold, double and triple clicks Values: 1 to 100 in 10 ms units (default is 50, that is equivalent to 500 ms)</Help>

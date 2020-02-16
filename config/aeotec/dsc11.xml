@@ -1,7 +1,8 @@
-<!-- 
-Aeotec DSC11 Smart Strip 
+<!--
+Aeotec DSC11 Smart Strip
 https://aeotec.freshdesk.com/helpdesk/attachments/6009584527
---><Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
+-->
+<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0086:000B:0003</MetaDataItem>
     <MetaDataItem name="ProductPic">images/aeotec/dsc11.png</MetaDataItem>
@@ -19,7 +20,8 @@ https://aeotec.freshdesk.com/helpdesk/attachments/6009584527
   <CommandClass id="112">
     <Value genre="config" index="4" label="Report threshold" max="1" min="0" size="1" type="list" units="" value="1">
       <Help>Enable selective reporting only when power change reaches a certain threshold or percentage set in 4.11 below.
-	  This is used to reduce network traffic.</Help>
+        This is used to reduce network traffic.
+      </Help>
       <Item label="Disable," value="0"/>
       <Item label="Enable" value="1"/>
     </Value>
@@ -76,99 +78,99 @@ https://aeotec.freshdesk.com/helpdesk/attachments/6009584527
     </Value>
     <Value affects="101,102,103" genre="config" index="100" label="Default Group Reports" type="button" units="" write_only="true">
       <Help>
-	Set report types for groups 1, 2 and 3 to default.
+        Set report types for groups 1, 2 and 3 to default.
       </Help>
     </Value>
     <Value genre="config" index="101" label="Report type sent in Reporting Group 1" size="4" type="int" units="" value="0">
       <Help>Configure auto report which information as Group 1.
-	 Value 1 (msb) Reserved
-	 Value 2 Reserved
-	 Value 3 
-			bit 7 reserved
-			bit 6 Auto report power level with specified time interval (channel 6)
-			bit 5 Auto report power level with specified time interval (channel 5)
-			bit 4 Auto report power level with specified time interval (channel 4)
-			bit 3 Auto report power level with specified time interval (channel 3)
-			bit 2 Auto report power level with specified time interval (channel 2)
-			bit 1 Auto report power level with specified time interval (channel 1)
-			bit 0 Auto report the total power level with specified time interval
-	Value 4 (lsb) 
-			bit 7 reserved
-			bit 6 Auto report power consumption with specified time interval (channel 6)
-			bit 5 Auto report power consumption with specified time interval (channel 5)
-			bit 4 Auto report power consumption with specified time interval (channel 4)
-			bit 3 Auto report power consumption with specified time interval (channel 3)
-			bit 2 Auto report power consumption with specified time interval (channel 2)
-			bit 1 Auto report power consumption with specified time interval (channel 1)
-			bit 0 Auto report the total power consumption with specified time interval
+        Value 1 (msb) Reserved
+        Value 2 Reserved
+        Value 3
+        bit 7 reserved
+        bit 6 Auto report power level with specified time interval (channel 6)
+        bit 5 Auto report power level with specified time interval (channel 5)
+        bit 4 Auto report power level with specified time interval (channel 4)
+        bit 3 Auto report power level with specified time interval (channel 3)
+        bit 2 Auto report power level with specified time interval (channel 2)
+        bit 1 Auto report power level with specified time interval (channel 1)
+        bit 0 Auto report the total power level with specified time interval
+        Value 4 (lsb)
+        bit 7 reserved
+        bit 6 Auto report power consumption with specified time interval (channel 6)
+        bit 5 Auto report power consumption with specified time interval (channel 5)
+        bit 4 Auto report power consumption with specified time interval (channel 4)
+        bit 3 Auto report power consumption with specified time interval (channel 3)
+        bit 2 Auto report power consumption with specified time interval (channel 2)
+        bit 1 Auto report power consumption with specified time interval (channel 1)
+        bit 0 Auto report the total power consumption with specified time interval
       </Help>
     </Value>
     <Value genre="config" index="102" label="Report type sent in Reporting Group 2" size="4" type="int" units="" value="0">
       <Help>Configure auto report which information as Group 2.
-	 Value 1 (msb) Reserved
-	 Value 2 Reserved
-	 Value 3 
-			bit 7 reserved
-			bit 6 Auto report power level with specified time interval (channel 6)
-			bit 5 Auto report power level with specified time interval (channel 5)
-			bit 4 Auto report power level with specified time interval (channel 4)
-			bit 3 Auto report power level with specified time interval (channel 3)
-			bit 2 Auto report power level with specified time interval (channel 2)
-			bit 1 Auto report power level with specified time interval (channel 1)
-			bit 0 Auto report the total power level with specified time interval
-	Value 4 (lsb) 
-			bit 7 reserved
-			bit 6 Auto report power consumption with specified time interval (channel 6)
-			bit 5 Auto report power consumption with specified time interval (channel 5)
-			bit 4 Auto report power consumption with specified time interval (channel 4)
-			bit 3 Auto report power consumption with specified time interval (channel 3)
-			bit 2 Auto report power consumption with specified time interval (channel 2)
-			bit 1 Auto report power consumption with specified time interval (channel 1)
-			bit 0 Auto report the total power consumption with specified time interval
+        Value 1 (msb) Reserved
+        Value 2 Reserved
+        Value 3
+        bit 7 reserved
+        bit 6 Auto report power level with specified time interval (channel 6)
+        bit 5 Auto report power level with specified time interval (channel 5)
+        bit 4 Auto report power level with specified time interval (channel 4)
+        bit 3 Auto report power level with specified time interval (channel 3)
+        bit 2 Auto report power level with specified time interval (channel 2)
+        bit 1 Auto report power level with specified time interval (channel 1)
+        bit 0 Auto report the total power level with specified time interval
+        Value 4 (lsb)
+        bit 7 reserved
+        bit 6 Auto report power consumption with specified time interval (channel 6)
+        bit 5 Auto report power consumption with specified time interval (channel 5)
+        bit 4 Auto report power consumption with specified time interval (channel 4)
+        bit 3 Auto report power consumption with specified time interval (channel 3)
+        bit 2 Auto report power consumption with specified time interval (channel 2)
+        bit 1 Auto report power consumption with specified time interval (channel 1)
+        bit 0 Auto report the total power consumption with specified time interval
       </Help>
     </Value>
     <Value genre="config" index="103" label="Report type sent in Reporting Group 3" size="4" type="int" units="" value="0">
       <Help>Configure auto report which information as Group 3.
-	 Value 1 (msb) Reserved
-	 Value 2 Reserved
-	 Value 3 
-			bit 7 reserved
-			bit 6 Auto report power level with specified time interval (channel 6)
-			bit 5 Auto report power level with specified time interval (channel 5)
-			bit 4 Auto report power level with specified time interval (channel 4)
-			bit 3 Auto report power level with specified time interval (channel 3)
-			bit 2 Auto report power level with specified time interval (channel 2)
-			bit 1 Auto report power level with specified time interval (channel 1)
-			bit 0 Auto report the total power level with specified time interval
-	Value 4 (lsb) 
-			bit 7 reserved
-			bit 6 Auto report power consumption with specified time interval (channel 6)
-			bit 5 Auto report power consumption with specified time interval (channel 5)
-			bit 4 Auto report power consumption with specified time interval (channel 4)
-			bit 3 Auto report power consumption with specified time interval (channel 3)
-			bit 2 Auto report power consumption with specified time interval (channel 2)
-			bit 1 Auto report power consumption with specified time interval (channel 1)
-			bit 0 Auto report the total power consumption with specified time interval
+        Value 1 (msb) Reserved
+        Value 2 Reserved
+        Value 3
+        bit 7 reserved
+        bit 6 Auto report power level with specified time interval (channel 6)
+        bit 5 Auto report power level with specified time interval (channel 5)
+        bit 4 Auto report power level with specified time interval (channel 4)
+        bit 3 Auto report power level with specified time interval (channel 3)
+        bit 2 Auto report power level with specified time interval (channel 2)
+        bit 1 Auto report power level with specified time interval (channel 1)
+        bit 0 Auto report the total power level with specified time interval
+        Value 4 (lsb)
+        bit 7 reserved
+        bit 6 Auto report power consumption with specified time interval (channel 6)
+        bit 5 Auto report power consumption with specified time interval (channel 5)
+        bit 4 Auto report power consumption with specified time interval (channel 4)
+        bit 3 Auto report power consumption with specified time interval (channel 3)
+        bit 2 Auto report power consumption with specified time interval (channel 2)
+        bit 1 Auto report power consumption with specified time interval (channel 1)
+        bit 0 Auto report the total power consumption with specified time interval
       </Help>
     </Value>
     <Value affects="111,112,113" genre="config" index="110" label="Set 111-113 to default" type="button" units="" value="0" write_only="true">
       <Help>
-	Set time interval for sending reports for groups 1, 2 and 3 to default.
+        Set time interval for sending reports for groups 1, 2 and 3 to default.
       </Help>
     </Value>
     <Value genre="config" index="111" label="Send Interval for Reporting Group 1" max="65535" min="0" type="int" units="seconds" value="600">
       <Help>
-	Defines the time interval when the defined report for group 1 is sent.
+        Defines the time interval when the defined report for group 1 is sent.
       </Help>
     </Value>
     <Value genre="config" index="112" label="Send Interval for Reporting Group 2" max="65535" min="0" type="int" units="seconds" value="600">
       <Help>
-	Defines the time interval when the defined report for group 2 is sent.
+        Defines the time interval when the defined report for group 2 is sent.
       </Help>
     </Value>
     <Value genre="config" index="113" label="Send Interval for Reporting Group 3" max="65535" min="0" type="int" units="seconds" value="600">
       <Help>
-	Defines the time interval when the defined report for group 3 is sent.
+        Defines the time interval when the defined report for group 3 is sent.
       </Help>
     </Value>
     <Value genre="config" index="252" label="Configuration Locked" max="1" min="0" size="1" type="list" units="" value="0">
@@ -181,7 +183,7 @@ https://aeotec.freshdesk.com/helpdesk/attachments/6009584527
     </Value>
     <Value genre="config" index="254" label="Device tag" max="65535" min="0" type="short" units="" value="0">
       <Help>
-	Device tag.
+        Device tag.
       </Help>
     </Value>
     <Value genre="config" index="255" label="Reset device" type="button" units="" write_only="true">

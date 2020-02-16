@@ -2,7 +2,7 @@
 NorthQ NQ-9121 Gas Meter
 http://northq.com/wp-content/uploads/2016/01/Technical-Integration.pdf
 -->
-<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
   <!-- COMMAND_CLASS_BASIC -->
   <CommandClass id="32">
     <Compatibility>
@@ -21,21 +21,21 @@ http://northq.com/wp-content/uploads/2016/01/Technical-Integration.pdf
     </Value>
     <Value genre="config" index="3" label="IR Listen period" max="127" min="0" type="byte" units="" value="0">
       <Help>
-      	Additional time for feedback measurement.
-      	Should always be 0.
-     </Help>
+        Additional time for feedback measurement.
+        Should always be 0.
+      </Help>
     </Value>
     <Value genre="config" index="4" label="IR Pulse Width" max="127" min="0" type="byte" units="" value="50">
       <Help>
-      	Adjusts transmit signal so received signal will in average be equal to this values. 
-      	Auto calibration might select another value than this.
+        Adjusts transmit signal so received signal will in average be equal to this values.
+        Auto calibration might select another value than this.
       </Help>
     </Value>
     <Value genre="config" index="5" label="Poll / Wake up frequency" max="50" min="1" type="byte" units="seconds" value="20">
       <Help>
-      	Wake device up this many times per second. 
-      	This value also controls number of measurements per second on mechanical meters.
-     </Help>
+        Wake device up this many times per second.
+        This value also controls number of measurements per second on mechanical meters.
+      </Help>
     </Value>
     <Value genre="config" index="9" label="Pulse count" max="2147483647" min="0" size="4" type="int" units="" value="0">
       <Help>In order for the Power Reader to report the proper total meter consumption the value for this registered has to be initialized with total_meter_consumption_stated_on_the_meter * impulse factor.</Help>
@@ -56,8 +56,9 @@ http://northq.com/wp-content/uploads/2016/01/Technical-Integration.pdf
     </Value>
     <Value genre="config" index="15" label="Calibration status" read_only="true" size="4" type="int" value="0">
       <Help>The calibration progress is calculated as (value[1] - 65 + value[2] / value[3]) * 25
-			The calibration is finished successfully when value[0] = 2 and value[2] = value[3].
-			The calibration has failed if value[0] != 1 OR (value[0] = 2 AND value[2] != value[3])</Help>
+        The calibration is finished successfully when value[0] = 2 and value[2] = value[3].
+        The calibration has failed if value[0] != 1 OR (value[0] = 2 AND value[2] != value[3])
+      </Help>
     </Value>
   </CommandClass>
 </Product>
