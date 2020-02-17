@@ -1,6 +1,7 @@
-<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem id="0B00" name="ProductPage" type="1214">https://www.widom.it/it/smart-double-switch/</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/widom/WDS2.png</MetaDataItem>
     <MetaDataItem id="0B00" name="Identifier" type="1214">WDS2</MetaDataItem>
     <MetaDataItem name="Description">Widom Smart Double Switch is the new ON/OFF smallest control device in the world designed to independently control two separate loads</MetaDataItem>
     <MetaDataItem id="0B00" name="FrequencyName" type="1214">CEPT (Europe)</MetaDataItem>
@@ -9,6 +10,7 @@
     <ChangeLog>
       <Entry author="Giuseppe Tiddia - giuseppe.tiddia@widom.it" date="15 Nov 2019" revision="1">Initial Metadata</Entry>
       <Entry author="Giuseppe Tiddia - giuseppe.tiddia@widom.it" date="15 Nov 2019" revision="2">Some fixes comparing with openHab exported file</Entry>
+      <Entry author="Giuseppe Tiddia - giuseppe.tiddia@widom.it" date="17 Feb 2020" revision="3">Added product image</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration -->

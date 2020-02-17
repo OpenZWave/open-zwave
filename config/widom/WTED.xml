@@ -1,6 +1,7 @@
-<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem id="0A00" name="ProductPage" >https://www.widom.it/it/smart-dimmer/</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/widom/WTED.png</MetaDataItem>
     <MetaDataItem name="ProductManual">https://www.widom.it/wp-content/uploads/2019/01/Widom_Smart_Dimmer_EN_1.pdf</MetaDataItem>
     <MetaDataItem id="0A00" name="Identifier" type="1214">WTED</MetaDataItem>
     <MetaDataItem name="Name">WiDOM Smart TE Drimmer</MetaDataItem>
@@ -11,6 +12,7 @@
     <ChangeLog>
       <Entry author="Giuseppe Tiddia - giuseppe.tiddia@widom.it" date="18 Nov 2019" revision="1">Initial Metadata</Entry>
       <Entry author="Giuseppe Tiddia - giuseppe.tiddia@widom.it" date="18 Nov 2019" revision="3">Some fixes comparing with openHab exported file</Entry>
+      <Entry author="Giuseppe Tiddia - giuseppe.tiddia@widom.it" date="17 Feb 2020" revision="4">Added product image</Entry>
     </ChangeLog>
   </MetaData>
 

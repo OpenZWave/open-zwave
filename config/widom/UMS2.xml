@@ -1,6 +1,7 @@
-<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem id="0800" name="ProductPage">https://www.widom.it/en/smart-roller-shutter/</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/widom/UMS2.png</MetaDataItem>
     <MetaDataItem name="ProductManual">https://www.widom.it/wp-content/uploads/2019/03/Widom_Smart_Roller_Shutter_EN_0.pdf</MetaDataItem>
     <MetaDataItem id="0800" name="Identifier" type="1214">UMS2</MetaDataItem>
     <MetaDataItem name="Name">WiDOM Smart Roller Shutter</MetaDataItem>
@@ -11,6 +12,7 @@
     <ChangeLog>
       <Entry author="Giuseppe Tiddia - giuseppe.tiddia@widom.it" date="18 Nov 2019" revision="2">Initial Metadata</Entry>
       <Entry author="Giuseppe Tiddia - giuseppe.tiddia@widom.it" date="18 Nov 2019" revision="3">Some fixes comparing with openHab exported file</Entry>
+      <Entry author="Giuseppe Tiddia - giuseppe.tiddia@widom.it" date="17 Feb 2020" revision="4">Added product image</Entry>
     </ChangeLog>
   </MetaData>
 

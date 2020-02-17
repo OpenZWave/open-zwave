@@ -846,9 +846,14 @@ DISTFILES =	.gitignore \
 	config/images/wenzhou/tz68.png \
 	config/images/wenzhou/tz69.png \
 	config/images/wenzhou/tz88.png \
+	config/images/widom/DRY.png \
 	config/images/widom/UBS104.png \
 	config/images/widom/UME304C_S.png \
+	config/images/widom/UMS2.png \
 	config/images/widom/WDS.png \
+	config/images/widom/WDS2.png \
+	config/images/widom/WSP.png \
+	config/images/widom/WTED.png \
 	config/images/zipato/HS1CA-Z.png \
 	config/images/zipato/HS1CG-Z.png \
 	config/images/zipato/HS1SA-Z.png \
@@ -1162,7 +1167,11 @@ DISTFILES =	.gitignore \
 	config/widom/DRY.xml \
 	config/widom/UBS104.xml \
 	config/widom/UME304C_S.xml \
+	config/widom/UMS2.xml \
 	config/widom/WDS.xml \
+	config/widom/WDS2.xml \
+	config/widom/WSP.xml \
+	config/widom/WTED.xml \
 	config/zipato/MiniKeypad.xml \
 	config/zipato/RGBBulb.xml \
 	config/zipato/RGBBulb2.xml \

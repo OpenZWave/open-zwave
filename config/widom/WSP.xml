@@ -1,6 +1,7 @@
-<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem id="0700" name="ProductPage" type="1214">https://www.widom.it/it/smart-plug/</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/widom/WSP.png</MetaDataItem>
     <MetaDataItem name="ProductManual">https://www.widom.it/wp-content/uploads/2019/08/Widom-Smart-Plug_EN_20190404_0.pdf</MetaDataItem>
     <MetaDataItem id="0700" name="Identifier" type="1214">WSP</MetaDataItem>
     <MetaDataItem name="Name">WiDOM Smart Dry Contact</MetaDataItem>
@@ -12,6 +13,7 @@
     <ChangeLog>
       <Entry author="Giuseppe Tiddia - giuseppe.tiddia@widom.it" date="15 Nov 2019" revision="1">Initial Metadata</Entry>
       <Entry author="Giuseppe Tiddia - giuseppe.tiddia@widom.it" date="15 Nov 2019" revision="2">Initial Metadata</Entry>
+      <Entry author="Giuseppe Tiddia - giuseppe.tiddia@widom.it" date="17 Feb 2020" revision="3">Added product image</Entry>
     </ChangeLog>
   </MetaData>
 
