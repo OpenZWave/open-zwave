@@ -917,6 +917,7 @@
     <Product config="honeywell/lynx-touch-l5100.xml" id="0003" name="Lynx Touch L5100 / L7000" type="0001"/>
     <Product config="honeywell/39351-ZW3005.xml" id="3038" name="39351 / ZW3005 In-Wall Smart Dimmer" type="4944"/>
     <Product config="honeywell/39348-zw4008.xml" id="3135" name="39348 / ZW4008 In-Wall Smart Switch" type="4952"/>
+    <Product config="honeywell/39357-ZW3004.xml" id="3130" name="39357 / ZW3004 In-Wall Smart Toggle Dimmer" type="4944"/>
   </Manufacturer>
   <Manufacturer id="0313" name="Hoppe"></Manufacturer>
   <Manufacturer id="0377" name="HORNBACH Baumarkt AG"></Manufacturer>
@@ -1294,10 +1295,12 @@
     <Product config="popp/123658.xml" id="0001" name="123658 Plug-in Switch plus Power Meter" type="0001"/>
     <Product config="popp/009105.xml" id="0001" name="009105 Wall Plug Switch Schuko (IP44)" type="0003"/>
     <Product config="popp/700397.xml" id="000a" name="700397 Wall Plug Switch Outdoor Schuko (IP44)" type="0003"/>
+    <Product config="popp/700793.xml" id="1002" name="700793 Smart Power Plug" type="0003"/>
     <Product config="popp/solar-siren.xml" id="0002" name="Solar Powered Outdoor Siren" type="0004"/>
     <Product config="popp/004407.xml" id="0003" name="004407 CO Detector" type="0004"/>
     <Product config="popp/009402.xml" id="0004" name="009402 10-Year Smoke Detector with Siren" type="0004"/>
-    <Product config="popp/700342.xml" id="000d" name="700342 10-Year Smoke Detector" type="0004"/>	  
+    <Product config="popp/700342.xml" id="000d" name="700342 10-Year Smoke Detector" type="0004"/>
+    <Product config="popp/700342.xml" id="0010" name="700342 10-Year Smoke Detector" type="0004"/>	  
     <Product config="popp/009501.xml" id="0003" name="009501 Flow Stop" type="0005"/>
     <Product config="popp/700168.xml" id="0011" name="Popp Z-Rain Rain Sensor" type="0004"/>
     <Product config="popp/012501.xml" id="0001" name="012501 Strike Lock Control" type="0005"/>
@@ -1508,6 +1511,7 @@
     <Product config="shenzen_neo/nas-pd01z.xml" id="1083" name="NAS-PD01Z Battery Powered PIR Sensor" type="0003"/>
     <!-- NAS-PD02Z exist with and without temp sensor and different params but same IDs https://github.com/OpenZWave/open-zwave/issues/1866 -->
     <Product config="shenzen_neo/nas-pd02z.xml" id="108d" name="NAS-PD02Z Battery Powered PIR Sensor V2" type="0003"/>
+    <Product config="shenzen_neo/nas-pd02z.xml" id="008d" name="NAS-PD02Z Battery Powered PIR Sensor V2" type="0003"/>
     <Product config="shenzen_neo/nas-ws02z.xml" id="0085" name="Water Leakage Detector" type="0003"/>
     <Product config="shenzen_neo/nas-ws02z.xml" id="1085" name="Water Leakage Detector" type="0003"/>
     <Product config="shenzen_neo/nas-ws02z.xml" id="6085" name="Water Leakage Detector" type="0003"/>
@@ -1610,6 +1614,7 @@
     <Product config="thermofloor/heatit021.xml" id="0001" name="Heatit Thermostat TF 021" type="0001"/>
     <Product config="thermofloor/heatit056.xml" id="0202" name="Heatit Thermostat TF 056" type="0003"/>
     <Product config="thermofloor/heatit-zdim.xml" id="2200" name="Heatit ZDim" type="0003"/>
+    <Product config="thermofloor/heatitz8.xml" id="0xa305" name="Heatit Z-Push Button 8" type="0x0300"/>
   </Manufacturer>
   <Manufacturer id="0317" name="Think Simple srl"></Manufacturer>
   <Manufacturer id="022A" name="TIMEVALVE"></Manufacturer>

@@ -92,6 +92,14 @@ namespace OpenZWave
 
 			static char const* c_modeName[] =
 			{ "Off", "Heat", "Cool", "Auto", "Aux Heat", "Resume", "Fan Only", "Furnace", "Dry Air", "Moist Air", "Auto Changeover", "Heat Econ", "Cool Econ", "Away", "Unknown", "Full Power", "Unknown", "Unknown", "Unknown", "Unknown", "Unknown", "Unknown", "Unknown", "Unknown", "Unknown", "Unknown", "Unknown", "Unknown", "Unknown", "Unknown", "Unknown", "Manufacturer Specific" };
+			
+
+			ThermostatMode::ThermostatMode(uint32 const _homeId, uint8 const _nodeId) :
+							CommandClass(_homeId, _nodeId),
+							m_currentMode(0)
+			{
+				SetStaticRequest(StaticRequest_Values);
+			}
 
 //-----------------------------------------------------------------------------
 // <ThermostatMode::ReadXML>
@@ -136,8 +144,6 @@ namespace OpenZWave
 					if (!supportedModes.empty())
 					{
 						m_supportedModes = supportedModes;
-						ClearStaticRequest(StaticRequest_Values);
-						CreateVars(1);
 					}
 				}
 			}
@@ -185,13 +191,13 @@ namespace OpenZWave
 				if ((_requestFlags & RequestFlag_Static) && HasStaticRequest(StaticRequest_Values))
 				{
 					// request supported mode list
-					requests |= RequestValue(_requestFlags, ThermostatModeCmd_SupportedGet, _instance, _queue);
+					requests |= RequestValue(_requestFlags, 0, _instance, _queue);
 				}
 
 				if (_requestFlags & RequestFlag_Dynamic)
 				{
 					// Request the current mode
-					requests |= RequestValue(_requestFlags, 0, _instance, _queue);
+					requests |= RequestValue(_requestFlags, ValueID_Index_ThermostatMode::Mode, _instance, _queue);
 				}
 
 				return requests;
@@ -203,7 +209,7 @@ namespace OpenZWave
 //-----------------------------------------------------------------------------
 			bool ThermostatMode::RequestValue(uint32 const _requestFlags, uint16 const _getTypeEnum, uint8 const _instance, Driver::MsgQueue const _queue)
 			{
-				if (_getTypeEnum == ThermostatModeCmd_SupportedGet)
+				if ((_requestFlags & RequestFlag_Static) && HasStaticRequest(StaticRequest_Values))
 				{
 					// Request the supported modes
 					Msg* msg = new Msg("ThermostatModeCmd_SupportedGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
@@ -215,9 +221,8 @@ namespace OpenZWave
 					msg->Append(GetDriver()->GetTransmitOptions());
 					GetDriver()->SendMsg(msg, _queue);
 					return true;
-				}
-
-				if (_getTypeEnum == 0)		// get current mode
+				} 
+				else if (_getTypeEnum == ValueID_Index_ThermostatMode::Mode)		// get current mode
 				{
 					if (m_com.GetFlagBool(COMPAT_FLAG_GETSUPPORTED))
 					{
@@ -271,17 +276,18 @@ namespace OpenZWave
 							if (valueList->GetItem())
 								Log::Write(LogLevel_Info, GetNodeId(), "Received thermostat mode: %s", valueList->GetItem()->m_label.c_str());
 							else
-								Log::Write(LogLevel_Info, GetNodeId(), "Received thermostat mode: %d", mode);
+								Log::Write(LogLevel_Warning, GetNodeId(), "Received thermostat mode: %d (No Item)", mode);
 							valueList->Release();
 						}
 						else
 						{
-							Log::Write(LogLevel_Info, GetNodeId(), "Received thermostat mode: index %d", mode);
+							Log::Write(LogLevel_Info, GetNodeId(), "Received thermostat mode: index %d (No ValueID)", mode);
 						}
+						m_currentMode = mode;
 					}
 					else
 					{
-						Log::Write(LogLevel_Info, GetNodeId(), "Received unknown thermostat mode: index %d", mode);
+						Log::Write(LogLevel_Warning, GetNodeId(), "Received unknown thermostat mode: index %d", mode);
 					}
 					return true;
 				}
@@ -317,8 +323,18 @@ namespace OpenZWave
 							}
 						}
 					}
-					ClearStaticRequest(StaticRequest_Values);
-					CreateVars(_instance);
+					/* at this stage, we don't know the Actual Mode of the Fan, so set it to the lowest 
+					 * value... If not, set to 0, which possibly could be invalid... 
+					 */
+					if (!m_supportedModes.empty()) {
+						m_currentMode = m_supportedModes[0].m_value;
+					} else {
+						m_currentMode = 0;
+					}
+					if (Node* node = GetNodeUnsafe())
+					{
+						node->CreateValueList(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_ThermostatMode::Mode, "Mode", "", false, false, 1, m_supportedModes, m_currentMode, 0);
+					}
 					return true;
 				}
 
@@ -359,47 +375,6 @@ namespace OpenZWave
 //-----------------------------------------------------------------------------
 			void ThermostatMode::CreateVars(uint8 const _instance)
 			{
-				// There are number of ways to get here...each needs to be handled differently:
-				//	QueryStage_ProtocolInfo:
-				//		Don't know what's supported yet, so do nothing
-				//	QueryStage_NodeInfo:
-				//		Need to create the instance so the values can be read from the xml file
-				//	QueryStage_Static:
-				//		Need to create the instance (processing SupportedReport) if it doesn't exist
-				//		If it does, populate with the appropriate values
-				//  other
-				//		Only create the instance if there are supportedModes
-
-				if (Node* node = GetNodeUnsafe())
-				{
-					Node::QueryStage qs = node->GetCurrentQueryStage();
-					if (qs == Node::QueryStage_ProtocolInfo || m_supportedModes.empty())
-					{
-						// this call is from QueryStage_ProtocolInfo,
-						// so just return (don't know which modes are supported yet)
-						return;
-					}
-
-					// identify the lowest supported mode as the "default" (or default to 0 if no supported modes identified yet)
-					int32 defaultValue = 0;
-					if (!m_supportedModes.empty())
-					{
-						defaultValue = m_supportedModes[0].m_value;
-					}
-
-					if (qs == Node::QueryStage_Static)
-					{
-						// This instance might already have been created (in NodeInfo, in preparation for loading the values
-						// from zwcfg xml file).  So, if the instance already exists, we delete its value and add a new one below
-						if (Internal::VC::ValueList* valueList = static_cast<Internal::VC::ValueList*>(GetValue(_instance, 0)))
-						{
-							node->RemoveValueList(valueList);
-							valueList->Release();
-						}
-					}
-
-					node->CreateValueList(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_ThermostatMode::Mode, "Mode", "", false, false, 1, m_supportedModes, defaultValue, 0);
-				}
 			}
 		} // namespace CC
 	} // namespace Internal

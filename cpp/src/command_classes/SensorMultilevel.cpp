@@ -295,14 +295,6 @@ namespace OpenZWave
 				return false;
 			}
 
-//-----------------------------------------------------------------------------
-// <SensorMultilevel::CreateVars>
-// Create the values managed by this command class
-//-----------------------------------------------------------------------------
-			void SensorMultilevel::CreateVars(uint8 const _instance)
-			{
-				// Don't create anything here. We do it in the report.
-			}
 		} // namespace CC
 	} // namespace Internal
 } // namespace OpenZWave

@@ -5891,7 +5891,6 @@ void Driver::NotifyWatchers()
 			default:
 				break;
 		}
-
 		Log::Write(LogLevel_Detail, notification->GetNodeId(), "Notification: %s", notification->GetAsString().c_str());
 
 		Manager::Get()->NotifyWatchers(notification);
