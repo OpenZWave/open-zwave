@@ -1787,6 +1787,10 @@
     <Product config="widom/UME304C_S.xml" id="0304" name="UME304 Energy Driven Switch" type="1214"/>
     <Product config="widom/WDS.xml" id="0504" name="WDS Universal Double Switch" type="1214"/>
     <Product config="widom/DRY.xml" id="0900" name="DRY Smart Dry Contact Switch" type="1214"/>
+    <Product config="widom/WDS2.xml" id="0B00" name="WDS2 Smart Double Switch" type="1214"/>
+    <Product config="widom/WSP.xml" id="0700" name="WSP Smart Plug" type="1214"/>
+    <Product config="widom/WTED.xml" id="0A00" name="WTED Smart TE Dimmer" type="1214"/>
+    <Product config="widom/UMS2.xml" id="0800" name="UMS2 Smart Roller Shutter" type="1214"/>
   </Manufacturer>
   <Manufacturer id="012D" name="Wilshine Holding"></Manufacturer>
   <Manufacturer id="017F" name="Wink"></Manufacturer>
