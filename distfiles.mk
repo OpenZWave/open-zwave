@@ -870,12 +870,15 @@ DISTFILES =	.gitignore \
 	config/images/zipato/zp3102.png \
 	config/images/zooz/zen06.png \
 	config/images/zooz/zen15.png \
+	config/images/zooz/zen16.png \
 	config/images/zooz/zen20.png \
 	config/images/zooz/zen20v2.png \
 	config/images/zooz/zen21.png \
 	config/images/zooz/zen22.png \
 	config/images/zooz/zen26.png \
 	config/images/zooz/zen27.png \
+	config/images/zooz/zen30.png \
+	config/images/zooz/zen31.png \
 	config/images/zooz/zse09.png \
 	config/images/zooz/zse19.png \
 	config/images/zooz/zse29.png \
@@ -1184,6 +1187,7 @@ DISTFILES =	.gitignore \
 	config/zooz/zen06.xml \
 	config/zooz/zen07.xml \
 	config/zooz/zen15.xml \
+	config/zooz/zen16.xml \
 	config/zooz/zen20.xml \
 	config/zooz/zen20v2.xml \
 	config/zooz/zen21.xml \
@@ -1195,6 +1199,8 @@ DISTFILES =	.gitignore \
 	config/zooz/zen25.xml \
 	config/zooz/zen26.xml \
 	config/zooz/zen27.xml \
+	config/zooz/zen30.xml \
+	config/zooz/zen31.xml \
 	config/zooz/zse08.xml \
 	config/zooz/zse09.xml \
 	config/zooz/zse18.xml \
