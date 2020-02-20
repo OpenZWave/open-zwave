@@ -31,6 +31,7 @@
 #include "Msg.h"
 #include "Driver.h"
 #include "Node.h"
+#include "Notification.h"
 #include "platform/Log.h"
 #include "value_classes/ValueBitSet.h"
 #include "value_classes/ValueBool.h"
@@ -82,6 +83,54 @@ namespace OpenZWave
 				}
 				return value;
 			}
+
+//-----------------------------------------------------------------------------
+// <Configuration::ReadXML>
+// Read the saved association data
+//-----------------------------------------------------------------------------
+			void Configuration::ReadXML(TiXmlElement const* _ccElement)
+			{
+				CommandClass::ReadXML(_ccElement);
+
+				TiXmlElement const* configElement = _ccElement->FirstChildElement();
+				while (configElement)
+				{
+					char const* str = configElement->Value();
+					if (str && !strcmp(str, "ConfigParams"))
+					{
+						int intVal;
+						if (TIXML_SUCCESS == configElement->QueryIntAttribute("param_no", &intVal))
+						{
+							m_numGroups = (uint8) intVal;
+						}
+
+						break;
+					}
+
+					configElement = configElement->NextSiblingElement();
+				}
+			}
+
+//-----------------------------------------------------------------------------
+// <Configuration::WriteXML>
+// Save the association data
+//-----------------------------------------------------------------------------
+			void Configuration::WriteXML(TiXmlElement* _ccElement)
+			{
+				CommandClass::WriteXML(_ccElement);
+
+				if (Node* node = GetNodeUnsafe())
+				{
+					TiXmlElement* configElement = new TiXmlElement("ConfigParams");
+
+					char str[8];
+					snprintf(str, 8, "%d", m_numGroups);
+					configElement->SetAttribute("num_groups", str);
+
+					_ccElement->LinkEndChild(configElement);
+				}
+			}
+
 
 //-----------------------------------------------------------------------------
 // <Configuration::HandleMsg>
@@ -242,7 +291,18 @@ namespace OpenZWave
 					param.flags |= ConfigParamFlags_Info_Done;
 					m_ConfigParams[paramNo] = param;
 					uint16 nextParam = getField(_data, CC_Param_Size::CC_Param_Size_Short, position);
-					Log::Write(LogLevel_Warning, GetNodeId(), "Param %d Format: %d Size: %d Min: %d Max: %d Default %d Next %d", param.paramNo, param.format, paramSize, param.min, param.max, param.defaultval, nextParam);
+					if (GetVersion() >= 4) {
+						param.readonly = (_data[3] & 0x40);
+						param.altering = (_data[3] & 0x80);
+						param.advanced = (_data[position] & 0x01);
+						param.nobulk = (_data[position] & 0x02);
+					} else {
+						param.readonly = false;
+						param.altering = false;
+						param.advanced = false;
+						param.nobulk = false;
+					}
+					Log::Write(LogLevel_Warning, GetNodeId(), "Param %d Format: %d Size: %d Min: %d Max: %d Default %d ReadOnly %d Altering %d Advanced %d NoBulk %d Next %d", param.paramNo, param.format, paramSize, param.min, param.max, param.defaultval, param.readonly, param.altering, param.advanced, param.nobulk, nextParam);
 					
 
 					if (nextParam > 0) {
@@ -470,6 +530,14 @@ namespace OpenZWave
 				msg->Append((uint8) (_value & 0xff));
 				msg->Append(GetDriver()->GetTransmitOptions());
 				GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
+
+				if (m_ConfigParams.find(_parameter) != m_ConfigParams.end()) {
+					if (m_ConfigParams.at(_parameter).altering) {
+						Notification* notification = new Notification(Notification::Type_UserAlerts);
+	                	notification->SetUserAlertNotification(Notification::Alert_NodeReloadRequired);
+    	            	GetDriver()->QueueNotification(notification);
+					}
+				}
 			}
 //-----------------------------------------------------------------------------
 // <Configuration::processConfigParams>
@@ -496,13 +564,27 @@ namespace OpenZWave
 						if (Node* node = GetNodeUnsafe())
 						{
 							switch (it->second.format) {
+								case CC_Param_Format::CC_Param_Format_List:
+								{
+									/* I have no idea?!?!?!?!?:
+									 * CC:0070.03.0F.11.00A:
+									 * If the parameter format is “Enumerated”, the parameter MUST be treated as an unsigned integer. A graphical configuration tool SHOULD present this parameter as a series of radio buttons [11].
+									 * 
+									 * ehhhh... how? 
+									 * 
+									 * Maybe its Bit Positions... 1, 2, 4, 8, 16?
+									 */
+									Log::Write(LogLevel_Warning, GetNodeId(), "ConfigParam ValueList - TODO");
+									/* fall Through to next block and treat it as a Integer till we figure this out */
+								}
+
 								case CC_Param_Format::CC_Param_Format_Signed:
 								case CC_Param_Format::CC_Param_Format_Unsigned:
 								{
 									switch (it->second.size) {
 										case CC_Param_Size::CC_Param_Size_Byte:
 										{
-											node->CreateValueByte(ValueID::ValueGenre_Config, GetCommandClassId(), 1, it->first, it->second.name, "", false, false, (uint8) it->second.defaultval, 0);
+											node->CreateValueByte(ValueID::ValueGenre_Config, GetCommandClassId(), 1, it->first, it->second.name, "", it->second.readonly, false, (uint8) it->second.defaultval, 0);
 											if (Internal::VC::ValueByte *vb = static_cast<Internal::VC::ValueByte*>(GetValue(1, it->first))) {
 												vb->SetHelp(it->second.help);
 												vb->SetMin(it->second.min);
@@ -513,7 +595,7 @@ namespace OpenZWave
 										}
 										case CC_Param_Size::CC_Param_Size_Short:
 										{
-											node->CreateValueShort(ValueID::ValueGenre_Config, GetCommandClassId(), 1, it->first, it->second.name, "", false, false, (int16) it->second.defaultval, 0);
+											node->CreateValueShort(ValueID::ValueGenre_Config, GetCommandClassId(), 1, it->first, it->second.name, "", it->second.readonly, false, (int16) it->second.defaultval, 0);
 											if (Internal::VC::ValueShort *vs = static_cast<Internal::VC::ValueShort*>(GetValue(1, it->first))) {
 												vs->SetHelp(it->second.help);
 												vs->SetMin(it->second.min);
@@ -523,7 +605,7 @@ namespace OpenZWave
 										}
 										case CC_Param_Size::CC_Param_Size_Int:
 										{
-											node->CreateValueInt(ValueID::ValueGenre_Config, GetCommandClassId(), 1, it->first, it->second.name, "", false, false, (int32) it->second.defaultval, 0);
+											node->CreateValueInt(ValueID::ValueGenre_Config, GetCommandClassId(), 1, it->first, it->second.name, "", it->second.readonly, false, (int32) it->second.defaultval, 0);
 											if (Internal::VC::ValueInt *vi = static_cast<Internal::VC::ValueInt*>(GetValue(1, it->first))) {
 												vi->SetHelp(it->second.help);
 												vi->SetMin(it->second.min);
@@ -542,26 +624,13 @@ namespace OpenZWave
 								}
 								case CC_Param_Format::CC_Param_Format_BitSet:
 								{
-									node->CreateValueBitSet(ValueID::ValueGenre_Config, GetCommandClassId(), 1, it->first, it->second.name, "", false, false, it->second.defaultval, 0);
+									node->CreateValueBitSet(ValueID::ValueGenre_Config, GetCommandClassId(), 1, it->first, it->second.name, "", it->second.readonly, false, it->second.defaultval, 0);
 									if (Internal::VC::ValueBitSet *vbs = static_cast<Internal::VC::ValueBitSet *>(GetValue(1, it->first)))
 									{
 										vbs->SetHelp(it->second.help);
 										vbs->SetBitMask(it->second.max);
 										/* I think we need to create the BitFields. */
 									}
-									break;
-								}
-								case CC_Param_Format::CC_Param_Format_List:
-								{
-									/* I have no idea?!?!?!?!?:
-									 * CC:0070.03.0F.11.00A:
-									 * If the parameter format is “Enumerated”, the parameter MUST be treated as an unsigned integer. A graphical configuration tool SHOULD present this parameter as a series of radio buttons [11].
-									 * 
-									 * ehhhh... how? 
-									 * 
-									 * Maybe its Bit Positions... 1, 2, 4, 8, 16?
-									 */
-									Log::Write(LogLevel_Warning, GetNodeId(), "ConfigParam List TODO?");
 									break;
 								}
 							}
