@@ -96,7 +96,7 @@ namespace OpenZWave
 				while (configElement)
 				{
 					char const* str = configElement->Value();
-					if (str && !strcmp(str, "ConfigParams"))
+					if (str && !strcmp(str, "ConfigParam"))
 					{
 						int intVal;
 						if (TIXML_SUCCESS == configElement->QueryIntAttribute("param_no", &intVal))
