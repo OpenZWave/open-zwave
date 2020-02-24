@@ -51,9 +51,9 @@ namespace OpenZWave
 					{
 					}
 
-					static uint8 const StaticGetCommandClassId()
+					static ZW_CommandClasses const StaticGetCommandClassId()
 					{
-						return 0x90;
+						return ZW_CommandClasses::Energy_Production;
 					}
 					static string const StaticGetCommandClassName()
 					{
@@ -63,7 +63,7 @@ namespace OpenZWave
 					// From CommandClass
 					virtual bool RequestState(uint32 const _requestFlags, uint8 const _instance, Driver::MsgQueue const _queue) override;
 					virtual bool RequestValue(uint32 const _requestFlags, uint16 const _valueEnum, uint8 const _dummy, Driver::MsgQueue const _queue) override;
-					virtual uint8 const GetCommandClassId() const override
+					virtual ZW_CommandClasses const GetCommandClassId() const override
 					{
 						return StaticGetCommandClassId();
 					}

@@ -32,7 +32,6 @@
 #include <string>
 #include <string.h>
 #include "Defs.h"
-//#include "Driver.h"
 
 namespace OpenZWave
 {

@@ -29,6 +29,7 @@
 #include "command_classes/NoOperation.h"
 #include "Defs.h"
 #include "Msg.h"
+#include "MsgNew.h"
 #include "Node.h"
 #include "Driver.h"
 #include "platform/Log.h"
@@ -71,6 +72,16 @@ namespace OpenZWave
 				else
 					msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_NO_ROUTE);
 				GetDriver()->SendMsg(msg, _queue);
+
+				MsgNew<NoOperation_Cmd> *msg2 = new MsgNew<NoOperation_Cmd>(this, ZW_Message_Type::Request, ZW_Msg_Func::Send_Data, true);
+				msg2->setCommandClass(ZW_CommandClasses::No_Operation);
+				msg2->setTargetNode(GetNodeId());
+				msg2->setCommandClassCmd(NoOperation_Cmd::Nop);
+				if (!_route) 
+					msg2->setTransmitOptions(TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_NO_ROUTE);
+				msg2->send(_queue);
+
+
 			}
 		} // namespace CC
 	} // namespace Internal

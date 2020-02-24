@@ -104,7 +104,7 @@ namespace OpenZWave
 				bool requests = false;
 				if ((_requestFlags & RequestFlag_Static) && HasStaticRequest(StaticRequest_Values))
 				{
-					requests = RequestValue(_requestFlags, ValueID_Index_CentralScene::SceneCount, _instance, _queue);
+					requests = RequestValue(_requestFlags, CentralSceneCmd_Capability_Get, _instance, _queue);
 				}
 				return requests;
 			}
@@ -115,7 +115,7 @@ namespace OpenZWave
 //-----------------------------------------------------------------------------
 			bool CentralScene::RequestValue(uint32 const _requestFlags, uint16 const _what, uint8 const _instance, Driver::MsgQueue const _queue)
 			{
-				if (_what == ValueID_Index_CentralScene::SceneCount)
+				if (_what == CentralSceneCmd_Capability_Get)
 				{
 					Msg* msg = new Msg("CentralSceneCmd_Capability_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
 					msg->SetInstance(this, _instance);

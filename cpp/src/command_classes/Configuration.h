@@ -54,9 +54,9 @@ namespace OpenZWave
 					{
 					}
 
-					static uint8 const StaticGetCommandClassId()
+					static ZW_CommandClasses const StaticGetCommandClassId()
 					{
-						return 0x70;
+						return ZW_CommandClasses::Configuration;
 					}
 					static string const StaticGetCommandClassName()
 					{
@@ -67,7 +67,7 @@ namespace OpenZWave
 					void Set(uint16 const _parameter, int32 const _value, uint8 const _size);
 
 					// From CommandClass
-					virtual uint8 const GetCommandClassId() const override
+					virtual ZW_CommandClasses const GetCommandClassId() const override
 					{
 						return StaticGetCommandClassId();
 					}

@@ -32,6 +32,7 @@
 #include <map>
 #include <list>
 #include "Defs.h"
+#include "CommandClassCommands.h"
 
 namespace OpenZWave
 {
@@ -50,11 +51,12 @@ namespace OpenZWave
 					typedef CommandClass* (*pfnCreateCommandClass_t)(uint32 const _homeId, uint8 const _nodeId);
 
 					static void RegisterCommandClasses();
-					static CommandClass* CreateCommandClass(uint8 const _commandClassId, uint32 const _homeId, uint8 const _nodeId);
+					static CommandClass* CreateCommandClass(ZW_CommandClasses const _commandClassId, uint32 const _homeId, uint8 const _nodeId);
 
-					static bool IsSupported(uint8 const _commandClassId);
-					static string GetName(uint8 const _commandClassId);
-					static list<uint8> GetAdvertisedCommandClasses();
+					static bool IsSupported(uint16_t const _commandClassId);
+					static string GetName(uint16_t const _commandClassId);
+					static ZW_CommandClasses GetZWCommandClass(uint16_t const _commandClassId);
+					static list<ZW_CommandClasses> GetAdvertisedCommandClasses();
 				private:
 					CommandClasses();
 					CommandClasses(CommandClasses const&);					// prevent copy
@@ -66,22 +68,22 @@ namespace OpenZWave
 						return instance;
 					}
 
-					void Register(uint8 const _commandClassId, string const& _commandClassName, pfnCreateCommandClass_t _create, bool advertised = false);
-					void ParseCommandClassOption(string const& _optionStr, bool const _include);
-					uint8 GetCommandClassId(string const& _name);
+					void Register(ZW_CommandClasses const _commandClassId, string const& _commandClassName, pfnCreateCommandClass_t _create, bool advertised = false);
+					uint16_t GetCommandClassId(string const& _name);
 
-					pfnCreateCommandClass_t m_commandClassCreators[256];
-					map<string, uint8> m_namesToIDs;
+					map<ZW_CommandClasses, pfnCreateCommandClass_t> m_commandClassCreators;
+					map<string, uint16_t> m_namesToIDs;
 					/* a list of CommandClasses that are advertised on the controllers NIF packet and can be controlled
 					 * via other Nodes
 					 */
-					list<uint8> m_advertisedCommandClasses;
+					list<ZW_CommandClasses> m_advertisedCommandClasses;
 
 					// m_supportedCommandClasses uses single bits to mark whether OpenZWave supports a command class
 					// Checking this is not the same as looking for non-NULL entried in m_commandClassCreators, since
 					// this may be modified by the program options --Include and --Ingnore to filter out support
 					// for unwanted command classes.
-					uint32 m_supportedCommandClasses[8];
+					//list<ZW_CommandClasses> m_supportedCommandClasses;
+//					uint32 m_supportedCommandClasses[16];
 			};
 		} // namespace CC
 	} // namespace Internal

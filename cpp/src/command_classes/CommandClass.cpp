@@ -316,9 +316,16 @@ namespace OpenZWave
 							{
 								Log::Write(LogLevel_Warning, GetNodeId(), "    Invalid XML - CommandClass Attribute is wrong type or missing");
 								child = child->NextSiblingElement();
+								delete arcc;
 								continue;
 							}
-							arcc->cc = (uint8) temp;
+							if (ZW_CommandClasses::_is_valid(temp)) 
+								arcc->cc = temp;
+							else {
+								Log::Write(LogLevel_Warning, GetNodeId(), "    Invalid XML - CommandClass Attribute is wrong type or missing"); 
+								child = child->NextSiblingElement();
+								delete arcc;
+							}
 							if (child->QueryIntAttribute("RequestFlags", &temp) != TIXML_SUCCESS)
 							{
 								Log::Write(LogLevel_Warning, GetNodeId(), "    Invalid XML - RequestFlags Attribute is wrong type or missing");
@@ -340,7 +347,7 @@ namespace OpenZWave
 								continue;
 							}
 							arcc->index = (uint8) temp;
-							Log::Write(LogLevel_Info, GetNodeId(), "    CommandClass: %s, RequestFlags: %d, Instance: %d, Index: %d", CommandClasses::GetName(arcc->cc).c_str(), arcc->genre, arcc->instance, arcc->index);
+							Log::Write(LogLevel_Info, GetNodeId(), "    CommandClass: %s, RequestFlags: %d, Instance: %d, Index: %d", arcc->cc._to_string(), arcc->genre, arcc->instance, arcc->index);
 							rcc->RefreshClasses.push_back(arcc);
 							ok = true;
 						}
@@ -388,7 +395,7 @@ namespace OpenZWave
 							for (uint32 j = 0; j < rcc->RefreshClasses.size(); j++)
 							{
 								RefreshValue *arcc = rcc->RefreshClasses.at(j);
-								Log::Write(LogLevel_Debug, GetNodeId(), "Requesting Refresh of Value: CommandClass: %s Genre %d, Instance %d, Index %d", CommandClasses::GetName(arcc->cc).c_str(), arcc->genre, arcc->instance, arcc->index);
+								Log::Write(LogLevel_Debug, GetNodeId(), "Requesting Refresh of Value: CommandClass: %s Genre %d, Instance %d, Index %d", arcc->cc._to_string(), arcc->genre, arcc->instance, arcc->index);
 								if (CommandClass* cc = node->GetCommandClass(arcc->cc))
 								{
 									cc->RequestValue(arcc->genre, arcc->index, arcc->instance, Driver::MsgQueue_Send);
@@ -415,7 +422,7 @@ namespace OpenZWave
 				m_com.WriteXML(_ccElement);
 				m_dom.WriteXML(_ccElement);
 
-				snprintf(str, sizeof(str), "%d", GetCommandClassId());
+				snprintf(str, sizeof(str), "%d", GetCommandClassId()._value);
 				_ccElement->SetAttribute("id", str);
 				_ccElement->SetAttribute("name", GetCommandClassName().c_str());
 

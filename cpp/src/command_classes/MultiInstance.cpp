@@ -336,14 +336,18 @@ namespace OpenZWave
 					for (uint8 i = 0; i < numCommandClasses; ++i)
 					{
 						uint8 commandClassId = _data[i + 4];
-						if (commandClassId == 0xef)
+						if (commandClassId == ZW_CommandClasses::Mark)
 						{
 							afterMark = true;
 							Log::Write(LogLevel_Info, GetNodeId(), "    Controlled CommandClasses:");
 						}
 
 						if (m_com.GetFlagBool(COMPAT_FLAG_MI_REMOVECC, commandClassId) == true) {
-							Log::Write(LogLevel_Info, GetNodeId(), "        %s (%d) (Disabled By Config)", CommandClasses::GetName(commandClassId).c_str(), commandClassId);
+							if (ZW_CommandClasses::_is_valid(commandClassId)) { 
+								Log::Write(LogLevel_Info, GetNodeId(), "        %s (%d) (Disabled By Config)", ZW_CommandClasses(commandClassId)._to_string(), commandClassId);
+							} else {
+								Log::Write(LogLevel_Info, GetNodeId(), "        %d (%d) (Disabled By Config)", commandClassId, commandClassId);
+							}
 							continue;
 						}
 
