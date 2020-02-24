@@ -50,9 +50,9 @@ namespace OpenZWave
 					{
 					}
 
-					static uint8 const StaticGetCommandClassId()
+					static ZW_CommandClasses const StaticGetCommandClassId()
 					{
-						return 0x00;
+						return ZW_CommandClasses::No_Operation;
 					}
 					static string const StaticGetCommandClassName()
 					{
@@ -62,7 +62,7 @@ namespace OpenZWave
 					void Set(bool const _route, Driver::MsgQueue const _queue = Driver::MsgQueue_NoOp);
 
 					// From CommandClass
-					virtual uint8 const GetCommandClassId() const override
+					virtual ZW_CommandClasses const GetCommandClassId() const override
 					{
 						return StaticGetCommandClassId();
 					}

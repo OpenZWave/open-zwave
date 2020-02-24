@@ -36,7 +36,7 @@
 #include "command_classes/MultiInstance.h"
 #include "command_classes/Security.h"
 #include "aes/aescpp.h"
-
+#define DEBUG 1
 namespace OpenZWave
 {
 	namespace Internal

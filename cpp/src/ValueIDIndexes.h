@@ -32,6 +32,7 @@
  */
 
 #include <cstring>
+#include "Utils.h"
 
 #ifndef _ValueIDIndexes_H
 #define _ValueIDIndexes_H

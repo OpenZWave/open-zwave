@@ -1402,7 +1402,10 @@ bool Manager::GetNodeClassInformation(uint32 const _homeId, uint8 const _nodeId,
 // Get a String representing the Command Class Name
 //-----------------------------------------------------------------------------
 string Manager::GetCommandClassName(uint8 const _commandClassId) {
-	return OpenZWave::Internal::CC::CommandClasses::GetName(_commandClassId);
+	if (ZW_CommandClasses::_is_valid(_commandClassId))
+		return ZW_CommandClasses(_commandClassId)._to_string();
+	else
+		return OpenZWave::Internal::CC::CommandClasses::GetName(ZW_CommandClasses::Invalid);
 }
 
 //-----------------------------------------------------------------------------

@@ -72,9 +72,9 @@ namespace OpenZWave
 					}
 					virtual ~Security();
 
-					static uint8 const StaticGetCommandClassId()
+					static ZW_CommandClasses const StaticGetCommandClassId()
 					{
-						return 0x98;
+						return ZW_CommandClasses::Security_S0;
 					}
 					static string const StaticGetCommandClassName()
 					{
@@ -85,7 +85,7 @@ namespace OpenZWave
 					// From CommandClass
 					bool RequestState(uint32 const _requestFlags, uint8 const _instance, Driver::MsgQueue const _queue) override;
 					bool RequestValue(uint32 const _requestFlags, uint16 const _index, uint8 const _instance, Driver::MsgQueue const _queue) override;
-					virtual uint8 const GetCommandClassId() const override
+					virtual ZW_CommandClasses const GetCommandClassId() const override
 					{
 						return StaticGetCommandClassId();
 					}
