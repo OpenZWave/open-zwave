@@ -264,15 +264,5 @@ namespace OpenZWave
 struct tm *localtime_r(const time_t *_clock, struct tm *_result);
 #endif
 
-struct ignore_assign {
-    ignore_assign(int value) : _value(value) { }
-    operator int() const { return _value; }
-
-    const ignore_assign& operator =(int dummy) { (void)dummy; return *this; }
-
-    int _value;
-};
-
-
 #endif
 

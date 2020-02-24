@@ -30,7 +30,6 @@
 
 #include "command_classes/CommandClass.h"
 #include "TimerThread.h"
-#include "MsgNew.h"
 
 namespace OpenZWave
 {
@@ -45,7 +44,6 @@ namespace OpenZWave
 			class Alarm: public CommandClass, private Timer
 			{
 				public:
-
 					static CommandClass* Create(uint32 const _homeId, uint8 const _nodeId)
 					{
 						return new Alarm(_homeId, _nodeId);
@@ -55,9 +53,9 @@ namespace OpenZWave
 					}
 
 					/** \brief Get command class ID (1 byte) identifying this command class. */
-					static ZW_CommandClasses const StaticGetCommandClassId()
+					static uint8 const StaticGetCommandClassId()
 					{
-						return ZW_CommandClasses::Alarm;
+						return 0x71;
 					}
 					/** \brief Get a string containing the name of this command class. */
 					static string const StaticGetCommandClassName()
@@ -69,7 +67,7 @@ namespace OpenZWave
 					virtual bool RequestState(uint32 const _requestFlags, uint8 const _instance, Driver::MsgQueue const _queue) override;
 					virtual bool RequestValue(uint32 const _requestFlags, uint16 const _index, uint8 const _instance, Driver::MsgQueue const _queue) override;
 					/** \brief Get command class ID (1 byte) identifying this command class. (Inherited from CommandClass) */
-					virtual ZW_CommandClasses const GetCommandClassId() const override
+					virtual uint8 const GetCommandClassId() const override
 					{
 						return StaticGetCommandClassId();
 					}

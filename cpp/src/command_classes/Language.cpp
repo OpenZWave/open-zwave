@@ -57,7 +57,7 @@ namespace OpenZWave
 			{
 				if ((_requestFlags & RequestFlag_Static) && HasStaticRequest(StaticRequest_Values))
 				{
-					return RequestValue(_requestFlags, 0, _instance, _queue);
+					return RequestValue(_requestFlags, ValueID_Index_Language::Language, _instance, _queue);
 				}
 
 				return false;

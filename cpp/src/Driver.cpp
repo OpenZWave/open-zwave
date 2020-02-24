@@ -2612,9 +2612,9 @@ void Driver::HandleGetSerialAPICapabilitiesResponse(uint8* _data)
 	msg->Append(0x01);			// Specific Static PC Controller
 
 	/* get a list of Advertised Command Classes */
-	list<ZW_CommandClasses> advertisedCommandClasses = Internal::CC::CommandClasses::GetAdvertisedCommandClasses();
+	list<uint8> advertisedCommandClasses = Internal::CC::CommandClasses::GetAdvertisedCommandClasses();
 	msg->Append((uint8) advertisedCommandClasses.size());			// Length
-	for (list<ZW_CommandClasses>::iterator it = advertisedCommandClasses.begin(); it != advertisedCommandClasses.end(); ++it) {
+	for (list<uint8>::iterator it = advertisedCommandClasses.begin(); it != advertisedCommandClasses.end(); ++it) {
 		msg->Append(*it);
 	}
 	SendMsg(msg, MsgQueue_Command);

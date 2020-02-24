@@ -2180,12 +2180,9 @@ Internal::CC::CommandClass* Node::AddCommandClass(uint8 const _commandClassId)
 		// Class and instance have already been added
 		return NULL;
 	}
-	if (!ZW_CommandClasses::_is_valid(_commandClassId)) {
-		return NULL;
-	}
 
 	// Create the command class object and add it to our map
-	if (Internal::CC::CommandClass* pCommandClass = Internal::CC::CommandClasses::CreateCommandClass(ZW_CommandClasses(_commandClassId), m_homeId, m_nodeId))
+	if (Internal::CC::CommandClass* pCommandClass = Internal::CC::CommandClasses::CreateCommandClass(_commandClassId, m_homeId, m_nodeId))
 	{
 		m_commandClassMap[_commandClassId] = pCommandClass;
 

@@ -41,7 +41,6 @@
 #include "platform/Thread.h"
 #include "platform/TimeStamp.h"
 #include "aes/aescpp.h"
-//#include "MsgNew.h"
 
 namespace OpenZWave
 {
@@ -76,7 +75,6 @@ namespace OpenZWave
 		struct HttpDownload;
 		class ManufacturerSpecificDB;
 		class Msg;
-		class MsgBase;
 		class TimerThread;
 	}
 
@@ -214,16 +212,6 @@ namespace OpenZWave
 			//-----------------------------------------------------------------------------
 			//	Controller
 			//-----------------------------------------------------------------------------
-		public:
-			uint8 GetControllerNodeId() const
-			{
-				return m_Controller_nodeId;
-			}
-			bool IsBridgeController() const
-			{
-				return (m_libraryType == 7);
-			}
-
 		private:
 			// Controller Capabilities (return in FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES)
 			enum
@@ -252,6 +240,10 @@ namespace OpenZWave
 			{
 				return ((m_initCaps & InitCaps_SUC) != 0);
 			}
+			bool IsBridgeController() const
+			{
+				return (m_libraryType == 7);
+			}
 			bool IsInclusionController() const
 			{
 				return ((m_controllerCaps & ControllerCaps_SIS) != 0);
@@ -265,6 +257,10 @@ namespace OpenZWave
 			uint32 GetHomeId() const
 			{
 				return m_homeId;
+			}
+			uint8 GetControllerNodeId() const
+			{
+				return m_Controller_nodeId;
 			}
 			uint8 GetSUCNodeId() const
 			{

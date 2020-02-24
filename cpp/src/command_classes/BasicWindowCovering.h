@@ -50,9 +50,9 @@ namespace OpenZWave
 					{
 					}
 
-					static ZW_CommandClasses const StaticGetCommandClassId()
+					static uint8 const StaticGetCommandClassId()
 					{
-						return ZW_CommandClasses::Basic_Window_Covering;
+						return 0x50;
 					}
 					static string const StaticGetCommandClassName()
 					{
@@ -60,7 +60,7 @@ namespace OpenZWave
 					}
 
 					// From CommandClass
-					virtual ZW_CommandClasses const GetCommandClassId() const override
+					virtual uint8 const GetCommandClassId() const override
 					{
 						return StaticGetCommandClassId();
 					}

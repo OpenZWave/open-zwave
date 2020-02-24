@@ -54,7 +54,6 @@ namespace OpenZWave
 			class ValueStore;
 		}
 		class Msg;
-		class MsgBase;
 	}
 	class Options;
 	class Node;
@@ -115,8 +114,6 @@ namespace OpenZWave
 			friend class Internal::VC::Value;
 			friend class Internal::VC::ValueStore;
 			friend class Internal::Msg;
-			friend class Internal::MsgBase;
-
 
 		public:
 			typedef void (*pfnOnNotification_t)(Notification const* _pNotification, void* _context);

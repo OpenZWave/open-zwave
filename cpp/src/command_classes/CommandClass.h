@@ -35,7 +35,6 @@
 #include "Bitfield.h"
 #include "Driver.h"
 #include "CompatOptionManager.h"
-#include "CommandClassCommands.h"
 
 namespace OpenZWave
 {
@@ -85,7 +84,7 @@ namespace OpenZWave
 					}
 					virtual void refreshValuesOnWakeup();
 
-					virtual ZW_CommandClasses const GetCommandClassId() const = 0;
+					virtual uint8 const GetCommandClassId() const = 0;
 					virtual string const GetCommandClassName() const = 0;
 					string const GetCommandClassLabel();
 					void SetCommandClassLabel(string label);
@@ -220,12 +219,11 @@ namespace OpenZWave
 
 					typedef struct RefreshValue
 					{
-							ZW_CommandClasses cc;
+							uint8 cc;
 							uint8 genre;
 							uint8 instance;
 							uint16 index;
 							std::vector<RefreshValue *> RefreshClasses;
-							RefreshValue(): cc(ZW_CommandClasses::Invalid) {};
 					} RefreshValue;
 
 				protected:

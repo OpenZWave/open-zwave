@@ -114,48 +114,40 @@ namespace OpenZWave
 //-----------------------------------------------------------------------------
 			CommandClasses::CommandClasses()
 			{
+				memset(m_commandClassCreators, 0, sizeof(pfnCreateCommandClass_t) * 256);
+				memset(m_supportedCommandClasses, 0, sizeof(uint32) * 8);
 			}
 
 //-----------------------------------------------------------------------------
 //	<CommandClasses::IsSupported>
 //	Static method to determine whether a command class is supported
 //-----------------------------------------------------------------------------
-			bool CommandClasses::IsSupported(uint16_t const _commandClassId)
+			bool CommandClasses::IsSupported(uint8 const _commandClassId)
 			{
-				if (!ZW_CommandClasses::_is_valid(_commandClassId)) {
-					return false;
-				}
 				// Test the bit representing the command class
-				return (Get().m_commandClassCreators.count(ZW_CommandClasses(_commandClassId)));
+				return ((Get().m_supportedCommandClasses[_commandClassId >> 5] & (1u << (_commandClassId & 0x1f))) != 0);
 			}
-			std::string CommandClasses::GetName(uint16_t const _commandClassId)
+			std::string CommandClasses::GetName(uint8 const _commandClassId)
 			{
-				for (std::map<string, uint16_t>::iterator it = Get().m_namesToIDs.begin(); it != Get().m_namesToIDs.end(); it++)
+				for (std::map<string, uint8>::iterator it = Get().m_namesToIDs.begin(); it != Get().m_namesToIDs.end(); it++)
 				{
 					if (it->second == _commandClassId)
 						return it->first;
 				}
 				return string("Unknown");
 			}
-			ZW_CommandClasses CommandClasses::GetZWCommandClass(uint16_t const _commandClassId)
-			{
-				for (std::map<string, uint16_t>::iterator it = Get().m_namesToIDs.begin(); it != Get().m_namesToIDs.end(); it++)
-				{
-					if (it->second == _commandClassId)
-						return ZW_CommandClasses(it->second);
-				}
-				return ZW_CommandClasses::Invalid;
-			}
-
 //-----------------------------------------------------------------------------
 //	<CommandClasses::Register>
 //	Static method to register a command class creator method
 //-----------------------------------------------------------------------------
-			void CommandClasses::Register(ZW_CommandClasses const _commandClassId, string const& _commandClassName, pfnCreateCommandClass_t _creator, bool advertised)
+			void CommandClasses::Register(uint8 const _commandClassId, string const& _commandClassName, pfnCreateCommandClass_t _creator, bool advertised)
 			{
 				m_commandClassCreators[_commandClassId] = _creator;
-				m_namesToIDs[_commandClassName] = _commandClassId._value;
 
+				// Set the bit representing the command class
+				Get().m_supportedCommandClasses[_commandClassId >> 5] |= (1u << (_commandClassId & 0x1f));
+
+				m_namesToIDs[_commandClassName] = _commandClassId;
 				if (advertised)
 				{
 					/* ZWavePlus CC must always be first */
@@ -170,11 +162,8 @@ namespace OpenZWave
 //	<CommandClasses::CreateCommandClass>
 //	Create a command class object using the registered method
 //-----------------------------------------------------------------------------
-			CommandClass* CommandClasses::CreateCommandClass(ZW_CommandClasses const _commandClassId, uint32 const _homeId, uint8 const _nodeId)
+			CommandClass* CommandClasses::CreateCommandClass(uint8 const _commandClassId, uint32 const _homeId, uint8 const _nodeId)
 			{
-				if (_commandClassId == (const OpenZWave::ZW_CommandClasses)ZW_CommandClasses::Invalid) {
-					return NULL;
-				}
 				// Get a pointer to the required CommandClass's Create method
 				pfnCreateCommandClass_t creator = Get().m_commandClassCreators[_commandClassId];
 				if ( NULL == creator)
@@ -252,29 +241,89 @@ namespace OpenZWave
 				cc.Register(Version::StaticGetCommandClassId(), Version::StaticGetCommandClassName(), Version::Create);
 				cc.Register(WakeUp::StaticGetCommandClassId(), WakeUp::StaticGetCommandClassName(), WakeUp::Create);
 				cc.Register(ZWavePlusInfo::StaticGetCommandClassId(), ZWavePlusInfo::StaticGetCommandClassName(), ZWavePlusInfo::Create, true);
+
+				// Now all the command classes have been registered, we can modify the
+				// supported command classes array according to the program options.
+				string str;
+				Options::Get()->GetOptionAsString("Include", &str);
+				if (str != "")
+				{
+					// The include list has entries, so we assume that it is a
+					// complete list of what should be supported.
+					// Any existing support is cleared first.
+					memset(cc.m_supportedCommandClasses, 0, sizeof(uint32) * 8);
+					cc.ParseCommandClassOption(str, true);
+				}
+
+				// Apply the excluded command class option
+				Options::Get()->GetOptionAsString("Exclude", &str);
+				if (str != "")
+				{
+					cc.ParseCommandClassOption(str, false);
+				}
+			}
+
+//-----------------------------------------------------------------------------
+//	<CommandClasses::ParseCommandClassOption>
+//	Parse a comma delimited list of included/excluded command classes
+//-----------------------------------------------------------------------------
+			void CommandClasses::ParseCommandClassOption(string const& _optionStr, bool const _include)
+			{
+				size_t pos = 0;
+				size_t start = 0;
+				bool parsing = true;
+				while (parsing)
+				{
+					string ccStr;
+
+					pos = _optionStr.find_first_of(",", start);
+					if (string::npos == pos)
+					{
+						ccStr = _optionStr.substr(start);
+						parsing = false;
+					}
+					else
+					{
+						ccStr = _optionStr.substr(start, pos - start);
+						start = pos + 1;
+					}
+
+					if (ccStr != "")
+					{
+						uint8 ccIdx = GetCommandClassId(ccStr);
+						if (_include)
+						{
+							m_supportedCommandClasses[ccIdx >> 5] |= (1u << (ccIdx & 0x1f));
+						}
+						else
+						{
+							m_supportedCommandClasses[ccIdx >> 5] &= ~(1u << (ccIdx & 0x1f));
+						}
+					}
+				}
 			}
 
 //-----------------------------------------------------------------------------
 //	<CommandClasses::GetCommandClassId>
 //	Convert a command class name (e.g COMMAND_CLASS_BASIC) into its 8-bit ID
 //-----------------------------------------------------------------------------
-			uint16_t CommandClasses::GetCommandClassId(string const& _name)
+			uint8 CommandClasses::GetCommandClassId(string const& _name)
 			{
 				string upperName = ToUpper(_name);
-				map<string, uint16_t>::iterator it = m_namesToIDs.find(upperName);
+				map<string, uint8>::iterator it = m_namesToIDs.find(upperName);
 				if (it != m_namesToIDs.end())
 				{
 					return it->second;
 				}
 
-				return ZW_CommandClasses::Invalid;
+				return 0xff;
 			}
 
 //-----------------------------------------------------------------------------
 //	<CommandClasses::GetAdvertisedCommandClasses>
 //	return a list of Advertised CommandClasses
 //-----------------------------------------------------------------------------
-			std::list<ZW_CommandClasses> CommandClasses::GetAdvertisedCommandClasses()
+			std::list<uint8> CommandClasses::GetAdvertisedCommandClasses()
 			{
 				CommandClasses& cc = Get();
 				return cc.m_advertisedCommandClasses;

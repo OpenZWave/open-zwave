@@ -53,7 +53,6 @@ namespace OpenZWave
 		namespace CC
 		{
 
-#if 0
 			enum AlarmCmd
 			{
 				AlarmCmd_Get = 0x04,
@@ -66,7 +65,6 @@ namespace OpenZWave
 				AlarmCmd_Event_Supported_Get = 0x01,
 				AlarmCmd_Event_Supported_Report = 0x02
 			};
-#endif
 
 //-----------------------------------------------------------------------------
 // <Alarm::Alarm>
@@ -97,7 +95,7 @@ namespace OpenZWave
 						msg->Append(GetNodeId());
 						msg->Append(2);
 						msg->Append(GetCommandClassId());
-						msg->Append(Alarm_Cmd::Get_Supported);
+						msg->Append(AlarmCmd_SupportedGet);
 						msg->Append(GetDriver()->GetTransmitOptions());
 						GetDriver()->SendMsg(msg, _queue);
 					}
@@ -156,7 +154,7 @@ namespace OpenZWave
 						msg->Append(GetNodeId());
 						msg->Append(2);
 						msg->Append(GetCommandClassId());
-						msg->Append(Alarm_Cmd::Get);
+						msg->Append(AlarmCmd_Get);
 						msg->Append(GetDriver()->GetTransmitOptions());
 						GetDriver()->SendMsg(msg, _queue);
 						return true;
@@ -169,7 +167,7 @@ namespace OpenZWave
 						msg->Append(GetNodeId());
 						msg->Append(GetVersion() == 2 ? 4 : 5);
 						msg->Append(GetCommandClassId());
-						msg->Append(Alarm_Cmd::Get);
+						msg->Append(AlarmCmd_Get);
 						msg->Append(0x00); /* we don't get Version 1/2 Alarm Types  */
 						msg->Append(0xFF);
 						if (GetVersion() > 2)
@@ -194,7 +192,7 @@ namespace OpenZWave
 			bool Alarm::HandleMsg(uint8 const* _data, uint32 const _length, uint32 const _instance	// = 1
 					)
 			{
-				if (Alarm_Cmd::Report == _data[0])
+				if (AlarmCmd_Report == (AlarmCmd) _data[0])
 				{
 					Log::Write(LogLevel_Info, GetNodeId(), "Got a AlarmCmd_Report Message.... ");
 					// We have received a report from the Z-Wave device
@@ -454,7 +452,7 @@ namespace OpenZWave
 					return true;
 				}
 
-				if (Alarm_Cmd::Report_Supported == _data[0])
+				if (AlarmCmd_SupportedReport == (AlarmCmd) _data[0])
 				{
 					if (Node* node = GetNodeUnsafe())
 					{
@@ -508,7 +506,7 @@ namespace OpenZWave
 										msg->Append(GetNodeId());
 										msg->Append(3);
 										msg->Append(GetCommandClassId());
-										msg->Append(Alarm_Cmd::Get_Supported_Event);
+										msg->Append(AlarmCmd_Event_Supported_Get);
 										msg->Append(index);
 										msg->Append(GetDriver()->GetTransmitOptions());
 										GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
@@ -519,7 +517,7 @@ namespace OpenZWave
 					}
 					return true;
 				}
-				if (Alarm_Cmd::Report_Supported_Event == _data[0])
+				if (AlarmCmd_Event_Supported_Report == (AlarmCmd) _data[0])
 				{
 					//			if( Node* node = GetNodeUnsafe() )
 					{

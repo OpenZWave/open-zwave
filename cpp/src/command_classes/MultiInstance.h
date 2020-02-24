@@ -68,9 +68,9 @@ namespace OpenZWave
 					{
 					}
 
-					static ZW_CommandClasses const StaticGetCommandClassId()
+					static uint8 const StaticGetCommandClassId()
 					{
-						return ZW_CommandClasses::MultiChannel;
+						return 0x60;
 					}
 					static string const StaticGetCommandClassName()
 					{
@@ -80,7 +80,7 @@ namespace OpenZWave
 					bool RequestInstances();
 
 					// From CommandClass
-					virtual ZW_CommandClasses const GetCommandClassId() const override
+					virtual uint8 const GetCommandClassId() const override
 					{
 						return StaticGetCommandClassId();
 					}

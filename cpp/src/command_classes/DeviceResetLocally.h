@@ -51,9 +51,9 @@ namespace OpenZWave
 					{
 					}
 
-					static ZW_CommandClasses const StaticGetCommandClassId()
+					static uint8 const StaticGetCommandClassId()
 					{
-						return ZW_CommandClasses::Device_Reset_Locally;
+						return 0x5a;
 					}
 					static string const StaticGetCommandClassName()
 					{
@@ -61,7 +61,7 @@ namespace OpenZWave
 					}
 
 					// From CommandClass
-					virtual ZW_CommandClasses const GetCommandClassId() const override
+					virtual uint8 const GetCommandClassId() const override
 					{
 						return StaticGetCommandClassId();
 					}

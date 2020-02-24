@@ -53,9 +53,9 @@ namespace OpenZWave
 					}
 
 					/** \brief Get command class ID (1 byte) identifying this command class. */
-					static ZW_CommandClasses const StaticGetCommandClassId()
+					static uint8 const StaticGetCommandClassId()
 					{
-						return ZW_CommandClasses::Central_Scene;
+						return 0x5B;
 					}
 					/** \brief Get a string containing the name of this command class. */
 					static string const StaticGetCommandClassName()
@@ -65,7 +65,7 @@ namespace OpenZWave
 
 					// From CommandClass
 					/** \brief Get command class ID (1 byte) identifying this command class. (Inherited from CommandClass) */
-					virtual ZW_CommandClasses const GetCommandClassId() const override
+					virtual uint8 const GetCommandClassId() const override
 					{
 						return StaticGetCommandClassId();
 					}

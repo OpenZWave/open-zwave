@@ -66,7 +66,6 @@ namespace OpenZWave
 			WakeUp::WakeUp(uint32 const _homeId, uint8 const _nodeId) :
 					CommandClass(_homeId, _nodeId), m_mutex(new Internal::Platform::Mutex()), m_awake(true), m_pollRequired(false), m_interval(0)
 			{
-				std::cout << "Wake Up!" << std::endl;
 				Timer::SetDriver(GetDriver());
 				Options::Get()->GetOptionAsBool("AssumeAwake", &m_awake);
 				m_com.EnableFlag(COMPAT_FLAG_WAKEUP_DELAYNMI, 0);
@@ -79,7 +78,6 @@ namespace OpenZWave
 //-----------------------------------------------------------------------------
 			WakeUp::~WakeUp()
 			{
-				std::cout << "Bye Bye " << std::endl;
 				m_mutex->Release();
 				while (!m_pendingQueue.empty())
 				{

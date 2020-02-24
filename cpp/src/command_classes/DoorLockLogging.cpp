@@ -116,12 +116,12 @@ namespace OpenZWave
 				bool requests = false;
 				if ((_requestFlags & RequestFlag_Static) && HasStaticRequest(StaticRequest_Values))
 				{
-					requests = RequestValue(_requestFlags, DoorLockLoggingCmd_RecordSupported_Get, _instance, _queue);
+					requests = RequestValue(_requestFlags, ValueID_Index_DoorLockLogging::System_Config_MaxRecords, _instance, _queue);
 				}
 
 				if (_requestFlags & RequestFlag_Dynamic)
 				{
-					requests |= RequestValue(_requestFlags, DoorLockLoggingCmd_Record_Get, _instance, _queue);
+					requests |= RequestValue(_requestFlags, ValueID_Index_DoorLockLogging::LogRecord, _instance, _queue);
 				}
 
 				return requests;
@@ -133,7 +133,7 @@ namespace OpenZWave
 //-----------------------------------------------------------------------------
 			bool DoorLockLogging::RequestValue(uint32 const _requestFlags, uint16 const _what, uint8 const _instance, Driver::MsgQueue const _queue)
 			{
-				if (_what == DoorLockLoggingCmd_RecordSupported_Get)
+				if (_what == ValueID_Index_DoorLockLogging::System_Config_MaxRecords)
 				{
 					Msg* msg = new Msg("DoorLockLoggingCmd_RecordSupported_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
 					msg->SetInstance(this, _instance);
@@ -146,7 +146,7 @@ namespace OpenZWave
 					return true;
 
 				}
-				else if (_what == DoorLockLoggingCmd_Record_Get)
+				else if (_what == ValueID_Index_DoorLockLogging::LogRecord)
 				{
 					Msg* msg = new Msg("DoorLockLoggingCmd_Record_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
 					msg->SetInstance(this, _instance);
