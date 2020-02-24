@@ -72,4 +72,10 @@
   <!-- Should OZW include any Instance Labels on ValueID Labels -->
   <!-- <Option name="IncludeInstanceLabel" value="false" /> -->
   
+  <!-- 700 Series Sticks/Controllers allow the user to change the region/frequency they operate at 
+  so you can use this option to set your stick to the correct frequency.
+  Options are "EU", "US", "AU/NZ", "HK", "MY", "IN", "IL", "RU", "CN", "JP", "KR"
+  if you do not specify this option, or leave it blank, OZW will not attempt to change the frequency
+  -->
+  <!-- <Option name="RFRegion" value="EU" /> --> 
 </Options>

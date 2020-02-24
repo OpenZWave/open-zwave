@@ -523,6 +523,22 @@ bool Manager::IsBridgeController(uint32 const _homeId)
 }
 
 //-----------------------------------------------------------------------------
+// <Manager::GetControllerRegion>
+//
+//-----------------------------------------------------------------------------
+ZW_RFRegion Manager::GetControllerRegion(uint32 const _homeId)
+{
+	if (Driver* driver = GetDriver(_homeId))
+	{
+		return driver->GetControllerRegion();
+	}
+
+	Log::Write(LogLevel_Info, "mgr,     GetControllerRegion() failed - _homeId %d not found", _homeId);
+	return ZW_RFRegion::RF_REGION_UNKNOWN;
+}
+
+
+//-----------------------------------------------------------------------------
 // <Manager::HasExtendedTxStatus>
 //
 //-----------------------------------------------------------------------------

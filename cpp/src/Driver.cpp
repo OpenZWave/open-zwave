@@ -115,7 +115,7 @@ static char const* c_sendQueueNames[] =
 //-----------------------------------------------------------------------------
 Driver::Driver(string const& _controllerPath, ControllerInterface const& _interface) :
 		m_driverThread(new Internal::Platform::Thread("driver")), m_dns(new Internal::DNSThread(this)), m_dnsThread(new Internal::Platform::Thread("dns")), m_initMutex(new Internal::Platform::Mutex()), m_exit(false), m_init(false), m_awakeNodesQueried(false), m_allNodesQueried(false), m_notifytransactions(false), m_timer(new Internal::TimerThread(this)), m_timerThread(new Internal::Platform::Thread("timer")), m_controllerInterfaceType(_interface), m_controllerPath(_controllerPath), m_controller(
-				NULL), m_homeId(0), m_libraryVersion(""), m_libraryTypeName(""), m_libraryType(0), m_manufacturerId(0), m_productType(0), m_productId(0), m_initVersion(0), m_initCaps(0), m_controllerCaps(0), m_Controller_nodeId(0), m_nodeMutex(new Internal::Platform::Mutex()), m_controllerReplication( NULL), m_transmitOptions( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE | TRANSMIT_OPTION_EXPLORE), m_waitingForAck(false), m_expectedCallbackId(0), m_expectedReply(0), m_expectedCommandClassId(
+				NULL), m_homeId(0), m_libraryVersion(""), m_libraryTypeName(""), m_libraryType(0), m_manufacturerId(0), m_productType(0), m_productId(0), m_rfregion(ZW_RFRegion::RF_REGION_UNKNOWN), m_initVersion(0), m_initCaps(0), m_controllerCaps(0), m_Controller_nodeId(0), m_nodeMutex(new Internal::Platform::Mutex()), m_controllerReplication( NULL), m_transmitOptions( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE | TRANSMIT_OPTION_EXPLORE), m_waitingForAck(false), m_expectedCallbackId(0), m_expectedReply(0), m_expectedCommandClassId(
 				0), m_expectedNodeId(0), m_pollThread(new Internal::Platform::Thread("poll")), m_pollMutex(new Internal::Platform::Mutex()), m_pollInterval(0), m_bIntervalBetweenPolls(false),				// if set to true (via SetPollInterval), the pollInterval will be interspersed between each poll (so a much smaller m_pollInterval like 100, 500, or 1,000 may be appropriate)
 		m_currentControllerCommand( NULL), m_SUCNodeId(0), m_controllerResetEvent( NULL), m_sendMutex(new Internal::Platform::Mutex()), m_currentMsg( NULL), m_virtualNeighborsReceived(false), m_notificationsEvent(new Internal::Platform::Event()), m_SOFCnt(0), m_ACKWaiting(0), m_readAborts(0), m_badChecksum(0), m_readCnt(0), m_writeCnt(0), m_CANCnt(0), m_NAKCnt(0), m_ACKCnt(0), m_OOFCnt(0), m_dropped(0), m_retries(0), m_callbacks(0), m_badroutes(0), m_noack(0), m_netbusy(0), m_notidle(0), m_txverified(
 				0), m_nondelivery(0), m_routedbusy(0), m_broadcastReadCnt(0), m_broadcastWriteCnt(0), AuthKey(0), EncryptKey(0), m_nonceReportSent(0), m_nonceReportSentAttempt(0), m_queueMsgEvent(new Internal::Platform::Event()), m_eventMutex(new Internal::Platform::Mutex())
@@ -794,11 +794,11 @@ void Driver::WriteCache()
 				if (m_nodes[i]->GetCurrentQueryStage() >= Node::QueryStage_CacheLoad)
 				{
 					m_nodes[i]->WriteXML(driverElement);
-					Log::Write(LogLevel_Info, i, "Cache Save for Node %d as its QueryStage_CacheLoad", i);
+					Log::Write(LogLevel_Info, i, "Cache Save for Node %d as its %s", i, m_nodes[i]->GetQueryStageName(m_nodes[i]->GetCurrentQueryStage()).c_str());
 				}
 				else
 				{
-					Log::Write(LogLevel_Info, i, "Skipping Cache Save for Node %d as its not past QueryStage_CacheLoad", i);
+					Log::Write(LogLevel_Info, i, "Skipping Cache Save for Node %d as its not past QueryStage_CacheLoad: %s", i, m_nodes[i]->GetQueryStageName(m_nodes[i]->GetCurrentQueryStage()).c_str());
 				}
 			}
 		}
@@ -2507,25 +2507,95 @@ void Driver::HandleSerialAPISetupResponse(uint8* _data)
 	// See INS13954 for description of FUNC_ID_SERIAL_API_SETUP with command 
 	// SERIAL_API_SETUP_CMD_TX_STATUS_REPORT
 	// Note: SERIAL_API_SETUP can do more things than enable this report...
-
+	static ZW_RFRegion pendingRegion = ZW_RFRegion::RF_REGION_UNKNOWN;
 	Log::Write(LogLevel_Info, "Received reply to FUNC_ID_SERIAL_API_SETUP");
-
-	switch (_data[0])
+	switch (_data[2]) 
 	{
-		case 1:
-			Log::Write(LogLevel_Info, "Successfully enabled extended txStatusReport.");
-			m_hasExtendedTxStatus = true;
+		case SERIAL_API_SETUP_CMD_SUPPORTED:
+		{
+			Log::Write(LogLevel_Info, "Got SerialAPI Supported Commands Report: %d", _data[3]);
+			m_serialapiMask = _data[3];
+			if (m_serialapiMask & SERIAL_API_SETUP_CMD_TX_STATUS_REPORT) 
+			{
+				Internal::Msg *msg = new Internal::Msg("SERIAL_API_SETUP_CMD_TX_STATUS_REPORT", 0xff, REQUEST, FUNC_ID_SERIAL_API_SETUP, false);
+				msg->Append( SERIAL_API_SETUP_CMD_TX_STATUS_REPORT);
+				msg->Append(1);
+				SendMsg(msg, MsgQueue_Command);
+			}
+			if (m_serialapiMask & SERIAL_API_SETUP_CMD_RF_REGION_GET)
+			{
+				Internal::Msg *msg = new Internal::Msg("SERIAL_API_SETUP_CMD_RF_REGION_GET", 0xff, REQUEST, FUNC_ID_SERIAL_API_SETUP, false);
+				msg->Append( SERIAL_API_SETUP_CMD_RF_REGION_GET);
+				SendMsg(msg, MsgQueue_Command);
+			}
 			break;
+		}
+		case SERIAL_API_SETUP_CMD_TX_STATUS_REPORT:
+		{
+			switch (_data[3])
+			{
+				case 1:
+					Log::Write(LogLevel_Info, "Successfully enabled extended txStatusReport.");
+					m_hasExtendedTxStatus = true;
+					break;
 
-		case 0:
-			Log::Write(LogLevel_Info, "Failed to enable extended txStatusReport. Controller might not support it.");
-			m_hasExtendedTxStatus = false;
-			break;
+				case 0:
+					Log::Write(LogLevel_Info, "Failed to enable extended txStatusReport. Controller might not support it.");
+					m_hasExtendedTxStatus = false;
+					break;
 
-		default:
-			Log::Write(LogLevel_Info, "FUNC_ID_SERIAL_API_SETUP returned unknown status: %u", _data[0]);
-			m_hasExtendedTxStatus = false;
+				default:
+					Log::Write(LogLevel_Info, "FUNC_ID_SERIAL_API_SETUP returned unknown status: %u", _data[3]);
+					m_hasExtendedTxStatus = false;
+					break;
+			}
 			break;
+		}
+		case SERIAL_API_SETUP_CMD_RF_REGION_GET:
+		{
+			Log::Write(LogLevel_Always, "Controller is set to %s Region", Internal::RFRegionFromCode((ZW_RFRegion)_data[3]).c_str());
+			if (Internal::ToUpper(Internal::RFRegionFromCode((ZW_RFRegion)_data[3])) != "UNKNOWN") {
+				m_rfregion = (ZW_RFRegion)_data[3];
+			} else {
+				Log::Write(LogLevel_Warning, "Unknown RF Region Returned From Controller: %d", _data[3]);
+				return;
+			}
+			string region;
+			if (Options::Get()->GetOptionAsString("RFRegion", &region)) {
+				if (region.empty()) {
+					Log::Write(LogLevel_Info, "Not Changing RFRegion of Controller");
+				} else { 
+					if (Internal::RFRegionFromString(region) == 0xFF) {
+						Log::Write(LogLevel_Warning, "Invalid RFRegion Specified in Options: %s", region.c_str());
+					} else if (Internal::RFRegionFromString(region) != _data[3]) {
+						if (m_serialapiMask & SERIAL_API_SETUP_CMD_RF_REGION_SET)
+						{
+							Log::Write(LogLevel_Always, "Setting Controller to RF Region %s", region.c_str());
+							Internal::Msg *msg = new Internal::Msg("SERIAL_API_SETUP_CMD_RF_REGION_SET", 0xff, REQUEST, FUNC_ID_SERIAL_API_SETUP, false);
+							msg->Append( SERIAL_API_SETUP_CMD_RF_REGION_SET);
+							msg->Append(Internal::RFRegionFromString(region));
+							SendMsg(msg, MsgQueue_Command);
+							pendingRegion = Internal::RFRegionFromString(region);
+						}
+					} else {
+						Log::Write(LogLevel_Info, "Not Changing RFRegion of Controller");
+					}
+				}
+			}
+			break;
+		}
+		case SERIAL_API_SETUP_CMD_RF_REGION_SET:
+		{
+			if (_data[3]) {
+				if (pendingRegion != 0xFF) {
+					m_rfregion = pendingRegion;
+					Log::Write(LogLevel_Always, "Successfully set new RFRegion on Controller: %s", Internal::RFRegionFromCode(m_rfregion).c_str());
+				}
+			} else {
+				Log::Write(LogLevel_Warning, "Couldn't Set new Region %s on Controller", Internal::RFRegionFromCode(pendingRegion).c_str());
+			}
+		}
+		break;
 	}
 }
 
@@ -2577,11 +2647,12 @@ void Driver::HandleGetSerialAPICapabilitiesResponse(uint8* _data)
 	m_productType = (((uint16) _data[6]) << 8) | (uint16) _data[7];
 	m_productId = (((uint16) _data[8]) << 8) | (uint16) _data[9];
 	memcpy(m_apiMask, &_data[10], sizeof(m_apiMask));
-
+	Internal::PrintHex("API Mask: ", m_apiMask, sizeof(m_apiMask));
 	if (IsBridgeController())
 	{
 		SendMsg(new Internal::Msg("FUNC_ID_ZW_GET_VIRTUAL_NODES", 0xff, REQUEST, FUNC_ID_ZW_GET_VIRTUAL_NODES, false), MsgQueue_Command);
 	}
+
 	if (IsAPICallSupported( FUNC_ID_ZW_GET_RANDOM))
 
 	{
@@ -2591,12 +2662,13 @@ void Driver::HandleGetSerialAPICapabilitiesResponse(uint8* _data)
 	}
 
 	if (IsAPICallSupported( FUNC_ID_SERIAL_API_SETUP))
-
-	{
-		Internal::Msg *msg = new Internal::Msg("FUNC_ID_SERIAL_API_SETUP", 0xff, REQUEST, FUNC_ID_SERIAL_API_SETUP, false);
-		msg->Append( SERIAL_API_SETUP_CMD_TX_STATUS_REPORT);
-		msg->Append(1);
-		SendMsg(msg, MsgQueue_Command);
+	{	
+		{
+			Internal::Msg *msg = new Internal::Msg("FUNC_ID_SERIAL_API_SETUP", 0xff, REQUEST, FUNC_ID_SERIAL_API_SETUP, false);
+			msg->Append( SERIAL_API_SETUP_CMD_SUPPORTED);
+			msg->Append(1);
+			SendMsg(msg, MsgQueue_Command);
+		}
 	}
 
 	SendMsg(new Internal::Msg("FUNC_ID_SERIAL_API_GET_INIT_DATA", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_INIT_DATA, false), MsgQueue_Command);

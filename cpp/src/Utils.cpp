@@ -204,6 +204,64 @@ namespace OpenZWave
 					}
 			}
 		}
+		ZW_RFRegion RFRegionFromString(string region) 
+		{
+			if (Internal::ToUpper(region) == "EU")
+				return ZW_RFRegion::RF_REGION_EU;
+			else if (Internal::ToUpper(region) == "US")
+				return ZW_RFRegion::RF_REGION_US;
+			else if (Internal::ToUpper(region) == "AU/NZ")
+				return ZW_RFRegion::RF_REGION_AUNZ;
+			else if (Internal::ToUpper(region) == "HK")
+				return ZW_RFRegion::RF_REGION_HK;
+			else if (Internal::ToUpper(region) == "MY")
+				return ZW_RFRegion::RF_REGION_MY;
+			else if (Internal::ToUpper(region) == "IN")
+				return ZW_RFRegion::RF_REGION_IN;
+			else if (Internal::ToUpper(region) == "IL")
+				return ZW_RFRegion::RF_REGION_IL;
+			else if (Internal::ToUpper(region) == "RU")
+				return ZW_RFRegion::RF_REGION_RU;
+			else if (Internal::ToUpper(region) == "CN")
+				return ZW_RFRegion::RF_REGION_CN;
+			else if (Internal::ToUpper(region) == "JP")
+				return ZW_RFRegion::RF_REGION_JP;
+			else if (Internal::ToUpper(region) == "KR")
+				return ZW_RFRegion::RF_REGION_KR;
+			return ZW_RFRegion::RF_REGION_UNKNOWN;
+		}
+		string RFRegionFromCode (ZW_RFRegion code) 
+		{
+			switch (code) 
+			{
+				case ZW_RFRegion::RF_REGION_EU:
+					return "EU";
+				case ZW_RFRegion::RF_REGION_US:
+					return "US";
+				case ZW_RFRegion::RF_REGION_AUNZ:
+					return "AU/NZ";
+				case ZW_RFRegion::RF_REGION_HK:
+					return "HK";
+				case ZW_RFRegion::RF_REGION_MY:
+					return "MY";
+				case ZW_RFRegion::RF_REGION_IN:
+					return "IN";
+				case ZW_RFRegion::RF_REGION_IL:
+					return "IL";
+				case ZW_RFRegion::RF_REGION_RU:
+					return "RU";
+				case ZW_RFRegion::RF_REGION_CN:
+					return "CN";
+				case ZW_RFRegion::RF_REGION_JP:
+					return "JP";
+				case ZW_RFRegion::RF_REGION_KR:
+					return "KR";
+				case ZW_RFRegion::RF_REGION_UNKNOWN:
+				default: {
+					return ("Unknown");
+				}
+			}
+		}
 	} // namespace Internal
 } // namespace OpenZWave
 

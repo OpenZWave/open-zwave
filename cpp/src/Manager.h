@@ -301,6 +301,14 @@ namespace OpenZWave
 			bool IsBridgeController(uint32 const _homeId);
 
 			/**
+			 * \brief Query if the Region the Controller is running on
+			 * Only Supported for 700 Series Controllers
+			 * \param _homeId The Home ID of the Z-Wave controller.
+			 * \return The Region the Controller is running in, if we can determine
+			 */
+			ZW_RFRegion GetControllerRegion(uint32 const _homeId);
+
+			/**
 			 * \brief Query if the controller support "extended status information"
 			 * On IMA enabled targets build on SDK >= 6.60.00
 			 * ZW_SendData can return information about TX time, route tries and more.

@@ -135,6 +135,7 @@ Options* Options::Create(string const& _configPath, string const& _userPath, str
 #if defined WINRT
 				s_instance->AddOptionInt( "ThreadTerminateTimeout", -1);						// Since threads cannot be terminated in WinRT, Thread::Terminate will simply wait for them to exit on there own
 #endif
+		s_instance->AddOptionString("RFRegion", "", false);					// RFRegion to set the Stick too. Blank - Don't change
 	}
 
 	return s_instance;
@@ -590,3 +591,4 @@ bool Options::Option::SetValueFromString(string const& _value)
 
 	return false;
 }
+

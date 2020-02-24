@@ -248,12 +248,14 @@ namespace OpenZWave
 			{
 				return ((m_controllerCaps & ControllerCaps_SIS) != 0);
 			}
-
+			ZW_RFRegion GetControllerRegion() const
+			{
+				return m_rfregion;
+			}
 			bool HasExtendedTxStatus() const
 			{
 				return m_hasExtendedTxStatus;
 			}
-
 			uint32 GetHomeId() const
 			{
 				return m_homeId;
@@ -337,6 +339,8 @@ namespace OpenZWave
 			uint16 m_productType;
 			uint16 m_productId;
 			uint8 m_apiMask[32];
+			uint8 m_serialapiMask;							// FUNC_ID_SERIAL_API_SETUP Commands Supported
+			ZW_RFRegion m_rfregion;
 
 			uint8 m_initVersion;								// Version of the Serial API used by the controller.
 			uint8 m_initCaps;									// Set of flags indicating the serial API capabilities (See IsSlave, HasTimerSupport, IsPrimaryController and IsStaticUpdateController above).
