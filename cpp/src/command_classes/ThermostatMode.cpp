@@ -331,6 +331,10 @@ namespace OpenZWave
 					} else {
 						m_currentMode = 0;
 					}
+					if (Node* node = GetNodeUnsafe())
+					{
+						node->CreateValueList(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_ThermostatMode::Mode, "Mode", "", false, false, 1, m_supportedModes, m_currentMode, 0);
+					}
 					return true;
 				}
 
@@ -371,10 +375,6 @@ namespace OpenZWave
 //-----------------------------------------------------------------------------
 			void ThermostatMode::CreateVars(uint8 const _instance)
 			{
-				if (Node* node = GetNodeUnsafe())
-				{
-					node->CreateValueList(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_ThermostatMode::Mode, "Mode", "", false, false, 1, m_supportedModes, m_currentMode, 0);
-				}
 			}
 		} // namespace CC
 	} // namespace Internal

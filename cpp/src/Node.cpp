@@ -271,6 +271,8 @@ void Node::AdvanceQueries()
 			}
 			case QueryStage_NodeInfo:
 			{
+				
+				Log::Write(LogLevel_Info, GetNodeId(), "NodeInfo Stage - NodeInfoRecieved %d - NotInfoSupported %d", NodeInfoReceived(), m_nodeInfoSupported);
 				if (!NodeInfoReceived() && m_nodeInfoSupported && (GetDriver()->GetControllerNodeId() != m_nodeId))
 				{
 					// obtain from the node a list of command classes that it 1) supports and 2) controls (separated by a mark in the buffer)
@@ -2181,21 +2183,24 @@ Internal::CC::CommandClass* Node::AddCommandClass(uint8 const _commandClassId)
 	{
 		m_commandClassMap[_commandClassId] = pCommandClass;
 
-		// Request the CC Version
-		Internal::CC::Version* vcc = static_cast<Internal::CC::Version*>(GetCommandClass(Internal::CC::Version::StaticGetCommandClassId()));
-		if (vcc)
-		{
-			if (pCommandClass->GetMaxVersion() > 1 && pCommandClass->GetVersion() == 0)
+
+		/* Only Request the CC Version if we are equal or after QueryStage_SecurityReport */
+		if (GetCurrentQueryStage() >= QueryStage_SecurityReport) {
+			Internal::CC::Version* vcc = static_cast<Internal::CC::Version*>(GetCommandClass(Internal::CC::Version::StaticGetCommandClassId()));
+			if (vcc)
 			{
-				Log::Write(LogLevel_Info, m_nodeId, "\t\tRequesting Versions for %s", pCommandClass->GetCommandClassName().c_str());
-				// Get the version for each supported command class that
-				// we have implemented at greater than version one.
-				vcc->RequestCommandClassVersion(pCommandClass);
-			}
-			else
-			{
-				// set the Version to 1 
-				pCommandClass->SetVersion(1);
+				if (pCommandClass->GetMaxVersion() > 1 && pCommandClass->GetVersion() == 0)
+				{
+					Log::Write(LogLevel_Info, m_nodeId, "\t\tRequesting Versions for %s", pCommandClass->GetCommandClassName().c_str());
+					// Get the version for each supported command class that
+					// we have implemented at greater than version one.
+					vcc->RequestCommandClassVersion(pCommandClass);
+				}
+				else
+				{
+					// set the Version to 1 
+					pCommandClass->SetVersion(1);
+				}
 			}
 		}
 		return pCommandClass;
@@ -3381,8 +3386,9 @@ void Node::ReadDeviceClasses()
 	TiXmlDocument doc;
 	if (!doc.LoadFile(filename.c_str(), TIXML_ENCODING_UTF8))
 	{
-		Log::Write(LogLevel_Info, "Failed to load device_classes.xml");
-		Log::Write(LogLevel_Info, "Check that the config path provided when creating the Manager points to the correct location.");
+		Log::Write(LogLevel_Warning, "Failed to load device_classes.xml");
+		Log::Write(LogLevel_Warning, "Check that the config path provided when creating the Manager points to the correct location.");
+		Log::Write(LogLevel_Warning, "tinyXML Reported %s", doc.ErrorDesc());
 		return;
 	}
 	doc.SetUserData((void *) filename.c_str());
