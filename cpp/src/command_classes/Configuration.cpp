@@ -92,22 +92,50 @@ namespace OpenZWave
 			{
 				CommandClass::ReadXML(_ccElement);
 
-				TiXmlElement const* configElement = _ccElement->FirstChildElement();
-				while (configElement)
+				TiXmlElement const* configParamsElement = _ccElement->FirstChildElement();
+				while (configParamsElement)
 				{
-					char const* str = configElement->Value();
-					if (str && !strcmp(str, "ConfigParam"))
+					char const* str = configParamsElement->Value();
+					if (str && !strcmp(str, "ConfigParams"))
 					{
-						int intVal;
-						if (TIXML_SUCCESS == configElement->QueryIntAttribute("param_no", &intVal))
-						{
-							m_numGroups = (uint8) intVal;
+						TiXmlElement const* configParam = configParamsElement->FirstChildElement();
+						ConfigParam param;
+						int value;
+						if (!configParam->QueryIntAttribute("index", &value)) {
+							Log::Write(LogLevel_Warning, GetNodeId(), "Missing Index Value on ConfigParam at Row %s", _ccElement->Row());
+							continue;
+						} else {
+							param.paramNo = (int16)(value & 0xFFFF);
 						}
-
-						break;
+						if (!configParam->QueryIntAttribute("altering", &value)) {
+							Log::Write(LogLevel_Warning, GetNodeId(), "Missing altering Value on ConfigParam at Row %s", _ccElement->Row());
+							continue;
+						} else {
+							param.altering = value > 0 ? true : false;
+						}
+						if (!configParam->QueryIntAttribute("advanced", &value)) {
+							Log::Write(LogLevel_Warning, GetNodeId(), "Missing advanced Value on ConfigParam at Row %s", _ccElement->Row());
+							continue;
+						} else {
+							param.advanced = value > 0 ? true : false;
+						}
+						if (!configParam->QueryIntAttribute("nobulk", &value)) {
+							Log::Write(LogLevel_Warning, GetNodeId(), "Missing nobulk Value on ConfigParam at Row %s", _ccElement->Row());
+							continue;
+						} else {
+							param.nobulk = value > 0 ? true : false;
+						}
+						if (!configParam->QueryIntAttribute("default", &value)) {
+							Log::Write(LogLevel_Warning, GetNodeId(), "Missing default Value on ConfigParam at Row %s", _ccElement->Row());
+							continue;
+						} else {
+							param.defaultval = value;
+						}
+						m_ConfigParams[param.paramNo] = param;
+						configParam = configParam->NextSiblingElement();		
 					}
 
-					configElement = configElement->NextSiblingElement();
+					configParamsElement = configParamsElement->NextSiblingElement();
 				}
 			}
 
@@ -121,13 +149,18 @@ namespace OpenZWave
 
 				if (Node* node = GetNodeUnsafe())
 				{
-					TiXmlElement* configElement = new TiXmlElement("ConfigParams");
-
-					char str[8];
-					snprintf(str, 8, "%d", m_numGroups);
-					configElement->SetAttribute("num_groups", str);
-
-					_ccElement->LinkEndChild(configElement);
+					TiXmlElement* configParamsElement = new TiXmlElement("ConfigParams");
+					for (std::map<uint16, ConfigParam>::iterator it = m_ConfigParams.begin(); it != m_ConfigParams.end(); it++) { 
+						TiXmlElement* configElement = new TiXmlElement("ConfigParam");
+						
+						configElement->SetAttribute("index", it->first);
+						configElement->SetAttribute("altering", it->second.altering);
+						configElement->SetAttribute("advanced", it->second.advanced);
+						configElement->SetAttribute("nobulk", it->second.nobulk);
+						configElement->SetAttribute("default", it->second.defaultval);
+						configParamsElement->LinkEndChild(configElement);
+					}
+					_ccElement->LinkEndChild(configParamsElement);
 				}
 			}
 

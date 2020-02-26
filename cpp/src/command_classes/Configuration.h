@@ -110,7 +110,6 @@ namespace OpenZWave
 					class ConfigParam {
 						public:
 							uint16 paramNo;
-							uint8 instance;
 							string name;
 							string help;
 							uint32 min;
