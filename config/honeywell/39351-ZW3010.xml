@@ -6,7 +6,7 @@
     <MetaDataItem name="ProductPic">images/honeywell/39351-ZW3005.png</MetaDataItem>
     <MetaDataItem id="3235" name="ZWProductPage" type="4944">https://products.z-wavealliance.org/products/3600/</MetaDataItem>
     <MetaDataItem name="Name">In-Wall Smart Dimmer </MetaDataItem>
-    <MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&filename=MarketCertificationFiles/3600/39351%20Binder.pdf</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&amp;filename=MarketCertificationFiles/3600/39351%20Binder.pdf</MetaDataItem>
     <MetaDataItem id="3235" name="FrequencyName" type="4944">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem name="ResetDescription">Quickly press ON (Top) button three (3) times then immediately
 press the OFF (Bottom) button three (3) times. The LED will flash
