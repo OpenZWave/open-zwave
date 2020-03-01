@@ -46,7 +46,7 @@ namespace OpenZWave
 		{
 		}
 
-		void SensorMultiLevelCCTypes::ReadXML()
+		bool SensorMultiLevelCCTypes::ReadXML()
 		{
 			// Parse the Z-Wave manufacturer and product XML file.
 			string configPath;
@@ -58,7 +58,7 @@ namespace OpenZWave
 			{
 				delete pDoc;
 				Log::Write(LogLevel_Warning, "Unable to load SensorMultiLevelCCTypes file %s", path.c_str());
-				return;
+				return false;
 			}
 			pDoc->SetUserData((void*) path.c_str());
 			Log::Write(LogLevel_Info, "Loading SensorMultiLevelCCTypes File %s", path.c_str());
@@ -71,9 +71,9 @@ namespace OpenZWave
 				str = root->Attribute("Revision");
 				if (!str)
 				{
-					Log::Write(LogLevel_Info, "Error in SensorMultiLevel Config file at line %d - missing Revision  attribute", root->Row());
+					Log::Write(LogLevel_Warning, "Error in SensorMultiLevel Config file at line %d - missing Revision  attribute", root->Row());
 					delete pDoc;
-					return;
+					return false;
 				}
 				m_revision = atol(str);
 			}
@@ -174,6 +174,7 @@ namespace OpenZWave
 			exit(0);
 #endif
 			delete pDoc;
+			return true;
 		}
 
 		std::string SensorMultiLevelCCTypes::GetSensorName(uint32 type)
@@ -239,7 +240,10 @@ namespace OpenZWave
 				return true;
 			}
 			m_instance = new SensorMultiLevelCCTypes();
-			ReadXML();
+			if (!ReadXML()) {
+				OZW_ERROR(OZWException::OZWEXCEPTION_CONFIG, "Cannot Create SensorMultiLevelCCTypes Class! - Missing/Invalid Config File?");
+				return false;
+			}
 			return true;
 		}
 
@@ -250,7 +254,9 @@ namespace OpenZWave
 				return m_instance;
 			}
 			m_instance = new SensorMultiLevelCCTypes();
-			ReadXML();
+			if (!ReadXML()) {
+				OZW_ERROR(OZWException::OZWEXCEPTION_CONFIG, "Cannot Get SensorMultiLevelCCTypes Class! - Missing/Invalid Config File?");
+			}
 			return m_instance;
 		}
 	} // namespace Internal

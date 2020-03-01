@@ -46,7 +46,7 @@ namespace OpenZWave
 		{
 		}
 
-		void NotificationCCTypes::ReadXML()
+		bool NotificationCCTypes::ReadXML()
 		{
 			// Parse the Z-Wave manufacturer and product XML file.
 			string configPath;
@@ -58,7 +58,7 @@ namespace OpenZWave
 			{
 				delete pDoc;
 				Log::Write(LogLevel_Warning, "Unable to load NotificationCCTypes file %s", path.c_str());
-				return;
+				return false;
 			}
 			pDoc->SetUserData((void*) path.c_str());
 			Log::Write(LogLevel_Info, "Loading NotificationCCTypes File %s", path.c_str());
@@ -73,7 +73,7 @@ namespace OpenZWave
 				{
 					Log::Write(LogLevel_Info, "Error in Product Config file at line %d - missing Revision  attribute", root->Row());
 					delete pDoc;
-					return;
+					return false;
 				}
 				m_revision = atol(str);
 			}
@@ -283,6 +283,7 @@ namespace OpenZWave
 			exit(0);
 #endif
 			delete pDoc;
+			return true;
 		}
 
 		std::string NotificationCCTypes::GetEventParamNames(NotificationEventParamTypes type)
@@ -376,8 +377,11 @@ namespace OpenZWave
 			{
 				return true;
 			}
-			m_instance = new NotificationCCTypes();
-			ReadXML();
+			m_instance = new NotificationCCTypes();			
+			if (!ReadXML()) {
+				OZW_ERROR(OZWException::OZWEXCEPTION_CONFIG, "Cannot Create NotificationCCTypes Class! - Missing/Invalid Config File?");
+				return false;
+			}
 			return true;
 		}
 
@@ -388,7 +392,10 @@ namespace OpenZWave
 				return m_instance;
 			}
 			m_instance = new NotificationCCTypes();
-			ReadXML();
+			if (!ReadXML()) {
+				OZW_ERROR(OZWException::OZWEXCEPTION_CONFIG, "Cannot Get NotificationCCTypes Class! - Missing/Invalid Config File?");
+				return m_instance;
+			}
 			return m_instance;
 		}
 	} // namespace Internal

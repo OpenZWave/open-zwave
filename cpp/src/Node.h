@@ -762,7 +762,7 @@ namespace OpenZWave
 			bool SetDeviceClasses(uint8 const _basic, uint8 const _generic, uint8 const _specific);	// Set the device class data for the node
 			bool SetPlusDeviceClasses(uint8 const _role, uint8 const _nodeType, uint16 const _deviceType);	// Set the device class data for the node based on the Zwave+ info report
 			bool AddMandatoryCommandClasses(uint8 const* _commandClasses);							// Add mandatory command classes as specified in the device_classes.xml to the node.
-			void ReadDeviceClasses();																	// Read the static device class data from the device_classes.xml file
+			bool ReadDeviceClasses();																	// Read the static device class data from the device_classes.xml file
 
 			static bool s_deviceClassesLoaded;		// True if the xml file has already been loaded
 			static map<uint8, string> s_basicDeviceClasses;		// Map of basic device classes.

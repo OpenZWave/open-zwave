@@ -3375,7 +3375,7 @@ bool Node::AddMandatoryCommandClasses(uint8 const* _commandClasses)
 // <Node::ReadDeviceClasses>
 // Read the static device class data from the device_classes.xml file
 //-----------------------------------------------------------------------------
-void Node::ReadDeviceClasses()
+bool Node::ReadDeviceClasses()
 {
 	// Load the XML document that contains the device class information
 	string configPath;
@@ -3389,7 +3389,8 @@ void Node::ReadDeviceClasses()
 		Log::Write(LogLevel_Warning, "Failed to load device_classes.xml");
 		Log::Write(LogLevel_Warning, "Check that the config path provided when creating the Manager points to the correct location.");
 		Log::Write(LogLevel_Warning, "tinyXML Reported %s", doc.ErrorDesc());
-		return;
+		OZW_ERROR(OZWException::OZWEXCEPTION_CONFIG, "Cannot read device_classes.xml! - Missing/Invalid Config File?");
+		return false;
 	}
 	doc.SetUserData((void *) filename.c_str());
 	TiXmlElement const* deviceClassesElement = doc.RootElement();
@@ -3459,6 +3460,7 @@ void Node::ReadDeviceClasses()
 	}
 
 	s_deviceClassesLoaded = true;
+	return true;
 }
 
 //-----------------------------------------------------------------------------
