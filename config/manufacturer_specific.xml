@@ -1312,6 +1312,7 @@
     <Product config="popp/zweather.xml" id="0400" name="ZWeather" type="0100"/>
     <Product config="popp/123601.xml" id="0001" name="123601 Plug-in Switch" type="1100"/>
     <Product config="popp/123580.xml" id="0002" name="123580 Plug-in Dimmer" type="1100"/>
+    <Product config="popp/701202.xml" id="0014" name="701202 Mold Detector" type="0004"/>
   </Manufacturer>
   <Manufacturer id="0064" name="Popp / Duwi (Reitz-Group.de)">
     <Product config="duwi/zw-edan-300.xml" id="0000" name="ZW EDAN 300 Flush Mounted Dimmer" type="0001"/>
