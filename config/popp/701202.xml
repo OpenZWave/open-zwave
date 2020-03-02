@@ -81,7 +81,7 @@
 	Default Value: 0
       </Help>
     </Value>
-   <Value value="genre" config="index" 9="label Low Temperature Trigger BASIC Set Command" Value="max" 255="min" 0="type" byte="" units="255">
+   <Value genre="config" index="9" label="Low Temperature Trigger BASIC Set Command Value" max="255" min="0" type="byte" units="" value="255">
       <Help>
 	This defines what BASIC command shall be sent out into association group 3 
 	Default Value: 255
