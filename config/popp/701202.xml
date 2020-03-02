@@ -10,12 +10,11 @@
     <MetaDataItem name="ProductSupport">https://popp.eu/support/</MetaDataItem>
     <MetaDataItem name="ProductPic">images/popp/701202.png</MetaDataItem>
     <MetaDataItem name="ProductManual">https://manuals.zwave.eu/backend/make.php?lang=EN&amp;sku=POPE701202&amp;cert=</MetaDataItem>
-    <MetaDataItem name="WakeupDescription">Press the tamper on the side of the appliance once.</MetaDataItem>
-    <MetaDataItem name="SendNIFDescription">Triple click the tamper button.</MetaDataItem>
+    <MetaDataItem name="WakeupDescription">Press the tamper button on the side of the appliance once.</MetaDataItem>
     <MetaDataItem name="InclusionDescription">
 	1. Open the housing.
 	2. Remove the battery protection.
-	3. Press the tamper on the side of the appliance three times quickly.</MetaDataItem>
+	3. Press the tamper button on the side of the appliance three times quickly.</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">
 	1. Open the housing.
 	2. Press the tamper button on the side of the appliance three times quickly.
