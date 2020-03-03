@@ -199,7 +199,7 @@ namespace OpenZWave
 				{
 					if (WakeUp* wakeUp = static_cast<WakeUp*>(node->GetCommandClass(WakeUp::StaticGetCommandClassId())))
 					{
-						if (!wakeUp->IsAwake())
+						if (!wakeUp->IsAwake() || !m_com.GetFlagBool(COMPAT_FLAG_GETSUPPORTED))
 						{
 							if (Internal::VC::ValueBool* value = static_cast<Internal::VC::ValueBool*>(GetValue(_instance, 0)))
 							{
