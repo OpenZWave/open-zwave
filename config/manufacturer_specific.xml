@@ -918,6 +918,7 @@
     <Product config="honeywell/39351-ZW3005.xml" id="3038" name="39351 / ZW3005 In-Wall Smart Dimmer" type="4944"/>
     <Product config="honeywell/39348-zw4008.xml" id="3135" name="39348 / ZW4008 In-Wall Smart Switch" type="4952"/>
     <Product config="honeywell/39357-ZW3004.xml" id="3130" name="39357 / ZW3004 In-Wall Smart Toggle Dimmer" type="4944"/>
+    <Product config="honeywell/39351-ZW3010.xml" id="3235" name="39351 / ZW3010 In-Wall Smart Dimmer" type="4944"/>
   </Manufacturer>
   <Manufacturer id="0313" name="Hoppe"></Manufacturer>
   <Manufacturer id="0377" name="HORNBACH Baumarkt AG"></Manufacturer>
