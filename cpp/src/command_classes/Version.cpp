@@ -165,7 +165,7 @@ namespace OpenZWave
 							else
 							{
 								Log::Write(LogLevel_Warning, GetNodeId(), "CommandClass Version is 0, Removing CommandClass %s", pCommandClass->GetCommandClassName().c_str());
-								GetNodeUnsafe()->RemoveCommandClass(_data[2]);
+								GetNodeUnsafe()->RemoveCommandClass(_data[1]);
 							}
 						}
 
