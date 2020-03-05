@@ -522,9 +522,6 @@ namespace OpenZWave
 			void SetNodeProductName(uint8 const _nodeId, string const& _productName);
 			void SetNodeName(uint8 const _nodeId, string const& _nodeName);
 			void SetNodeLocation(uint8 const _nodeId, string const& _location);
-			void SetNodeLevel(uint8 const _nodeId, uint8 const _level);
-			void SetNodeOn(uint8 const _nodeId);
-			void SetNodeOff(uint8 const _nodeId);
 
 			Internal::VC::Value* GetValue(ValueID const& _id);
 
@@ -829,14 +826,6 @@ namespace OpenZWave
 
 			bool m_virtualNeighborsReceived;
 			uint8 m_virtualNeighbors[NUM_NODE_BITFIELD_BYTES];		// Bitmask containing virtual neighbors
-
-			//-----------------------------------------------------------------------------
-			// SwitchAll
-			//-----------------------------------------------------------------------------
-		private:
-			// The public interface is provided via the wrappers in the Manager class
-			void SwitchAllOn();
-			void SwitchAllOff();
 
 			//-----------------------------------------------------------------------------
 			// Configuration Parameters	(wrappers for the Node methods)

@@ -62,8 +62,6 @@
 #include "command_classes/ZWavePlusInfo.h"
 #include "command_classes/DeviceResetLocally.h"
 
-#include "Scene.h"
-
 #include "value_classes/ValueID.h"
 #include "value_classes/Value.h"
 #include "value_classes/ValueBitSet.h"
@@ -135,8 +133,6 @@ Node::~Node()
 			GetDriver()->DisablePoll(valueId);
 		}
 	}
-
-	Internal::Scene::RemoveValues(m_homeId, m_nodeId);
 
 	// Delete the values
 	delete m_values;
@@ -2374,51 +2370,6 @@ void Node::RefreshValuesOnWakeup()
 	}
 
 }
-//-----------------------------------------------------------------------------
-// <Node::SetLevel>
-// Helper method to set a device's basic level
-//-----------------------------------------------------------------------------
-void Node::SetLevel(uint8 const _level)
-{
-	// Level is 0-99, with 0 = off and 99 = fully on. 255 = turn on at last level.
-	uint8 adjustedLevel = _level;
-	if ((_level > 99) && (_level < 255))
-	{
-		adjustedLevel = 99;
-	}
-
-	if (Internal::CC::Basic* cc = static_cast<Internal::CC::Basic*>(GetCommandClass(Internal::CC::Basic::StaticGetCommandClassId())))
-	{
-		cc->Set(adjustedLevel);
-	}
-}
-
-//-----------------------------------------------------------------------------
-// <Node::SetNodeOn>
-// Helper method to set a device to be on
-//-----------------------------------------------------------------------------
-void Node::SetNodeOn()
-{
-	// Level is 0-99, with 0 = off and 99 = fully on. 255 = turn on at last level.
-	if (Internal::CC::Basic* cc = static_cast<Internal::CC::Basic*>(GetCommandClass(Internal::CC::Basic::StaticGetCommandClassId())))
-	{
-		cc->Set(255);
-	}
-}
-
-//-----------------------------------------------------------------------------
-// <Node::SetNodeOff>
-// Helper method to set a device to be off
-//-----------------------------------------------------------------------------
-void Node::SetNodeOff()
-{
-	// Level is 0-99, with 0 = off and 99 = fully on. 255 = turn on at last level.
-	if (Internal::CC::Basic* cc = static_cast<Internal::CC::Basic*>(GetCommandClass(Internal::CC::Basic::StaticGetCommandClassId())))
-	{
-		cc->Set(0);
-	}
-}
-
 //-----------------------------------------------------------------------------
 // <Node::CreateValueID>
 // Helper to create a ValueID

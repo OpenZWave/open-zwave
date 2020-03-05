@@ -423,17 +423,14 @@ namespace OpenZWave
 				return m_location;
 			}
 
-//			string GetManufacturerId()const{ return std::to_string(m_manufacturerId); }
 			uint16 GetManufacturerId() const
 			{
 				return m_manufacturerId;
 			}
-//			string GetProductType()const{ return string(m_productType); }
 			uint16 GetProductType() const
 			{
 				return m_productType;
 			}
-//			string GetProductId()const{ return string(m_productId); }
 			uint16 GetProductId() const
 			{
 				return m_productId;
@@ -623,18 +620,6 @@ namespace OpenZWave
 			uint32 m_fileConfigRevision;
 			uint32 m_loadedConfigRevision;
 			uint32 m_latestConfigRevision;
-			//-----------------------------------------------------------------------------
-			// Basic commands (helpers that go through the basic command class)
-			//-----------------------------------------------------------------------------
-		public:
-			void SetLevel(uint8 const _level);
-
-			//-----------------------------------------------------------------------------
-			// On/Off commands (helpers that go through the basic or switchall command class)
-			//-----------------------------------------------------------------------------
-		public:
-			void SetNodeOn();
-			void SetNodeOff();
 
 			//-----------------------------------------------------------------------------
 			// Values (handled by the command classes)

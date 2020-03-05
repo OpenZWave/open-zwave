@@ -31,7 +31,6 @@
 #include "Node.h"
 #include "Msg.h"
 #include "Notification.h"
-#include "Scene.h"
 #include "ZWSecurity.h"
 #include "DNSThread.h"
 #include "TimerThread.h"
@@ -186,7 +185,6 @@ Driver::~Driver()
 		if (save)
 		{
 			WriteCache();
-			Internal::Scene::WriteXML("zwscene.xml");
 		}
 	}
 
@@ -5097,45 +5095,6 @@ void Driver::SetNodeLocation(uint8 const _nodeId, string const& _location)
 }
 
 //-----------------------------------------------------------------------------
-// <Driver::SetNodeLevel>
-// Helper to set the node level through the basic command class
-//-----------------------------------------------------------------------------
-void Driver::SetNodeLevel(uint8 const _nodeId, uint8 const _level)
-{
-	Internal::LockGuard LG(m_nodeMutex);
-	if (Node* node = GetNode(_nodeId))
-	{
-		node->SetLevel(_level);
-	}
-}
-
-//-----------------------------------------------------------------------------
-// <Driver::SetNodeOn>
-// Helper to set the node on through the basic command class
-//-----------------------------------------------------------------------------
-void Driver::SetNodeOn(uint8 const _nodeId)
-{
-	Internal::LockGuard LG(m_nodeMutex);
-	if (Node* node = GetNode(_nodeId))
-	{
-		node->SetNodeOn();
-	}
-}
-
-//-----------------------------------------------------------------------------
-// <Driver::SetNodeOff>
-// Helper to set the node off through the basic command class
-//-----------------------------------------------------------------------------
-void Driver::SetNodeOff(uint8 const _nodeId)
-{
-	Internal::LockGuard LG(m_nodeMutex);
-	if (Node* node = GetNode(_nodeId))
-	{
-		node->SetNodeOff();
-	}
-}
-
-//-----------------------------------------------------------------------------
 // <Driver::GetValue>
 // Get a pointer to a Value object for the specified ValueID
 //-----------------------------------------------------------------------------
@@ -5771,52 +5730,6 @@ void Driver::TestNetwork(uint8 const _nodeId, uint32 const _count)
 		for (int i = 0; i < (int) _count; i++)
 		{
 			noop->Set(true);
-		}
-	}
-}
-
-//-----------------------------------------------------------------------------
-//	SwitchAll
-//-----------------------------------------------------------------------------
-
-//-----------------------------------------------------------------------------
-// <Driver::SwitchAllOn>
-// All devices that support the SwitchAll command class will be turned on
-//-----------------------------------------------------------------------------
-void Driver::SwitchAllOn()
-{
-	Internal::CC::SwitchAll::On(this, 0xff);
-
-	Internal::LockGuard LG(m_nodeMutex);
-	for (int i = 0; i < 256; ++i)
-	{
-		if (GetNodeUnsafe(i))
-		{
-			if (m_nodes[i]->GetCommandClass(Internal::CC::SwitchAll::StaticGetCommandClassId()))
-			{
-				Internal::CC::SwitchAll::On(this, (uint8) i);
-			}
-		}
-	}
-}
-
-//-----------------------------------------------------------------------------
-// <Driver::SwitchAllOff>
-// All devices that support the SwitchAll command class will be turned off
-//-----------------------------------------------------------------------------
-void Driver::SwitchAllOff()
-{
-	Internal::CC::SwitchAll::Off(this, 0xff);
-
-	Internal::LockGuard LG(m_nodeMutex);
-	for (int i = 0; i < 256; ++i)
-	{
-		if (GetNodeUnsafe(i))
-		{
-			if (m_nodes[i]->GetCommandClass(Internal::CC::SwitchAll::StaticGetCommandClassId()))
-			{
-				Internal::CC::SwitchAll::Off(this, (uint8) i);
-			}
 		}
 	}
 }

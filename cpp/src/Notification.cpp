@@ -98,9 +98,6 @@ string Notification::GetAsString() const
 		case Type_PollingEnabled:
 			str = "PollingEnabled";
 			break;
-		case Type_SceneEvent:
-			str = "SceneEvent";
-			break;
 		case Type_CreateButton:
 			str = "CreateButton";
 			break;

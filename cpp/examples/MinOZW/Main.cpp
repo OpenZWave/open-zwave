@@ -249,7 +249,6 @@ void OnNotification
 		case Notification::Type_NodeProtocolInfo:
 		case Notification::Type_NodeQueriesComplete:
 		case Notification::Type_NodeNew:
-		case Notification::Type_SceneEvent:
 		case Notification::Type_CreateButton:
 		case Notification::Type_DeleteButton:
 		case Notification::Type_ButtonOn:
