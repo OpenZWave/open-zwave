@@ -3724,7 +3724,9 @@ void Manager::ResetController(uint32 const _homeId)
 		Internal::Platform::Wait::Single(event);
 		event->Release();
 		string path = driver->GetControllerPath();
+OPENZWAVE_DEPRECATED_WARNINGS_OFF		
 		Driver::ControllerInterface intf = driver->GetControllerInterfaceType();
+OPENZWAVE_DEPRECATED_WARNINGS_ON
 		RemoveDriver(path);
 		AddDriver(path, intf);
 		Internal::Platform::Wait::Multiple( NULL, 0, 500);

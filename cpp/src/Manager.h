@@ -348,8 +348,9 @@ namespace OpenZWave
 			/**
 			 * \brief Obtain controller interface type
 			 * \param _homeId The Home ID of the Z-Wave controller.
+			 * \deprecated This will be removed in next version
 			 */
-			Driver::ControllerInterface GetControllerInterfaceType(uint32 const _homeId);
+			DEPRECATED Driver::ControllerInterface GetControllerInterfaceType(uint32 const _homeId);
 
 			/**
 			 * \brief Obtain controller interface path
@@ -509,8 +510,9 @@ namespace OpenZWave
 			 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
 			 * \param _nodeId The ID of the node to query.
 			 * \return true if security features implemented.
+			 * \deprecated This does not represent S0/S2 at all. Drop it. 
 			 */
-			bool IsNodeSecurityDevice(uint32 const _homeId, uint8 const _nodeId);
+			DEPRECATED bool IsNodeSecurityDevice(uint32 const _homeId, uint8 const _nodeId);
 
 			/**
 			 * \brief Get the maximum baud rate of a node's communications
@@ -533,8 +535,9 @@ namespace OpenZWave
 			 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
 			 * \param _nodeId The ID of the node to query.
 			 * \return the node's security byte
+			 * \deprecated This has nothing to do with S0/S2. 
 			 */
-			uint8 GetNodeSecurity(uint32 const _homeId, uint8 const _nodeId);
+			DEPRECATED uint8 GetNodeSecurity(uint32 const _homeId, uint8 const _nodeId);
 
 			/**
 			 * \brief Is this a ZWave+ Supported Node?
@@ -954,8 +957,9 @@ namespace OpenZWave
 			 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
 			 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
 			 * \see ValueID
+			 * \deprecated We will no longer allow programitically setting labels or help. This is done via Config Files
 			 */
-			void SetValueLabel(ValueID const& _id, string const& _value, int32 _pos = -1);
+			DEPRECATED void SetValueLabel(ValueID const& _id, string const& _value, int32 _pos = -1);
 
 			/**
 			 * \brief Gets the units that the value is measured in.
@@ -974,8 +978,9 @@ namespace OpenZWave
 			 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
 			 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
 			 * \see ValueID
+ 			 * \deprecated We will no longer allow programitically setting labels or help. This is done via Config Files
 			 */
-			void SetValueUnits(ValueID const& _id, string const& _value);
+			DEPRECATED void SetValueUnits(ValueID const& _id, string const& _value);
 
 			/**
 			 * \brief Gets a help string describing the value's purpose and usage.
@@ -996,8 +1001,9 @@ namespace OpenZWave
 			 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
 			 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
 			 * \see ValueID
+ 			 * \deprecated We will no longer allow programitically setting labels or help. This is done via Config Files
 			 */
-			void SetValueHelp(ValueID const& _id, string const& _value, int32 _pos = -1);
+			DEPRECATED void SetValueHelp(ValueID const& _id, string const& _value, int32 _pos = -1);
 
 			/**
 			 * \brief Gets the minimum that this value may contain.
@@ -2048,8 +2054,9 @@ namespace OpenZWave
 			 * \param _buttonId the ID of the Button to create
 			 * \return if the CreateButton Command was send successfully to the Controller
 			 * \sa CancelControllerCommand
+			 * \deprecated Virtual Nodes/Buttons are no longer supported
 			 */
-			bool CreateButton(uint32 const _homeId, uint8 const _nodeId, uint8 const _buttonid);
+			DEPRECATED bool CreateButton(uint32 const _homeId, uint8 const _nodeId, uint8 const _buttonid);
 
 			/**
 			 * \brief Delete a handheld button id.
@@ -2064,8 +2071,9 @@ namespace OpenZWave
 			 * \param _buttonId the ID of the Button to delete
 			 * \return if the DeleteButton Command was send successfully to the Controller
 			 * \sa CancelControllerCommand
+			 * \deprecated Virtual Nodes/Buttons are no longer supported
 			 */
-			bool DeleteButton(uint32 const _homeId, uint8 const _nodeId, uint8 const _buttonid);
+			DEPRECATED bool DeleteButton(uint32 const _homeId, uint8 const _nodeId, uint8 const _buttonid);
 
 			/**
 			 *  \brief Send a raw packet to a node.

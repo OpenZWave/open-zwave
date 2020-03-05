@@ -284,7 +284,7 @@ namespace OpenZWave
 			{
 				return m_controllerPath;
 			}
-			ControllerInterface GetControllerInterfaceType() const
+			DEPRECATED ControllerInterface GetControllerInterfaceType() const
 			{
 				return m_controllerInterfaceType;
 			}
@@ -490,10 +490,10 @@ namespace OpenZWave
 			bool IsNodeFrequentListeningDevice(uint8 const _nodeId);
 			bool IsNodeBeamingDevice(uint8 const _nodeId);
 			bool IsNodeRoutingDevice(uint8 const _nodeId);
-			bool IsNodeSecurityDevice(uint8 const _nodeId);
+			DEPRECATED bool IsNodeSecurityDevice(uint8 const _nodeId);
 			uint32 GetNodeMaxBaudRate(uint8 const _nodeId);
 			uint8 GetNodeVersion(uint8 const _nodeId);
-			uint8 GetNodeSecurity(uint8 const _nodeId);
+			DEPRECATED uint8 GetNodeSecurity(uint8 const _nodeId);
 			uint8 GetNodeBasic(uint8 const _nodeId);
 			string GetNodeBasicString(uint8 const _nodeId);
 			uint8 GetNodeGeneric(uint8 const _nodeId, uint8 _instance);
@@ -811,18 +811,19 @@ namespace OpenZWave
 			/**
 			 * Virtual Node Commands.
 			 * Commands to be used with virtual nodes.
+			 * DEPRECIATE in next version
 			 */
 		private:
-			uint32 GetVirtualNeighbors(uint8** o_neighbors);
-			void RequestVirtualNeighbors(MsgQueue const _queue);
-			bool IsVirtualNode(uint8 const _nodeId) const
+			DEPRECATED uint32 GetVirtualNeighbors(uint8** o_neighbors);
+			DEPRECATED void RequestVirtualNeighbors(MsgQueue const _queue);
+			DEPRECATED bool IsVirtualNode(uint8 const _nodeId) const
 			{
 				return ((m_virtualNeighbors[(_nodeId - 1) >> 3] & 1 << ((_nodeId - 1) & 0x07)) != 0);
 			}
-			void SendVirtualNodeInfo(uint8 const _fromNodeId, uint8 const _ToNodeId);
-			void SendSlaveLearnModeOff();
-			void SaveButtons();
-			void ReadButtons(uint8 const _nodeId);
+			DEPRECATED void SendVirtualNodeInfo(uint8 const _fromNodeId, uint8 const _ToNodeId);
+			DEPRECATED void SendSlaveLearnModeOff();
+			DEPRECATED void SaveButtons();
+			DEPRECATED void ReadButtons(uint8 const _nodeId);
 
 			bool m_virtualNeighborsReceived;
 			uint8 m_virtualNeighbors[NUM_NODE_BITFIELD_BYTES];		// Bitmask containing virtual neighbors

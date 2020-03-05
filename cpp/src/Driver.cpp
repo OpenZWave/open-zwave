@@ -2860,6 +2860,7 @@ void Driver::HandleSerialAPIGetInitDataResponse(uint8* _data)
 				uint8 nodeId = (i * 8) + j + 1;
 				if (_data[i + 5] & (0x01 << j))
 				{
+OPENZWAVE_DEPRECATED_WARNINGS_OFF
 					if (IsVirtualNode(nodeId))
 					{
 						Log::Write(LogLevel_Info, GetNodeNumber(m_currentMsg), "    Node %.3d - Virtual (ignored)", nodeId);
@@ -2891,6 +2892,7 @@ void Driver::HandleSerialAPIGetInitDataResponse(uint8* _data)
 							InitNode(nodeId);
 						}
 					}
+OPENZWAVE_DEPRECATED_WARNINGS_ON					
 				}
 				else
 				{
@@ -5401,9 +5403,9 @@ void Driver::DoControllerCommand()
 						bool found = false;
 						for (uint8 n = 1; n <= 232 && !found; n++)
 						{
+OPENZWAVE_DEPRECATED_WARNINGS_OFF
 							if (!IsVirtualNode(n))
 								continue;
-
 							map<uint8, uint8>::iterator it = node->m_buttonMap.begin();
 							for (; it != node->m_buttonMap.end(); ++it)
 							{
@@ -5417,6 +5419,7 @@ void Driver::DoControllerCommand()
 								SendVirtualNodeInfo(n, m_currentControllerCommand->m_controllerCommandNode);
 								found = true;
 							}
+OPENZWAVE_DEPRECATED_WARNINGS_ON
 						}
 						if (!found) // create a new virtual node
 						{
@@ -5481,7 +5484,9 @@ void Driver::DoControllerCommand()
 						SendMsg( msg );
 #endif
 						node->m_buttonMap.erase(m_currentControllerCommand->m_controllerCommandArg);
+OPENZWAVE_DEPRECATED_WARNINGS_OFF
 						SaveButtons();
+OPENZWAVE_DEPRECATED_WARNINGS_ON
 
 						Notification* notification = new Notification(Notification::Type_DeleteButton);
 						notification->SetHomeAndNodeIds(m_homeId, m_currentControllerCommand->m_controllerCommandNode);
@@ -5645,6 +5650,7 @@ bool Driver::CancelControllerCommand()
 			AddNodeStop( FUNC_ID_ZW_ADD_NODE_TO_NETWORK);
 			break;
 		}
+OPENZWAVE_DEPRECATED_WARNINGS_OFF
 		case ControllerCommand_CreateButton:
 		case ControllerCommand_DeleteButton:
 		{
@@ -5654,6 +5660,7 @@ bool Driver::CancelControllerCommand()
 			}
 			break;
 		}
+OPENZWAVE_DEPRECATED_WARNINGS_ON
 		case ControllerCommand_None:
 		case ControllerCommand_RequestNetworkUpdate:
 		case ControllerCommand_RequestNodeNeighborUpdate:
@@ -6271,7 +6278,9 @@ bool Driver::HandleSetSlaveLearnModeResponse(uint8* _data)
 		Log::Write(LogLevel_Warning, nodeId, "WARNING: Received reply to FUNC_ID_ZW_SET_SLAVE_LEARN_MODE - command failed");
 		state = ControllerState_Failed;
 		res = false;
+OPENZWAVE_DEPRECATED_WARNINGS_OFF		
 		SendSlaveLearnModeOff();
+OPENZWAVE_DEPRECATED_WARNINGS_ON
 	}
 
 	UpdateControllerState(state);
@@ -6291,8 +6300,9 @@ void Driver::HandleSetSlaveLearnModeRequest(uint8* _data)
 	{
 		return;
 	}
-
+OPENZWAVE_DEPRECATED_WARNINGS_OFF
 	SendSlaveLearnModeOff();
+OPENZWAVE_DEPRECATED_WARNINGS_ON
 	switch (_data[3])
 	{
 		case SLAVE_ASSIGN_COMPLETE:
@@ -6305,7 +6315,9 @@ void Driver::HandleSetSlaveLearnModeRequest(uint8* _data)
 				if (node != NULL)
 				{
 					node->m_buttonMap[m_currentControllerCommand->m_controllerCommandArg] = _data[5];
+OPENZWAVE_DEPRECATED_WARNINGS_OFF					
 					SendVirtualNodeInfo(_data[5], m_currentControllerCommand->m_controllerCommandNode);
+OPENZWAVE_DEPRECATED_WARNINGS_ON
 				}
 			}
 			else if (_data[5] == 0)
@@ -6324,7 +6336,9 @@ void Driver::HandleSetSlaveLearnModeRequest(uint8* _data)
 				if (node != NULL)
 				{
 					node->m_buttonMap[m_currentControllerCommand->m_controllerCommandArg] = _data[5];
+OPENZWAVE_DEPRECATED_WARNINGS_OFF					
 					SendVirtualNodeInfo(_data[5], m_currentControllerCommand->m_controllerCommandNode);
+OPENZWAVE_DEPRECATED_WARNINGS_ON
 				}
 			}
 			else if (_data[5] == 0)
@@ -6392,14 +6406,18 @@ void Driver::HandleSendSlaveNodeInfoRequest(uint8* _data)
 	if (_data[3] == TRANSMIT_COMPLETE_OK)	// finish up
 	{
 		Log::Write(LogLevel_Info, GetNodeNumber(m_currentMsg), "SEND_SLAVE_NODE_INFO_COMPLETE OK");
+OPENZWAVE_DEPRECATED_WARNINGS_OFF
 		SaveButtons();
+OPENZWAVE_DEPRECATED_WARNINGS_ON
 		Notification* notification = new Notification(Notification::Type_CreateButton);
 		notification->SetHomeAndNodeIds(m_homeId, m_currentControllerCommand->m_controllerCommandNode);
 		notification->SetButtonId(m_currentControllerCommand->m_controllerCommandArg);
 		QueueNotification(notification);
 
 		UpdateControllerState(ControllerState_Completed);
+OPENZWAVE_DEPRECATED_WARNINGS_OFF
 		RequestVirtualNeighbors(MsgQueue_Send);
+OPENZWAVE_DEPRECATED_WARNINGS_ON
 	}
 	else			// error. try again
 	{
@@ -6407,7 +6425,9 @@ void Driver::HandleSendSlaveNodeInfoRequest(uint8* _data)
 		Node* node = GetNodeUnsafe(m_currentControllerCommand->m_controllerCommandNode);
 		if (node != NULL)
 		{
+OPENZWAVE_DEPRECATED_WARNINGS_OFF
 			SendVirtualNodeInfo(node->m_buttonMap[m_currentControllerCommand->m_controllerCommandArg], m_currentControllerCommand->m_controllerCommandNode);
+OPENZWAVE_DEPRECATED_WARNINGS_ON
 		}
 	}
 }

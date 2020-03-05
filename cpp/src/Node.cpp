@@ -1471,7 +1471,9 @@ void Node::UpdateProtocolInfo(uint8 const* _data)
 		// Do this for every controller. A little extra work but it won't be a large file.
 		if (IsController())
 		{
+OPENZWAVE_DEPRECATED_WARNINGS_OFF
 			GetDriver()->ReadButtons(m_nodeId);
+OPENZWAVE_DEPRECATED_WARNINGS_ON
 		}
 #if 0
 		/* come back to this. We need to find a better way to Route Messages
