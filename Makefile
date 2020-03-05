@@ -57,10 +57,10 @@ xmltest:	$(XMLLINT)
 	@$(XMLLINT) --noout --schema $(top_srcdir)/config/NotificationCCTypes.xsd $(top_srcdir)/config/NotificationCCTypes.xml
 	@$(XMLLINT) --noout --schema $(top_srcdir)/config/SensorMultiLevelCCTypes.xsd $(top_srcdir)/config/SensorMultiLevelCCTypes.xml
 	@$(XMLLINT) --noout --schema $(top_srcdir)/config/device_configuration.xsd $(top_srcdir)/config/*/*.xml
-	-@cpp/build/testconfig.pl
+	@cpp/build/testconfig.pl
 endif
 fulltest:
-	-@cpp/build/testconfig.pl --printwarnings
+	@cpp/build/testconfig.pl --printwarnings
 
 
 

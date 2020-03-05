@@ -165,7 +165,7 @@ namespace OpenZWave
 							else
 							{
 								Log::Write(LogLevel_Warning, GetNodeId(), "CommandClass Version is 0, Removing CommandClass %s", pCommandClass->GetCommandClassName().c_str());
-								GetNodeUnsafe()->RemoveCommandClass(_data[2]);
+								GetNodeUnsafe()->RemoveCommandClass(_data[1]);
 							}
 						}
 
@@ -184,8 +184,8 @@ namespace OpenZWave
 			{
 				if (m_com.GetFlagBool(COMPAT_FLAG_VERSION_GETCLASSVERSION))
 				{
-					if (_commandClass->HasStaticRequest(StaticRequest_Version))
-					{
+//					if (_commandClass->HasStaticRequest(StaticRequest_Version))
+//					{
 						Msg* msg = new Msg("VersionCmd_CommandClassGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
 						msg->Append(GetNodeId());
 						msg->Append(3);
@@ -193,9 +193,9 @@ namespace OpenZWave
 						msg->Append(VersionCmd_CommandClassGet);
 						msg->Append(_commandClass->GetCommandClassId());
 						msg->Append(GetDriver()->GetTransmitOptions());
-						GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
+						GetDriver()->SendMsg(msg, Driver::MsgQueue_Query);
 						return true;
-					}
+//					}
 				}
 
 				return false;

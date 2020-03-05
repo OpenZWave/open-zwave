@@ -249,6 +249,7 @@ namespace OpenZWave
 				if (index < 0)
 				{
 					// Item not found
+					Log::Write(LogLevel_Warning, "Attempt to Set a Invalid Label %s for ValueList in OnValueRefreshed", _label.c_str());
 					return false;
 				}
 
@@ -266,6 +267,7 @@ namespace OpenZWave
 				if (index < 0)
 				{
 					// Item not found
+					Log::Write(LogLevel_Warning, "Attempt to Set a Invalid Index %d for ValueList in OnValueRefreshed", _value);
 					return;
 				}
 
@@ -297,7 +299,7 @@ namespace OpenZWave
 						return i;
 					}
 				}
-
+				Log::Write(LogLevel_Warning, "Attempt to get a Invalid Label %s from ValueList", _label.c_str());
 				return -1;
 			}
 
@@ -314,7 +316,7 @@ namespace OpenZWave
 						return i;
 					}
 				}
-
+				Log::Write(LogLevel_Warning, "Attempt to get a Invalid Index %d on ValueList", _value);
 				return -1;
 			}
 
@@ -333,7 +335,7 @@ namespace OpenZWave
 
 					return true;
 				}
-
+				Log::Write(LogLevel_Error, "o_items passed to ValueList::GetItemLabels is null");
 				return false;
 			}
 
@@ -352,7 +354,7 @@ namespace OpenZWave
 
 					return true;
 				}
-
+				Log::Write(LogLevel_Error, "o_values passed to ValueList::GetItemLabels is null");
 				return false;
 			}
 
