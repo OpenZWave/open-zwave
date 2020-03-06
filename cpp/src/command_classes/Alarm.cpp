@@ -194,6 +194,7 @@ namespace OpenZWave
 			{
 				if (AlarmCmd_Report == (AlarmCmd) _data[0])
 				{
+					Log::Write(LogLevel_Info, GetNodeId(), "Got a AlarmCmd_Report Message.... ");
 					// We have received a report from the Z-Wave device
 					if (GetVersion() == 1)
 					{
@@ -443,6 +444,10 @@ namespace OpenZWave
 							TimerSetEvent(m_ClearTimeout, callback, 1);
 						}
 
+					}
+					else 
+					{
+						Log::Write(LogLevel_Warning, GetNodeId(), "Got a AlarmCmd_Report Message - Greater than Version 2, but size was less than 7?");
 					}
 					return true;
 				}

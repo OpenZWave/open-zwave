@@ -39,7 +39,6 @@
 #include "Notification.h"
 #include "NotificationCCTypes.h"
 #include "Options.h"
-#include "Scene.h"
 #include "SensorMultiLevelCCTypes.h"
 #include "Utils.h"
 
@@ -189,7 +188,6 @@ Manager::Manager() :
 	Log::SetLoggingState(logging);
 
 	Internal::CC::CommandClasses::RegisterCommandClasses();
-	Internal::Scene::ReadScenes();
 	// petergebruers replace getVersionAsString() with getVersionLongAsString() because
 	// the latter prints more information, based on the status of the repository
 	// when "make" was run. A Makefile gets this info from git describe --long --tags --dirty
@@ -279,27 +277,6 @@ Manager::~Manager()
 	Log::Destroy();
 }
 
-//-----------------------------------------------------------------------------
-// Configuration
-//-----------------------------------------------------------------------------
-
-//-----------------------------------------------------------------------------
-// <Manager::WriteConfig>
-// Save the configuration of a driver to a file
-//-----------------------------------------------------------------------------
-void Manager::WriteConfig(uint32 const _homeId)
-{
-	if (Driver* driver = GetDriver(_homeId))
-	{
-		driver->WriteCache();
-		Log::Write(LogLevel_Info, "mgr,     Manager::WriteConfig completed for driver with home ID of 0x%.8x", _homeId);
-	}
-	else
-	{
-		Log::Write(LogLevel_Info, "mgr,     Manager::WriteConfig failed - _homeId %d not found", _homeId);
-	}
-	Internal::Scene::WriteXML("zwscene.xml");
-}
 
 //-----------------------------------------------------------------------------
 //	Drivers
@@ -523,6 +500,22 @@ bool Manager::IsBridgeController(uint32 const _homeId)
 }
 
 //-----------------------------------------------------------------------------
+// <Manager::GetControllerRegion>
+//
+//-----------------------------------------------------------------------------
+ZW_RFRegion Manager::GetControllerRegion(uint32 const _homeId)
+{
+	if (Driver* driver = GetDriver(_homeId))
+	{
+		return driver->GetControllerRegion();
+	}
+
+	Log::Write(LogLevel_Info, "mgr,     GetControllerRegion() failed - _homeId %d not found", _homeId);
+	return ZW_RFRegion::RF_REGION_UNKNOWN;
+}
+
+
+//-----------------------------------------------------------------------------
 // <Manager::HasExtendedTxStatus>
 //
 //-----------------------------------------------------------------------------
@@ -605,7 +598,9 @@ Driver::ControllerInterface Manager::GetControllerInterfaceType(uint32 const _ho
 	Driver::ControllerInterface ifType = Driver::ControllerInterface_Unknown;
 	if (Driver* driver = GetDriver(_homeId))
 	{
+OPENZWAVE_DEPRECATED_WARNINGS_OFF
 		ifType = driver->GetControllerInterfaceType();
+OPENZWAVE_DEPRECATED_WARNINGS_ON
 	}
 	return ifType;
 }
@@ -876,7 +871,9 @@ bool Manager::IsNodeSecurityDevice(uint32 const _homeId, uint8 const _nodeId)
 	bool security = 0;
 	if (Driver* driver = GetDriver(_homeId))
 	{
+OPENZWAVE_DEPRECATED_WARNINGS_OFF
 		security = driver->IsNodeSecurityDevice(_nodeId);
+OPENZWAVE_DEPRECATED_WARNINGS_ON
 	}
 
 	return security;
@@ -921,7 +918,9 @@ uint8 Manager::GetNodeSecurity(uint32 const _homeId, uint8 const _nodeId)
 	uint8 version = 0;
 	if (Driver* driver = GetDriver(_homeId))
 	{
+OPENZWAVE_DEPRECATED_WARNINGS_OFF
 		version = driver->GetNodeSecurity(_nodeId);
+OPENZWAVE_DEPRECATED_WARNINGS_ON
 	}
 
 	return version;
@@ -1312,30 +1311,6 @@ string Manager::GetNodeProductId(uint32 const _homeId, uint8 const _nodeId)
 }
 
 //-----------------------------------------------------------------------------
-// <Manager::SetNodeOn>
-// Helper method to turn a node on
-//-----------------------------------------------------------------------------
-void Manager::SetNodeOn(uint32 const _homeId, uint8 const _nodeId)
-{
-	if (Driver* driver = GetDriver(_homeId))
-	{
-		driver->SetNodeOn(_nodeId);
-	}
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::SetNodeOff>
-// Helper method to turn a node off
-//-----------------------------------------------------------------------------
-void Manager::SetNodeOff(uint32 const _homeId, uint8 const _nodeId)
-{
-	if (Driver* driver = GetDriver(_homeId))
-	{
-		driver->SetNodeOff(_nodeId);
-	}
-}
-
-//-----------------------------------------------------------------------------
 // <Manager::IsNodeInfoReceived>
 // Helper method to return whether a particular class is available in a node
 //-----------------------------------------------------------------------------
@@ -1466,18 +1441,6 @@ string Manager::GetNodeQueryStage(uint32 const _homeId, uint8 const _nodeId)
 		}
 	}
 	return result;
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::SetNodeLevel>
-// Helper method to set the basic level of a node
-//-----------------------------------------------------------------------------
-void Manager::SetNodeLevel(uint32 const _homeId, uint8 const _nodeId, uint8 const _level)
-{
-	if (Driver* driver = GetDriver(_homeId))
-	{
-		return driver->SetNodeLevel(_nodeId, _level);
-	}
 }
 
 //-----------------------------------------------------------------------------
@@ -3515,34 +3478,6 @@ bool Manager::GetSwitchPoint(ValueID const& _id, uint8 const _idx, uint8* o_hour
 }
 
 //-----------------------------------------------------------------------------
-//	SwitchAll
-//-----------------------------------------------------------------------------
-
-//-----------------------------------------------------------------------------
-// <Manager::SwitchAllOn>
-// All devices that support the SwitchAll command class will be turned on
-//-----------------------------------------------------------------------------
-void Manager::SwitchAllOn(uint32 const _homeId)
-{
-	if (Driver* driver = GetDriver(_homeId))
-	{
-		return driver->SwitchAllOn();
-	}
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::SwitchAllOff>
-// All devices that support the SwitchAll command class will be turned off
-//-----------------------------------------------------------------------------
-void Manager::SwitchAllOff(uint32 const _homeId)
-{
-	if (Driver* driver = GetDriver(_homeId))
-	{
-		return driver->SwitchAllOff();
-	}
-}
-
-//-----------------------------------------------------------------------------
 //	Configuration Parameters
 //-----------------------------------------------------------------------------
 
@@ -3795,13 +3730,13 @@ void Manager::ResetController(uint32 const _homeId)
 		Internal::Platform::Wait::Single(event);
 		event->Release();
 		string path = driver->GetControllerPath();
+OPENZWAVE_DEPRECATED_WARNINGS_OFF		
 		Driver::ControllerInterface intf = driver->GetControllerInterfaceType();
+OPENZWAVE_DEPRECATED_WARNINGS_ON
 		RemoveDriver(path);
 		AddDriver(path, intf);
 		Internal::Platform::Wait::Multiple( NULL, 0, 500);
-	} OPENZWAVE_DEPRECATED_WARNINGS_OFF;
-	RemoveAllScenes(_homeId);
-	OPENZWAVE_DEPRECATED_WARNINGS_ON;
+	} 
 }
 
 //-----------------------------------------------------------------------------
@@ -3814,25 +3749,6 @@ void Manager::SoftReset(uint32 const _homeId)
 	{
 		driver->SoftReset();
 	}
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::BeginControllerCommand>
-// Start the controller performing one of its network management functions
-//-----------------------------------------------------------------------------
-bool Manager::BeginControllerCommand(uint32 const _homeId, Driver::ControllerCommand _command, Driver::pfnControllerCallback_t _callback,				// = NULL
-		void* _context,								// = NULL
-		bool _highPower,							// = false
-		uint8 _nodeId,								// = 0xff
-		uint8 _arg								// = 0
-		)
-{
-	if (Driver* driver = GetDriver(_homeId))
-	{
-		return driver->BeginControllerCommand(_command, _callback, _context, _highPower, _nodeId, _arg);
-	}
-
-	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -4130,15 +4046,10 @@ bool Manager::ReplicationSend(uint32 const _homeId, uint8 const _nodeId)
 //-----------------------------------------------------------------------------
 // <Manager::CreateButton>
 // Send a NIF frame from the Controller to the Node
+// Deprecated
 //-----------------------------------------------------------------------------
 bool Manager::CreateButton(uint32 const _homeId, uint8 const _nodeId, uint8 const _buttonid)
 {
-	if (Driver *driver = GetDriver(_homeId))
-	{
-		Internal::LockGuard LG(driver->m_nodeMutex);
-		return driver->BeginControllerCommand(Driver::ControllerCommand_CreateButton,
-		NULL, NULL, true, _nodeId, _buttonid);
-	}
 	return false;
 }
 
@@ -4148,12 +4059,6 @@ bool Manager::CreateButton(uint32 const _homeId, uint8 const _nodeId, uint8 cons
 //-----------------------------------------------------------------------------
 bool Manager::DeleteButton(uint32 const _homeId, uint8 const _nodeId, uint8 const _buttonid)
 {
-	if (Driver *driver = GetDriver(_homeId))
-	{
-		Internal::LockGuard LG(driver->m_nodeMutex);
-		return driver->BeginControllerCommand(Driver::ControllerCommand_DeleteButton,
-		NULL, NULL, true, _nodeId, _buttonid);
-	}
 	return false;
 }
 
@@ -4183,555 +4088,6 @@ void Manager::SendRawData(uint32 const _homeId, uint8 const _nodeId, string cons
 			driver->SendMsg(msg, Driver::MsgQueue_Send);
 		}
 	}
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::GetNumScenes>
-// Return the number of defined scenes.
-//-----------------------------------------------------------------------------
-uint8 Manager::GetNumScenes()
-{
-	return Internal::Scene::s_sceneCnt;
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::GetAllScenes>
-// Return an array of all Scene Ids
-//-----------------------------------------------------------------------------
-uint8 Manager::GetAllScenes(uint8** _sceneIds)
-{
-	*_sceneIds = NULL;
-	return Internal::Scene::GetAllScenes(_sceneIds);
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::RemoveAllScenes>
-// Remove every scene id
-//-----------------------------------------------------------------------------
-void Manager::RemoveAllScenes(uint32 const _homeId)
-{
-	for (int i = 1; i < 256; i++)
-	{
-		if (_homeId == 0)	// remove every device from every scene
-		{
-			OPENZWAVE_DEPRECATED_WARNINGS_OFF
-			RemoveScene(i);
-		OPENZWAVE_DEPRECATED_WARNINGS_ON
-	}
-	else
-	{
-		Internal::Scene *scene = Internal::Scene::Get(i);
-		if (scene != NULL)
-		{
-			scene->RemoveValues(_homeId);
-		}
-	}
-}
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::CreateScene>
-// Create a new scene and return new Scene ID.
-//-----------------------------------------------------------------------------
-uint8 Manager::CreateScene()
-{
-for (int i = 1; i < 256; i++)
-{
-	Internal::Scene* scene = Internal::Scene::Get(i);
-	if (scene != NULL)
-	{
-		continue;
-	}
-	new Internal::Scene(i);
-	return i;
-}
-return 0;
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::RemoveScene>
-// Remove scene and delete its contents
-//-----------------------------------------------------------------------------
-bool Manager::RemoveScene(uint8 const _sceneId)
-{
-Internal::Scene *scene = Internal::Scene::Get(_sceneId);
-if (scene != NULL)
-{
-	delete scene;
-	return true;
-}
-return false;
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::AddSceneValue>
-// Add a bool ValueID/value pair to the scene
-//-----------------------------------------------------------------------------
-bool Manager::AddSceneValue(uint8 const _sceneId, ValueID const& _valueId, bool const _value)
-{
-Internal::Scene *scene = Internal::Scene::Get(_sceneId);
-if (scene != NULL)
-{
-	return scene->AddValue(_valueId, _value ? "True" : "False");
-}
-return false;
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::AddSceneValue>
-// Add a byte ValueID/value pair to the scene
-//-----------------------------------------------------------------------------
-bool Manager::AddSceneValue(uint8 const _sceneId, ValueID const& _valueId, uint8 const _value)
-{
-Internal::Scene *scene = Internal::Scene::Get(_sceneId);
-if (scene != NULL)
-{
-	char str[16];
-	snprintf(str, sizeof(str), "%d", _value);
-	return scene->AddValue(_valueId, str);
-}
-return false;
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::AddSceneValue>
-// Add a decimal ValueID/value pair to the scene
-//-----------------------------------------------------------------------------
-bool Manager::AddSceneValue(uint8 const _sceneId, ValueID const& _valueId, float const _value)
-{
-Internal::Scene *scene = Internal::Scene::Get(_sceneId);
-if (scene != NULL)
-{
-	char str[16];
-	snprintf(str, sizeof(str), "%f", _value);
-	return scene->AddValue(_valueId, str);
-}
-return false;
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::AddSceneValue>
-// Add an integer ValueID/value pair to the scene
-//-----------------------------------------------------------------------------
-bool Manager::AddSceneValue(uint8 const _sceneId, ValueID const& _valueId, int32 const _value)
-{
-Internal::Scene *scene = Internal::Scene::Get(_sceneId);
-if (scene != NULL)
-{
-	char str[16];
-	snprintf(str, sizeof(str), "%d", _value);
-	return scene->AddValue(_valueId, str);
-}
-return false;
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::AddSceneValue>
-// Add a short ValueID/value pair to the scene
-//-----------------------------------------------------------------------------
-bool Manager::AddSceneValue(uint8 const _sceneId, ValueID const& _valueId, int16 const _value)
-{
-Internal::Scene *scene = Internal::Scene::Get(_sceneId);
-if (scene != NULL)
-{
-	char str[16];
-	snprintf(str, sizeof(str), "%d", _value);
-	return scene->AddValue(_valueId, str);
-}
-return false;
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::AddSceneValue>
-// Add a string ValueID/value pair to the scene
-//-----------------------------------------------------------------------------
-bool Manager::AddSceneValue(uint8 const _sceneId, ValueID const& _valueId, string const& _value)
-{
-Internal::Scene *scene = Internal::Scene::Get(_sceneId);
-if (scene != NULL)
-{
-	return scene->AddValue(_valueId, _value);
-}
-return false;
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::AddSceneValueListSelection>
-// Add a list selection item ValueID/value pair to the scene (as string)
-//-----------------------------------------------------------------------------
-bool Manager::AddSceneValueListSelection(uint8 const _sceneId, ValueID const& _valueId, string const& _value)
-{
-Internal::Scene *scene = Internal::Scene::Get(_sceneId);
-if (scene != NULL)
-{
-	return scene->AddValue(_valueId, _value);
-}
-return false;
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::AddSceneValueListSelection>
-// Add a list selection item ValueID/value pair to the scene (as integer)
-//-----------------------------------------------------------------------------
-bool Manager::AddSceneValueListSelection(uint8 const _sceneId, ValueID const& _valueId, int32 const _value)
-{
-Internal::Scene *scene = Internal::Scene::Get(_sceneId);
-if (scene != NULL)
-{
-	char str[16];
-	snprintf(str, sizeof(str), "%d", _value);
-	return scene->AddValue(_valueId, str);
-}
-return false;
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::RemoveSceneValue>
-// Remove a ValueID/value pair from the scene
-//-----------------------------------------------------------------------------
-bool Manager::RemoveSceneValue(uint8 const _sceneId, ValueID const& _valueId)
-{
-Internal::Scene *scene = Internal::Scene::Get(_sceneId);
-if (scene != NULL)
-{
-	return scene->RemoveValue(_valueId);
-}
-return false;
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::SceneGetValues>
-// Return a scene's Value ID
-//-----------------------------------------------------------------------------
-int Manager::SceneGetValues(uint8 const _sceneId, vector<ValueID>* o_value)
-{
-o_value->clear();
-Internal::Scene *scene = Internal::Scene::Get(_sceneId);
-if (scene != NULL)
-{
-	return scene->GetValues(o_value);
-}
-return 0;
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::SceneGetValueAsBool>
-// Return a scene's Value ID bool value
-//-----------------------------------------------------------------------------
-bool Manager::SceneGetValueAsBool(uint8 const _sceneId, ValueID const& _valueId, bool* o_value)
-{
-Internal::Scene *scene = Internal::Scene::Get(_sceneId);
-if (scene != NULL)
-{
-	string str;
-	if (scene->GetValue(_valueId, &str))
-	{
-		*o_value = !strcasecmp("true", str.c_str());
-		return true;
-	}
-}
-return false;
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::SceneGetValueAsByte>
-// Return a scene's Value ID byte value
-//-----------------------------------------------------------------------------
-bool Manager::SceneGetValueAsByte(uint8 const _sceneId, ValueID const& _valueId, uint8* o_value)
-{
-Internal::Scene *scene = Internal::Scene::Get(_sceneId);
-if (scene != NULL)
-{
-	string str;
-	if (scene->GetValue(_valueId, &str))
-	{
-		*o_value = (uint8) atoi(str.c_str());
-		return true;
-	}
-}
-return false;
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::SceneGetValueAsFloat>
-// Return a scene's Value ID float value
-//-----------------------------------------------------------------------------
-bool Manager::SceneGetValueAsFloat(uint8 const _sceneId, ValueID const& _valueId, float* o_value)
-{
-Internal::Scene *scene = Internal::Scene::Get(_sceneId);
-if (scene != NULL)
-{
-	string str;
-	if (scene->GetValue(_valueId, &str))
-	{
-		*o_value = (float) atof(str.c_str());
-		return true;
-	}
-}
-return false;
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::SceneGetValueAsInt>
-// Return a scene's Value ID integer value
-//-----------------------------------------------------------------------------
-bool Manager::SceneGetValueAsInt(uint8 const _sceneId, ValueID const& _valueId, int32* o_value)
-{
-Internal::Scene *scene = Internal::Scene::Get(_sceneId);
-if (scene != NULL)
-{
-	string str;
-	if (scene->GetValue(_valueId, &str))
-	{
-		*o_value = (int32) atoi(str.c_str());
-		return true;
-	}
-}
-return false;
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::SceneGetValueAsShort>
-// Return a scene's Value ID short value
-//-----------------------------------------------------------------------------
-bool Manager::SceneGetValueAsShort(uint8 const _sceneId, ValueID const& _valueId, int16* o_value)
-{
-Internal::Scene *scene = Internal::Scene::Get(_sceneId);
-if (scene != NULL)
-{
-	string str;
-	if (scene->GetValue(_valueId, &str))
-	{
-		*o_value = (int16) atoi(str.c_str());
-		return true;
-	}
-}
-return false;
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::SceneGetValueAsString>
-// Return a scene's Value ID string value
-//-----------------------------------------------------------------------------
-bool Manager::SceneGetValueAsString(uint8 const _sceneId, ValueID const& _valueId, string* o_value)
-{
-Internal::Scene *scene = Internal::Scene::Get(_sceneId);
-if (scene != NULL)
-{
-	if (scene->GetValue(_valueId, o_value))
-	{
-		return true;
-	}
-}
-return false;
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::SceneGetValueListSelection>
-// Return a scene's Value ID list selection (as string) value
-//-----------------------------------------------------------------------------
-bool Manager::SceneGetValueListSelection(uint8 const _sceneId, ValueID const& _valueId, string* o_value)
-{
-Internal::Scene *scene = Internal::Scene::Get(_sceneId);
-if (scene != NULL)
-{
-	if (scene->GetValue(_valueId, o_value))
-	{
-		return true;
-	}
-}
-return false;
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::SceneGetValueListSelection>
-// Return a scene's Value ID list selection (as integer) value
-//-----------------------------------------------------------------------------
-bool Manager::SceneGetValueListSelection(uint8 const _sceneId, ValueID const& _valueId, int32* o_value)
-{
-Internal::Scene *scene = Internal::Scene::Get(_sceneId);
-if (scene != NULL)
-{
-	string str;
-	if (scene->GetValue(_valueId, &str))
-	{
-		*o_value = (int32) atoi(str.c_str());
-		return true;
-	}
-}
-return false;
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::SetSceneValue>
-// Set a scene's ValueID bool value.
-//-----------------------------------------------------------------------------
-bool Manager::SetSceneValue(uint8 const _sceneId, ValueID const& _valueId, bool const _value)
-{
-Internal::Scene *scene = Internal::Scene::Get(_sceneId);
-if (scene != NULL)
-{
-	return scene->SetValue(_valueId, _value ? "True" : "False");
-}
-return false;
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::SetSceneValue>
-// Set a scene's ValueID byte value.
-//-----------------------------------------------------------------------------
-bool Manager::SetSceneValue(uint8 const _sceneId, ValueID const& _valueId, uint8 const _value)
-{
-Internal::Scene *scene = Internal::Scene::Get(_sceneId);
-if (scene != NULL)
-{
-	char str[16];
-	snprintf(str, sizeof(str), "%d", _value);
-	return scene->SetValue(_valueId, str);
-}
-return false;
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::SetSceneValue>
-// Set a scene's ValueID float value.
-//-----------------------------------------------------------------------------
-bool Manager::SetSceneValue(uint8 const _sceneId, ValueID const& _valueId, float const _value)
-{
-Internal::Scene *scene = Internal::Scene::Get(_sceneId);
-if (scene != NULL)
-{
-	char str[16];
-	snprintf(str, sizeof(str), "%f", _value);
-	return scene->SetValue(_valueId, str);
-}
-return false;
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::SetSceneValue>
-// Set a scene's ValueID integer value.
-//-----------------------------------------------------------------------------
-bool Manager::SetSceneValue(uint8 const _sceneId, ValueID const& _valueId, int32 const _value)
-{
-Internal::Scene *scene = Internal::Scene::Get(_sceneId);
-if (scene != NULL)
-{
-	char str[16];
-	snprintf(str, sizeof(str), "%d", _value);
-	return scene->SetValue(_valueId, str);
-}
-return false;
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::SetSceneValue>
-// Set a scene's ValueID short value.
-//-----------------------------------------------------------------------------
-bool Manager::SetSceneValue(uint8 const _sceneId, ValueID const& _valueId, int16 const _value)
-{
-Internal::Scene *scene = Internal::Scene::Get(_sceneId);
-if (scene != NULL)
-{
-	char str[16];
-	snprintf(str, sizeof(str), "%d", _value);
-	return scene->SetValue(_valueId, str);
-}
-return false;
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::SetSceneValue>
-// Set a scene's ValueID string value.
-//-----------------------------------------------------------------------------
-bool Manager::SetSceneValue(uint8 const _sceneId, ValueID const& _valueId, string const& _value)
-{
-Internal::Scene *scene = Internal::Scene::Get(_sceneId);
-if (scene != NULL)
-{
-	return scene->SetValue(_valueId, _value);
-}
-return false;
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::SetSceneValueListSelection>
-// Set a scene's ValueID list item value (as string).
-//-----------------------------------------------------------------------------
-bool Manager::SetSceneValueListSelection(uint8 const _sceneId, ValueID const& _valueId, string const& _value)
-{
-Internal::Scene *scene = Internal::Scene::Get(_sceneId);
-if (scene != NULL)
-{
-	return scene->SetValue(_valueId, _value);
-}
-return false;
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::SetSceneValueListSelection>
-// Set a scene's ValueID list item value (as integer).
-//-----------------------------------------------------------------------------
-bool Manager::SetSceneValueListSelection(uint8 const _sceneId, ValueID const& _valueId, int32 const _value)
-{
-Internal::Scene *scene = Internal::Scene::Get(_sceneId);
-if (scene != NULL)
-{
-	char str[16];
-	snprintf(str, sizeof(str), "%d", _value);
-	return scene->SetValue(_valueId, str);
-}
-return false;
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::GetSceneLabel>
-// Return a scene's label
-//-----------------------------------------------------------------------------
-string Manager::GetSceneLabel(uint8 const _sceneId)
-{
-Internal::Scene *scene = Internal::Scene::Get(_sceneId);
-if (scene != NULL)
-{
-	return scene->GetLabel();
-}
-return NULL;
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::SetSceneLabel>
-// Set a scene's label
-//-----------------------------------------------------------------------------
-void Manager::SetSceneLabel(uint8 const _sceneId, string const& _value)
-{
-Internal::Scene *scene = Internal::Scene::Get(_sceneId);
-if (scene != NULL)
-{
-	scene->SetLabel(_value);
-}
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::SceneExists>
-// Check if a Scene ID exists
-//-----------------------------------------------------------------------------
-bool Manager::SceneExists(uint8 const _sceneId)
-{
-return Internal::Scene::Get(_sceneId) != NULL;
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::ActivateScene>
-// Perform all the settings for the given Scene ID
-//-----------------------------------------------------------------------------
-bool Manager::ActivateScene(uint8 const _sceneId)
-{
-Internal::Scene *scene = Internal::Scene::Get(_sceneId);
-if (scene != NULL)
-{
-	return scene->Activate();
-}
-return false;
 }
 
 //-----------------------------------------------------------------------------

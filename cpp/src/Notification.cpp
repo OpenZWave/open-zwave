@@ -28,6 +28,7 @@
 #include "Defs.h"
 #include "Notification.h"
 #include "Driver.h"
+#include "command_classes/CommandClasses.h"
 
 using namespace OpenZWave;
 
@@ -42,18 +43,34 @@ string Notification::GetAsString() const
 	string command;
 	switch (m_type)
 	{
-		case Type_ValueAdded:
-			str = "ValueAdded";
+		case Type_ValueAdded: {
+			str = "ValueAdded ";
+			std::stringstream ss;
+			ss << "CC: " << Internal::CC::CommandClasses::GetName(GetValueID().GetCommandClassId()) << " Instance: " << (int)GetValueID().GetInstance() << " Index: " << std::dec << GetValueID().GetIndex();
+			str += ss.str();
 			break;
-		case Type_ValueRemoved:
-			str = "ValueRemoved";
+		}
+		case Type_ValueRemoved: {
+			str = "ValueRemoved ";
+			std::stringstream ss;
+			ss << "CC: " << Internal::CC::CommandClasses::GetName(GetValueID().GetCommandClassId()) << " Instance: " << (int)GetValueID().GetInstance() << " Index: " << std::dec << GetValueID().GetIndex();
+			str += ss.str();
 			break;
-		case Type_ValueChanged:
-			str = "ValueChanged";
+		}
+		case Type_ValueChanged: {
+			str = "ValueChanged ";
+			std::stringstream ss;
+			ss << "CC: " << Internal::CC::CommandClasses::GetName(GetValueID().GetCommandClassId()) << " Instance: " << (int)GetValueID().GetInstance() << " Index: " << std::dec << GetValueID().GetIndex();
+			str += ss.str();
 			break;
-		case Type_ValueRefreshed:
-			str = "ValueRefreshed";
+		}
+		case Type_ValueRefreshed: {
+			str = "ValueRefreshed ";
+			std::stringstream ss;
+			ss << "CC: " << Internal::CC::CommandClasses::GetName(GetValueID().GetCommandClassId()) << " Instance: " << (int)GetValueID().GetInstance() << " Index: " << std::dec << GetValueID().GetIndex();
+			str += ss.str();
 			break;
+		}
 		case Type_Group:
 			str = "Group";
 			break;
@@ -80,9 +97,6 @@ string Notification::GetAsString() const
 			break;
 		case Type_PollingEnabled:
 			str = "PollingEnabled";
-			break;
-		case Type_SceneEvent:
-			str = "SceneEvent";
 			break;
 		case Type_CreateButton:
 			str = "CreateButton";
@@ -158,17 +172,11 @@ string Notification::GetAsString() const
 				case Driver::ControllerCommand_AssignReturnRoute:
 					command = "AssignReturnRoute ";
 					break;
-				case Driver::ControllerCommand_CreateButton:
-					command = "CreateButton ";
-					break;
 				case Driver::ControllerCommand_CreateNewPrimary:
 					command = "CreateNewPrimary ";
 					break;
 				case Driver::ControllerCommand_DeleteAllReturnRoutes:
 					command = "DeleteAllReturnRoutes ";
-					break;
-				case Driver::ControllerCommand_DeleteButton:
-					command = "DeleteButton ";
 					break;
 				case Driver::ControllerCommand_HasNodeFailed:
 					command = "HasNodeFailed ";
@@ -217,12 +225,6 @@ string Notification::GetAsString() const
 					{
 						case Driver::ControllerError_None:
 							str = "ControllerCommand - Error - None";
-							break;
-						case Driver::ControllerError_ButtonNotFound:
-							str = "ControllerCommand - Error - ButtonNotFound";
-							break;
-						case Driver::ControllerError_NodeNotFound:
-							str = "ControllerCommand - Error - NodeNotFound";
 							break;
 						case Driver::ControllerError_NotBridge:
 							str = "ControllerCommand - Error - NotBridge";

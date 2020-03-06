@@ -257,7 +257,6 @@ namespace OpenZWave
 						res |= true;
 					}
 				}
-//				exit(-1);
 				return res;
 			}
 

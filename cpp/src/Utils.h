@@ -117,6 +117,10 @@ namespace OpenZWave
 		void PrintHex(std::string prefix, uint8_t const *data, uint32 const length);
 		string PktToString(uint8 const *data, uint32 const length);
 
+		string RFRegionFromCode (ZW_RFRegion code);
+		ZW_RFRegion RFRegionFromString(string region);
+
+
 		struct LockGuard
 		{
 				LockGuard(Internal::Platform::Mutex* mutex) :

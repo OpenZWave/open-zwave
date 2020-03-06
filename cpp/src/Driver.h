@@ -250,12 +250,14 @@ namespace OpenZWave
 			{
 				return ((m_controllerCaps & ControllerCaps_SIS) != 0);
 			}
-
+			ZW_RFRegion GetControllerRegion() const
+			{
+				return m_rfregion;
+			}
 			bool HasExtendedTxStatus() const
 			{
 				return m_hasExtendedTxStatus;
 			}
-
 			uint32 GetHomeId() const
 			{
 				return m_homeId;
@@ -284,7 +286,7 @@ namespace OpenZWave
 			{
 				return m_controllerPath;
 			}
-			ControllerInterface GetControllerInterfaceType() const
+			DEPRECATED ControllerInterface GetControllerInterfaceType() const
 			{
 				return m_controllerInterfaceType;
 			}
@@ -339,6 +341,8 @@ namespace OpenZWave
 			uint16 m_productType;
 			uint16 m_productId;
 			uint8 m_apiMask[32];
+			uint8 m_serialapiMask;							// FUNC_ID_SERIAL_API_SETUP Commands Supported
+			ZW_RFRegion m_rfregion;
 
 			uint8 m_initVersion;								// Version of the Serial API used by the controller.
 			uint8 m_initCaps;									// Set of flags indicating the serial API capabilities (See IsSlave, HasTimerSupport, IsPrimaryController and IsStaticUpdateController above).
@@ -412,12 +416,12 @@ namespace OpenZWave
 			bool HandleSerialApiSetTimeoutsResponse(uint8* _data);
 			bool HandleMemoryGetByteResponse(uint8* _data);
 			bool HandleReadMemoryResponse(uint8* _data);
-			void HandleGetVirtualNodesResponse(uint8* _data);
-			bool HandleSetSlaveLearnModeResponse(uint8* _data);
-			void HandleSetSlaveLearnModeRequest(uint8* _data);
-			bool HandleSendSlaveNodeInfoResponse(uint8* _data);
-			void HandleSendSlaveNodeInfoRequest(uint8* _data);
-			void HandleApplicationSlaveCommandRequest(uint8* _data);
+			//void HandleGetVirtualNodesResponse(uint8* _data);
+			//bool HandleSetSlaveLearnModeResponse(uint8* _data);
+			//void HandleSetSlaveLearnModeRequest(uint8* _data);
+			//bool HandleSendSlaveNodeInfoResponse(uint8* _data);
+			//void HandleSendSlaveNodeInfoRequest(uint8* _data);
+			//void HandleApplicationSlaveCommandRequest(uint8* _data);
 			void HandleSerialAPIResetRequest(uint8* _data);
 
 			void CommonAddNodeStatusRequestHandler(uint8 _funcId, uint8* _data);
@@ -488,10 +492,10 @@ namespace OpenZWave
 			bool IsNodeFrequentListeningDevice(uint8 const _nodeId);
 			bool IsNodeBeamingDevice(uint8 const _nodeId);
 			bool IsNodeRoutingDevice(uint8 const _nodeId);
-			bool IsNodeSecurityDevice(uint8 const _nodeId);
+			DEPRECATED bool IsNodeSecurityDevice(uint8 const _nodeId);
 			uint32 GetNodeMaxBaudRate(uint8 const _nodeId);
 			uint8 GetNodeVersion(uint8 const _nodeId);
-			uint8 GetNodeSecurity(uint8 const _nodeId);
+			DEPRECATED uint8 GetNodeSecurity(uint8 const _nodeId);
 			uint8 GetNodeBasic(uint8 const _nodeId);
 			string GetNodeBasicString(uint8 const _nodeId);
 			uint8 GetNodeGeneric(uint8 const _nodeId, uint8 _instance);
@@ -516,13 +520,10 @@ namespace OpenZWave
 			uint16 GetNodeManufacturerId(uint8 const _nodeId);
 			uint16 GetNodeProductType(uint8 const _nodeId);
 			uint16 GetNodeProductId(uint8 const _nodeId);
-			void SetNodeManufacturerName(uint8 const _nodeId, string const& _manufacturerName);
-			void SetNodeProductName(uint8 const _nodeId, string const& _productName);
-			void SetNodeName(uint8 const _nodeId, string const& _nodeName);
-			void SetNodeLocation(uint8 const _nodeId, string const& _location);
-			void SetNodeLevel(uint8 const _nodeId, uint8 const _level);
-			void SetNodeOn(uint8 const _nodeId);
-			void SetNodeOff(uint8 const _nodeId);
+			DEPRECATED void SetNodeManufacturerName(uint8 const _nodeId, string const& _manufacturerName);
+			DEPRECATED void SetNodeProductName(uint8 const _nodeId, string const& _productName);
+			DEPRECATED void SetNodeName(uint8 const _nodeId, string const& _nodeName);
+			DEPRECATED void SetNodeLocation(uint8 const _nodeId, string const& _location);
 
 			Internal::VC::Value* GetValue(ValueID const& _id);
 
@@ -568,9 +569,7 @@ namespace OpenZWave
 				ControllerCommand_AssignReturnRoute, /**< Assign a network return routes to a device. */
 				ControllerCommand_DeleteAllReturnRoutes, /**< Delete all return routes from a device. */
 				ControllerCommand_SendNodeInformation, /**< Send a node information frame */
-				ControllerCommand_ReplicationSend, /**< Send information from primary to secondary */
-				ControllerCommand_CreateButton, /**< Create an id that tracks handheld button presses */
-				ControllerCommand_DeleteButton /**< Delete id that tracks handheld button presses */
+				ControllerCommand_ReplicationSend /**< Send information from primary to secondary */
 			};
 
 			/**
@@ -600,8 +599,6 @@ namespace OpenZWave
 			enum ControllerError
 			{
 				ControllerError_None = 0,
-				ControllerError_ButtonNotFound, /**< Button */
-				ControllerError_NodeNotFound, /**< Button */
 				ControllerError_NotBridge, /**< Button */
 				ControllerError_NotSUC, /**< CreateNewPrimary */
 				ControllerError_NotSecondary, /**< CreateNewPrimary */
@@ -804,37 +801,6 @@ namespace OpenZWave
 			//-----------------------------------------------------------------------------
 		private:
 			void TestNetwork(uint8 const _nodeId, uint32 const _count);
-
-			//-----------------------------------------------------------------------------
-			// Virtual Node commands
-			//-----------------------------------------------------------------------------
-		public:
-			/**
-			 * Virtual Node Commands.
-			 * Commands to be used with virtual nodes.
-			 */
-		private:
-			uint32 GetVirtualNeighbors(uint8** o_neighbors);
-			void RequestVirtualNeighbors(MsgQueue const _queue);
-			bool IsVirtualNode(uint8 const _nodeId) const
-			{
-				return ((m_virtualNeighbors[(_nodeId - 1) >> 3] & 1 << ((_nodeId - 1) & 0x07)) != 0);
-			}
-			void SendVirtualNodeInfo(uint8 const _fromNodeId, uint8 const _ToNodeId);
-			void SendSlaveLearnModeOff();
-			void SaveButtons();
-			void ReadButtons(uint8 const _nodeId);
-
-			bool m_virtualNeighborsReceived;
-			uint8 m_virtualNeighbors[NUM_NODE_BITFIELD_BYTES];		// Bitmask containing virtual neighbors
-
-			//-----------------------------------------------------------------------------
-			// SwitchAll
-			//-----------------------------------------------------------------------------
-		private:
-			// The public interface is provided via the wrappers in the Manager class
-			void SwitchAllOn();
-			void SwitchAllOff();
 
 			//-----------------------------------------------------------------------------
 			// Configuration Parameters	(wrappers for the Node methods)

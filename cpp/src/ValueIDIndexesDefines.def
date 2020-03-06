@@ -2277,6 +2277,10 @@ ENUM(ValueID_Index_Meter,
 ENUM(ValueID_Index_MeterPulse,
 		Count = 0
 	);
+ENUM(ValueID_Index_NodeNaming,
+		NodeName = 0,
+		NodeLocation = 1
+	);
 ENUM(ValueID_Index_PowerLevel,
 		Powerlevel = 0,
 		Timeout = 1,

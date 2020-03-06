@@ -104,7 +104,7 @@ namespace OpenZWave
 				bool requests = false;
 				if ((_requestFlags & RequestFlag_Static) && HasStaticRequest(StaticRequest_Values))
 				{
-					requests = RequestValue(_requestFlags, CentralSceneCmd_Capability_Get, _instance, _queue);
+					requests = RequestValue(_requestFlags, ValueID_Index_CentralScene::SceneCount, _instance, _queue);
 				}
 				return requests;
 			}
@@ -115,7 +115,7 @@ namespace OpenZWave
 //-----------------------------------------------------------------------------
 			bool CentralScene::RequestValue(uint32 const _requestFlags, uint16 const _what, uint8 const _instance, Driver::MsgQueue const _queue)
 			{
-				if (_what == CentralSceneCmd_Capability_Get)
+				if (_what == ValueID_Index_CentralScene::SceneCount)
 				{
 					Msg* msg = new Msg("CentralSceneCmd_Capability_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
 					msg->SetInstance(this, _instance);
@@ -221,7 +221,7 @@ namespace OpenZWave
 					{
 						Log::Write(LogLevel_Warning, GetNodeId(), "Can't find ValueID for SceneCount");
 					}
-
+					Log::Write(LogLevel_Info, GetNodeId(), "Central Scene Contains %d Scenes that are%sidentical", m_dom.GetFlagByte(STATE_FLAG_CS_SCENECOUNT), identical ? " " : " not ");
 					for (int sceneID = 1; sceneID <= m_dom.GetFlagByte(STATE_FLAG_CS_SCENECOUNT); sceneID++)
 					{
 						if (GetVersion() == 1)
@@ -240,6 +240,7 @@ namespace OpenZWave
 								char lbl[64];
 								snprintf(lbl, 64, "Scene %d", sceneID);
 								node->CreateValueList(ValueID::ValueGenre_User, GetCommandClassId(), _instance, sceneID, lbl, "", true, false, 3, items, 0, 0);
+								Log::Write(LogLevel_Info, GetNodeId(), "Created Scene %d (Version 1)", sceneID);
 							}
 						}
 						if (GetVersion() >= 2)
@@ -254,8 +255,10 @@ namespace OpenZWave
 								int keyAttributes = _data[2 + sceneID];
 								createSupportedKeyAttributesValues(keyAttributes, sceneID, _instance);
 							}
+							Log::Write(LogLevel_Info, GetNodeId(), "Created Scene %d", sceneID);
 						}
 					}
+					return true;
 				}
 
 				return false;

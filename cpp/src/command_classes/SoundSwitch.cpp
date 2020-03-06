@@ -77,6 +77,10 @@ namespace OpenZWave
 				{
 					requests |= RequestValue(_requestFlags, ValueID_Index_SoundSwitch::Tone_Count, _instance, _queue);
 				}
+				if (_requestFlags & RequestFlag_Dynamic) 
+				{
+					requests |= RequestValue(_requestFlags, ValueID_Index_SoundSwitch::Volume, _instance, _queue);
+				}
 
 				return requests;
 			}
@@ -106,6 +110,16 @@ namespace OpenZWave
 					{
 						Log::Write(LogLevel_Info, GetNodeId(), "SoundSwitchCmd_Tones_Number_Get Not Supported on this node");
 					}
+				} else if (_index == ValueID_Index_SoundSwitch::Volume || _index == ValueID_Index_SoundSwitch::Default_Tone) {
+						Msg* msg = new Msg("SoundSwitchCmd_Tones_Config_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
+						msg->SetInstance(this, _instance);
+						msg->Append(GetNodeId());
+						msg->Append(2);
+						msg->Append(GetCommandClassId());
+						msg->Append(SoundSwitchCmd_Tones_Config_Get);
+						msg->Append(GetDriver()->GetTransmitOptions());
+						GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
+						return true;
 				}
 				return false;
 			}
@@ -250,15 +264,31 @@ namespace OpenZWave
 					}
 					ret = true;
 				}
-				if (index == ValueID_Index_SoundSwitch::Volume || index == ValueID_Index_SoundSwitch::Default_Tone)
+				if (index == ValueID_Index_SoundSwitch::Volume)
 				{
 					uint8 volume = 0xff;
-					uint8 defaulttone = 0x01;
-					if (Internal::VC::ValueByte const* value = static_cast<Internal::VC::ValueByte const*>(GetValue(instance, ValueID_Index_SoundSwitch::Volume)))
+					if (Internal::VC::ValueByte const* value = static_cast<Internal::VC::ValueByte const*>(&_value))
 					{
 						volume = value->GetValue();
+						if (volume > 100) {
+							volume = 0xFF;
+						}
 					}
-					if (Internal::VC::ValueList const* value = static_cast<Internal::VC::ValueList const*>(GetValue(instance, ValueID_Index_SoundSwitch::Default_Tone)))
+					Msg* msg = new Msg("SoundSwitchCmd_Tones_Config_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
+					msg->SetInstance(this, instance);
+					msg->Append(GetNodeId());
+					msg->Append(4);
+					msg->Append(GetCommandClassId());
+					msg->Append(SoundSwitchCmd_Tones_Config_Set);
+					msg->Append(volume);
+					msg->Append(0);
+					msg->Append(GetDriver()->GetTransmitOptions());
+					GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
+					ret = true;
+				}
+				if (index == ValueID_Index_SoundSwitch::Default_Tone) {
+					uint8 defaulttone = 0x00;
+					if (Internal::VC::ValueList const* value = static_cast<Internal::VC::ValueList const*>(&_value))
 					{
 						Internal::VC::ValueList::Item const *item = value->GetItem();
 						if (item == NULL)
@@ -268,19 +298,18 @@ namespace OpenZWave
 						if (defaulttone == 0xFF)
 							defaulttone = 1;
 					}
-					Msg* msg = new Msg("SoundSwitchCmd_Tones_Config_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
+					Msg* msg = new Msg("SoundSwitchCmd_Tones_Config_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
 					msg->SetInstance(this, instance);
 					msg->Append(GetNodeId());
 					msg->Append(4);
 					msg->Append(GetCommandClassId());
 					msg->Append(SoundSwitchCmd_Tones_Config_Set);
-					msg->Append(volume);
+					msg->Append(0xFF);
 					msg->Append(defaulttone);
 					msg->Append(GetDriver()->GetTransmitOptions());
 					GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
 					ret = true;
 				}
-
 				return ret;
 			}
 

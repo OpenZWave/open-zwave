@@ -128,13 +128,13 @@ namespace OpenZWave
 				QueryStage_ProtocolInfo, /**< Retrieve protocol information */
 				QueryStage_Probe, /**< Ping device to see if alive */
 				QueryStage_WakeUp, /**< Start wake up process if a sleeping node */
-				QueryStage_ManufacturerSpecific1, /**< Retrieve manufacturer name and product ids if ProtocolInfo lets us */
 				QueryStage_NodeInfo, /**< Retrieve info about supported, controlled command classes */
 				QueryStage_NodePlusInfo, /**< Retrieve ZWave+ info and update device classes */
 				QueryStage_SecurityReport, /**< Retrieve a list of Command Classes that require Security */
-				QueryStage_ManufacturerSpecific2, /**< Retrieve manufacturer name and product ids */
 				QueryStage_Versions, /**< Retrieve version information */
+				QueryStage_ManufacturerSpecific1, /**< Retrieve manufacturer name and product ids if ProtocolInfo lets us */
 				QueryStage_Instances, /**< Retrieve information about multiple command class instances */
+				QueryStage_ManufacturerSpecific2, /**< Retrieve manufacturer name and product ids */
 				QueryStage_Static, /**< Retrieve static information (doesn't change) */
 				QueryStage_CacheLoad, /**< Ping a device upon restarting with cached config for the device */
 				QueryStage_Probe1 = QueryStage_CacheLoad, /** < Depreciated name. /todo Remove in 2.0 timeframe */
@@ -397,7 +397,6 @@ namespace OpenZWave
 			uint8 m_neighbors[29];		// Bitmask containing the neighboring nodes
 			uint8 m_numRouteNodes;		// number of node routes
 			uint8 m_routeNodes[5];		// nodes to route to
-			map<uint8, uint8> m_buttonMap;	// Map button IDs into virtual node numbers
 			bool m_addingNode;
 
 			//-----------------------------------------------------------------------------
@@ -423,17 +422,14 @@ namespace OpenZWave
 				return m_location;
 			}
 
-//			string GetManufacturerId()const{ return std::to_string(m_manufacturerId); }
 			uint16 GetManufacturerId() const
 			{
 				return m_manufacturerId;
 			}
-//			string GetProductType()const{ return string(m_productType); }
 			uint16 GetProductType() const
 			{
 				return m_productType;
 			}
-//			string GetProductId()const{ return string(m_productId); }
 			uint16 GetProductId() const
 			{
 				return m_productId;
@@ -447,8 +443,8 @@ namespace OpenZWave
 			{
 				m_productName = _productName;
 			}
-			void SetNodeName(string const& _nodeName);
-			void SetLocation(string const& _location);
+			DEPRECATED void SetNodeName(string const& _nodeName);
+			DEPRECATED void SetLocation(string const& _location);
 
 			void SetManufacturerId(uint16 const& _manufacturerId)
 			{
@@ -623,18 +619,6 @@ namespace OpenZWave
 			uint32 m_fileConfigRevision;
 			uint32 m_loadedConfigRevision;
 			uint32 m_latestConfigRevision;
-			//-----------------------------------------------------------------------------
-			// Basic commands (helpers that go through the basic command class)
-			//-----------------------------------------------------------------------------
-		public:
-			void SetLevel(uint8 const _level);
-
-			//-----------------------------------------------------------------------------
-			// On/Off commands (helpers that go through the basic or switchall command class)
-			//-----------------------------------------------------------------------------
-		public:
-			void SetNodeOn();
-			void SetNodeOff();
 
 			//-----------------------------------------------------------------------------
 			// Values (handled by the command classes)

@@ -89,13 +89,6 @@ namespace OpenZWave
 						snprintf(msg, sizeof(msg), "via configuration");
 						duration = 0;
 					}
-					Log::Write(LogLevel_Info, GetNodeId(), "Received SceneActivation set from node %d: scene id=%d %s. Sending event notification.", GetNodeId(), _data[1], msg);
-					/* Sending the Scene ID via a notification should be depreciated in 1.8 */
-					Notification* notification = new Notification(Notification::Type_SceneEvent);
-					notification->SetHomeAndNodeIds(GetHomeId(), GetNodeId());
-					notification->SetSceneId(_data[1]);
-					GetDriver()->QueueNotification(notification);
-
 					Log::Write(LogLevel_Info, GetNodeId(), "Received SceneActivation report: %d (duration: %d)", _data[1], duration);
 					if (Internal::VC::ValueInt* value = static_cast<Internal::VC::ValueInt*>(GetValue(_instance, ValueID_Index_SceneActivation::SceneID)))
 					{

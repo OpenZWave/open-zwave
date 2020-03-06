@@ -100,7 +100,7 @@ void OnNotification
 	// Must do this inside a critical section to avoid conflicts with the main thread
 	pthread_mutex_lock( &g_criticalSection );
 
-	std::cout << "Notification: " << _notification << std::endl;
+//	std::cout << "Notification: " << _notification << std::endl;
 
 	switch( _notification->GetType() )
 	{
@@ -235,6 +235,7 @@ void OnNotification
 		}
 
 		case Notification::Type_AwakeNodesQueried:
+			break;
 		case Notification::Type_AllNodesQueried:
 		case Notification::Type_AllNodesQueriedSomeDead:
 		{
@@ -248,7 +249,6 @@ void OnNotification
 		case Notification::Type_NodeProtocolInfo:
 		case Notification::Type_NodeQueriesComplete:
 		case Notification::Type_NodeNew:
-		case Notification::Type_SceneEvent:
 		case Notification::Type_CreateButton:
 		case Notification::Type_DeleteButton:
 		case Notification::Type_ButtonOn:
@@ -357,7 +357,6 @@ int main( int argc, char* argv[] )
 			//if( nodeInfo->m_nodeId == 1) continue;
 
 			printf("NodeID: %d \n ", nodeInfo->m_nodeId);
-			printf("\t NodeName: %s \n ", Manager::Get()->GetNodeName(nodeInfo->m_homeId,nodeInfo->m_nodeId).c_str());
 			printf("\t ManufacturerName: %s \n ", Manager::Get()->GetNodeManufacturerName(nodeInfo->m_homeId,nodeInfo->m_nodeId).c_str());
 			printf("\t NodeProductName: %s \n ", Manager::Get()->GetNodeProductName(nodeInfo->m_homeId,nodeInfo->m_nodeId).c_str());
 

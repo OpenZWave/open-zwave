@@ -34,6 +34,7 @@
 #include "Driver.h"
 #include "Notification.h"
 #include "platform/Log.h"
+#include "value_classes/ValueString.h"
 
 namespace OpenZWave
 {
@@ -289,9 +290,16 @@ namespace OpenZWave
 						string name = ExtractString(_data, _length);
 						if (node->m_nodeName == "")
 						{
-							// We only overwrite the name if it is empty
-							node->m_nodeName = name;
 							Log::Write(LogLevel_Info, GetNodeId(), "Received the name: %s.", name.c_str());
+
+							// Deprecated Interface. Remove in Future Versions
+							node->m_nodeName = name;
+
+							if (Internal::VC::ValueString* value = static_cast<Internal::VC::ValueString*>(GetValue(_instance, ValueID_Index_NodeNaming::NodeName)))
+							{
+								value->OnValueRefreshed(name);
+								value->Release();
+							}
 							updated = true;
 						}
 					}
@@ -300,9 +308,17 @@ namespace OpenZWave
 						string location = ExtractString(_data, _length);
 						if (node->m_location == "")
 						{
-							// We only overwrite the location if it is empty
-							node->m_location = location;
 							Log::Write(LogLevel_Info, GetNodeId(), "Received the location: %s.", location.c_str());
+
+							// Deprecated Interface. Remove in Future Versions
+							node->m_location = location;
+
+							if (Internal::VC::ValueString* value = static_cast<Internal::VC::ValueString*>(GetValue(_instance, ValueID_Index_NodeNaming::NodeLocation)))
+							{
+								value->OnValueRefreshed(location);
+								value->Release();
+							}
+
 							updated = true;
 						}
 					}
@@ -375,6 +391,41 @@ namespace OpenZWave
 				msg->Append(GetDriver()->GetTransmitOptions());
 				GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
 			}
+//-----------------------------------------------------------------------------
+// <NodeNaming::SetValue>
+// Set the device's indicator value
+//-----------------------------------------------------------------------------
+			bool NodeNaming::SetValue(Internal::VC::Value const& _value)
+			{
+				if (ValueID_Index_NodeNaming::NodeName == _value.GetID().GetIndex())
+				{
+					Internal::VC::ValueString const* value = static_cast<Internal::VC::ValueString const*>(&_value);
+					SetName(value->GetValue());
+					return true;
+				} else if (ValueID_Index_NodeNaming::NodeLocation == _value.GetID().GetIndex())
+				{
+					Internal::VC::ValueString const* value = static_cast<Internal::VC::ValueString const*>(&_value);
+					SetLocation(value->GetValue());
+					return true;
+				}
+
+				return false;
+			}
+
+//-----------------------------------------------------------------------------
+// <NodeNaming::CreateVars>
+// Create the values managed by this command class
+//-----------------------------------------------------------------------------
+			void NodeNaming::CreateVars(uint8 const _instance)
+			{
+				if (Node* node = GetNodeUnsafe())
+				{
+					node->CreateValueString(ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_NodeNaming::NodeName, "Name", "", false, false, "", 0);
+					node->CreateValueString(ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_NodeNaming::NodeLocation, "Location", "", false, false, "", 0);
+				}
+			}
+
+
 
 //-----------------------------------------------------------------------------
 // <ExtractString>
