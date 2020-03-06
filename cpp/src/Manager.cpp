@@ -598,7 +598,9 @@ Driver::ControllerInterface Manager::GetControllerInterfaceType(uint32 const _ho
 	Driver::ControllerInterface ifType = Driver::ControllerInterface_Unknown;
 	if (Driver* driver = GetDriver(_homeId))
 	{
+OPENZWAVE_DEPRECATED_WARNINGS_OFF
 		ifType = driver->GetControllerInterfaceType();
+OPENZWAVE_DEPRECATED_WARNINGS_ON
 	}
 	return ifType;
 }
@@ -869,7 +871,9 @@ bool Manager::IsNodeSecurityDevice(uint32 const _homeId, uint8 const _nodeId)
 	bool security = 0;
 	if (Driver* driver = GetDriver(_homeId))
 	{
+OPENZWAVE_DEPRECATED_WARNINGS_OFF
 		security = driver->IsNodeSecurityDevice(_nodeId);
+OPENZWAVE_DEPRECATED_WARNINGS_ON
 	}
 
 	return security;
@@ -914,7 +918,9 @@ uint8 Manager::GetNodeSecurity(uint32 const _homeId, uint8 const _nodeId)
 	uint8 version = 0;
 	if (Driver* driver = GetDriver(_homeId))
 	{
+OPENZWAVE_DEPRECATED_WARNINGS_OFF
 		version = driver->GetNodeSecurity(_nodeId);
+OPENZWAVE_DEPRECATED_WARNINGS_ON
 	}
 
 	return version;
