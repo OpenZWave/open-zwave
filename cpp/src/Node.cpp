@@ -153,12 +153,6 @@ Node::~Node()
 		m_groups.erase(it);
 	}
 
-	// Delete the button map
-	while (!m_buttonMap.empty())
-	{
-		map<uint8, uint8>::iterator it = m_buttonMap.begin();
-		m_buttonMap.erase(it);
-	}
 	delete m_nodeCache;
 }
 
@@ -1468,13 +1462,6 @@ void Node::UpdateProtocolInfo(uint8 const* _data)
 
 		// Set up the device class based data for the node, including mandatory command classes
 		SetDeviceClasses(_data[3], _data[4], _data[5]);
-		// Do this for every controller. A little extra work but it won't be a large file.
-		if (IsController())
-		{
-OPENZWAVE_DEPRECATED_WARNINGS_OFF
-			GetDriver()->ReadButtons(m_nodeId);
-OPENZWAVE_DEPRECATED_WARNINGS_ON
-		}
 #if 0
 		/* come back to this. We need to find a better way to Route Messages
 		 * from Nodes to CC's that are advertised by the ControllerNode

@@ -675,8 +675,9 @@ namespace OpenZWave
 			 * \param _nodeId The ID of the node to query.
 			 * \return A string containing the node's name.
 			 * \see SetNodeName, GetNodeLocation, SetNodeLocation
+			 * \deprecated This method will be removed in future versions. See Internal::CC::NodeName CC
 			 */
-			string GetNodeName(uint32 const _homeId, uint8 const _nodeId);
+			DEPRECATED string GetNodeName(uint32 const _homeId, uint8 const _nodeId);
 
 			/**
 			 * \brief Get the location of a node
@@ -688,6 +689,7 @@ namespace OpenZWave
 			 * \param _nodeId The ID of the node to query.
 			 * \return A string containing the node's location.
 			 * \see SetNodeLocation, GetNodeName, SetNodeName
+			 * \deprecated This method will be removed in Future Versions. See Internal::CC::NodeName CC
 			 */
 			string GetNodeLocation(uint32 const _homeId, uint8 const _nodeId);
 
@@ -751,8 +753,9 @@ namespace OpenZWave
 			 * \param _nodeId The ID of the node to query.
 			 * \param _manufacturerName	A string containing the node's manufacturer name.
 			 * \see GetNodeManufacturerName, GetNodeProductName, SetNodeProductName
+			 * \deprecated This Method will be removed in future versions
 			 */
-			void SetNodeManufacturerName(uint32 const _homeId, uint8 const _nodeId, string const& _manufacturerName);
+			DEPRECATED void SetNodeManufacturerName(uint32 const _homeId, uint8 const _nodeId, string const& _manufacturerName);
 
 			/**
 			 * \brief Set the product name of a device
@@ -766,8 +769,9 @@ namespace OpenZWave
 			 * \param _nodeId The ID of the node to query.
 			 * \param _productName A string containing the node's product name.
 			 * \see GetNodeProductName, GetNodeManufacturerName, SetNodeManufacturerName
+			 * \deprecated This Method will be removed in future versions
 			 */
-			void SetNodeProductName(uint32 const _homeId, uint8 const _nodeId, string const& _productName);
+			DEPRECATED void SetNodeProductName(uint32 const _homeId, uint8 const _nodeId, string const& _productName);
 
 			/**
 			 * \brief Set the name of a node
@@ -781,8 +785,9 @@ namespace OpenZWave
 			 * \param _nodeId The ID of the node to query.
 			 * \param _nodeName A string containing the node's name.
 			 * \see GetNodeName, GetNodeLocation, SetNodeLocation
+			 * \deprecated This method will be removed in future versions. See Internal::CC::NodeName CC
 			 */
-			void SetNodeName(uint32 const _homeId, uint8 const _nodeId, string const& _nodeName);
+			DEPRECATED void SetNodeName(uint32 const _homeId, uint8 const _nodeId, string const& _nodeName);
 
 			/**
 			 * \brief Set the location of a node
@@ -795,8 +800,9 @@ namespace OpenZWave
 			 * \param _nodeId The ID of the node to query.
 			 * \param _location A string containing the node's location.
 			 * \see GetNodeLocation, GetNodeName, SetNodeName
+			 * \deprecated this method will be removed in future versions. See Internal::CC:NodeName CC
 			 */
-			void SetNodeLocation(uint32 const _homeId, uint8 const _nodeId, string const& _location);
+			DEPRECATED void SetNodeLocation(uint32 const _homeId, uint8 const _nodeId, string const& _location);
 
 			/**
 			 * \brief Get whether the node information has been received

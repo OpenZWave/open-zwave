@@ -4046,15 +4046,10 @@ bool Manager::ReplicationSend(uint32 const _homeId, uint8 const _nodeId)
 //-----------------------------------------------------------------------------
 // <Manager::CreateButton>
 // Send a NIF frame from the Controller to the Node
+// Deprecated
 //-----------------------------------------------------------------------------
 bool Manager::CreateButton(uint32 const _homeId, uint8 const _nodeId, uint8 const _buttonid)
 {
-	if (Driver *driver = GetDriver(_homeId))
-	{
-		Internal::LockGuard LG(driver->m_nodeMutex);
-		return driver->BeginControllerCommand(Driver::ControllerCommand_CreateButton,
-		NULL, NULL, true, _nodeId, _buttonid);
-	}
 	return false;
 }
 
@@ -4064,12 +4059,6 @@ bool Manager::CreateButton(uint32 const _homeId, uint8 const _nodeId, uint8 cons
 //-----------------------------------------------------------------------------
 bool Manager::DeleteButton(uint32 const _homeId, uint8 const _nodeId, uint8 const _buttonid)
 {
-	if (Driver *driver = GetDriver(_homeId))
-	{
-		Internal::LockGuard LG(driver->m_nodeMutex);
-		return driver->BeginControllerCommand(Driver::ControllerCommand_DeleteButton,
-		NULL, NULL, true, _nodeId, _buttonid);
-	}
 	return false;
 }
 

@@ -414,12 +414,12 @@ namespace OpenZWave
 			bool HandleSerialApiSetTimeoutsResponse(uint8* _data);
 			bool HandleMemoryGetByteResponse(uint8* _data);
 			bool HandleReadMemoryResponse(uint8* _data);
-			void HandleGetVirtualNodesResponse(uint8* _data);
-			bool HandleSetSlaveLearnModeResponse(uint8* _data);
-			void HandleSetSlaveLearnModeRequest(uint8* _data);
-			bool HandleSendSlaveNodeInfoResponse(uint8* _data);
-			void HandleSendSlaveNodeInfoRequest(uint8* _data);
-			void HandleApplicationSlaveCommandRequest(uint8* _data);
+			//void HandleGetVirtualNodesResponse(uint8* _data);
+			//bool HandleSetSlaveLearnModeResponse(uint8* _data);
+			//void HandleSetSlaveLearnModeRequest(uint8* _data);
+			//bool HandleSendSlaveNodeInfoResponse(uint8* _data);
+			//void HandleSendSlaveNodeInfoRequest(uint8* _data);
+			//void HandleApplicationSlaveCommandRequest(uint8* _data);
 			void HandleSerialAPIResetRequest(uint8* _data);
 
 			void CommonAddNodeStatusRequestHandler(uint8 _funcId, uint8* _data);
@@ -518,10 +518,10 @@ namespace OpenZWave
 			uint16 GetNodeManufacturerId(uint8 const _nodeId);
 			uint16 GetNodeProductType(uint8 const _nodeId);
 			uint16 GetNodeProductId(uint8 const _nodeId);
-			void SetNodeManufacturerName(uint8 const _nodeId, string const& _manufacturerName);
-			void SetNodeProductName(uint8 const _nodeId, string const& _productName);
-			void SetNodeName(uint8 const _nodeId, string const& _nodeName);
-			void SetNodeLocation(uint8 const _nodeId, string const& _location);
+			DEPRECATED void SetNodeManufacturerName(uint8 const _nodeId, string const& _manufacturerName);
+			DEPRECATED void SetNodeProductName(uint8 const _nodeId, string const& _productName);
+			DEPRECATED void SetNodeName(uint8 const _nodeId, string const& _nodeName);
+			DEPRECATED void SetNodeLocation(uint8 const _nodeId, string const& _location);
 
 			Internal::VC::Value* GetValue(ValueID const& _id);
 
@@ -567,9 +567,7 @@ namespace OpenZWave
 				ControllerCommand_AssignReturnRoute, /**< Assign a network return routes to a device. */
 				ControllerCommand_DeleteAllReturnRoutes, /**< Delete all return routes from a device. */
 				ControllerCommand_SendNodeInformation, /**< Send a node information frame */
-				ControllerCommand_ReplicationSend, /**< Send information from primary to secondary */
-				ControllerCommand_CreateButton, /**< Create an id that tracks handheld button presses */
-				ControllerCommand_DeleteButton /**< Delete id that tracks handheld button presses */
+				ControllerCommand_ReplicationSend /**< Send information from primary to secondary */
 			};
 
 			/**
@@ -599,8 +597,6 @@ namespace OpenZWave
 			enum ControllerError
 			{
 				ControllerError_None = 0,
-				ControllerError_ButtonNotFound, /**< Button */
-				ControllerError_NodeNotFound, /**< Button */
 				ControllerError_NotBridge, /**< Button */
 				ControllerError_NotSUC, /**< CreateNewPrimary */
 				ControllerError_NotSecondary, /**< CreateNewPrimary */
@@ -803,30 +799,6 @@ namespace OpenZWave
 			//-----------------------------------------------------------------------------
 		private:
 			void TestNetwork(uint8 const _nodeId, uint32 const _count);
-
-			//-----------------------------------------------------------------------------
-			// Virtual Node commands
-			//-----------------------------------------------------------------------------
-		public:
-			/**
-			 * Virtual Node Commands.
-			 * Commands to be used with virtual nodes.
-			 * DEPRECIATE in next version
-			 */
-		private:
-			DEPRECATED uint32 GetVirtualNeighbors(uint8** o_neighbors);
-			DEPRECATED void RequestVirtualNeighbors(MsgQueue const _queue);
-			DEPRECATED bool IsVirtualNode(uint8 const _nodeId) const
-			{
-				return ((m_virtualNeighbors[(_nodeId - 1) >> 3] & 1 << ((_nodeId - 1) & 0x07)) != 0);
-			}
-			DEPRECATED void SendVirtualNodeInfo(uint8 const _fromNodeId, uint8 const _ToNodeId);
-			DEPRECATED void SendSlaveLearnModeOff();
-			DEPRECATED void SaveButtons();
-			DEPRECATED void ReadButtons(uint8 const _nodeId);
-
-			bool m_virtualNeighborsReceived;
-			uint8 m_virtualNeighbors[NUM_NODE_BITFIELD_BYTES];		// Bitmask containing virtual neighbors
 
 			//-----------------------------------------------------------------------------
 			// Configuration Parameters	(wrappers for the Node methods)

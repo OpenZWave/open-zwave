@@ -397,7 +397,6 @@ namespace OpenZWave
 			uint8 m_neighbors[29];		// Bitmask containing the neighboring nodes
 			uint8 m_numRouteNodes;		// number of node routes
 			uint8 m_routeNodes[5];		// nodes to route to
-			map<uint8, uint8> m_buttonMap;	// Map button IDs into virtual node numbers
 			bool m_addingNode;
 
 			//-----------------------------------------------------------------------------
@@ -444,8 +443,8 @@ namespace OpenZWave
 			{
 				m_productName = _productName;
 			}
-			void SetNodeName(string const& _nodeName);
-			void SetLocation(string const& _location);
+			DEPRECATED void SetNodeName(string const& _nodeName);
+			DEPRECATED void SetLocation(string const& _location);
 
 			void SetManufacturerId(uint16 const& _manufacturerId)
 			{

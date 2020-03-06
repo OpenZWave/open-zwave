@@ -357,7 +357,6 @@ int main( int argc, char* argv[] )
 			//if( nodeInfo->m_nodeId == 1) continue;
 
 			printf("NodeID: %d \n ", nodeInfo->m_nodeId);
-			printf("\t NodeName: %s \n ", Manager::Get()->GetNodeName(nodeInfo->m_homeId,nodeInfo->m_nodeId).c_str());
 			printf("\t ManufacturerName: %s \n ", Manager::Get()->GetNodeManufacturerName(nodeInfo->m_homeId,nodeInfo->m_nodeId).c_str());
 			printf("\t NodeProductName: %s \n ", Manager::Get()->GetNodeProductName(nodeInfo->m_homeId,nodeInfo->m_nodeId).c_str());
 

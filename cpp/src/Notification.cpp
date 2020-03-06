@@ -172,17 +172,11 @@ string Notification::GetAsString() const
 				case Driver::ControllerCommand_AssignReturnRoute:
 					command = "AssignReturnRoute ";
 					break;
-				case Driver::ControllerCommand_CreateButton:
-					command = "CreateButton ";
-					break;
 				case Driver::ControllerCommand_CreateNewPrimary:
 					command = "CreateNewPrimary ";
 					break;
 				case Driver::ControllerCommand_DeleteAllReturnRoutes:
 					command = "DeleteAllReturnRoutes ";
-					break;
-				case Driver::ControllerCommand_DeleteButton:
-					command = "DeleteButton ";
 					break;
 				case Driver::ControllerCommand_HasNodeFailed:
 					command = "HasNodeFailed ";
@@ -231,12 +225,6 @@ string Notification::GetAsString() const
 					{
 						case Driver::ControllerError_None:
 							str = "ControllerCommand - Error - None";
-							break;
-						case Driver::ControllerError_ButtonNotFound:
-							str = "ControllerCommand - Error - ButtonNotFound";
-							break;
-						case Driver::ControllerError_NodeNotFound:
-							str = "ControllerCommand - Error - NodeNotFound";
 							break;
 						case Driver::ControllerError_NotBridge:
 							str = "ControllerCommand - Error - NotBridge";
