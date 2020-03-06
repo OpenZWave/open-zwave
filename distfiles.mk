@@ -1334,8 +1334,6 @@ DISTFILES =	.gitignore \
 	cpp/src/OZWException.h \
 	cpp/src/Options.cpp \
 	cpp/src/Options.h \
-	cpp/src/Scene.cpp \
-	cpp/src/Scene.h \
 	cpp/src/SensorMultiLevelCCTypes.cpp \
 	cpp/src/SensorMultiLevelCCTypes.h \
 	cpp/src/TimerThread.cpp \

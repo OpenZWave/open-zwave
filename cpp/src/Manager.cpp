@@ -1139,7 +1139,9 @@ void Manager::SetNodeManufacturerName(uint32 const _homeId, uint8 const _nodeId,
 {
 	if (Driver* driver = GetDriver(_homeId))
 	{
+OPENZWAVE_DEPRECATED_WARNINGS_OFF
 		driver->SetNodeManufacturerName(_nodeId, _manufacturerName);
+OPENZWAVE_DEPRECATED_WARNINGS_ON
 	}
 }
 
@@ -1151,7 +1153,9 @@ void Manager::SetNodeProductName(uint32 const _homeId, uint8 const _nodeId, stri
 {
 	if (Driver* driver = GetDriver(_homeId))
 	{
+OPENZWAVE_DEPRECATED_WARNINGS_OFF
 		driver->SetNodeProductName(_nodeId, _productName);
+OPENZWAVE_DEPRECATED_WARNINGS_ON
 	}
 }
 
@@ -1163,7 +1167,9 @@ void Manager::SetNodeName(uint32 const _homeId, uint8 const _nodeId, string cons
 {
 	if (Driver* driver = GetDriver(_homeId))
 	{
+OPENZWAVE_DEPRECATED_WARNINGS_OFF
 		driver->SetNodeName(_nodeId, _nodeName);
+OPENZWAVE_DEPRECATED_WARNINGS_ON
 	}
 }
 
@@ -1177,7 +1183,9 @@ void Manager::SetNodeLocation(uint32 const _homeId, uint8 const _nodeId, string 
 {
 	if (Driver* driver = GetDriver(_homeId))
 	{
+OPENZWAVE_DEPRECATED_WARNINGS_OFF
 		driver->SetNodeLocation(_nodeId, _location);
+OPENZWAVE_DEPRECATED_WARNINGS_ON
 	}
 }
 

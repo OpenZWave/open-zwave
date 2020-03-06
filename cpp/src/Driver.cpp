@@ -5054,7 +5054,9 @@ void Driver::SetNodeName(uint8 const _nodeId, string const& _nodeName)
 	Internal::LockGuard LG(m_nodeMutex);
 	if (Node* node = GetNode(_nodeId))
 	{
+OPENZWAVE_DEPRECATED_WARNINGS_OFF
 		node->SetNodeName(_nodeName);
+OPENZWAVE_DEPRECATED_WARNINGS_ON
 	}
 }
 
@@ -5067,7 +5069,9 @@ void Driver::SetNodeLocation(uint8 const _nodeId, string const& _location)
 	Internal::LockGuard LG(m_nodeMutex);
 	if (Node* node = GetNode(_nodeId))
 	{
+OPENZWAVE_DEPRECATED_WARNINGS_OFF
 		node->SetLocation(_location);
+OPENZWAVE_DEPRECATED_WARNINGS_ON
 	}
 }
 
