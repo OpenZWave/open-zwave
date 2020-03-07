@@ -3650,10 +3650,9 @@ void Driver::HandleApplicationCommandHandlerRequest(uint8* _data, bool encrypted
 
 	uint8 status = _data[2];
 	uint8 nodeId = this->IsBridgeController() ? _data[4] : _data[3];
-	uint8 classId = _data[5];
+	uint8 classId = this->IsBridgeController() ? _data[6] : _data[5];
 	uint8 lengthbyte = this->IsBridgeController() ? _data[5] : _data[4];
 	Node* node = GetNodeUnsafe(nodeId);
-
 	if ((status & RECEIVE_STATUS_ROUTED_BUSY) != 0)
 	{
 		m_routedbusy++;
@@ -3703,12 +3702,11 @@ void Driver::HandleApplicationCommandHandlerRequest(uint8* _data, bool encrypted
 		{
 			node->SetNodeAlive(true);
 		}
+	} else {
+		Log::Write(LogLevel_Warning, "Cant find Node for HandleApplicationCommandHandlerRequest: %d", nodeId);
+		return;
 	}
-	if (Internal::CC::ApplicationStatus::StaticGetCommandClassId() == classId)
-	{
-		//TODO: Test this class function or implement
-	}
-	else if (Internal::CC::ControllerReplication::StaticGetCommandClassId() == classId)
+	if (Internal::CC::ControllerReplication::StaticGetCommandClassId() == classId)
 	{
 		if (m_controllerReplication && m_currentControllerCommand && (ControllerCommand_ReceiveConfiguration == m_currentControllerCommand->m_controllerCommand))
 		{

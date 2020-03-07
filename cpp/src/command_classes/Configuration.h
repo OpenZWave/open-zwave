@@ -63,6 +63,9 @@ namespace OpenZWave
 						return "COMMAND_CLASS_CONFIGURATION";
 					}
 
+					virtual void ReadXML(TiXmlElement const* _ccElement) override;
+					virtual void WriteXML(TiXmlElement* _ccElement) override;
+					virtual bool RequestState(uint32 const _requestFlags, uint8 const _instance, Driver::MsgQueue const _queue) override;
 					virtual bool RequestValue(uint32 const _requestFlags, uint16 const _parameter, uint8 const _index, Driver::MsgQueue const _queue) override;
 					void Set(uint16 const _parameter, int32 const _value, uint8 const _size);
 
@@ -77,12 +80,59 @@ namespace OpenZWave
 					}
 					virtual bool HandleMsg(uint8 const* _data, uint32 const _length, uint32 const _instance = 1) override;
 					virtual bool SetValue(Internal::VC::Value const& _value) override;
-
+					uint8 GetMaxVersion() override
+					{
+						return 4;
+					}
+				protected:
+					void CreateVars(uint8 const _instance) override;
 				private:
 					Configuration(uint32 const _homeId, uint8 const _nodeId) :
 							CommandClass(_homeId, _nodeId)
 					{
 					}
+					
+
+					enum CC_Param_Format {
+						CC_Param_Format_Signed = 0x00,
+						CC_Param_Format_Unsigned = 0x01,
+						CC_Param_Format_List = 0x02,
+						CC_Param_Format_BitSet = 0x03
+					};
+					enum CC_Param_Size {
+						CC_Param_Size_Unassigned = 0x00,
+						CC_Param_Size_Byte = 0x01,
+						CC_Param_Size_Short = 0x02,
+						CC_Param_Size_Int = 0x04,
+					};
+
+					uint32 getField(const uint8 *data, CC_Param_Size size, uint8 &pos);
+					bool processConfigParams(uint16 param);
+
+					class ConfigParam {
+						public:
+							uint16 paramNo;
+							string name;
+							string help;
+							uint32 min;
+							uint32 max;
+							uint32 defaultval;
+							CC_Param_Size size;
+							CC_Param_Format format;
+							uint8 flags;
+							/* Version 4 onwards */
+							bool readonly;
+							bool altering;
+							bool advanced;
+							bool nobulk;
+					};
+					enum ConfigParamFlags {
+						ConfigParamFlags_Info_Done = 0x01,
+						ConfigParamFlags_Name_Done = 0x02,
+						ConfigParamFlags_Help_Done = 0x04,
+					};
+					std::map<uint16, ConfigParam> m_ConfigParams;
+
 			};
 		} // namespace CC
 	} // namespace Internal

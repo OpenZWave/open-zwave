@@ -41,6 +41,7 @@ namespace OpenZWave
 		{
 			class ApplicationStatus;
 			class Basic;
+			class Configuration;
 			class ManufacturerSpecific;
 			class NodeNaming;
 			class SceneActivation;
@@ -73,6 +74,7 @@ namespace OpenZWave
 			friend class Internal::CC::SceneActivation;
 			friend class Internal::CC::WakeUp;
 			friend class Internal::CC::ApplicationStatus;
+			friend class Internal::CC::Configuration;
 			friend class Internal::ManufacturerSpecificDB;
 			/* allow us to Stream a Notification */
 			//friend std::ostream &operator<<(std::ostream &os, const Notification &dt);

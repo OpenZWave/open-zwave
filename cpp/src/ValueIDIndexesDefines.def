@@ -2142,7 +2142,8 @@ ENUM(ValueID_Index_Configuration,
 		Parameter_252,
 		Parameter_253,
 		Parameter_254,
-		Parameter_255
+		Parameter_255,
+		ResetToDefault = 32766
 	);
 ENUM(ValueID_Index_ControllerReplication,
 		NodeId = 0,
