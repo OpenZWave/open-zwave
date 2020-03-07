@@ -472,7 +472,7 @@ namespace OpenZWave
 				msg->Append(GetCommandClassId());
 				msg->Append(WakeUpCmd_NoMoreInformation);
 				msg->Append(GetDriver()->GetTransmitOptions());
-				//GetDriver()->SendMsg(msg, Driver::MsgQueue_WakeUp);
+				GetDriver()->SendMsg(msg, Driver::MsgQueue_WakeUp);
 			}
 
 //-----------------------------------------------------------------------------
