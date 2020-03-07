@@ -158,23 +158,20 @@ namespace OpenZWave
 			{
 				CommandClass::WriteXML(_ccElement);
 
-				if (Node* node = GetNodeUnsafe())
-				{
-					TiXmlElement* configParamsElement = new TiXmlElement("ConfigParams");
-					for (std::map<uint16, ConfigParam>::iterator it = m_ConfigParams.begin(); it != m_ConfigParams.end(); it++) { 
-						TiXmlElement* configElement = new TiXmlElement("ConfigParam");
-						char str[32];
-						snprintf(str, sizeof(str), "%d", it->first);
-						configElement->SetAttribute("index", str);
-						configElement->SetAttribute("altering", it->second.altering ? "true" : "false");
-						configElement->SetAttribute("advanced", it->second.advanced ? "true" : "false");
-						configElement->SetAttribute("nobulk", it->second.nobulk ? "true" : "false");
-						snprintf(str, sizeof(str), "%d", it->second.defaultval);
-						configElement->SetAttribute("default", str);
-						configParamsElement->LinkEndChild(configElement);
-					}
-					_ccElement->LinkEndChild(configParamsElement);
+				TiXmlElement* configParamsElement = new TiXmlElement("ConfigParams");
+				for (std::map<uint16, ConfigParam>::iterator it = m_ConfigParams.begin(); it != m_ConfigParams.end(); it++) { 
+					TiXmlElement* configElement = new TiXmlElement("ConfigParam");
+					char str[32];
+					snprintf(str, sizeof(str), "%d", it->first);
+					configElement->SetAttribute("index", str);
+					configElement->SetAttribute("altering", it->second.altering ? "true" : "false");
+					configElement->SetAttribute("advanced", it->second.advanced ? "true" : "false");
+					configElement->SetAttribute("nobulk", it->second.nobulk ? "true" : "false");
+					snprintf(str, sizeof(str), "%d", it->second.defaultval);
+					configElement->SetAttribute("default", str);
+					configParamsElement->LinkEndChild(configElement);
 				}
+				_ccElement->LinkEndChild(configParamsElement);
 			}
 
 
