@@ -84,6 +84,8 @@ namespace OpenZWave
 					{
 						return 4;
 					}
+				protected:
+					void CreateVars(uint8 const _instance) override;
 				private:
 					Configuration(uint32 const _homeId, uint8 const _nodeId) :
 							CommandClass(_homeId, _nodeId)
@@ -105,7 +107,7 @@ namespace OpenZWave
 					};
 
 					uint32 getField(const uint8 *data, CC_Param_Size size, uint8 &pos);
-					bool processConfigParams();
+					bool processConfigParams(uint16 param);
 
 					class ConfigParam {
 						public:

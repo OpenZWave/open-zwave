@@ -99,40 +99,51 @@ namespace OpenZWave
 					if (str && !strcmp(str, "ConfigParams"))
 					{
 						TiXmlElement const* configParam = configParamsElement->FirstChildElement();
-						ConfigParam param;
-						int value;
-						if (!configParam->QueryIntAttribute("index", &value)) {
-							Log::Write(LogLevel_Warning, GetNodeId(), "Missing Index Value on ConfigParam at Row %s", _ccElement->Row());
-							continue;
-						} else {
-							param.paramNo = (int16)(value & 0xFFFF);
+						while (configParam) { 
+							ConfigParam param;
+							int value;
+							if (TIXML_SUCCESS != configParam->QueryIntAttribute("index", &value)) {
+								Log::Write(LogLevel_Warning, GetNodeId(), "Missing Index Value on ConfigParam at Row %d", configParam->Row());
+								configParam = configParam->NextSiblingElement();		
+								continue;
+							} else {
+								param.paramNo = (int16)(value & 0xFFFF);
+							}
+
+							char const *str2 = configParam->Attribute("altering");
+							if (!str2) {
+								Log::Write(LogLevel_Warning, GetNodeId(), "Missing altering Value on ConfigParam at Row %d", configParam->Row());
+								configParam = configParam->NextSiblingElement();		
+								continue;
+							} else {
+								param.altering = !strcmp(str2, "true");
+							}
+							str2 = configParam->Attribute("advanced");
+							if (!str2) {
+								Log::Write(LogLevel_Warning, GetNodeId(), "Missing advanced Value on ConfigParam at Row %d", configParam->Row());
+								configParam = configParam->NextSiblingElement();		
+								continue;
+							} else {
+								param.advanced = !strcmp(str2, "true");
+							}
+							str2 = configParam->Attribute("nobulk");
+							if (!str2) {
+								Log::Write(LogLevel_Warning, GetNodeId(), "Missing nobulk Value on ConfigParam at Row %d", configParam->Row());
+								configParam = configParam->NextSiblingElement();		
+								continue;
+							} else {
+								param.nobulk = !strcmp(str2, "true");
+							}
+							if (TIXML_SUCCESS != configParam->QueryIntAttribute("default", &value)) {
+								Log::Write(LogLevel_Warning, GetNodeId(), "Missing default Value on ConfigParam at Row %d", configParam->Row());
+								configParam = configParam->NextSiblingElement();		
+								continue;
+							} else {
+								param.defaultval = value;
+							}
+							m_ConfigParams[param.paramNo] = param;
+							configParam = configParam->NextSiblingElement();
 						}
-						if (!configParam->QueryIntAttribute("altering", &value)) {
-							Log::Write(LogLevel_Warning, GetNodeId(), "Missing altering Value on ConfigParam at Row %s", _ccElement->Row());
-							continue;
-						} else {
-							param.altering = value > 0 ? true : false;
-						}
-						if (!configParam->QueryIntAttribute("advanced", &value)) {
-							Log::Write(LogLevel_Warning, GetNodeId(), "Missing advanced Value on ConfigParam at Row %s", _ccElement->Row());
-							continue;
-						} else {
-							param.advanced = value > 0 ? true : false;
-						}
-						if (!configParam->QueryIntAttribute("nobulk", &value)) {
-							Log::Write(LogLevel_Warning, GetNodeId(), "Missing nobulk Value on ConfigParam at Row %s", _ccElement->Row());
-							continue;
-						} else {
-							param.nobulk = value > 0 ? true : false;
-						}
-						if (!configParam->QueryIntAttribute("default", &value)) {
-							Log::Write(LogLevel_Warning, GetNodeId(), "Missing default Value on ConfigParam at Row %s", _ccElement->Row());
-							continue;
-						} else {
-							param.defaultval = value;
-						}
-						m_ConfigParams[param.paramNo] = param;
-						configParam = configParam->NextSiblingElement();		
 					}
 
 					configParamsElement = configParamsElement->NextSiblingElement();
@@ -152,12 +163,14 @@ namespace OpenZWave
 					TiXmlElement* configParamsElement = new TiXmlElement("ConfigParams");
 					for (std::map<uint16, ConfigParam>::iterator it = m_ConfigParams.begin(); it != m_ConfigParams.end(); it++) { 
 						TiXmlElement* configElement = new TiXmlElement("ConfigParam");
-						
-						configElement->SetAttribute("index", it->first);
-						configElement->SetAttribute("altering", it->second.altering);
-						configElement->SetAttribute("advanced", it->second.advanced);
-						configElement->SetAttribute("nobulk", it->second.nobulk);
-						configElement->SetAttribute("default", it->second.defaultval);
+						char str[32];
+						snprintf(str, sizeof(str), "%d", it->first);
+						configElement->SetAttribute("index", str);
+						configElement->SetAttribute("altering", it->second.altering ? "true" : "false");
+						configElement->SetAttribute("advanced", it->second.advanced ? "true" : "false");
+						configElement->SetAttribute("nobulk", it->second.nobulk ? "true" : "false");
+						snprintf(str, sizeof(str), "%d", it->second.defaultval);
+						configElement->SetAttribute("default", str);
 						configParamsElement->LinkEndChild(configElement);
 					}
 					_ccElement->LinkEndChild(configParamsElement);
@@ -172,18 +185,33 @@ namespace OpenZWave
 			bool Configuration::HandleMsg(uint8 const* _data, uint32 const _length, uint32 const _instance	// = 1
 					)
 			{
-				if (ConfigurationCmd_Report == (ConfigurationCmd) _data[0])
+				if ( (ConfigurationCmd_Report == (ConfigurationCmd) _data[0]) || (ConfigurationCmd_Bulk_Report == (ConfigurationCmd) _data[0]) )
 				{
+					bool bulk = (_data[0] == ConfigurationCmd_Bulk_Report);
+					uint16 parameter;
+					uint8 size;
+					uint32 paramValue = 0;
 					// Extract the parameter index and value
-					uint8 parameter = _data[1];
-					uint8 size = _data[2] & 0x07;
-					int32 paramValue = 0;
-					for (uint8 i = 0; i < size; ++i)
+					if (bulk)
 					{
-						paramValue <<= 8;
-						paramValue |= (int32) _data[i + 3];
+						parameter = (_data[1] << 8) + (_data[2]);
+						size = _data[5] & 0x07;
+						for (uint8 i = 0; i < size; ++i)
+						{
+							paramValue <<= 8;
+							paramValue |= (int32) _data[i + 6];
+						}
 					}
-
+					else 
+					{
+						parameter = _data[1];
+						size = _data[2] & 0x07;
+						for (uint8 i = 0; i < size; ++i)
+						{
+							paramValue <<= 8;
+							paramValue |= (int32) _data[i + 3];
+						}
+					}
 					if (Internal::VC::Value* value = GetValue(1, parameter))
 					{
 						switch (value->GetID().GetType())
@@ -321,7 +349,8 @@ namespace OpenZWave
 					param.max = getField(_data, paramSize, position);
 					param.defaultval = getField(_data, paramSize, position);
 					param.format = paramFormat;
-					param.flags |= ConfigParamFlags_Info_Done;
+
+					param.flags = ConfigParamFlags_Info_Done;
 					m_ConfigParams[paramNo] = param;
 					uint16 nextParam = getField(_data, CC_Param_Size::CC_Param_Size_Short, position);
 					if (GetVersion() >= 4) {
@@ -335,7 +364,7 @@ namespace OpenZWave
 						param.advanced = false;
 						param.nobulk = false;
 					}
-					Log::Write(LogLevel_Warning, GetNodeId(), "Param %d Format: %d Size: %d Min: %d Max: %d Default %d ReadOnly %d Altering %d Advanced %d NoBulk %d Next %d", param.paramNo, param.format, paramSize, param.min, param.max, param.defaultval, param.readonly, param.altering, param.advanced, param.nobulk, nextParam);
+					Log::Write(LogLevel_Info, GetNodeId(), "Param %d Format: %d Size: %d Min: %d Max: %d Default %d ReadOnly %d Altering %d Advanced %d NoBulk %d Next %d", param.paramNo, param.format, paramSize, param.min, param.max, param.defaultval, param.readonly, param.altering, param.advanced, param.nobulk, nextParam);
 					
 
 					if (nextParam > 0) {
@@ -373,9 +402,6 @@ namespace OpenZWave
 							GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
 						}
 						return true;
-					} else {
-						/* No More Params - Lets process what we have */
-						return processConfigParams();
 					}
 					return true;
 
@@ -388,10 +414,11 @@ namespace OpenZWave
 						for (uint32 i = 4; i <= (_length -1); i++) {
 							m_ConfigParams.at(paramNo).name += _data[i];
 						}
-						if (reportsToFollow)
+						if (!reportsToFollow) {
 							m_ConfigParams.at(paramNo).flags |= ConfigParamFlags_Name_Done;
+						}
 						uint8 moreInfo = (_data[3]);
-						Log::Write(LogLevel_Warning, GetNodeId(), "Param %d Name: %s (moreInfo %d)", paramNo, m_ConfigParams.at(paramNo).name.c_str(), moreInfo);
+						Log::Write(LogLevel_Info, GetNodeId(), "Param %d Name: %s (moreInfo %d, flags %d)", paramNo, m_ConfigParams.at(paramNo).name.c_str(), moreInfo, m_ConfigParams.at(paramNo).flags);
 					} else {
 						Log::Write(LogLevel_Warning, GetNodeId(), "Cant Find Config Param %d for NameReport", paramNo);
 					}
@@ -405,15 +432,18 @@ namespace OpenZWave
 						for (uint32 i = 4; i <= (_length -1); i++) {
 							m_ConfigParams.at(paramNo).help += _data[i];
 						}
-						if (reportsToFollow)
-							m_ConfigParams.at(paramNo).flags |= ConfigParamFlags_Info_Done;
+						if (!reportsToFollow) {
+							m_ConfigParams.at(paramNo).flags |= ConfigParamFlags_Help_Done;
+						}
 						uint8 moreInfo = (_data[3]);
-						Log::Write(LogLevel_Warning, GetNodeId(), "Param %d Help: %s (moreInfo: %d)", paramNo, m_ConfigParams.at(paramNo).help.c_str(), moreInfo);
+						Log::Write(LogLevel_Info, GetNodeId(), "Param %d Help: %s (moreInfo: %d, flags %d)", paramNo, m_ConfigParams.at(paramNo).help.c_str(), moreInfo, m_ConfigParams.at(paramNo).flags);
+						return processConfigParams(paramNo);
 					} else {
 						Log::Write(LogLevel_Warning, GetNodeId(), "Cant Find Config Param %d for InfoReport", paramNo);
 					}
 					return true;
 				}
+				Log::Write(LogLevel_Warning, GetNodeId(), "Unhandled Configuration Command: %d", _data[0]);
 				return false;
 			}
 
@@ -424,56 +454,111 @@ namespace OpenZWave
 			bool Configuration::SetValue(Internal::VC::Value const& _value)
 			{
 				uint16 param = _value.GetID().GetIndex();
-				switch (_value.GetID().GetType())
+				if ((GetVersion() >= 3) && (param == ValueID_Index_Configuration::ResetToDefault))
 				{
-					case ValueID::ValueType_BitSet:
+					/* Reset all our Params */
+					for (std::map<uint16, ConfigParam>::iterator it = m_ConfigParams.begin(); it != m_ConfigParams.end(); it++) 
 					{
-						Internal::VC::ValueBitSet const& vbs = static_cast<Internal::VC::ValueBitSet const&>(_value);
-						Set(param, (int32) vbs.GetValue(), vbs.GetSize());
-						return true;
-					}
-					case ValueID::ValueType_Bool:
-					{
-						Internal::VC::ValueBool const& valueBool = static_cast<Internal::VC::ValueBool const&>(_value);
-						Set(param, (int32) valueBool.GetValue(), 1);
-						return true;
-					}
-					case ValueID::ValueType_Byte:
-					{
-						Internal::VC::ValueByte const& valueByte = static_cast<Internal::VC::ValueByte const&>(_value);
-						Set(param, (int32) valueByte.GetValue(), 1);
-						return true;
-					}
-					case ValueID::ValueType_Short:
-					{
-						Internal::VC::ValueShort const& valueShort = static_cast<Internal::VC::ValueShort const&>(_value);
-						Set(param, (int32) valueShort.GetValue(), 2);
-						return true;
-					}
-					case ValueID::ValueType_Int:
-					{
-						Internal::VC::ValueInt const& valueInt = static_cast<Internal::VC::ValueInt const&>(_value);
-						Set(param, valueInt.GetValue(), 4);
-						return true;
-					}
-					case ValueID::ValueType_List:
-					{
-						Internal::VC::ValueList const& valueList = static_cast<Internal::VC::ValueList const&>(_value);
-						if (valueList.GetItem() != NULL)
-							Set(param, valueList.GetItem()->m_value, valueList.GetSize());
-						return true;
-					}
-					case ValueID::ValueType_Button:
-					{
-						Internal::VC::ValueButton const& valueButton = static_cast<Internal::VC::ValueButton const&>(_value);
-						Set(param, valueButton.IsPressed(), 1);
-						return true;
-					}
-					default:
-					{
+						if (it->first < 255) { 
+							Msg* msg = new Msg("ConfigurationCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
+							msg->Append(GetNodeId());
+							msg->Append(4 + it->second.size);
+							msg->Append(GetCommandClassId());
+							msg->Append(ConfigurationCmd_Set);
+							msg->Append((it->first & 0xFF));
+							msg->Append((it->second.size & 0x07) + 0x80);
+							if (it->second.size > 2)
+							{
+								msg->Append((uint8) ((it->second.defaultval >> 24) & 0xff));
+								msg->Append((uint8) ((it->second.defaultval >> 16) & 0xff));
+							}
+							if (it->second.size > 1)
+							{
+								msg->Append((uint8) ((it->second.defaultval >> 8) & 0xff));
+							}
+							msg->Append((uint8) (it->second.defaultval & 0xff));
+							msg->Append(GetDriver()->GetTransmitOptions());
+							GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
+						} 
+						else 
+						{
+							Msg* msg = new Msg("ConfigurationCmd_Bulk_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
+							msg->Append(GetNodeId());
+							msg->Append(6 + it->second.size);
+							msg->Append(GetCommandClassId());
+							msg->Append(ConfigurationCmd_Bulk_Set);
+							msg->Append(((it->first & 0xFF00) >> 8));
+							msg->Append((it->first & 0xFF));
+							msg->Append(1);
+							msg->Append((it->second.size & 0x07) + 0x80);
+							if (it->second.size > 2)
+							{
+								msg->Append((uint8) ((it->second.defaultval >> 24) & 0xff));
+								msg->Append((uint8) ((it->second.defaultval >> 16) & 0xff));
+							}
+							if (it->second.size > 1)
+							{
+								msg->Append((uint8) ((it->second.defaultval >> 8) & 0xff));
+							}
+							msg->Append((uint8) (it->second.defaultval & 0xff));
+							msg->Append(GetDriver()->GetTransmitOptions());
+							GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
+
+						}
 					}
 				}
-
+				else
+				{
+					switch (_value.GetID().GetType())
+					{
+						case ValueID::ValueType_BitSet:
+						{
+							Internal::VC::ValueBitSet const& vbs = static_cast<Internal::VC::ValueBitSet const&>(_value);
+							Set(param, (int32) vbs.GetValue(), vbs.GetSize());
+							return true;
+						}
+						case ValueID::ValueType_Bool:
+						{
+							Internal::VC::ValueBool const& valueBool = static_cast<Internal::VC::ValueBool const&>(_value);
+							Set(param, (int32) valueBool.GetValue(), 1);
+							return true;
+						}
+						case ValueID::ValueType_Byte:
+						{
+							Internal::VC::ValueByte const& valueByte = static_cast<Internal::VC::ValueByte const&>(_value);
+							Set(param, (int32) valueByte.GetValue(), 1);
+							return true;
+						}
+						case ValueID::ValueType_Short:
+						{
+							Internal::VC::ValueShort const& valueShort = static_cast<Internal::VC::ValueShort const&>(_value);
+							Set(param, (int32) valueShort.GetValue(), 2);
+							return true;
+						}
+						case ValueID::ValueType_Int:
+						{
+							Internal::VC::ValueInt const& valueInt = static_cast<Internal::VC::ValueInt const&>(_value);
+							Set(param, valueInt.GetValue(), 4);
+							return true;
+						}
+						case ValueID::ValueType_List:
+						{
+							Internal::VC::ValueList const& valueList = static_cast<Internal::VC::ValueList const&>(_value);
+							if (valueList.GetItem() != NULL)
+								Set(param, valueList.GetItem()->m_value, valueList.GetSize());
+							return true;
+						}
+						case ValueID::ValueType_Button:
+						{
+							Internal::VC::ValueButton const& valueButton = static_cast<Internal::VC::ValueButton const&>(_value);
+							Set(param, valueButton.IsPressed(), 1);
+							return true;
+						}
+						default:
+						{
+						}
+					}
+				}
 				Log::Write(LogLevel_Info, GetNodeId(), "Configuration::Set failed (bad value or value type) - Parameter=%d", param);
 				return false;
 			}
@@ -520,15 +605,32 @@ namespace OpenZWave
 				}
 				if (m_com.GetFlagBool(COMPAT_FLAG_GETSUPPORTED))
 				{
-					Msg* msg = new Msg("ConfigurationCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
-					msg->Append(GetNodeId());
-					msg->Append(3);
-					msg->Append(GetCommandClassId());
-					msg->Append(ConfigurationCmd_Get);
-					msg->Append((_parameter & 0xFF));
-					msg->Append(GetDriver()->GetTransmitOptions());
-					GetDriver()->SendMsg(msg, _queue);
-					return true;
+					if ((GetVersion() < 3 ) || (_parameter < 255) ) 
+					{
+						Msg* msg = new Msg("ConfigurationCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
+						msg->Append(GetNodeId());
+						msg->Append(3);
+						msg->Append(GetCommandClassId());
+						msg->Append(ConfigurationCmd_Get);
+						msg->Append((_parameter & 0xFF));
+						msg->Append(GetDriver()->GetTransmitOptions());
+						GetDriver()->SendMsg(msg, _queue);
+						return true;
+					} 
+					else 
+					{
+						Msg* msg = new Msg("ConfigurationCmd_Bulk_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
+						msg->Append(GetNodeId());
+						msg->Append(5);
+						msg->Append(GetCommandClassId());
+						msg->Append(ConfigurationCmd_Bulk_Get);
+						msg->Append(((_parameter & 0xFF00) >> 8));
+						msg->Append((_parameter & 0xFF));
+						msg->Append(1);
+						msg->Append(GetDriver()->GetTransmitOptions());
+						GetDriver()->SendMsg(msg, _queue);
+						return true;
+					}
 				}
 				else
 				{
@@ -544,25 +646,52 @@ namespace OpenZWave
 			{
 				Log::Write(LogLevel_Info, GetNodeId(), "Configuration::Set - Parameter=%d, Value=%d Size=%d", _parameter, _value, _size);
 
-				Msg* msg = new Msg("ConfigurationCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
-				msg->Append(GetNodeId());
-				msg->Append(4 + _size);
-				msg->Append(GetCommandClassId());
-				msg->Append(ConfigurationCmd_Set);
-				msg->Append((_parameter & 0xFF));
-				msg->Append(_size);
-				if (_size > 2)
+				if ((GetVersion() < 3) || (_parameter < 255))
 				{
-					msg->Append((uint8) ((_value >> 24) & 0xff));
-					msg->Append((uint8) ((_value >> 16) & 0xff));
-				}
-				if (_size > 1)
+					Msg* msg = new Msg("ConfigurationCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
+					msg->Append(GetNodeId());
+					msg->Append(4 + _size);
+					msg->Append(GetCommandClassId());
+					msg->Append(ConfigurationCmd_Set);
+					msg->Append((_parameter & 0xFF));
+					msg->Append((_size & 0x07));
+					if (_size > 2)
+					{
+						msg->Append((uint8) ((_value >> 24) & 0xff));
+						msg->Append((uint8) ((_value >> 16) & 0xff));
+					}
+					if (_size > 1)
+					{
+						msg->Append((uint8) ((_value >> 8) & 0xff));
+					}
+					msg->Append((uint8) (_value & 0xff));
+					msg->Append(GetDriver()->GetTransmitOptions());
+					GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
+				} 
+				else 
 				{
-					msg->Append((uint8) ((_value >> 8) & 0xff));
+					Msg* msg = new Msg("ConfigurationCmd_Bulk_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
+					msg->Append(GetNodeId());
+					msg->Append(6 + _size);
+					msg->Append(GetCommandClassId());
+					msg->Append(ConfigurationCmd_Bulk_Set);
+					msg->Append(((_parameter & 0xFF00) >> 8));
+					msg->Append((_parameter & 0xFF));
+					msg->Append(1);
+					msg->Append((_size & 0x07));
+					if (_size > 2)
+					{
+						msg->Append((uint8) ((_value >> 24) & 0xff));
+						msg->Append((uint8) ((_value >> 16) & 0xff));
+					}
+					if (_size > 1)
+					{
+						msg->Append((uint8) ((_value >> 8) & 0xff));
+					}
+					msg->Append((uint8) (_value & 0xff));
+					msg->Append(GetDriver()->GetTransmitOptions());
+					GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
 				}
-				msg->Append((uint8) (_value & 0xff));
-				msg->Append(GetDriver()->GetTransmitOptions());
-				GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
 
 				if (m_ConfigParams.find(_parameter) != m_ConfigParams.end()) {
 					if (m_ConfigParams.at(_parameter).altering) {
@@ -577,26 +706,29 @@ namespace OpenZWave
 // Process the Config Params we got from the device and compare to what
 // out config file specifies. Fill in the blanks...
 //-----------------------------------------------------------------------------
-			bool Configuration::processConfigParams() 
+			bool Configuration::processConfigParams(uint16 param) 
 			{
-				for (std::map<uint16, ConfigParam>::iterator it = m_ConfigParams.begin(); it != m_ConfigParams.end(); it++) {
-					if (it->second.flags != (ConfigParamFlags::ConfigParamFlags_Name_Done + ConfigParamFlags::ConfigParamFlags_Info_Done + ConfigParamFlags_Help_Done))
+				if (m_ConfigParams.count(param)) {
+					if (m_ConfigParams[param].flags != (ConfigParamFlags::ConfigParamFlags_Name_Done + ConfigParamFlags::ConfigParamFlags_Info_Done + ConfigParamFlags_Help_Done))
 					{
-						Log::Write(LogLevel_Warning, GetNodeId(), "Config Param %d is incomplete: %d", it->first, it->second.flags);
-						continue;
+						Log::Write(LogLevel_Warning, GetNodeId(), "Config Param %d is incomplete: %d", param, m_ConfigParams[param].flags);
+						return false;
 					}					
 					/* see if we have a Value for this Param No */
-					if (Internal::VC::Value *var = GetValue(1, it->first))
+					if (Internal::VC::Value *var = GetValue(1, param))
 					{
 						/* value Exists.. */
-						Log::Write(LogLevel_Info, GetNodeId(), "Config Param %d (%s) already exists as a %s (%s)", it->first, it->second.name.c_str(), var->GetID().GetTypeAsString().c_str(), var->GetLabel().c_str());
+						Log::Write(LogLevel_Info, GetNodeId(), "Config Param %d (%s) already exists as a %s (%s)", param, m_ConfigParams[param].name.c_str(), var->GetID().GetTypeAsString().c_str(), var->GetLabel().c_str());
 						/* what, if any sanity checks should we do? size? */
-						continue;
+						var->Release();
+						RequestValue(0, param, 1, Driver::MsgQueue_Query);
+
+						return true;
 					} else {
 						/* value doesn't exist */
 						if (Node* node = GetNodeUnsafe())
 						{
-							switch (it->second.format) {
+							switch (m_ConfigParams[param].format) {
 								case CC_Param_Format::CC_Param_Format_List:
 								{
 									/* I have no idea?!?!?!?!?:
@@ -614,42 +746,44 @@ namespace OpenZWave
 								case CC_Param_Format::CC_Param_Format_Signed:
 								case CC_Param_Format::CC_Param_Format_Unsigned:
 								{
-									switch (it->second.size) {
+									switch (m_ConfigParams[param].size) {
 										case CC_Param_Size::CC_Param_Size_Byte:
 										{
-											node->CreateValueByte(ValueID::ValueGenre_Config, GetCommandClassId(), 1, it->first, it->second.name, "", it->second.readonly, false, (uint8) it->second.defaultval, 0);
-											if (Internal::VC::ValueByte *vb = static_cast<Internal::VC::ValueByte*>(GetValue(1, it->first))) {
-												vb->SetHelp(it->second.help);
-												vb->SetMin(it->second.min);
-												vb->SetMax(it->second.max);
+											node->CreateValueByte(ValueID::ValueGenre_Config, GetCommandClassId(), 1, param, m_ConfigParams[param].name, "", m_ConfigParams[param].readonly, false, (uint8) m_ConfigParams[param].defaultval, 0);
+											if (Internal::VC::ValueByte *vb = static_cast<Internal::VC::ValueByte*>(GetValue(1, param))) {
+												vb->SetHelp(m_ConfigParams[param].help);
+												vb->SetMin(m_ConfigParams[param].min);
+												vb->SetMax(m_ConfigParams[param].max);
+												vb->Release();
 											}
-
 											break;
 										}
 										case CC_Param_Size::CC_Param_Size_Short:
 										{
-											node->CreateValueShort(ValueID::ValueGenre_Config, GetCommandClassId(), 1, it->first, it->second.name, "", it->second.readonly, false, (int16) it->second.defaultval, 0);
-											if (Internal::VC::ValueShort *vs = static_cast<Internal::VC::ValueShort*>(GetValue(1, it->first))) {
-												vs->SetHelp(it->second.help);
-												vs->SetMin(it->second.min);
-												vs->SetMax(it->second.max);
+											node->CreateValueShort(ValueID::ValueGenre_Config, GetCommandClassId(), 1, param, m_ConfigParams[param].name, "", m_ConfigParams[param].readonly, false, (int16) m_ConfigParams[param].defaultval, 0);
+											if (Internal::VC::ValueShort *vs = static_cast<Internal::VC::ValueShort*>(GetValue(1, param))) {
+												vs->SetHelp(m_ConfigParams[param].help);
+												vs->SetMin(m_ConfigParams[param].min);
+												vs->SetMax(m_ConfigParams[param].max);
+												vs->Release();
 											}
 											break;
 										}
 										case CC_Param_Size::CC_Param_Size_Int:
 										{
-											node->CreateValueInt(ValueID::ValueGenre_Config, GetCommandClassId(), 1, it->first, it->second.name, "", it->second.readonly, false, (int32) it->second.defaultval, 0);
-											if (Internal::VC::ValueInt *vi = static_cast<Internal::VC::ValueInt*>(GetValue(1, it->first))) {
-												vi->SetHelp(it->second.help);
-												vi->SetMin(it->second.min);
-												vi->SetMax(it->second.max);
+											node->CreateValueInt(ValueID::ValueGenre_Config, GetCommandClassId(), 1, param, m_ConfigParams[param].name, "", m_ConfigParams[param].readonly, false, (int32) m_ConfigParams[param].defaultval, 0);
+											if (Internal::VC::ValueInt *vi = static_cast<Internal::VC::ValueInt*>(GetValue(1, param))) {
+												vi->SetHelp(m_ConfigParams[param].help);
+												vi->SetMin(m_ConfigParams[param].min);
+												vi->SetMax(m_ConfigParams[param].max);
+												vi->Release();
 											}
 											break;
 										}
 										case CC_Param_Size_Unassigned: 
 										{
 											/* do nothing. */
-											Log::Write(LogLevel_Warning, GetNodeId(), "Got a Config Param %d with Size 0!", it->first);
+											Log::Write(LogLevel_Warning, GetNodeId(), "Got a Config Param %d with Size 0!", param);
 											break;
 										}
 									}
@@ -657,24 +791,45 @@ namespace OpenZWave
 								}
 								case CC_Param_Format::CC_Param_Format_BitSet:
 								{
-									node->CreateValueBitSet(ValueID::ValueGenre_Config, GetCommandClassId(), 1, it->first, it->second.name, "", it->second.readonly, false, it->second.defaultval, 0);
-									if (Internal::VC::ValueBitSet *vbs = static_cast<Internal::VC::ValueBitSet *>(GetValue(1, it->first)))
+									node->CreateValueBitSet(ValueID::ValueGenre_Config, GetCommandClassId(), 1, param, m_ConfigParams[param].name, "", m_ConfigParams[param].readonly, false, m_ConfigParams[param].defaultval, 0);
+									if (Internal::VC::ValueBitSet *vbs = static_cast<Internal::VC::ValueBitSet *>(GetValue(1, param)))
 									{
-										vbs->SetHelp(it->second.help);
-										vbs->SetBitMask(it->second.max);
+										vbs->SetHelp(m_ConfigParams[param].help);
+										vbs->SetBitMask(m_ConfigParams[param].max);
 										/* I think we need to create the BitFields. */
+										vbs->Release();
+
 									}
 									break;
 								}
 							}
-							Log::Write(LogLevel_Info, GetNodeId(), "Created a new Config Param %d (%s) as a %d", it->first, it->second.name.c_str(), it->second.format);
+							Log::Write(LogLevel_Info, GetNodeId(), "Created a new Config Param %d (%s) as a %d", param, m_ConfigParams[param].name.c_str(), m_ConfigParams[param].format);
+							RequestValue(0, param, 1, Driver::MsgQueue_Query);
+							return true;
 						} else {
 							Log::Write(LogLevel_Warning, GetNodeId(), "Cant Get Node to Create Config Param");
+							return false;
 						}
 					}
 				}
-				return true;
+				Log::Write(LogLevel_Warning, GetNodeId(), "Cant find ConfigParam %d", param);
+				return false;
 			}
+//-----------------------------------------------------------------------------
+// <Configuration::CreateVars>
+// Create the values managed by this command class
+//-----------------------------------------------------------------------------
+			void Configuration::CreateVars(uint8 const _instance)
+			{
+				if (GetVersion() >= 3) 
+				{
+					if (Node* node = GetNodeUnsafe())
+					{
+						node->CreateValueButton(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_Configuration::ResetToDefault, "Reset Config Params To Default", 0);
+					}
+				}
+			}
+
 		} // namespace CC
 	} // namespace Internal
 } // namespace OpenZWave

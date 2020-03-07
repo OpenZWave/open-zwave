@@ -53,6 +53,7 @@ namespace OpenZWave
 			bool ApplicationStatus::HandleMsg(uint8 const* _data, uint32 const _length, uint32 const _instance	// = 1
 					)
 			{
+				Log::Write(LogLevel_Warning, GetNodeId(), "Recieved a ApplicationStatus Message: %d", _data[1]);
 				Notification* notification = new Notification(Notification::Type_UserAlerts);
 				notification->SetHomeAndNodeIds(GetHomeId(), GetNodeId());
 				if (ApplicationStatusCmd_Busy == (ApplicationStatusCmd) _data[0])
