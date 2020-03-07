@@ -66,7 +66,7 @@ namespace OpenZWave
 			};
 
 			uint32 Configuration::getField(const uint8 *data, CC_Param_Size size, uint8 &pos) {
-				uint32 value;
+				uint32 value = 0;
 				switch (size) {
 					case CC_Param_Size::CC_Param_Size_Byte:
 						value = data[pos++];
@@ -79,6 +79,9 @@ namespace OpenZWave
 						break;
 					case CC_Param_Size::CC_Param_Size_Unassigned:
 						value = 0;
+						break;
+					default:
+						Log::Write(LogLevel_Error, "Unhandled CC_Param_Size %u", size);
 						break;
 				}
 				return value;
