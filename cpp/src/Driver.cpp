@@ -1635,7 +1635,7 @@ bool Driver::ReadMsg()
 				m_readAborts++;
 				break;
 			}
-
+			/* this is the size of the packet */
 			m_controller->Read(&buffer[1], 1);
 			m_controller->SetSignalThreshold(buffer[1]);
 			if (Internal::Platform::Wait::Single(m_controller, 500) < 0)

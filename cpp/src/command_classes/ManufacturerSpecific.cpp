@@ -137,6 +137,7 @@ namespace OpenZWave
 				else
 				{
 					Log::Write(LogLevel_Info, GetNodeId(), "ManufacturerSpecificCmd_Get Not Supported on this node");
+					return true;
 				}
 				return false;
 			}

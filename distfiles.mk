@@ -367,6 +367,7 @@ DISTFILES =	.gitignore \
 	config/homeseer/ztroller.xml \
 	config/honeywell/39348-zw4008.xml \
 	config/honeywell/39351-ZW3005.xml \
+	config/honeywell/39351-ZW3010.xml \
 	config/honeywell/39357-ZW3004.xml \
 	config/honeywell/lynx-touch-l5100.xml \
 	config/honeywell/th6320zw2003.xml \
@@ -676,6 +677,11 @@ DISTFILES =	.gitignore \
 	config/images/ingersoll/dwzwave1.png \
 	config/images/inovelli/lzw30-sn.png \
 	config/images/inovelli/lzw30.png \
+	config/images/inovelli/lzw31-sn.png \
+	config/images/inovelli/lzw31.png \
+	config/images/inovelli/lzw40.png \
+	config/images/inovelli/lzw41.png \
+	config/images/inovelli/lzw42.png \
 	config/images/inovelli/simple_module.png \
 	config/images/iwatsu/ne-4ct-2p.png \
 	config/images/iwatsu/ne-4ct.png \
@@ -742,6 +748,7 @@ DISTFILES =	.gitignore \
 	config/images/popp/700045.png \
 	config/images/popp/700168.png \
 	config/images/popp/700397.png \
+	config/images/popp/701202.png \
 	config/images/popp/dwt.png \
 	config/images/popp/smoke-detector.png \
 	config/images/popp/solar-siren.png \
@@ -898,6 +905,11 @@ DISTFILES =	.gitignore \
 	config/ingersoll/dwzwave1.xml \
 	config/inovelli/lzw30-sn.xml \
 	config/inovelli/lzw30.xml \
+	config/inovelli/lzw31-sn.xml \
+	config/inovelli/lzw31.xml \
+	config/inovelli/lzw40.xml \
+	config/inovelli/lzw41.xml \
+	config/inovelli/lzw42.xml \
 	config/inovelli/nzw1201.xml \
 	config/inovelli/nzw30.xml \
 	config/inovelli/nzw31.xml \
@@ -1019,6 +1031,7 @@ DISTFILES =	.gitignore \
 	config/popp/700342.xml \
 	config/popp/700397.xml \
 	config/popp/700793.xml \
+	config/popp/701202.xml \
 	config/popp/dwt.xml \
 	config/popp/smoke-detector.xml \
 	config/popp/solar-siren.xml \

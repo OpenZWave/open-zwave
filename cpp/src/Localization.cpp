@@ -238,7 +238,7 @@ namespace OpenZWave
 		{
 		}
 
-		void Localization::ReadXML()
+		bool Localization::ReadXML()
 		{
 			// Parse the Z-Wave manufacturer and product XML file.
 			string configPath;
@@ -250,7 +250,7 @@ namespace OpenZWave
 			{
 				Log::Write(LogLevel_Warning, "Unable to load Localization file %s: %s", path.c_str(), pDoc->ErrorDesc());
 				delete pDoc;
-				return;
+				return false;
 			}
 			pDoc->SetUserData((void*) path.c_str());
 			Log::Write(LogLevel_Info, "Loading Localization File %s", path.c_str());
@@ -265,7 +265,7 @@ namespace OpenZWave
 				{
 					Log::Write(LogLevel_Info, "Error in Product Config file at line %d - missing Revision  attribute", root->Row());
 					delete pDoc;
-					return;
+					return false;
 				}
 				m_revision = atol(str);
 			}
@@ -319,6 +319,7 @@ namespace OpenZWave
 			}
 			Log::Write(LogLevel_Info, "Loaded %s With Revision %d", pDoc->GetUserData(), m_revision);
 			delete pDoc;
+			return true;
 		}
 
 		void Localization::ReadGlobalXMLLabel(const TiXmlElement *labelElement)
@@ -767,7 +768,9 @@ namespace OpenZWave
 				return m_instance;
 			}
 			m_instance = new Localization();
-			ReadXML();
+			if (!ReadXML()) {
+				OZW_ERROR(OZWException::OZWEXCEPTION_CONFIG, "Cannot Create Localization Class! - Missing/Invalid Config File?");
+			}
 			Options::Get()->GetOptionAsString("Language", &m_selectedLang);
 			return m_instance;
 		}
