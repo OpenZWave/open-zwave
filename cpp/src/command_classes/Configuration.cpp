@@ -80,9 +80,6 @@ namespace OpenZWave
 					case CC_Param_Size::CC_Param_Size_Unassigned:
 						value = 0;
 						break;
-					default:
-						Log::Write(LogLevel_Error, "Unhandled CC_Param_Size %u", size);
-						break;
 				}
 				return value;
 			}
