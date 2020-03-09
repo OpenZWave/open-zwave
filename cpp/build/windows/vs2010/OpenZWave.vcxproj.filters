@@ -276,9 +276,6 @@
     <ClInclude Include="..\..\..\src\Bitfield.h">
       <Filter>Main</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\Scene.h">
-      <Filter>Main</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\platform\TimeStamp.h">
       <Filter>Platform</Filter>
     </ClInclude>
@@ -299,9 +296,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\platform\Stream.h">
       <Filter>Platform</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\Scene.h">
-      <Filter>Main</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\command_classes\SceneActivation.h">
       <Filter>Command Classes</Filter>
@@ -644,9 +638,6 @@
     <ClCompile Include="..\..\..\src\platform\HidController.cpp">
       <Filter>Platform</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\Scene.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\platform\TimeStamp.cpp">
       <Filter>Platform</Filter>
     </ClCompile>
@@ -664,9 +655,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\platform\Stream.cpp">
       <Filter>Platform</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\Scene.cpp">
-      <Filter>Main</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\command_classes\SceneActivation.cpp">
       <Filter>Command Classes</Filter>

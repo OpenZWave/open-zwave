@@ -267,7 +267,6 @@ exit 0</Command>
     <ClInclude Include="..\..\..\src\platform\windows\ThreadImpl.h" />
     <ClInclude Include="..\..\..\src\platform\windows\TimeStampImpl.h" />
     <ClInclude Include="..\..\..\src\platform\windows\WaitImpl.h" />
-    <ClInclude Include="..\..\..\src\Scene.h" />
     <ClInclude Include="..\..\..\src\Utils.h" />
     <ClInclude Include="..\..\..\src\value_classes\ValueButton.h" />
     <ClInclude Include="..\..\..\src\value_classes\ValueRaw.h" />
@@ -391,7 +390,6 @@ exit 0</Command>
     <ClCompile Include="..\..\..\src\platform\windows\ThreadImpl.cpp" />
     <ClCompile Include="..\..\..\src\platform\windows\TimeStampImpl.cpp" />
     <ClCompile Include="..\..\..\src\platform\windows\WaitImpl.cpp" />
-    <ClCompile Include="..\..\..\src\Scene.cpp" />
     <ClCompile Include="..\..\..\src\Utils.cpp" />
     <ClCompile Include="..\..\..\src\value_classes\ValueButton.cpp" />
     <ClCompile Include="..\..\..\src\value_classes\ValueRaw.cpp" />

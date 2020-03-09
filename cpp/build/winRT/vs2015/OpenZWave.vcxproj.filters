@@ -232,9 +232,6 @@
     <ClInclude Include="..\..\..\src\Options.h">
       <Filter>Main</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\Scene.h">
-      <Filter>Main</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\Utils.h">
       <Filter>Main</Filter>
     </ClInclude>
@@ -559,9 +556,6 @@
       <Filter>Main</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\Options.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\Scene.cpp">
       <Filter>Main</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\Utils.cpp">
