@@ -287,8 +287,6 @@ int main( int argc, char* argv[] )
 	if( !g_initFailed )
 	{
 
-		Manager::Get()->WriteConfig( g_homeId );
-
 		// The section below demonstrates setting up polling for a variable.  In this simple
 		// example, it has been hardwired to poll COMMAND_CLASS_BASIC on the each node that 
 		// supports this setting.
