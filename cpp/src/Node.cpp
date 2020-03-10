@@ -1585,6 +1585,9 @@ bool Node::IsSecured()
 void Node::SetInstanceLabel(uint8 const _instance, char *label)
 {
 	m_globalInstanceLabel[_instance] = string(label);
+	Driver *driver = GetDriver();
+	if (driver)
+		driver->WriteCache();
 }
 
 string Node::GetInstanceLabel(uint8 const _ccid, uint8 const _instance)

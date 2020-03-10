@@ -86,6 +86,7 @@ namespace OpenZWave
 			virtual void Write(LogLevel _level, uint8 const _nodeId, char const* _format, va_list _args) = 0;
 			virtual void SetLoggingState(LogLevel _saveLevel) = 0;
 			virtual void SetLogFileName(const string &_filename) = 0;
+			virtual void ReopenLogFile() = 0;
 	};
 
 	/** \brief Implements a platform-independent log...written to the console and, optionally, a file.
@@ -191,6 +192,10 @@ namespace OpenZWave
 			 * \see Create, Destroy
 			 */
 			static void Write(LogLevel _level, uint8 const _nodeId, char const* _format, ...);
+			/**
+			 * Reopen log file
+			 */
+			static void ReopenLogFile();
 		private:
 			Log(string const& _filename, bool const _bAppend, bool const _bConsoleOutput, LogLevel _saveLevel);
 			~Log();

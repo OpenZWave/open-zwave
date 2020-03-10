@@ -50,25 +50,7 @@ namespace OpenZWave
 					m_saveLevel(_saveLevel),					// level of messages to log to file
 					pFile( NULL)
 			{
-				if (!m_filename.empty())
-				{
-					if (!m_bAppendLog)
-					{
-						this->pFile = fopen(m_filename.c_str(), "w");
-					}
-					else
-					{
-						this->pFile = fopen(m_filename.c_str(), "a");
-					}
-					if (this->pFile == NULL)
-					{
-						std::cerr << "Could Not Open OZW Log File." << std::endl;
-					}
-					else
-					{
-						setlinebuf(this->pFile);
-					}
-				}
+				OpenLogFile();
 				setlinebuf(stdout);	// To prevent buffering and lock contention issues
 			}
 
@@ -78,8 +60,46 @@ namespace OpenZWave
 //-----------------------------------------------------------------------------
 			LogImpl::~LogImpl()
 			{
+				CloseLogFile();
+			}
+
+			void LogImpl::OpenLogFile()
+			{
+				if (m_filename.empty())
+					return;
+
+				if (!m_bAppendLog)
+				{
+					this->pFile = fopen(m_filename.c_str(), "w");
+				}
+				else
+				{
+					this->pFile = fopen(m_filename.c_str(), "a");
+				}
+				if (this->pFile == NULL)
+				{
+					std::cerr << "Could Not Open OZW Log File." << std::endl;
+				}
+				else
+				{
+					setlinebuf(this->pFile);
+				}
+			}
+
+			void LogImpl::CloseLogFile()
+			{
 				if (this->pFile)
 					fclose(this->pFile);
+			}
+
+//-----------------------------------------------------------------------------
+//	<LogImpl::ReopenLogFile>
+//	Reopens log file so that for example Logrotate can do its job
+//-----------------------------------------------------------------------------
+			void LogImpl::ReopenLogFile()
+			{
+				CloseLogFile();
+				OpenLogFile();
 			}
 
 			unsigned int LogImpl::toEscapeCode(LogLevel _level)

@@ -4158,6 +4158,7 @@ bool Driver::EnablePoll(ValueID const &_valueId, uint8 const _intensity)
 			notification->SetValueId(_valueId);
 			QueueNotification(notification);
 			Log::Write(LogLevel_Info, nodeId, "EnablePoll for HomeID 0x%.8x, value(cc=0x%02x,in=0x%02x,id=0x%02x)--poll list has %d items", _valueId.GetHomeId(), _valueId.GetCommandClassId(), _valueId.GetIndex(), _valueId.GetInstance(), m_pollList.size());
+			WriteCache();
 			return true;
 		}
 
@@ -4213,6 +4214,7 @@ bool Driver::DisablePoll(ValueID const &_valueId)
 				notification->SetValueId(_valueId);
 				QueueNotification(notification);
 				Log::Write(LogLevel_Info, nodeId, "DisablePoll for HomeID 0x%.8x, value(cc=0x%02x,in=0x%02x,id=0x%02x)--poll list has %d items", _valueId.GetHomeId(), _valueId.GetCommandClassId(), _valueId.GetIndex(), _valueId.GetInstance(), m_pollList.size());
+				WriteCache();
 				return true;
 			}
 		}
@@ -4320,6 +4322,7 @@ void Driver::SetPollIntensity(ValueID const &_valueId, uint8 const _intensity)
 
 	value->Release();
 	m_pollMutex->Unlock();
+	WriteCache();
 }
 
 //-----------------------------------------------------------------------------
@@ -5021,6 +5024,7 @@ void Driver::SetNodeManufacturerName(uint8 const _nodeId, string const& _manufac
 	{
 		node->SetManufacturerName(_manufacturerName);
 	}
+	WriteCache();
 }
 
 //-----------------------------------------------------------------------------
@@ -5034,6 +5038,7 @@ void Driver::SetNodeProductName(uint8 const _nodeId, string const& _productName)
 	{
 		node->SetProductName(_productName);
 	}
+	WriteCache();
 }
 
 //-----------------------------------------------------------------------------
@@ -5049,6 +5054,7 @@ OPENZWAVE_DEPRECATED_WARNINGS_OFF
 		node->SetNodeName(_nodeName);
 OPENZWAVE_DEPRECATED_WARNINGS_ON
 	}
+	WriteCache();
 }
 
 //-----------------------------------------------------------------------------
