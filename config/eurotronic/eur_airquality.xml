@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Eurotronic Z-Wave Plus air quality sensor
+Product website: https://eurotronic.org/produkte/sensoren/luftguetesensor/
+-->
+<Product xmlns='http://code.google.com/p/open-zwave/' >
+ 
+    <!-- Configuration Parameters -->
+    <CommandClass id="112">
+        <Instance index="1"/>
+        <Value type="byte" genre="config" instance="1" index="1" label="Temperature on Change Reporting" min="0" max="50" value="5" size="1">
+            <Help>
+                0: No on change reporting (only time-based reports)
+                1-50: report if temperature changed by delta = 0,1°C - 5,0°C 
+                Default: 5
+            </Help>
+        </Value>
+
+        <Value type="byte" genre="config" instance="1" index="2" label="Humidity on Change Reporting" min="0" max="10" value="5" size="1">
+            <Help>
+                0: No on change reporting (only time-based reports)
+                1-10: report if humidity changed by delta = 1% ...10%
+                Default: 5
+            </Help>
+        </Value>
+        <Value type="list" genre="config" instance="1" index="3" label="Temperature Scale" min="0" max="1" value="0" size="1">
+            <Help>
+                0: Temperature in Degrees Celcius
+                1: Temperature in Degrees Fahrenheit
+                Default: 0
+            </Help>
+            <Item label="Celsius" value="0" />
+            <Item label="Fahrenheit" value="1" />
+        </Value>
+        <Value type="byte" genre="config" instance="1" index="4" label="Temperature Resolution" min="0" max="2" value="1" size="1">
+            <Help>
+                0: No resolution (example 22°C)
+                1: 1/10 resolution (example 22.3°C)
+                2: 1/100 resolution (example 22.35°C)
+                Default: 1
+            </Help>
+        </Value>
+        <Value type="byte" genre="config" instance="1" index="5" label="Humidity Resolution" min="0" max="2" value="0" size="1">
+            <Help>
+                0: No resolution (example 33%)
+                1: 1/10 resolution (example 33.4%)
+                2: 1/100 resolution (example 33.45%
+                Default: 0
+            </Help>
+        </Value>
+
+        <Value type="byte" genre="config" instance="1" index="6" label="VOC on Change Reporting" min="0" max="10" value="5" size="1">
+            <Help>
+                0: No on change reporting (only time-based reports)
+                1-10: report if VOC reading changed by 100ppb - 1000ppb 
+                Default: 5
+            </Help>
+        </Value>
+
+        <Value type="byte" genre="config" instance="1" index="7" label="CO2eq on Change Reporting" min="0" max="10" value="5" size="1">
+            <Help>
+                0: No on change reporting (only time-based reports)
+                1-10: report if CO2eq reading changed by 100ppm - 1000ppm 
+                Default: 5
+            </Help>
+        </Value>
+
+        <Value type="list" genre="config" instance="1" index="8" label="Air quality indication via LED" min="0" max="1" value="1" size="1">
+            <Help>
+                0: No air quality indication via LEDs
+                1: Indicate measuered air quality via LEDs
+                Default: 1
+            </Help>
+            <Item label="No air quality indication via LEDs" value="0" />
+            <Item label="Indicate measuered air quality via LEDs" value="1" />
+        </Value>
+
+
+
+
+  </CommandClass>
+ 
+ 
+    <!-- Association Groups -->
+   <CommandClass id="133">
+    <Associations num_groups="2">
+      <Group index="1" max_associations="1" label="Lifeline" />
+      <Group index="2" max_associations="5" label="Temperature" />
+    </Associations>
+  </CommandClass>
+</Product>
