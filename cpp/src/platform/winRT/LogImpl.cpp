@@ -68,13 +68,11 @@ namespace OpenZWave
 //	<LogImpl::LogImpl>
 //	Constructor
 //-----------------------------------------------------------------------------
-			LogImpl::LogImpl(string const& _filename, bool const _bAppendLog, bool const _bConsoleOutput, LogLevel const _saveLevel, LogLevel const _queueLevel, LogLevel const _dumpTrigger) :
+			LogImpl::LogImpl(string const& _filename, bool const _bAppendLog, bool const _bConsoleOutput, LogLevel const _saveLevel) :
 					m_filename(_filename),					// name of log file
 					m_bAppendLog(_bAppendLog),				// true to append (and not overwrite) any existing log
 					m_bConsoleOutput(_bConsoleOutput),		// true to provide a copy of output to console
 					m_saveLevel(_saveLevel),					// level of messages to log to file
-					m_queueLevel(_queueLevel),				// level of messages to log to queue
-					m_dumpTrigger(_dumpTrigger)				// dump queued messages when this level is seen
 			{
 				string accessType;
 
@@ -118,7 +116,7 @@ namespace OpenZWave
 				string logLevelStr = GetLogLevelString(_logLevel);
 
 				// handle this message
-				if ((_logLevel <= m_queueLevel) || (_logLevel == LogLevel_Internal))	// we're going to do something with this message...
+				if (_logLevel <= m_saveLevel)	// we're going to do something with this message...
 				{
 					char lineBuf[1024];
 					if (!_format || (_format[0] == 0))
@@ -130,109 +128,45 @@ namespace OpenZWave
 						vsprintf_s(lineBuf, sizeof(lineBuf), _format, _args);
 					}
 
-					// should this message be saved to file (and possibly written to console?)
-					if ((_logLevel <= m_saveLevel) || (_logLevel == LogLevel_Internal))
+					// save to file
+					FILE* pFile = NULL;
+					if (!fopen_s(&pFile, m_filename.c_str(), "a") || m_bConsoleOutput)
 					{
-						// save to file
-						FILE* pFile = NULL;
-						if (!fopen_s(&pFile, m_filename.c_str(), "a") || m_bConsoleOutput)
+						if (_logLevel != LogLevel_Internal)						// don't add a second timestamp to display of queued messages
 						{
-							if (_logLevel != LogLevel_Internal)						// don't add a second timestamp to display of queued messages
-							{
-								if (pFile != NULL)
-								{
-									fprintf(pFile, "%s%s%s", timeStr.c_str(), logLevelStr.c_str(), nodeStr.c_str());
-								}
-								if (m_bConsoleOutput)
-								{
-									printf("%s%s%s", timeStr.c_str(), logLevelStr.c_str(), nodeStr.c_str());
-								}
-							}
-
-							// print message to file (and possibly screen)
 							if (pFile != NULL)
 							{
-								fprintf(pFile, "%s", lineBuf);
-								fprintf(pFile, "\n");
-								fclose(pFile);
+								fprintf(pFile, "%s%s%s", timeStr.c_str(), logLevelStr.c_str(), nodeStr.c_str());
 							}
 							if (m_bConsoleOutput)
 							{
-								printf("%s", lineBuf);
-								printf("\n");
+								printf("%s%s%s", timeStr.c_str(), logLevelStr.c_str(), nodeStr.c_str());
 							}
-
 						}
+
+						// print message to file (and possibly screen)
+						if (pFile != NULL)
+						{
+							fprintf(pFile, "%s", lineBuf);
+							fprintf(pFile, "\n");
+							fclose(pFile);
+						}
+						if (m_bConsoleOutput)
+						{
+							printf("%s", lineBuf);
+							printf("\n");
+						}
+
 					}
-
-					if (_logLevel != LogLevel_Internal)
-					{
-						char queueBuf[1024];
-						string threadStr = GetThreadId();
-						sprintf_s(queueBuf, sizeof(queueBuf), "%s%s%s", timeStr.c_str(), threadStr.c_str(), lineBuf);
-						Queue(queueBuf);
-					}
-				}
-
-				// now check to see if the _dumpTrigger has been hit
-				if ((_logLevel <= m_dumpTrigger) && (_logLevel != LogLevel_Internal) && (_logLevel != LogLevel_Always))
-				{
-					QueueDump();
-				}
-			}
-
-//-----------------------------------------------------------------------------
-//	<LogImpl::Queue>
-//	Write to the log queue
-//-----------------------------------------------------------------------------
-			void LogImpl::Queue(char const* _buffer)
-			{
-				string bufStr = _buffer;
-				m_logQueue.push_back(bufStr);
-
-				// rudimentary queue size management
-				if (m_logQueue.size() > 500)
-				{
-					m_logQueue.pop_front();
-				}
-			}
-
-//-----------------------------------------------------------------------------
-//	<LogImpl::QueueDump>
-//	Dump the LogQueue to output device
-//-----------------------------------------------------------------------------
-			void LogImpl::QueueDump()
-			{
-				Log::Write(LogLevel_Internal, "\n\nDumping queued log messages\n");
-				list<string>::iterator it = m_logQueue.begin();
-				while (it != m_logQueue.end())
-				{
-					string strTemp = *it;
-					Log::Write(LogLevel_Internal, strTemp.c_str());
-					++it;
-				}
-				m_logQueue.clear();
-				Log::Write(LogLevel_Internal, "\nEnd of queued log message dump\n\n");
-			}
-
-//-----------------------------------------------------------------------------
-//	<LogImpl::Clear>
-//	Clear the LogQueue
-//-----------------------------------------------------------------------------
-			void LogImpl::QueueClear()
-			{
-				m_logQueue.clear();
 			}
 
 //-----------------------------------------------------------------------------
 //	<LogImpl::SetLoggingState>
 //	Sets the various log state variables
 //-----------------------------------------------------------------------------
-			void LogImpl::SetLoggingState(LogLevel _saveLevel, LogLevel _queueLevel, LogLevel _dumpTrigger)
+			void LogImpl::SetLoggingState(LogLevel _saveLevel)
 			{
 				m_saveLevel = _saveLevel;
-				m_queueLevel = _queueLevel;
-				m_dumpTrigger = _dumpTrigger;
 			}
 
 //-----------------------------------------------------------------------------

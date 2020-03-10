@@ -84,9 +84,7 @@ namespace OpenZWave
 			}
 			;
 			virtual void Write(LogLevel _level, uint8 const _nodeId, char const* _format, va_list _args) = 0;
-			virtual void QueueDump() = 0;
-			virtual void QueueClear() = 0;
-			virtual void SetLoggingState(LogLevel _saveLevel, LogLevel _queueLevel, LogLevel _dumpTrigger) = 0;
+			virtual void SetLoggingState(LogLevel _saveLevel) = 0;
 			virtual void SetLogFileName(const string &_filename) = 0;
 	};
 
@@ -103,7 +101,7 @@ namespace OpenZWave
 			 * \return a pointer to the logging object.
 			 * \see Destroy, Write
 			 */
-			static Log* Create(string const& _filename, bool const _bAppend, bool const _bConsoleOutput, LogLevel const _saveLevel, LogLevel const _queueLevel, LogLevel const _dumpTrigger);
+			static Log* Create(string const& _filename, bool const _bAppend, bool const _bConsoleOutput, LogLevel const _saveLevel);
 
 			/** \brief Create a log.
 			 *
@@ -148,7 +146,7 @@ namespace OpenZWave
 			 * \param _queueLevel	LogLevel of messages to queue to be dumped in case of an error
 			 * \param _dumpTrigger	LogLevel of message that triggers a queue dump (probably LogLevel_Error or LogLevel_Warning)
 			 */
-			static void SetLoggingState(LogLevel _saveLevel, LogLevel _queueLevel, LogLevel _dumpTrigger);
+			static void SetLoggingState(LogLevel _saveLevel);
 
 			/**\brief Determine whether logging is enabled or not (retained for backward compatibility)
 			 *
@@ -162,7 +160,7 @@ namespace OpenZWave
 			 * \param _queueLevel	LogLevel of messages to queue to be dumped in case of an error
 			 * \param _dumpTrigger	LogLevel of message that triggers a queue dump (probably LogLevel_Error or LogLevel_Warning)
 			 */
-			static void GetLoggingState(LogLevel* _saveLevel, LogLevel* _queueLevel, LogLevel* _dumpTrigger);
+			static void GetLoggingState(LogLevel* _saveLevel);
 
 			/** \brief Change the log file name.
 			 *
@@ -193,18 +191,8 @@ namespace OpenZWave
 			 * \see Create, Destroy
 			 */
 			static void Write(LogLevel _level, uint8 const _nodeId, char const* _format, ...);
-
-			/** \brief Send the queued log messages to the log output.
-			 */
-			static void QueueDump();
-
-			/**
-			 * Clear the log message queue
-			 */
-			static void QueueClear();
-
 		private:
-			Log(string const& _filename, bool const _bAppend, bool const _bConsoleOutput, LogLevel _saveLevel, LogLevel _queueLevel, LogLevel _dumpTrigger);
+			Log(string const& _filename, bool const _bAppend, bool const _bConsoleOutput, LogLevel _saveLevel);
 			~Log();
 
 			static std::vector<i_LogImpl*> m_pImpls; /**< Pointer to an object that encapsulates the platform-specific logging implementation. */

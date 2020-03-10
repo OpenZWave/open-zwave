@@ -65,7 +65,7 @@ Options* Options::Create(string const& _configPath, string const& _userPath, str
 		Internal::Platform::FileOps::Create();
 		if (!Internal::Platform::FileOps::FolderExists(configPath))
 		{
-			Log::Create("", false, true, LogLevel_Debug, LogLevel_Debug, LogLevel_None);
+			Log::Create("", false, true, LogLevel_Debug);
 			/* Try some default directories */
 			if (Internal::Platform::FileOps::FolderExists("config/"))
 			{
@@ -133,7 +133,7 @@ Options* Options::Create(string const& _configPath, string const& _userPath, str
 		s_instance->AddOptionString("Language", "", false);			// Language we should use
 		s_instance->AddOptionBool("IncludeInstanceLabel", true);						// Should we include the Instance Label in Value Labels on MultiInstance Devices
 #if defined WINRT
-				s_instance->AddOptionInt( "ThreadTerminateTimeout", -1);						// Since threads cannot be terminated in WinRT, Thread::Terminate will simply wait for them to exit on there own
+		s_instance->AddOptionInt( "ThreadTerminateTimeout", -1);						// Since threads cannot be terminated in WinRT, Thread::Terminate will simply wait for them to exit on there own
 #endif
 		s_instance->AddOptionString("RFRegion", "", false);					// RFRegion to set the Stick too. Blank - Don't change
 	}

@@ -377,10 +377,6 @@ void Driver::DriverThreadProc(Internal::Platform::Event* _exitEvent)
 				{
 					count = 7;
 				}
-				else
-				{
-					Log::QueueClear();							// clear the log queue when starting a new message
-				}
 
 				// Wait for something to do
 				int32 res = Internal::Platform::Wait::Multiple(waitObjects, count, timeout);
@@ -1715,7 +1711,6 @@ bool Driver::ReadMsg()
 			else
 			{
 				Log::Write(LogLevel_Warning, "m_currentMsg was NULL when trying to set MaxSendAttempts");
-				Log::QueueDump();
 			}
 			// Don't do WriteMsg("CAN"); here, the controller has data waiting to be handled by OZW.
 			// Instead, let the main loop handle incoming message first to flush the buffer(s)
@@ -4450,8 +4445,6 @@ void Driver::PollThreadProc(Internal::Platform::Event* _exitEvent)
 				if (loopCount == 3000 * 10)		// 300 seconds worth of delay?  Something unusual is going on
 				{
 					Log::Write(LogLevel_Warning, "Poll queue hasn't been able to execute for 300 secs or more");
-					Log::QueueDump();
-					//					assert( 0 );
 				}
 			}
 

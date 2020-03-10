@@ -92,7 +92,7 @@ Manager* Manager::Create()
 	}
 
 	// Options have not been created and locked.
-	Log::Create("", false, true, LogLevel_Debug, LogLevel_Debug, LogLevel_None);
+	Log::Create("", false, true, LogLevel_Debug);
 	Log::Write(LogLevel_Error, "Options have not been created and locked. Exiting...");
 	OZW_FATAL_ERROR(OZWException::OZWEXCEPTION_OPTIONS, "Options Not Created and Locked");
 	return NULL;
@@ -184,7 +184,7 @@ Manager::Manager() :
 	Options::Get()->GetOptionAsInt("DumpTriggerLevel", &nDumpTrigger);
 
 	string logFilename = userPath + logFileNameBase;
-	Log::Create(logFilename, bAppend, bConsoleOutput, (LogLevel) nSaveLogLevel, (LogLevel) nQueueLogLevel, (LogLevel) nDumpTrigger);
+	Log::Create(logFilename, bAppend, bConsoleOutput, (LogLevel) nSaveLogLevel);
 	Log::SetLoggingState(logging);
 
 	Internal::CC::CommandClasses::RegisterCommandClasses();

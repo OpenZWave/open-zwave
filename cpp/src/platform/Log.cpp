@@ -65,43 +65,22 @@ static bool s_dologging;
 //	<Log::Create>
 //	Static creation of the singleton
 //-----------------------------------------------------------------------------
-Log* Log::Create(string const& _filename, bool const _bAppend, bool const _bConsoleOutput, LogLevel const _saveLevel, LogLevel const _queueLevel, LogLevel const _dumpTrigger)
+Log* Log::Create(string const& _filename, bool const _bAppend, bool const _bConsoleOutput, LogLevel const _saveLevel)
 {
 	if ( NULL == s_instance)
 	{
-		s_instance = new Log(_filename, _bAppend, _bConsoleOutput, _saveLevel, _queueLevel, _dumpTrigger);
+		s_instance = new Log(_filename, _bAppend, _bConsoleOutput, _saveLevel);
 		s_dologging = true; // default logging to true so no change to what people experience now
 	}
 	else
 	{
 		Log::Destroy();
-		s_instance = new Log(_filename, _bAppend, _bConsoleOutput, _saveLevel, _queueLevel, _dumpTrigger);
+		s_instance = new Log(_filename, _bAppend, _bConsoleOutput, _saveLevel);
 		s_dologging = true; // default logging to true so no change to what people experience now
 	}
 
 	return s_instance;
 }
-
-//-----------------------------------------------------------------------------
-//	<Log::Create>
-//	Static creation of the singleton
-//-----------------------------------------------------------------------------
-/* 	It isn't clear this is ever called or used.  If no one complains, consider
- deleting this code in April 2012.
- Log* Log::Create
- (
- i_LogImpl *LogClass
- )
- {
- if (NULL == s_instance )
- {
- s_instance = new Log( "" );
- s_dologging = true;
- }
- SetLoggingClass( LogClass );
- return s_instance;
- }
- */
 
 //-----------------------------------------------------------------------------
 //	<Log::Destroy>
@@ -153,19 +132,11 @@ void Log::SetLoggingState(bool _dologging)
 //	<Log::SetLoggingState>
 //	Set flag to actually write to log or skip it
 //-----------------------------------------------------------------------------
-void Log::SetLoggingState(LogLevel _saveLevel, LogLevel _queueLevel, LogLevel _dumpTrigger)
+void Log::SetLoggingState(LogLevel _saveLevel)
 {
-	// parameter checking:
-	//  _queueLevel cannot be less than or equal to _saveLevel (where lower ordinals are more severe conditions)
-	//  _dumpTrigger cannot be greater than or equal to _queueLevel
-	if (_queueLevel <= _saveLevel)
-		Log::Write(LogLevel_Warning, "Only lower priority messages may be queued for error-driven display.");
-	if (_dumpTrigger >= _queueLevel)
-		Log::Write(LogLevel_Warning, "The trigger for dumping queued messages must be a higher-priority message than the level that is queued.");
-
 	bool prevLogging = s_dologging;
 	// s_dologging is true if any messages are to be saved in file or queue
-	if ((_saveLevel > LogLevel_Always) || (_queueLevel > LogLevel_Always))
+	if (_saveLevel > LogLevel_Always)
 	{
 		s_dologging = true;
 	}
@@ -178,7 +149,7 @@ void Log::SetLoggingState(LogLevel _saveLevel, LogLevel _queueLevel, LogLevel _d
 	{
 		s_instance->m_logMutex->Lock();
 		for (std::vector<i_LogImpl*>::iterator it = s_instance->m_pImpls.begin(); it != s_instance->m_pImpls.end(); it++)
-			(*it)->SetLoggingState(_saveLevel, _queueLevel, _dumpTrigger);
+			(*it)->SetLoggingState(_saveLevel);
 		s_instance->m_logMutex->Unlock();
 	}
 
@@ -234,36 +205,6 @@ void Log::Write(LogLevel _level, uint8 const _nodeId, char const* _format, ...)
 }
 
 //-----------------------------------------------------------------------------
-//	<Log::QueueDump>
-//	Send queued messages to the log (and empty the queue)
-//-----------------------------------------------------------------------------
-void Log::QueueDump()
-{
-	if (s_instance && s_dologging && (s_instance->m_pImpls.size() > 0))
-	{
-		s_instance->m_logMutex->Lock();
-		for (std::vector<i_LogImpl*>::iterator it = s_instance->m_pImpls.begin(); it !=s_instance->m_pImpls.end(); it++)
-			(*it)->QueueDump();
-		s_instance->m_logMutex->Unlock();
-	}
-}
-
-//-----------------------------------------------------------------------------
-//	<Log::QueueClear>
-//	Empty the queued message queue
-//-----------------------------------------------------------------------------
-void Log::QueueClear()
-{
-	if (s_instance && s_dologging && (s_instance->m_pImpls.size() > 0))
-	{
-		s_instance->m_logMutex->Lock();
-		for (std::vector<i_LogImpl*>::iterator it = s_instance->m_pImpls.begin(); it !=s_instance->m_pImpls.end(); it++)
-			(*it)->QueueClear();
-		s_instance->m_logMutex->Unlock();
-	}
-}
-
-//-----------------------------------------------------------------------------
 //	<Log::SetLogFileName>
 //	Change the name of the log file (will start writing a new file)
 //-----------------------------------------------------------------------------
@@ -282,12 +223,12 @@ void Log::SetLogFileName(const string &_filename)
 //	<Log::Log>
 //	Constructor
 //-----------------------------------------------------------------------------
-Log::Log(string const& _filename, bool const _bAppend, bool const _bConsoleOutput, LogLevel const _saveLevel, LogLevel const _queueLevel, LogLevel const _dumpTrigger) :
+Log::Log(string const& _filename, bool const _bAppend, bool const _bConsoleOutput, LogLevel const _saveLevel) :
 		m_logMutex(new Internal::Platform::Mutex())
 {
 	if (m_pImpls.size() == 0)
 	{
-		m_pImpls.push_back(new Internal::Platform::LogImpl(_filename, _bAppend, _bConsoleOutput, _saveLevel, _queueLevel, _dumpTrigger));
+		m_pImpls.push_back(new Internal::Platform::LogImpl(_filename, _bAppend, _bConsoleOutput, _saveLevel));
 	}
 }
 
