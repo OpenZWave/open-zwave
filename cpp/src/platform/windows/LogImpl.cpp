@@ -79,7 +79,7 @@ namespace OpenZWave
 					m_filename(_filename),					// name of log file
 					m_bConsoleOutput(_bConsoleOutput),		// true to provide a copy of output to console
 					m_bAppendLog(_bAppendLog),				// true to append (and not overwrite) any existing log
-					m_saveLevel(_saveLevel),					// level of messages to log to file
+					m_saveLevel(_saveLevel)					// level of messages to log to file
 			{
 				string accessType;
 
