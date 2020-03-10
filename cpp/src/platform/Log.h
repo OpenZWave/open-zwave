@@ -88,6 +88,7 @@ namespace OpenZWave
 			virtual void QueueClear() = 0;
 			virtual void SetLoggingState(LogLevel _saveLevel, LogLevel _queueLevel, LogLevel _dumpTrigger) = 0;
 			virtual void SetLogFileName(const string &_filename) = 0;
+			virtual void ReopenLogFile() = 0;
 	};
 
 	/** \brief Implements a platform-independent log...written to the console and, optionally, a file.
@@ -202,6 +203,11 @@ namespace OpenZWave
 			 * Clear the log message queue
 			 */
 			static void QueueClear();
+
+			/**
+			 * Reopen log file
+			 */
+			static void ReopenLogFile();
 
 		private:
 			Log(string const& _filename, bool const _bAppend, bool const _bConsoleOutput, LogLevel _saveLevel, LogLevel _queueLevel, LogLevel _dumpTrigger);
