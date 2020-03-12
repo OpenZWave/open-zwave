@@ -3,8 +3,8 @@
 Eurotronic Z-Wave Plus temperature and humitity sensor
 Product website: https://eurotronic.org/produkte/sensoren/temperatur-feuchte-sensor/
 -->
-<Product xmlns='https://github.com/OpenZWave/open-zwave' >
-   <MetaData>
+<Product  Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
+    <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0148:0001:0004</MetaDataItem>
     <MetaDataItem name="Name">Temperature and Humidity Sensor</MetaDataItem>
     <MetaDataItem name="ProductPic">images/eurotronic/eur_temphumid.png</MetaDataItem>
@@ -15,19 +15,18 @@ Press the network button three times within 1 second.</MetaDataItem>
 Press and hold the network button for at least 10 seconds. The temperature humidity sensor will indicate
 the reset blinking pattern once the reset is completed.
     </MetaDataItem>
-
-@TODO
-    <MetaDataItem name="ProductManual">https://eurotronic.org/wp-content/XXX.pdf</MetaDataItem>
+    <MetaDataItem id="0001" name="FrequencyName" type="0004">CEPT (Europe)</MetaDataItem>
+    <MetaDataItem id="0001" name="ZWProductPage" type="0004">https://eurotronic.org/produkte/sensoren/temperatur-feuchte-sensor/</MetaDataItem>
+<!--
+TODO: English manual not yet available on website of eurotronics
+-->
+    <MetaDataItem name="ProductManual">https://eurotronic.org/</MetaDataItem>
     <MetaDataItem name="Description">
     </MetaDataItem>
 
     <ChangeLog>
       <Entry author="gpgmailencrypt@gmx.de" date="12 Mar 2020" revision="1">Initial Metadata Import </Entry>
     </ChangeLog>
-    <MetaDataItem id="0001" name="FrequencyName" type="0005">CEPT (Europe)</MetaDataItem>
-    <MetaDataItem id="0001" name="ZWProductPage" type="0005">https://eurotronic.org/produkte/sensoren/temperatur-feuchte-sensor/</MetaDataItem>
-
-
   </MetaData>
 
     <!-- Configuration Parameters -->
