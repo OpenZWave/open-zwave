@@ -200,9 +200,11 @@ DISTFILES =	.gitignore \
 	config/enerwave/zwn-sc7.xml \
 	config/enerwave/zwnrsm1plus.xml \
 	config/enerwave/zwnrsm2plus.xml \
+	config/eurotronic/eur_airquality.xml \
 	config/eurotronic/eur_cometz.xml \
 	config/eurotronic/eur_spiritz.xml \
 	config/eurotronic/eur_stellaz.xml \
+	config/eurotronic/eur_temphumin.xml \
 	config/everspring/ad146.xml \
 	config/everspring/ad147.xml \
 	config/everspring/an145.xml \
@@ -519,9 +521,11 @@ DISTFILES =	.gitignore \
 	config/images/enerwave/zw20rm.png \
 	config/images/enerwave/zwn-bpc.png \
 	config/images/enerwave/zwnrsm1plus.png \
+	config/images/eurotronic/eur_airquality.png \
 	config/images/eurotronic/eur_cometz.png \
 	config/images/eurotronic/eur_spiritz.png \
 	config/images/eurotronic/eur_stellaz.png \
+	config/images/eurotronic/eur_temphumid.png \
 	config/images/everspring/ad146.png \
 	config/images/everspring/ad147.png \
 	config/images/everspring/an157.png \
