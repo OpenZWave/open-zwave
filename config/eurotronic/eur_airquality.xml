@@ -3,7 +3,7 @@
 Eurotronic Z-Wave Plus air quality sensor
 Product website: https://eurotronic.org/produkte/sensoren/luftguetesensor/
 -->
-<Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
    <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0148:0001:0005</MetaDataItem>
     <MetaDataItem name="ProductPic">images/eurotronic/eur_airquality.png</MetaDataItem>
@@ -18,22 +18,21 @@ Press the network button three times within 1 second.</MetaDataItem>
 Press and hold the network button for at least 10 seconds. The Air Quality Sensor Z-Wave Plus will indicate
 the reset blinking pattern once the reset is completed.
 </MetaDataItem>
-    <MetaDataItem name="Description">The brand new Z-Wave sensor in an ultra slim design housing provides comprehensive information on indoor
-air quality. Based on these information it is possible to always ensure a healthy living climate.
-• Ultra-flat design housing
-• Use of high-precision, Swiss sensor technology
+    <MetaDataItem name="Description">This Z-Wave sensor provides comprehensive information on indoor
+air quality.
 • Multicolor LED for signalling ventilation recommendations
 • Returns the following values:
   - VOC value (volatile organic compounds) in ppm
   - CO2 value (as CO2 equivalent) in ppm
-  - Temperature (°C) and humidity (%)
+  - Temperature (°C)
+  - Humidity (%)
   - Dew point (°C)
 • Supports Z-Wave Plus S2 security (encryption)
 • Z-Wave repeater function
 • Operation with plug-in power supply unit
 </MetaDataItem>
     <ChangeLog>
-      <Entry author="gpgmailencrypt@gmx.de" date="12 Mar 2020" revision="1">Initial Metadata Import from https://eurotronic.org/wp-content/uploads/2020/02/LGS-Z-Wave-Plus_BDA_web_EN-1.pdf/</Entry>
+      <Entry author="gpgmailencrypt@gmx.de" date="13 Mar 2020" revision="2">Initial Metadata Import from https://eurotronic.org/wp-content/uploads/2020/02/LGS-Z-Wave-Plus_BDA_web_EN-1.pdf/</Entry>
     </ChangeLog>
     <MetaDataItem id="0001" name="FrequencyName" type="0005">CEPT (Europe)</MetaDataItem>
     <MetaDataItem id="0001" name="ZWProductPage" type="0005">https://eurotronic.org/produkte/sensoren/luftguetesensor/</MetaDataItem>
@@ -59,28 +58,34 @@ air quality. Based on these information it is possible to always ensure a health
         </Value>
         <Value type="list" genre="config" instance="1" index="3" label="Temperature Scale" min="0" max="1" value="0" size="1">
             <Help>
-                0: Temperature in Degrees Celcius
-                1: Temperature in Degrees Fahrenheit
-                Default: 0
+                Temperature in Degrees Celcius
+                Temperature in Degrees Fahrenheit
+                Default: Temperature in Degrees Celcius
             </Help>
             <Item label="Celsius" value="0" />
             <Item label="Fahrenheit" value="1" />
         </Value>
-        <Value type="byte" genre="config" instance="1" index="4" label="Temperature Resolution" min="0" max="2" value="1" size="1">
+        <Value type="list" genre="config" instance="1" index="4" label="Temperature Resolution" min="0" max="2" value="1" size="1">
             <Help>
-                0: No resolution (example 22°C)
-                1: 1/10 resolution (example 22.3°C)
-                2: 1/100 resolution (example 22.35°C)
-                Default: 1
+                No resolution (example 22°C)
+                1/10 resolution (example 22.3°C)
+                1/100 resolution (example 22.35°C)
+                Default: No resolution (example 22°C)
             </Help>
-        </Value>
-        <Value type="byte" genre="config" instance="1" index="5" label="Humidity Resolution" min="0" max="2" value="0" size="1">
+             <Item label="No resolution (example 22°C)" value="0" />
+             <Item label="1/10 resolution (example 22.3°C)" value="1" />
+             <Item label="1/100 resolution (example 22.35°C)" value="2" />
+       </Value>
+        <Value type="list" genre="config" instance="1" index="5" label="Humidity Resolution" min="0" max="2" value="0" size="1">
             <Help>
-                0: No resolution (example 33%)
-                1: 1/10 resolution (example 33.4%)
-                2: 1/100 resolution (example 33.45%
-                Default: 0
+                No resolution (example 33%)
+                1/10 resolution (example 33.4%)
+                1/100 resolution (example 33.45%
+                Default: No resolution (example 33%
             </Help>
+             <Item label="No resolution (example 33%)" value="0" />
+             <Item label="1/10 resolution (example 33.4%)" value="1" />
+             <Item label="1/100 resolution (example 33.45%)" value="2" />
         </Value>
         <Value type="byte" genre="config" instance="1" index="6" label="VOC on Change Reporting" min="0" max="10" value="5" size="1">
             <Help>
