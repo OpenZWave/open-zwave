@@ -28,6 +28,7 @@
 #include "Defs.h"
 #include "Notification.h"
 #include "Driver.h"
+#include "command_classes/CommandClasses.h"
 
 using namespace OpenZWave;
 
@@ -42,18 +43,34 @@ string Notification::GetAsString() const
 	string command;
 	switch (m_type)
 	{
-		case Type_ValueAdded:
-			str = "ValueAdded";
+		case Type_ValueAdded: {
+			str = "ValueAdded ";
+			std::stringstream ss;
+			ss << "CC: " << Internal::CC::CommandClasses::GetName(GetValueID().GetCommandClassId()) << " Instance: " << (int)GetValueID().GetInstance() << " Index: " << std::dec << GetValueID().GetIndex();
+			str += ss.str();
 			break;
-		case Type_ValueRemoved:
-			str = "ValueRemoved";
+		}
+		case Type_ValueRemoved: {
+			str = "ValueRemoved ";
+			std::stringstream ss;
+			ss << "CC: " << Internal::CC::CommandClasses::GetName(GetValueID().GetCommandClassId()) << " Instance: " << (int)GetValueID().GetInstance() << " Index: " << std::dec << GetValueID().GetIndex();
+			str += ss.str();
 			break;
-		case Type_ValueChanged:
-			str = "ValueChanged";
+		}
+		case Type_ValueChanged: {
+			str = "ValueChanged ";
+			std::stringstream ss;
+			ss << "CC: " << Internal::CC::CommandClasses::GetName(GetValueID().GetCommandClassId()) << " Instance: " << (int)GetValueID().GetInstance() << " Index: " << std::dec << GetValueID().GetIndex();
+			str += ss.str();
 			break;
-		case Type_ValueRefreshed:
-			str = "ValueRefreshed";
+		}
+		case Type_ValueRefreshed: {
+			str = "ValueRefreshed ";
+			std::stringstream ss;
+			ss << "CC: " << Internal::CC::CommandClasses::GetName(GetValueID().GetCommandClassId()) << " Instance: " << (int)GetValueID().GetInstance() << " Index: " << std::dec << GetValueID().GetIndex();
+			str += ss.str();
 			break;
+		}
 		case Type_Group:
 			str = "Group";
 			break;

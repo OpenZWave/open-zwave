@@ -128,13 +128,13 @@ namespace OpenZWave
 				QueryStage_ProtocolInfo, /**< Retrieve protocol information */
 				QueryStage_Probe, /**< Ping device to see if alive */
 				QueryStage_WakeUp, /**< Start wake up process if a sleeping node */
-				QueryStage_ManufacturerSpecific1, /**< Retrieve manufacturer name and product ids if ProtocolInfo lets us */
 				QueryStage_NodeInfo, /**< Retrieve info about supported, controlled command classes */
 				QueryStage_NodePlusInfo, /**< Retrieve ZWave+ info and update device classes */
 				QueryStage_SecurityReport, /**< Retrieve a list of Command Classes that require Security */
-				QueryStage_ManufacturerSpecific2, /**< Retrieve manufacturer name and product ids */
 				QueryStage_Versions, /**< Retrieve version information */
+				QueryStage_ManufacturerSpecific1, /**< Retrieve manufacturer name and product ids if ProtocolInfo lets us */
 				QueryStage_Instances, /**< Retrieve information about multiple command class instances */
+				QueryStage_ManufacturerSpecific2, /**< Retrieve manufacturer name and product ids */
 				QueryStage_Static, /**< Retrieve static information (doesn't change) */
 				QueryStage_CacheLoad, /**< Ping a device upon restarting with cached config for the device */
 				QueryStage_Probe1 = QueryStage_CacheLoad, /** < Depreciated name. /todo Remove in 2.0 timeframe */
@@ -351,14 +351,13 @@ namespace OpenZWave
 			{
 				return m_basic;
 			}
-			uint8 GetGeneric() const
-			{
-				return m_generic;
-			}
-			uint8 GetSpecific() const
-			{
-				return m_specific;
-			}
+			string GetBasicString();
+			uint8 GetGeneric(uint8 const _instance) const;
+			string GetGenericString(uint8 const _instance);
+			uint8 GetSpecific(uint8 const _instance) const;
+			string GetSpecificString(uint8 const _instance);
+			string GetEndPointDeviceClassLabel(uint8 const _generic, uint8 const _specific);
+
 			string const& GetType() const
 			{
 				return m_type;
@@ -531,6 +530,7 @@ namespace OpenZWave
 			 *
 			 */
 			uint8 GetNumInstances(uint8 const _ccid);
+			 
 		private:
 			/**
 			 * Creates the specified command class object and adds it to the node (via the
@@ -762,8 +762,7 @@ namespace OpenZWave
 			bool SetDeviceClasses(uint8 const _basic, uint8 const _generic, uint8 const _specific);	// Set the device class data for the node
 			bool SetPlusDeviceClasses(uint8 const _role, uint8 const _nodeType, uint16 const _deviceType);	// Set the device class data for the node based on the Zwave+ info report
 			bool AddMandatoryCommandClasses(uint8 const* _commandClasses);							// Add mandatory command classes as specified in the device_classes.xml to the node.
-			void ReadDeviceClasses();																	// Read the static device class data from the device_classes.xml file
-			string GetEndPointDeviceClassLabel(uint8 const _generic, uint8 const _specific);
+			bool ReadDeviceClasses();																	// Read the static device class data from the device_classes.xml file
 
 			static bool s_deviceClassesLoaded;		// True if the xml file has already been loaded
 			static map<uint8, string> s_basicDeviceClasses;		// Map of basic device classes.

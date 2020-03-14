@@ -155,7 +155,7 @@ clean:
 	@rm -rf $(DEPDIR) $(OBJDIR) $(LIBDIR)/libopenzwave.so* $(LIBDIR)/libopenzwave*.dylib $(LIBDIR)/libopenzwave.a $(top_builddir)/libopenzwave.pc $(top_builddir)/docs/api $(top_builddir)/Doxyfile $(top_srcdir)/cpp/src/vers.cpp
 
 printversion:
-	@echo "Building OpenZWave Version $(GITVERSION)"	
+	@echo "Building OpenZWave Version $(GITVERSION) - $(VERSION).$(VERSION_REV)"	
 
 
 -include $(patsubst %.cpp,$(DEPDIR)/%.d,$(tinyxml))

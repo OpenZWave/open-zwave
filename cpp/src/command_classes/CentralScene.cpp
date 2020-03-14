@@ -221,7 +221,7 @@ namespace OpenZWave
 					{
 						Log::Write(LogLevel_Warning, GetNodeId(), "Can't find ValueID for SceneCount");
 					}
-
+					Log::Write(LogLevel_Info, GetNodeId(), "Central Scene Contains %d Scenes that are%sidentical", m_dom.GetFlagByte(STATE_FLAG_CS_SCENECOUNT), identical ? " " : " not ");
 					for (int sceneID = 1; sceneID <= m_dom.GetFlagByte(STATE_FLAG_CS_SCENECOUNT); sceneID++)
 					{
 						if (GetVersion() == 1)
@@ -240,6 +240,7 @@ namespace OpenZWave
 								char lbl[64];
 								snprintf(lbl, 64, "Scene %d", sceneID);
 								node->CreateValueList(ValueID::ValueGenre_User, GetCommandClassId(), _instance, sceneID, lbl, "", true, false, 3, items, 0, 0);
+								Log::Write(LogLevel_Info, GetNodeId(), "Created Scene %d (Version 1)", sceneID);
 							}
 						}
 						if (GetVersion() >= 2)
@@ -254,8 +255,10 @@ namespace OpenZWave
 								int keyAttributes = _data[2 + sceneID];
 								createSupportedKeyAttributesValues(keyAttributes, sceneID, _instance);
 							}
+							Log::Write(LogLevel_Info, GetNodeId(), "Created Scene %d", sceneID);
 						}
 					}
+					return true;
 				}
 
 				return false;

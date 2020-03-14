@@ -67,8 +67,8 @@ namespace OpenZWave
 					// From CommandClass
 					virtual void ReadXML(TiXmlElement const* _ccElement) override;
 					virtual void WriteXML(TiXmlElement* _ccElement) override;
-					virtual bool RequestState(uint32 const _requestFlags, uint8 const _instance, Driver::MsgQueue const _queue) override;
-					virtual bool RequestValue(uint32 const _requestFlags, uint16 const _index, uint8 const _instance, Driver::MsgQueue const _queue) override;
+					virtual bool RequestState(uint32 const _requestFlags, uint8 const _endPoint, Driver::MsgQueue const _queue) override;
+					virtual bool RequestValue(uint32 const _requestFlags, uint16 const _index, uint8 const _endPoint, Driver::MsgQueue const _queue) override;
 					virtual uint8 const GetCommandClassId() const override
 					{
 						return StaticGetCommandClassId();
@@ -77,12 +77,15 @@ namespace OpenZWave
 					{
 						return StaticGetCommandClassName();
 					}
-					virtual bool HandleMsg(uint8 const* _data, uint32 const _length, uint32 const _instance = 1) override;
+					virtual bool HandleMsg(uint8 const* _data, uint32 const _length, uint32 const _endPoint = 1) override;
 
 					void RequestAllGroups(uint32 const _requestFlags);
-					void Set(uint8 const _group, uint8 const _nodeId, uint8 const _instance);
-					void Remove(uint8 const _group, uint8 const _nodeId, uint8 const _instance);
+					void Set(uint8 const _group, uint8 const _nodeId, uint8 const _endPoint);
+					void Remove(uint8 const _group, uint8 const _nodeId, uint8 const _endPoint);
 
+					bool supportsMultiInstance() override {
+						return false;
+					}
 				private:
 					MultiChannelAssociation(uint32 const _homeId, uint8 const _nodeId);
 					void QueryGroup(uint8 _groupIdx, uint32 const _requestFlags);
@@ -90,6 +93,7 @@ namespace OpenZWave
 
 					bool m_queryAll;			// When true, once a group has been queried, we request the next one.
 					uint8 m_numGroups;		// Number of groups supported by the device.  255 is reported by certain manufacturers and requires special handling.
+					uint8 m_currentGroupQuery; // The Current Group we are Querying for. 
 					vector<InstanceAssociation> m_pendingMembers;	// Used to build a list of group members from multiple reports
 
 			};

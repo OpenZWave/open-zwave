@@ -69,8 +69,11 @@ namespace OpenZWave
 			// Ensure the singleton instance is set
 			s_instance = this;
 
-			if (!s_bXmlLoaded)
-				LoadProductXML();
+			if (!s_bXmlLoaded) {
+				if (!LoadProductXML()) {
+					OZW_ERROR(OZWException::OZWEXCEPTION_CONFIG, "Cannot Load/Read ManufacturerSpecificDB! - Missing/Invalid Config File?");
+				}
+			}
 
 		}
 
@@ -279,7 +282,6 @@ namespace OpenZWave
 				map<int64, std::shared_ptr<ProductDescriptor> >::iterator pit = s_productMap.begin();
 				while (!s_productMap.empty())
 				{
-					pit->second->Release();
 					s_productMap.erase(pit);
 					pit = s_productMap.begin();
 				}
@@ -298,8 +300,11 @@ namespace OpenZWave
 		void ManufacturerSpecificDB::checkConfigFiles(Driver *driver)
 		{
 			LockGuard LG(m_MfsMutex);
-			if (!s_bXmlLoaded)
-				LoadProductXML();
+			if (!s_bXmlLoaded) {
+				if (!LoadProductXML()) {
+					OZW_ERROR(OZWException::OZWEXCEPTION_CONFIG, "Cannot Load/Read ManufacturerSpecificDB! - Missing/Invalid Config File?");
+				}
+			}
 
 			string configPath;
 			Options::Get()->GetOptionAsString("ConfigPath", &configPath);
@@ -373,7 +378,9 @@ namespace OpenZWave
 				if (success)
 				{
 					UnloadProductXML();
-					LoadProductXML();
+					if (!LoadProductXML()) {
+						OZW_ERROR(OZWException::OZWEXCEPTION_CONFIG, "Cannot Load/Read ManufacturerSpecificDB! - Missing/Invalid Config File?");
+					}
 					checkConfigFiles(driver);
 				}
 			}
@@ -406,8 +413,11 @@ namespace OpenZWave
 		std::shared_ptr<ProductDescriptor> ManufacturerSpecificDB::getProduct(uint16 _manufacturerId, uint16 _productType, uint16 _productId)
 		{
 
-			if (!s_bXmlLoaded)
-				LoadProductXML();
+			if (!s_bXmlLoaded) {
+				if (!LoadProductXML()) {
+					OZW_ERROR(OZWException::OZWEXCEPTION_CONFIG, "Cannot Load/Read ManufacturerSpecificDB! - Missing/Invalid Config File?");
+				}
+			}
 
 			// Try to get the real manufacturer and product names
 			map<uint16, string>::iterator mit = s_manufacturerMap.find(_manufacturerId);

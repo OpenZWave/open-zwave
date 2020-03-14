@@ -122,10 +122,7 @@ namespace OpenZWave
 			 * \return a pointer to the Options singleton object.
 			 * \see Create, Destroy
 			 */
-			static Options* Get()
-			{
-				return s_instance;
-			}
+			static Options* Get();
 
 			/**
 			 * Locks the options.
@@ -247,9 +244,7 @@ namespace OpenZWave
 			Option* AddOption(string const& _name);							// check lock and create (or open existing) option
 			Option* Find(string const& _name);
 
-			OPENZWAVE_EXPORT_WARNINGS_OFF
 			map<string, Option*> m_options;										// Map of option names to values.
-			OPENZWAVE_EXPORT_WARNINGS_ON
 			string m_xml;											// Path to XML options file.
 			string m_commandLine;									// String containing command line options.
 			string m_SystemPath;

@@ -27,6 +27,9 @@
 
 #include "ValueID.h"
 #include "Value.h"
+#include <sstream>
+#include <iomanip>
+
 
 namespace OpenZWave
 {
@@ -48,4 +51,22 @@ namespace OpenZWave
 		return Internal::VC::Value::GetTypeNameFromEnum(GetType());
 	}
 
+	string const ValueID::GetAsString() const
+	{
+		// Match constructor order
+		// ValueID(uint32 const _homeId, uint8 const _nodeId, ValueGenre const _genre, uint8 const _commandClassId,
+		// uint8 const _instance, uint16 const _valueIndex, ValueType const _type)
+		std::ostringstream s;
+
+		s
+			<< "HomeID: 0x" << hex << setfill('0') << setw(8) << GetHomeId()
+			<< ", ValueID: (Id 0x" << setw(16) << GetId() << dec << setfill(' ')
+			<< ", NodeID " << static_cast<unsigned int>(GetNodeId())
+			<< ", Genre " << GetGenreAsString()
+			<< ", CC 0x" << hex << setfill('0') << setw(2) << static_cast<unsigned int>(GetCommandClassId()) << dec << setfill(' ')
+			<< ", Instance " << static_cast<unsigned int>(GetInstance())
+			<< ", Index " << static_cast<unsigned int>(GetIndex())
+			<< ", Type " << GetTypeAsString() << ')';
+		return s.str();
+	}
 }// namespace OpenZWave

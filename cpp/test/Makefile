@@ -9,9 +9,17 @@
 .SUFFIXES:	.d .cpp .o .a
 .PHONY:	default clean
 
+# 2019-10 added this test because there are path issues, hings go wrong when you try to run
+# "make" in the cpp/test subdirectory. One of the offending statements is "top_builddir ?= $(CURDIR)"
+# Needs some work to get a proper fix.
 
-DEBUG_CFLAGS    := -Wall -ggdb -DDEBUG $(CPPFLAGS)
-RELEASE_CFLAGS  := -Wall -Wno-unknown-pragmas -O3 $(CPPFLAGS)
+ifeq ($(top_builddir),)
+ $(error Variable top_builddir is undefined, please run "make" from root of OpenzWave repository only.)
+endif
+
+COMMON_FLAGS	:= -std=c++11 -Wall -Wno-unknown-pragmas -Wsign-compare
+DEBUG_CFLAGS    := -ggdb -DDEBUG $(CPPFLAGS) $(COMMON_FLAGS)
+RELEASE_CFLAGS  := -O3 $(CPPFLAGS) $(COMMON_FLAGS)
 
 DEBUG_LDFLAGS	:= -g
 
@@ -21,7 +29,13 @@ top_srcdir := $(abspath $(dir $(lastword $(MAKEFILE_LIST)))../../)
 LIBDIR  	?= $(top_builddir)
 
 INCLUDES	:= -I $(top_srcdir)/cpp/test/ -I $(top_srcdir)/cpp/test/include/ -I $(top_srcdir)/cpp/src -I $(top_srcdir)/cpp/tinyxml/ -I $(top_srcdir)/cpp/hidapi/hidapi/
-LIBS = $(wildcard $(LIBDIR)/*.a )
+OZW_LIB = $(wildcard $(LIBDIR)/*.a )
+LIBS = $(OZW_LIB)
+
+ifneq ($(UNAME),FreeBSD)
+LIBS += -lresolv
+endif
+
 #LIBSDIR = $(abspath $(dir $(firstword $(LIBS))))
 SOURCES  := $(top_srcdir)/cpp/test/src/ $(top_srcdir)/cpp/test/
 gtestsrc := $(notdir $(wildcard $(top_srcdir)/cpp/test/src/*.cc))
@@ -69,7 +83,7 @@ $(OBJDIR)/%.o : %.cc
 	@$(CXX) $(CFLAGS) $(TARCH) $(INCLUDES) -o $@ $<
 
 $(top_builddir)/gtest-main:	$(patsubst %.cc,$(OBJDIR)/%.o,$(gtestsrc)) \
-	$(patsubst %.cpp,$(OBJDIR)/%.o,$(testsrc))
+	$(patsubst %.cpp,$(OBJDIR)/%.o,$(testsrc)) $(OZW_LIB)
 	@echo "Linking $@"
 	@$(LD) $(LDFLAGS) $(TARCH) -o $@ $+ $(LIBS) -pthread
 

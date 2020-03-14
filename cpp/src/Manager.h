@@ -366,11 +366,8 @@ namespace OpenZWave
 		private:
 			Driver* GetDriver(uint32 const _homeId); /**< Get a pointer to a Driver object from the HomeID.  Only to be used by OpenZWave. */
 			void SetDriverReady(Driver* _driver, bool success); /**< Indicate that the Driver is ready to be used, and send the notification callback. */
-
-			OPENZWAVE_EXPORT_WARNINGS_OFF
 			list<Driver*> m_pendingDrivers; /**< Drivers that are in the process of reading saved data and querying their Z-Wave network for basic information. */
 			map<uint32, Driver*> m_readyDrivers; /**< Drivers that are ready to be used by the application. */
-		OPENZWAVE_EXPORT_WARNINGS_ON
 
 		//-----------------------------------------------------------------------------
 		//	Polling Z-Wave devices
@@ -562,20 +559,50 @@ namespace OpenZWave
 			uint8 GetNodeBasic(uint32 const _homeId, uint8 const _nodeId);
 
 			/**
+			 * \brief Get the basic type of a node.
+			 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
+			 * \param _nodeId The ID of the node to query.
+			 * \return the node's basic type.
+			 */
+			string GetNodeBasicString(uint32 const _homeId, uint8 const _nodeId);
+
+
+			/**
 			 * \brief Get the generic type of a node.
 			 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
 			 * \param _nodeId The ID of the node to query.
+			 * \param _instance If Specified, Get the Generic Type for a Instance
 			 * \return the node's generic type.
 			 */
-			uint8 GetNodeGeneric(uint32 const _homeId, uint8 const _nodeId);
+			uint8 GetNodeGeneric(uint32 const _homeId, uint8 const _nodeId, uint8 const _instance = 0);
+
+			/**
+			 * \brief Get the generic type of a node as a String
+			 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
+			 * \param _nodeId The ID of the node to query.
+			 * \param _instance If Specified, Get the Generic Type for a Instance
+			 * \return the node's generic type.
+			 */
+			string GetNodeGenericString(uint32 const _homeId, uint8 const _nodeId, uint8 const _instance = 0);
 
 			/**
 			 * \brief Get the specific type of a node.
 			 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
 			 * \param _nodeId The ID of the node to query.
+			 * \param _instance If Specified, Get the Specific Type for a Instance
 			 * \return the node's specific type.
 			 */
-			uint8 GetNodeSpecific(uint32 const _homeId, uint8 const _nodeId);
+			uint8 GetNodeSpecific(uint32 const _homeId, uint8 const _nodeId, uint8 const _instance = 0);
+
+			/**
+			 * \brief Get the specific type of a node as a string
+			 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
+			 * \param _nodeId The ID of the node to query.
+			 * \param _instance If Specified, Get the Specific Type for a Instance
+			 * \return the node's specific type.
+			 */
+			string GetNodeSpecificString(uint32 const _homeId, uint8 const _nodeId, uint8 const _instance = 0);
+
 
 			/**
 			 * \brief Get a human-readable label describing the node
@@ -829,6 +856,14 @@ namespace OpenZWave
 			 * \return True if the node does have the class instantiated, will return name & version
 			 */
 			bool GetNodeClassInformation(uint32 const _homeId, uint8 const _nodeId, uint8 const _commandClassId, string *_className = NULL, uint8 *_classVersion = NULL);
+
+			/**
+			 * \brief Get a friendly name for the CommandClass ID
+			 * \param _commandClassId Id of the class to test for
+			 * \return String returning the CommandClass Name
+			 */
+			string GetCommandClassName(uint8 const _commandClassId);
+
 			/**
 			 * \brief Get whether the node is awake or asleep
 			 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
@@ -1068,6 +1103,15 @@ namespace OpenZWave
 			 * \see ValueID
 			 */
 			bool IsValuePolled(ValueID const& _id);
+
+			/**
+			 * \brief Test whether the ValueID is valid.
+			 * \param _id The unique identifier of the value.
+			 * \return true if the valueID is valid, otherwise false.
+			 * \see ValueID
+			 */
+			bool IsValueValid(ValueID const& _id);
+
 
 			/**
 			 * \brief Gets a the value of a Bit from a BitSet ValueID
@@ -1667,6 +1711,9 @@ namespace OpenZWave
 			/**
 			 * \brief Gets the associations for a group.
 			 * Makes a copy of the list of associated nodes in the group, and returns it in an array of InstanceAssociation's.
+			 * struct InstanceAssociation is defined in Group.h and contains
+			 * a (NodeID, End Point) pair. See SDS13783-11B Z-Wave Transport-Encapsulation Command Class Specification
+			 * chapter 2.3.1 Terminology for the definition of "End Point" and "Multi Channel Encapsulation"
 			 * The caller is responsible for freeing the array memory with a call to delete [].
 			 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
 			 * \param _nodeId The ID of the node whose associations we are interested in.
@@ -1781,10 +1828,8 @@ namespace OpenZWave
 					}
 			};
 
-			OPENZWAVE_EXPORT_WARNINGS_OFF
 			list<Watcher*> m_watchers;							// List of all the registered watchers.
 			list<list<Watcher*>::iterator*> m_watcherIterators;					// Iterators currently operating on the list of watchers
-			OPENZWAVE_EXPORT_WARNINGS_ON
 			Internal::Platform::Mutex* m_notificationMutex;
 
 			//-----------------------------------------------------------------------------
