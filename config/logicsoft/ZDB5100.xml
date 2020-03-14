@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="Name">Matrix</MetaDataItem>
     <MetaDataItem name="Description">MATRIX ZDB5100 is a dimmer wall switch module with four backlit pushbuttons. MATRIX is designed to fit into 1-module FUGA® wall boxes (Danish standard).</MetaDataItem>
@@ -105,16 +105,16 @@
     <Value genre="config" index="15" label="Associations groups, transmission when included secure" size="2" type="bitset" bitmask="8191" value="8191">
       <Help>This parameter specifies if commands are transmitted as a secure message for each of the association groups.
         Bitmask:
-        0: All messages in all groups are sentas insecure.
-        1: Messages in association group 2 aresentas secure.
-        2: Messages in association group 3 aresentas secure.
-        4: Messages in association group 4 aresentas secure.
-        8: Messages in association group 5 aresentas secure.
-        16: Messages in association group 6 aresentas secure.
-        32: Messages in association group 7 aresentas secure.
-        64: Messages in association group 8 aresentas secure.
-        128: Messages in association group 9 aresentas secure.
-        256: Messages in association group 10 aresentas secure.
+        0: All messages in all groups are sent as insecure.
+        1: Messages in association group 2 aresent as secure.
+        2: Messages in association group 3 aresent as secure.
+        4: Messages in association group 4 aresent as secure.
+        8: Messages in association group 5 aresent as secure.
+        16: Messages in association group 6 aresent as secure.
+        32: Messages in association group 7 aresent as secure.
+        64: Messages in association group 8 aresent as secure.
+        128: Messages in association group 9 aresent as secure.
+        256: Messages in association group 10 aresent as secure.
         512: Messages in association group 11 aresent as secure.
         1024: Messages in association group 12 aresent as secure.
         2048: Messages in association group 13 aresent as secure.
@@ -122,63 +122,63 @@
         8191: Messages in allassociation groups are sent as secure. (Default)
       </Help>
       <BitSet id="1">
-        <Label>Bit 0</Label>
+        <Label>Bit#0. All commands are sent unencrypted</Label>
         <Help>All messages in all groups are sent as insecure.</Help>
       </BitSet>
       <BitSet id="2">
-        <Label>Bit 1</Label>
+        <Label>Bit#1. Send Basic Report to association group 2 encrypted.</Label>
         <Help>Messages in association group 2 are sent as secure.</Help>
       </BitSet>
       <BitSet id="3">
-        <Label>Bit 2</Label>
+        <Label>Bit#2. Send Binary Switch Set to association group 3 encrypted.</Label>
         <Help>Messages in association group 3 are sent as secure.</Help>
       </BitSet>
       <BitSet id="4">
-        <Label>Bit 4</Label>
+        <Label>Bit#4. Send Multi-LevelSwitch to association group 4 encrypted.</Label>
         <Help>Messages in association group 4 are sent as secure.</Help>
       </BitSet>
       <BitSet id="5">
-        <Label>Bit 8</Label>
+        <Label>Bit#8. Send Basic Report to association group 5 encrypted.</Label>
         <Help>Messages in association group 5 are sent as secure.</Help>
       </BitSet>
       <BitSet id="6">
-        <Label>Bit 16</Label>
+        <Label>Bit#16. Send Binary Switch Set to association group 6 encrypted.</Label>
         <Help>Messages in association group 6 are sent as secure.</Help>
       </BitSet>
       <BitSet id="7">
-        <Label>Bit 32</Label>
+        <Label>Bit#32. Send Multi-LevelSwitch to association group 7 encrypted.</Label>
         <Help>Messages in association group 7 are sent as secure.</Help>
       </BitSet>
       <BitSet id="8">
-        <Label>Bit 64</Label>
+        <Label>Bit#64. Send Basic Report to association group 8 encrypted.</Label>
         <Help>Messages in association group 8 are sent as secure.</Help>
       </BitSet>
       <BitSet id="9">
-        <Label>Bit 128</Label>
+        <Label>Bit#128. Send Binary Switch Set to association group 9 encrypted.</Label>
         <Help>Messages in association group 9 are sent as secure.</Help>
       </BitSet>
       <BitSet id="10">
-        <Label>Bit 256</Label>
+        <Label>Bit#256. Send Multi-LevelSwitch to association group 10 encrypted.</Label>
         <Help>Messages in association group 10 are sent as secure.</Help>
       </BitSet>
       <BitSet id="11">
-        <Label>Bit 512</Label>
+        <Label>Bit#512. Send Basic Report to association group 11 encrypted.</Label>
         <Help>Messages in association group 11 are sent as secure.</Help>
       </BitSet>
       <BitSet id="12">
-        <Label>Bit 1024</Label>
+        <Label>Bit#1024. Send Binary Switch Set to association group 12 encrypted.</Label>
         <Help>Messages in association group 12 are sent as secure.</Help>
       </BitSet>
       <BitSet id="13">
-        <Label>Bit 2048</Label>
+        <Label>Bit#2048. Send Multi-LevelSwitch to association group 10 encrypted.</Label>
         <Help>Messages in association group 13 are sent as secure.</Help>
       </BitSet>
       <BitSet id="14">
-        <Label>Bit 4096</Label>
+        <Label>Bit#4096. Send Basic Report to association group 14 encrypted.</Label>
         <Help>Messages in association group 14 are sent as secure.</Help>
       </BitSet>
       <BitSet id="15">
-        <Label>Bit 8191</Label>
+        <Label>Bit#8191. All commands are sent encrypted (default).</Label>
         <Help>Messages in all association groups are sent as secure.</Help>
       </BitSet>
     </Value>
