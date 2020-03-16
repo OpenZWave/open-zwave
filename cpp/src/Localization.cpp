@@ -36,6 +36,7 @@
 #include "command_classes/ThermostatSetpoint.h"
 #include "command_classes/SoundSwitch.h"
 #include "command_classes/Meter.h"
+#include "command_classes/CentralScene.h"
 
 namespace OpenZWave
 {
@@ -552,6 +553,11 @@ namespace OpenZWave
 			{
 				return ((uint64) _node << 56 | (uint64) _commandClass << 48) | ((uint64) _index << 32) | ((uint64) _pos);
 			}
+			/* indexes below 256 are the Scene Labels - Unique per device */
+			if (_commandClass == Internal::CC::CentralScene::StaticGetCommandClassId() && (_index < 256))
+			{
+				return ((uint64) _node << 56 | (uint64) _commandClass << 48 | (uint64) _index << 32 | (uint64) _pos);
+			}
 			return ((uint64) _commandClass << 48) | ((uint64) _index << 32) | ((uint64) _pos);
 		}
 
@@ -643,6 +649,10 @@ namespace OpenZWave
 			{
 				unique = true;
 			}
+			if ((ccID == Internal::CC::CentralScene::StaticGetCommandClassId()) && (indexId < 256))
+			{
+				unique = true;
+			}
 			uint64 key = GetValueKey(node, ccID, indexId, pos, unique);
 			if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end())
 			{
@@ -656,6 +666,10 @@ namespace OpenZWave
 		{
 			bool unique = false;
 			if ((ccID == Internal::CC::SoundSwitch::StaticGetCommandClassId()) && (indexId == 1 || indexId == 3))
+			{
+				unique = true;
+			}
+			if ((ccID == Internal::CC::CentralScene::StaticGetCommandClassId()) && (indexId < 256))
 			{
 				unique = true;
 			}
@@ -680,6 +694,10 @@ namespace OpenZWave
 			{
 				unique = true;
 			}
+			if ((ccID == Internal::CC::CentralScene::StaticGetCommandClassId()) && (indexId < 256))
+			{
+				unique = true;
+			}
 
 			uint64 key = GetValueKey(node, ccID, indexId, pos, unique);
 			if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end())
@@ -694,6 +712,10 @@ namespace OpenZWave
 		{
 			bool unique = false;
 			if ((ccID == Internal::CC::SoundSwitch::StaticGetCommandClassId()) && (indexId == 1 || indexId == 3))
+			{
+				unique = true;
+			}
+			if ((ccID == Internal::CC::CentralScene::StaticGetCommandClassId()) && (indexId < 256))
 			{
 				unique = true;
 			}
