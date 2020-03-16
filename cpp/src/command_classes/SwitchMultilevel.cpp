@@ -240,7 +240,7 @@ namespace OpenZWave
 					}
 					return true;
 				}
-
+				Log::Write(LogLevel_Warning, GetNodeId(), "Recieved a Unhandled SwitchMultiLevel Command: %d", _data[0]);
 				return false;
 			}
 
