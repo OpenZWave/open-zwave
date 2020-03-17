@@ -360,11 +360,12 @@ int main( int argc, char* argv[] )
 			printf("\t ManufacturerName: %s \n ", Manager::Get()->GetNodeManufacturerName(nodeInfo->m_homeId,nodeInfo->m_nodeId).c_str());
 			printf("\t NodeProductName: %s \n ", Manager::Get()->GetNodeProductName(nodeInfo->m_homeId,nodeInfo->m_nodeId).c_str());
 
-			printf("Values announced by the nodes without polling: \n");
+			printf("Values announced by the nodes without polling: %d\n", nodeInfo->m_values.size());
 			for( list<ValueID>::iterator it2 = nodeInfo->m_values.begin(); it2 != nodeInfo->m_values.end(); ++it2 )
 			{
 				ValueID v = *it2;
 				printf("\t ValueLabel: %s \n", Manager::Get()->GetValueLabel(v).c_str());
+				printf("\t\t ValueIndex: %d - Instance %d\n", v.GetIndex(), v.GetInstance());
 				printf("\t\t ValueType: %s (%d) \n", v.GetTypeAsString().c_str(), v.GetType());
 				printf("\t\t ValueHelp: %s \n", Manager::Get()->GetValueHelp(v).c_str());
 				printf("\t\t ValueUnits: %s \n", Manager::Get()->GetValueUnits(v).c_str());
@@ -372,11 +373,13 @@ int main( int argc, char* argv[] )
 				printf("\t\t ValueMax: %d \n", Manager::Get()->GetValueMax(v));
 				printf("\t\t ValueGenre: %s (%d)\n", v.GetGenreAsString().c_str(), v.GetGenre());
 
+#if 0
 				if( v.GetCommandClassId() == COMMAND_CLASS_BASIC )
 				{
 //					Manager::Get()->EnablePoll( v, 2 );		// enables polling with "intensity" of 2, though this is irrelevant with only one value polled
-					break;
+//					break;
 				}
+#endif
 			}
 		}
 		pthread_mutex_unlock( &g_criticalSection );

@@ -32,6 +32,7 @@
 #include "Driver.h"
 #include "Node.h"
 #include "Notification.h"
+#include "Utils.h"
 #include "platform/Log.h"
 #include "value_classes/ValueBitSet.h"
 #include "value_classes/ValueBool.h"
@@ -346,7 +347,7 @@ namespace OpenZWave
 					param.max = getField(_data, paramSize, position);
 					param.defaultval = getField(_data, paramSize, position);
 					param.format = paramFormat;
-
+					param.size = paramSize;
 					param.flags = ConfigParamFlags_Info_Done;
 					m_ConfigParams[paramNo] = param;
 					uint16 nextParam = getField(_data, CC_Param_Size::CC_Param_Size_Short, position);
@@ -719,7 +720,6 @@ namespace OpenZWave
 						/* what, if any sanity checks should we do? size? */
 						var->Release();
 						RequestValue(0, param, 1, Driver::MsgQueue_Query);
-
 						return true;
 					} else {
 						/* value doesn't exist */
@@ -793,7 +793,16 @@ namespace OpenZWave
 									{
 										vbs->SetHelp(m_ConfigParams[param].help);
 										vbs->SetBitMask(m_ConfigParams[param].max);
-										/* I think we need to create the BitFields. */
+										for (int i = 0; i < (m_ConfigParams[param].size *8); i++) {
+											unsigned int test_bit = 1LL << i;
+											if (m_ConfigParams[param].max & test_bit) { 
+												string label = "Bit ";
+												label.append(Internal::intToString(i+1));
+												vbs->SetBitLabel(i+1, label);
+												label = "Set Bit ";
+												label.append(Internal::intToString(i+1));
+											}
+										}
 										vbs->Release();
 
 									}
