@@ -297,8 +297,7 @@ namespace OpenZWave
 			{
 				if (isValidBit(_idx))
 				{
-					Localization::Get()->SetValueItemHelp(m_id.GetNodeId(), m_id.GetCommandClassId(), m_id.GetIndex(), -1, _idx, Localization::Get()->GetSelectedLang());
-					return true;
+					return Localization::Get()->SetValueItemHelp(m_id.GetNodeId(), m_id.GetCommandClassId(), m_id.GetIndex(), -1, _idx, help, Localization::Get()->GetSelectedLang());
 				}
 				Log::Write(LogLevel_Warning, m_id.GetNodeId(), "SetBitHelp: Bit %d is not valid with BitMask %d", _idx, m_BitMask);
 				return false;
