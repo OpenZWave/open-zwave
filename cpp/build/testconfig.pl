@@ -134,6 +134,9 @@ foreach my $metadataitem ($data->{MetaData})
 				if ($data->{Revision} == $changelog->{'revision'}) {
 					$gotrev = 1;
 				}
+				if (!length($changelog->{'content'})) {
+					LogError($_[0], 9, "No Text in Entry for ChangeLog Revision $changelog->{revision}");
+				}
 			}
 			if ($gotrev == 0) {
 				LogError($_[0], 9, "No Change Log Entry for this revision");
