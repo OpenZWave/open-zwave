@@ -706,6 +706,7 @@ DISTFILES =	.gitignore \
 	config/images/linear/WD500Z5-1.png \
 	config/images/linear/gd00z-7.png \
 	config/images/linear/ngd00z.png \
+	config/images/logicsoft/ZDB5100.png \
 	config/images/logicsoft/ZHC5010.png \
 	config/images/mcohome/mh7h.png \
 	config/images/mcohome/mhp220.png \
@@ -959,6 +960,7 @@ DISTFILES =	.gitignore \
 	config/linear/WT00Z-1.xml \
 	config/linear/gd00z-7.xml \
 	config/linear/ngd00z.xml \
+	config/logicsoft/ZDB5100.xml \
 	config/logicsoft/ZHC5002.xml \
 	config/logicsoft/ZHC5010.xml \
 	config/manufacturer_specific.xml \
