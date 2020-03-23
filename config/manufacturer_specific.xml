@@ -1056,6 +1056,7 @@
 		<Product type="0011" id="0008" name="TH6320ZW2003 T6 Pro Series Thermostat" config="honeywell/th6320zw2003.xml"/>
 		<Product type="0001" id="0003" name="Lynx Touch L5100 / L7000" config="honeywell/lynx-touch-l5100.xml"/>
 		<Product type="4944" id="3038" name="39351 / ZW3005 In-Wall Smart Dimmer" config="honeywell/39351-ZW3005.xml"/>
+		<Product type="4952" id="3036" name="39348 / ZW4005 In-Wall Smart Switch" config="honeywell/39348-ZW4005.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0313" name="Hoppe">
 	</Manufacturer>
