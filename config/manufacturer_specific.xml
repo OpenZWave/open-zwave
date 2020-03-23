@@ -220,6 +220,7 @@
     <Product config="aeotec/zw141.xml" id="008d" name="ZW141 Nano Shutter" type="0103"/>  
     <Product config="aeotec/zw141.xml" id="008d" name="ZW141 Nano Shutter" type="0203"/>  	  
     <Product config="aeotec/zw164.xml" id="00a4" name="ZW164 Indoor Siren 6" type="0003"/>
+    <Product config="aeotec/zw164.xml" id="00a4" name="ZW164 Indoor Siren 6" type="0103"/>
     <Product config="aeotec/zw175.xml" id="00af" name="ZW175 Smart Switch 7" type="0003"/>
     <Product config="aeotec/zw187.xml" id="00bb" name="ZW187 Recessed Door Sensor 7" type="0002"/>
     <Product config="aeotec/zw187.xml" id="00bb" name="ZW187 Recessed Door Sensor 7" type="0102"/>
