@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ManufacturerSpecificData Revision="82" xmlns="https://github.com/OpenZWave/open-zwave">
+<ManufacturerSpecificData Revision="84" xmlns="https://github.com/OpenZWave/open-zwave">
   <Manufacturer id="0028" name="2B Electronics"></Manufacturer>
   <Manufacturer id="0098" name="2GIG Technologies">
     <Product config="2gig/ct50e.xml" id="015e" name="CT50e Thermostat" type="3200"/>
@@ -1582,7 +1582,7 @@
   <Manufacturer id="0239" name="Stelpro">
     <Product config="stelpro/stzw402.xml" id="0001" name="STZW402+ Electronic Thermostat" type="0001"/>
   </Manufacturer>
-  <Manufacturer id="0217" name="Strattec Advanced gr"></Manufacturer>
+  <Manufacturer id="0217" name="Strattec Advanced Logic"></Manufacturer>
   <Manufacturer id="0168" name="STRATTEC Security"></Manufacturer>
   <Manufacturer id="0105" name="Sumitomo"></Manufacturer>
   <Manufacturer id="028B" name="Sunjet Components"></Manufacturer>
