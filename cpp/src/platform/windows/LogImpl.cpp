@@ -96,7 +96,8 @@ namespace OpenZWave
 					FILE* pFile;
 					if (!fopen_s(&pFile, _filename.c_str(), accessType.c_str()))
 					{
-						fprintf(pFile, "\nLogging started %s\n\n", timeStr.c_str());
+						TimeStamp timeStr;
+						fprintf(pFile, "\nLogging started %s\n\n", timeStr.GetAsString().c_str());
 						fclose(pFile);
 					}
 				}
@@ -187,6 +188,7 @@ namespace OpenZWave
 							fprintf(pFile, "%s%s%s%s\n", timeStr.GetAsString().c_str(), logLevelStr.c_str(), nodeStr.c_str(), lineBuf);
 							fclose(pFile);
 						}
+					}
 				}
 				if (m_bConsoleOutput)
 				{
