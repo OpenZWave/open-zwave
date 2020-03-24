@@ -2610,7 +2610,7 @@ void Driver::HandleGetControllerCapabilitiesResponse(uint8* _data)
 void Driver::HandleGetSerialAPICapabilitiesResponse(uint8* _data)
 {
 	Log::Write(LogLevel_Info, GetNodeNumber(m_currentMsg), " Received reply to FUNC_ID_SERIAL_API_GET_CAPABILITIES");
-	Log::Write(LogLevel_Info, GetNodeNumber(m_currentMsg), "    Serial API Version:   %d.%d", _data[2], _data[3]);
+	Log::Write(LogLevel_Info, GetNodeNumber(m_currentMsg), "    Firmware Version:     %d.%d", _data[2], _data[3]);
 	Log::Write(LogLevel_Info, GetNodeNumber(m_currentMsg), "    Manufacturer ID:      0x%.2x%.2x", _data[4], _data[5]);
 	Log::Write(LogLevel_Info, GetNodeNumber(m_currentMsg), "    Product Type:         0x%.2x%.2x", _data[6], _data[7]);
 	Log::Write(LogLevel_Info, GetNodeNumber(m_currentMsg), "    Product ID:           0x%.2x%.2x", _data[8], _data[9]);
@@ -2828,6 +2828,7 @@ void Driver::HandleSerialAPIGetInitDataResponse(uint8* _data)
 
 	Log::Write(LogLevel_Info, GetNodeNumber(m_currentMsg), "Received reply to FUNC_ID_SERIAL_API_GET_INIT_DATA:");
 	m_initVersion = _data[2];
+	Log::Write(LogLevel_Info, GetNodeNumber(m_currentMsg), "    Communication Interface Version: %d", m_initVersion);
 	m_initCaps = _data[3];
 
 	if (_data[4] == NUM_NODE_BITFIELD_BYTES)
