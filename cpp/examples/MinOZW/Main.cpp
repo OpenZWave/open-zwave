@@ -100,7 +100,7 @@ void OnNotification
 	// Must do this inside a critical section to avoid conflicts with the main thread
 	pthread_mutex_lock( &g_criticalSection );
 
-	std::cout << "Notification: " << _notification << std::endl;
+//	std::cout << "Notification: " << _notification << std::endl;
 
 	switch( _notification->GetType() )
 	{
@@ -235,6 +235,7 @@ void OnNotification
 		}
 
 		case Notification::Type_AwakeNodesQueried:
+			break;
 		case Notification::Type_AllNodesQueried:
 		case Notification::Type_AllNodesQueriedSomeDead:
 		{

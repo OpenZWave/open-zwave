@@ -36,6 +36,7 @@
 #include "command_classes/ThermostatSetpoint.h"
 #include "command_classes/SoundSwitch.h"
 #include "command_classes/Meter.h"
+#include "command_classes/CentralScene.h"
 
 namespace OpenZWave
 {
@@ -238,7 +239,7 @@ namespace OpenZWave
 		{
 		}
 
-		void Localization::ReadXML()
+		bool Localization::ReadXML()
 		{
 			// Parse the Z-Wave manufacturer and product XML file.
 			string configPath;
@@ -250,7 +251,7 @@ namespace OpenZWave
 			{
 				Log::Write(LogLevel_Warning, "Unable to load Localization file %s: %s", path.c_str(), pDoc->ErrorDesc());
 				delete pDoc;
-				return;
+				return false;
 			}
 			pDoc->SetUserData((void*) path.c_str());
 			Log::Write(LogLevel_Info, "Loading Localization File %s", path.c_str());
@@ -265,7 +266,7 @@ namespace OpenZWave
 				{
 					Log::Write(LogLevel_Info, "Error in Product Config file at line %d - missing Revision  attribute", root->Row());
 					delete pDoc;
-					return;
+					return false;
 				}
 				m_revision = atol(str);
 			}
@@ -319,6 +320,7 @@ namespace OpenZWave
 			}
 			Log::Write(LogLevel_Info, "Loaded %s With Revision %d", pDoc->GetUserData(), m_revision);
 			delete pDoc;
+			return true;
 		}
 
 		void Localization::ReadGlobalXMLLabel(const TiXmlElement *labelElement)
@@ -551,6 +553,11 @@ namespace OpenZWave
 			{
 				return ((uint64) _node << 56 | (uint64) _commandClass << 48) | ((uint64) _index << 32) | ((uint64) _pos);
 			}
+			/* indexes below 256 are the Scene Labels - Unique per device */
+			if (_commandClass == Internal::CC::CentralScene::StaticGetCommandClassId() && (_index < 256))
+			{
+				return ((uint64) _node << 56 | (uint64) _commandClass << 48 | (uint64) _index << 32 | (uint64) _pos);
+			}
 			return ((uint64) _commandClass << 48) | ((uint64) _index << 32) | ((uint64) _pos);
 		}
 
@@ -642,6 +649,10 @@ namespace OpenZWave
 			{
 				unique = true;
 			}
+			if ((ccID == Internal::CC::CentralScene::StaticGetCommandClassId()) && (indexId < 256))
+			{
+				unique = true;
+			}
 			uint64 key = GetValueKey(node, ccID, indexId, pos, unique);
 			if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end())
 			{
@@ -655,6 +666,10 @@ namespace OpenZWave
 		{
 			bool unique = false;
 			if ((ccID == Internal::CC::SoundSwitch::StaticGetCommandClassId()) && (indexId == 1 || indexId == 3))
+			{
+				unique = true;
+			}
+			if ((ccID == Internal::CC::CentralScene::StaticGetCommandClassId()) && (indexId < 256))
 			{
 				unique = true;
 			}
@@ -679,6 +694,10 @@ namespace OpenZWave
 			{
 				unique = true;
 			}
+			if ((ccID == Internal::CC::CentralScene::StaticGetCommandClassId()) && (indexId < 256))
+			{
+				unique = true;
+			}
 
 			uint64 key = GetValueKey(node, ccID, indexId, pos, unique);
 			if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end())
@@ -693,6 +712,10 @@ namespace OpenZWave
 		{
 			bool unique = false;
 			if ((ccID == Internal::CC::SoundSwitch::StaticGetCommandClassId()) && (indexId == 1 || indexId == 3))
+			{
+				unique = true;
+			}
+			if ((ccID == Internal::CC::CentralScene::StaticGetCommandClassId()) && (indexId < 256))
 			{
 				unique = true;
 			}
@@ -767,7 +790,9 @@ namespace OpenZWave
 				return m_instance;
 			}
 			m_instance = new Localization();
-			ReadXML();
+			if (!ReadXML()) {
+				OZW_ERROR(OZWException::OZWEXCEPTION_CONFIG, "Cannot Create Localization Class! - Missing/Invalid Config File?");
+			}
 			Options::Get()->GetOptionAsString("Language", &m_selectedLang);
 			return m_instance;
 		}

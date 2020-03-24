@@ -103,6 +103,8 @@ DISTFILES =	.gitignore \
 	config/aeotec/zw162.xml \
 	config/aeotec/zw164.xml \
 	config/aeotec/zw175.xml \
+	config/aeotec/zw187.xml \
+	config/aeotec/zw189.xml \
 	config/aeotec/zwa001.xml \
 	config/aeotec/zwa002.xml \
 	config/aeotec/zwa003.xml \
@@ -110,6 +112,7 @@ DISTFILES =	.gitignore \
 	config/aeotec/zwa005.xml \
 	config/aeotec/zwa006.xml \
 	config/aeotec/zwa008.xml \
+	config/aeotec/zwa021.xml \
 	config/airlinemechanical/zds-ud10.xml \
 	config/alfred/DB2.xml \
 	config/assa_abloy/ConexisL1.xml \
@@ -197,9 +200,11 @@ DISTFILES =	.gitignore \
 	config/enerwave/zwn-sc7.xml \
 	config/enerwave/zwnrsm1plus.xml \
 	config/enerwave/zwnrsm2plus.xml \
+	config/eurotronic/eur_airquality.xml \
 	config/eurotronic/eur_cometz.xml \
 	config/eurotronic/eur_spiritz.xml \
 	config/eurotronic/eur_stellaz.xml \
+	config/eurotronic/eur_temphumin.xml \
 	config/everspring/ad146.xml \
 	config/everspring/ad147.xml \
 	config/everspring/an145.xml \
@@ -274,6 +279,7 @@ DISTFILES =	.gitignore \
 	config/followgood/swz-1002.xml \
 	config/forest/fs2z5232000002.xml \
 	config/fortrezz/fmi.xml \
+	config/fortrezz/fts05p.xml \
 	config/fortrezz/gdc1_fortrezz_1501.xml \
 	config/fortrezz/mimo2plus.xml \
 	config/fortrezz/mimolite.xml \
@@ -300,6 +306,7 @@ DISTFILES =	.gitignore \
 	config/ge/28169-plugin-switch.xml \
 	config/ge/45604.xml \
 	config/ge/46201-switch.xml \
+	config/ge/46203-dimmer.xml \
 	config/ge/dimmer.xml \
 	config/ge/dimmer_module.xml \
 	config/ge/hinge-pin.xml \
@@ -341,6 +348,8 @@ DISTFILES =	.gitignore \
 	config/heiman/HS1WL-Z.xml \
 	config/heiman/HS2SK-Z.xml \
 	config/heiman/HS2WD-Z.xml \
+	config/heltun/he-ft01.xml \
+	config/heltun/he-ht01.xml \
 	config/heltun/he-zw-sw-5a-1.xml \
 	config/heltun/he-zw-therm-fc1.xml \
 	config/heltun/he-zw-therm-fl2.xml \
@@ -358,7 +367,11 @@ DISTFILES =	.gitignore \
 	config/homeseer/hsm100.xml \
 	config/homeseer/hsm200.xml \
 	config/homeseer/ztroller.xml \
+	config/honeywell/39348-ZW4005.xml \
+	config/honeywell/39348-zw4008.xml \
 	config/honeywell/39351-ZW3005.xml \
+	config/honeywell/39351-ZW3010.xml \
+	config/honeywell/39357-ZW3004.xml \
 	config/honeywell/lynx-touch-l5100.xml \
 	config/honeywell/th6320zw2003.xml \
 	config/honeywell/th8320zw1000.xml \
@@ -442,6 +455,8 @@ DISTFILES =	.gitignore \
 	config/images/aeotec/zw141.png \
 	config/images/aeotec/zw162.png \
 	config/images/aeotec/zw164.png \
+	config/images/aeotec/zw187.png \
+	config/images/aeotec/zw189.png \
 	config/images/aeotec/zw195.png \
 	config/images/aeotec/zwa001.png \
 	config/images/aeotec/zwa002.png \
@@ -449,6 +464,7 @@ DISTFILES =	.gitignore \
 	config/images/aeotec/zwa004.png \
 	config/images/aeotec/zwa005.png \
 	config/images/aeotec/zwa006.png \
+	config/images/aeotec/zwa021.png \
 	config/images/airlinemechanical/zds-ud10.png \
 	config/images/alfred/DB2.png \
 	config/images/assa_abloy/ConexisL1.png \
@@ -506,9 +522,11 @@ DISTFILES =	.gitignore \
 	config/images/enerwave/zw20rm.png \
 	config/images/enerwave/zwn-bpc.png \
 	config/images/enerwave/zwnrsm1plus.png \
+	config/images/eurotronic/eur_airquality.png \
 	config/images/eurotronic/eur_cometz.png \
 	config/images/eurotronic/eur_spiritz.png \
 	config/images/eurotronic/eur_stellaz.png \
+	config/images/eurotronic/eur_temphumid.png \
 	config/images/everspring/ad146.png \
 	config/images/everspring/ad147.png \
 	config/images/everspring/an157.png \
@@ -566,6 +584,7 @@ DISTFILES =	.gitignore \
 	config/images/followgood/swz-1002.png \
 	config/images/forest/fs2z5232000002.png \
 	config/images/fortrezz/fmi.png \
+	config/images/fortrezz/fts05p.png \
 	config/images/fortrezz/gdc1_fortrezz_1501.png \
 	config/images/fortrezz/mimo2plus.png \
 	config/images/fortrezz/mimolite.png \
@@ -591,6 +610,7 @@ DISTFILES =	.gitignore \
 	config/images/ge/28169-plugin-switch.png \
 	config/images/ge/45604.png \
 	config/images/ge/46201-switch.png \
+	config/images/ge/46203-dimmer.png \
 	config/images/ge/dimmer.png \
 	config/images/ge/dimmer_module.png \
 	config/images/ge/hinge-pin.png \
@@ -627,6 +647,8 @@ DISTFILES =	.gitignore \
 	config/images/heiman/HS1SA-Z.png \
 	config/images/heiman/HS1WL-Z.png \
 	config/images/heiman/HS2SK-Z.png \
+	config/images/heltun/he-ft01.png \
+	config/images/heltun/he-ht01.png \
 	config/images/homeseer/hs-ds100plus.png \
 	config/images/homeseer/hs-fc200plus.png \
 	config/images/homeseer/hs-fls100plus.png \
@@ -637,7 +659,10 @@ DISTFILES =	.gitignore \
 	config/images/homeseer/hs-ws100plus.png \
 	config/images/homeseer/hs-ws200plus.png \
 	config/images/homeseer/hsm200.png \
+	config/images/honeywell/39348-ZW4005.png \
+	config/images/honeywell/39348-zw4008.png \
 	config/images/honeywell/39351-ZW3005.png \
+	config/images/honeywell/39357-ZW3004.png \
 	config/images/honeywell/lynx-touch-l5100.png \
 	config/images/honeywell/th6320zw2003.png \
 	config/images/honeywell/th8320zw1000.png \
@@ -658,11 +683,17 @@ DISTFILES =	.gitignore \
 	config/images/ingersoll/dwzwave1.png \
 	config/images/inovelli/lzw30-sn.png \
 	config/images/inovelli/lzw30.png \
+	config/images/inovelli/lzw31-sn.png \
+	config/images/inovelli/lzw31.png \
+	config/images/inovelli/lzw40.png \
+	config/images/inovelli/lzw41.png \
+	config/images/inovelli/lzw42.png \
 	config/images/inovelli/simple_module.png \
 	config/images/iwatsu/ne-4ct-2p.png \
 	config/images/iwatsu/ne-4ct.png \
 	config/images/jasco/45601.png \
 	config/images/kaipule/im20.png \
+	config/images/kwikset/914c.png \
 	config/images/kwikset/smartcode.png \
 	config/images/leviton/dz15s.png \
 	config/images/leviton/dz6hd.png \
@@ -675,6 +706,7 @@ DISTFILES =	.gitignore \
 	config/images/linear/WD500Z5-1.png \
 	config/images/linear/gd00z-7.png \
 	config/images/linear/ngd00z.png \
+	config/images/logicsoft/ZDB5100.png \
 	config/images/logicsoft/ZHC5010.png \
 	config/images/mcohome/mh7h.png \
 	config/images/mcohome/mhp220.png \
@@ -723,6 +755,7 @@ DISTFILES =	.gitignore \
 	config/images/popp/700045.png \
 	config/images/popp/700168.png \
 	config/images/popp/700397.png \
+	config/images/popp/701202.png \
 	config/images/popp/dwt.png \
 	config/images/popp/smoke-detector.png \
 	config/images/popp/solar-siren.png \
@@ -788,8 +821,10 @@ DISTFILES =	.gitignore \
 	config/images/telldus/tzwp100.png \
 	config/images/telldus/tzwp102.png \
 	config/images/there/800z.png \
+	config/images/thermofloor/Heatit-Z-Push-button-8-white.png \
 	config/images/thermofloor/heatit021.png \
 	config/images/thermofloor/heatit056.png \
+	config/images/thermofloor/heatit_zdim.png \
 	config/images/trane/TZEMT400AB32MAA.png \
 	config/images/trane/TZEMT400BB32MAA.png \
 	config/images/trane/TZEMT524AA21MA.png \
@@ -826,14 +861,20 @@ DISTFILES =	.gitignore \
 	config/images/wenzhou/tz68.png \
 	config/images/wenzhou/tz69.png \
 	config/images/wenzhou/tz88.png \
+	config/images/widom/DRY.png \
 	config/images/widom/UBS104.png \
 	config/images/widom/UME304C_S.png \
+	config/images/widom/UMS2.png \
 	config/images/widom/WDS.png \
+	config/images/widom/WDS2.png \
+	config/images/widom/WSP.png \
+	config/images/widom/WTED.png \
 	config/images/zipato/HS1CA-Z.png \
 	config/images/zipato/HS1CG-Z.png \
 	config/images/zipato/HS1SA-Z.png \
 	config/images/zipato/HS1WL-Z.png \
 	config/images/zipato/RGBBulb.png \
+	config/images/zipato/ne-nas-ab01z.png \
 	config/images/zipato/pan04.png \
 	config/images/zipato/phpab01.png \
 	config/images/zipato/pse02.png \
@@ -843,11 +884,15 @@ DISTFILES =	.gitignore \
 	config/images/zipato/zp3102.png \
 	config/images/zooz/zen06.png \
 	config/images/zooz/zen15.png \
+	config/images/zooz/zen16.png \
 	config/images/zooz/zen20.png \
 	config/images/zooz/zen20v2.png \
 	config/images/zooz/zen21.png \
 	config/images/zooz/zen22.png \
 	config/images/zooz/zen26.png \
+	config/images/zooz/zen27.png \
+	config/images/zooz/zen30.png \
+	config/images/zooz/zen31.png \
 	config/images/zooz/zse09.png \
 	config/images/zooz/zse19.png \
 	config/images/zooz/zse29.png \
@@ -867,6 +912,11 @@ DISTFILES =	.gitignore \
 	config/ingersoll/dwzwave1.xml \
 	config/inovelli/lzw30-sn.xml \
 	config/inovelli/lzw30.xml \
+	config/inovelli/lzw31-sn.xml \
+	config/inovelli/lzw31.xml \
+	config/inovelli/lzw40.xml \
+	config/inovelli/lzw41.xml \
+	config/inovelli/lzw42.xml \
 	config/inovelli/nzw1201.xml \
 	config/inovelli/nzw30.xml \
 	config/inovelli/nzw31.xml \
@@ -883,6 +933,7 @@ DISTFILES =	.gitignore \
 	config/jasco/45601.xml \
 	config/kaipule/im20.xml \
 	config/kaipule/ix32.xml \
+	config/kwikset/914c.xml \
 	config/kwikset/smartcode.xml \
 	config/leviton/dz15s.xml \
 	config/leviton/dz6hd.xml \
@@ -909,6 +960,7 @@ DISTFILES =	.gitignore \
 	config/linear/WT00Z-1.xml \
 	config/linear/gd00z-7.xml \
 	config/linear/ngd00z.xml \
+	config/logicsoft/ZDB5100.xml \
 	config/logicsoft/ZHC5002.xml \
 	config/logicsoft/ZHC5010.xml \
 	config/manufacturer_specific.xml \
@@ -984,8 +1036,10 @@ DISTFILES =	.gitignore \
 	config/popp/123658.xml \
 	config/popp/700045.xml \
 	config/popp/700168.xml \
+	config/popp/700342.xml \
 	config/popp/700397.xml \
 	config/popp/700793.xml \
+	config/popp/701202.xml \
 	config/popp/dwt.xml \
 	config/popp/smoke-detector.xml \
 	config/popp/solar-siren.xml \
@@ -1081,8 +1135,10 @@ DISTFILES =	.gitignore \
 	config/telldus/tzwp100.xml \
 	config/telldus/tzwp102.xml \
 	config/there/800z.xml \
+	config/thermofloor/heatit-zdim.xml \
 	config/thermofloor/heatit021.xml \
 	config/thermofloor/heatit056.xml \
+	config/thermofloor/heatitz8.xml \
 	config/trane/TZEMT400AB32MAA.xml \
 	config/trane/TZEMT400BB32MAA.xml \
 	config/trane/TZEMT524AA21MA.xml \
@@ -1134,18 +1190,25 @@ DISTFILES =	.gitignore \
 	config/wenzhou/tz74.xml \
 	config/wenzhou/tz79.xml \
 	config/wenzhou/tz88.xml \
+	config/widom/DRY.xml \
 	config/widom/UBS104.xml \
 	config/widom/UME304C_S.xml \
+	config/widom/UMS2.xml \
 	config/widom/WDS.xml \
+	config/widom/WDS2.xml \
+	config/widom/WSP.xml \
+	config/widom/WTED.xml \
 	config/zipato/MiniKeypad.xml \
 	config/zipato/RGBBulb.xml \
 	config/zipato/RGBBulb2.xml \
+	config/zipato/ne-nas-ab02z.xml \
 	config/zipato/pan04.xml \
 	config/zipato/vszd2102.xml \
 	config/zipato/zp3102.xml \
 	config/zooz/zen06.xml \
 	config/zooz/zen07.xml \
 	config/zooz/zen15.xml \
+	config/zooz/zen16.xml \
 	config/zooz/zen20.xml \
 	config/zooz/zen20v2.xml \
 	config/zooz/zen21.xml \
@@ -1157,6 +1220,8 @@ DISTFILES =	.gitignore \
 	config/zooz/zen25.xml \
 	config/zooz/zen26.xml \
 	config/zooz/zen27.xml \
+	config/zooz/zen30.xml \
+	config/zooz/zen31.xml \
 	config/zooz/zse08.xml \
 	config/zooz/zse09.xml \
 	config/zooz/zse18.xml \
@@ -1548,9 +1613,9 @@ DISTFILES =	.gitignore \
 	cpp/test/Makefile \
 	cpp/test/ValueID_test.cpp \
 	cpp/test/include/gtest/gtest-death-test.h \
+	cpp/test/include/gtest/gtest-matchers.h \
 	cpp/test/include/gtest/gtest-message.h \
 	cpp/test/include/gtest/gtest-param-test.h \
-	cpp/test/include/gtest/gtest-param-test.h.pump \
 	cpp/test/include/gtest/gtest-printers.h \
 	cpp/test/include/gtest/gtest-spi.h \
 	cpp/test/include/gtest/gtest-test-part.h \
@@ -1558,26 +1623,22 @@ DISTFILES =	.gitignore \
 	cpp/test/include/gtest/gtest.h \
 	cpp/test/include/gtest/gtest_pred_impl.h \
 	cpp/test/include/gtest/gtest_prod.h \
+	cpp/test/include/gtest/internal/custom/README.md \
 	cpp/test/include/gtest/internal/custom/gtest-port.h \
 	cpp/test/include/gtest/internal/custom/gtest-printers.h \
 	cpp/test/include/gtest/internal/custom/gtest.h \
 	cpp/test/include/gtest/internal/gtest-death-test-internal.h \
 	cpp/test/include/gtest/internal/gtest-filepath.h \
 	cpp/test/include/gtest/internal/gtest-internal.h \
-	cpp/test/include/gtest/internal/gtest-linked_ptr.h \
-	cpp/test/include/gtest/internal/gtest-param-util-generated.h \
-	cpp/test/include/gtest/internal/gtest-param-util-generated.h.pump \
 	cpp/test/include/gtest/internal/gtest-param-util.h \
 	cpp/test/include/gtest/internal/gtest-port-arch.h \
 	cpp/test/include/gtest/internal/gtest-port.h \
 	cpp/test/include/gtest/internal/gtest-string.h \
-	cpp/test/include/gtest/internal/gtest-tuple.h \
-	cpp/test/include/gtest/internal/gtest-tuple.h.pump \
 	cpp/test/include/gtest/internal/gtest-type-util.h \
-	cpp/test/include/gtest/internal/gtest-type-util.h.pump \
 	cpp/test/src/gtest-death-test.cc \
 	cpp/test/src/gtest-filepath.cc \
 	cpp/test/src/gtest-internal-inl.h \
+	cpp/test/src/gtest-matchers.cc \
 	cpp/test/src/gtest-port.cc \
 	cpp/test/src/gtest-printers.cc \
 	cpp/test/src/gtest-test-part.cc \

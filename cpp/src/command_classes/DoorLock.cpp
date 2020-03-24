@@ -463,7 +463,7 @@ namespace OpenZWave
 						for (uint8 i = 0; i < 8; ++i)
 						{
 							item.m_label = c_LockStateNames[i];
-							item.m_value = (i < 6) ? i : 0xFF;
+							item.m_value = (i <= 6) ? i : 0xFF;
 							items.push_back(item);
 						}
 						node->CreateValueList(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_DoorLock::Lock_Mode, "Locked (Advanced)", "", false, false, 1, items, 0, 0);

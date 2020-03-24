@@ -17,8 +17,9 @@ ifeq ($(top_builddir),)
  $(error Variable top_builddir is undefined, please run "make" from root of OpenzWave repository only.)
 endif
 
-DEBUG_CFLAGS    := -std=c++11 -Wall -ggdb -DDEBUG $(CPPFLAGS)
-RELEASE_CFLAGS  := -std=c++11 -Wall -Wno-unknown-pragmas -O3 $(CPPFLAGS)
+COMMON_FLAGS	:= -std=c++11 -Wall -Wno-unknown-pragmas -Wsign-compare
+DEBUG_CFLAGS    := -ggdb -DDEBUG $(CPPFLAGS) $(COMMON_FLAGS)
+RELEASE_CFLAGS  := -O3 $(CPPFLAGS) $(COMMON_FLAGS)
 
 DEBUG_LDFLAGS	:= -g
 
