@@ -114,7 +114,7 @@ static char const* c_sendQueueNames[] =
 //-----------------------------------------------------------------------------
 Driver::Driver(string const& _controllerPath, ControllerInterface const& _interface) :
 		m_driverThread(new Internal::Platform::Thread("driver")), m_dns(new Internal::DNSThread(this)), m_dnsThread(new Internal::Platform::Thread("dns")), m_initMutex(new Internal::Platform::Mutex()), m_exit(false), m_init(false), m_awakeNodesQueried(false), m_allNodesQueried(false), m_notifytransactions(false), m_timer(new Internal::TimerThread(this)), m_timerThread(new Internal::Platform::Thread("timer")), m_controllerInterfaceType(_interface), m_controllerPath(_controllerPath), m_controller(
-				NULL), m_homeId(0), m_libraryVersion(""), m_libraryTypeName(""), m_libraryType(0), m_manufacturerId(0), m_productType(0), m_productId(0), m_rfregion(ZW_RFRegion::RF_REGION_UNKNOWN), m_initVersion(0), m_initCaps(0), m_controllerCaps(0), m_Controller_nodeId(0), m_nodeMutex(new Internal::Platform::Mutex()), m_controllerReplication( NULL), m_transmitOptions( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE | TRANSMIT_OPTION_EXPLORE), m_waitingForAck(false), m_expectedCallbackId(0), m_expectedReply(0), m_expectedCommandClassId(
+				NULL), m_homeId(0), m_libraryVersion(""), m_libraryTypeName(""), m_libraryType(0), m_manufacturerId(0), m_productType(0), m_productId(0), m_rfregion(ZW_RFRegion::RF_REGION_UNKNOWN), m_initVersion(0), m_chipType(0), m_chipVersion(0), m_initCaps(0), m_controllerCaps(0), m_Controller_nodeId(0), m_nodeMutex(new Internal::Platform::Mutex()), m_controllerReplication( NULL), m_transmitOptions( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE | TRANSMIT_OPTION_EXPLORE), m_waitingForAck(false), m_expectedCallbackId(0), m_expectedReply(0), m_expectedCommandClassId(
 				0), m_expectedNodeId(0), m_pollThread(new Internal::Platform::Thread("poll")), m_pollMutex(new Internal::Platform::Mutex()), m_pollInterval(0), m_bIntervalBetweenPolls(false),				// if set to true (via SetPollInterval), the pollInterval will be interspersed between each poll (so a much smaller m_pollInterval like 100, 500, or 1,000 may be appropriate)
 		m_currentControllerCommand( NULL), m_SUCNodeId(0), m_controllerResetEvent( NULL), m_sendMutex(new Internal::Platform::Mutex()), m_currentMsg( NULL), m_notificationsEvent(new Internal::Platform::Event()), m_SOFCnt(0), m_ACKWaiting(0), m_readAborts(0), m_badChecksum(0), m_readCnt(0), m_writeCnt(0), m_CANCnt(0), m_NAKCnt(0), m_ACKCnt(0), m_OOFCnt(0), m_dropped(0), m_retries(0), m_callbacks(0), m_badroutes(0), m_noack(0), m_netbusy(0), m_notidle(0), m_txverified(
 				0), m_nondelivery(0), m_routedbusy(0), m_broadcastReadCnt(0), m_broadcastWriteCnt(0), AuthKey(0), EncryptKey(0), m_nonceReportSent(0), m_nonceReportSentAttempt(0), m_queueMsgEvent(new Internal::Platform::Event()), m_eventMutex(new Internal::Platform::Mutex())
@@ -2833,6 +2833,10 @@ void Driver::HandleSerialAPIGetInitDataResponse(uint8* _data)
 
 	if (_data[4] == NUM_NODE_BITFIELD_BYTES)
 	{
+		m_chipType = _data[5+NUM_NODE_BITFIELD_BYTES];
+		Log::Write(LogLevel_Info, GetNodeNumber(m_currentMsg), "    Chip Type: %d", m_chipType);
+		m_chipVersion = _data[6+NUM_NODE_BITFIELD_BYTES];
+		Log::Write(LogLevel_Info, GetNodeNumber(m_currentMsg), "    Chip Version: %d", m_chipVersion);
 		for (i = 0; i < NUM_NODE_BITFIELD_BYTES; ++i)
 		{
 			for (int32 j = 0; j < 8; ++j)

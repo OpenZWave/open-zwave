@@ -344,8 +344,10 @@ namespace OpenZWave
 			uint8 m_serialapiMask;							// FUNC_ID_SERIAL_API_SETUP Commands Supported
 			ZW_RFRegion m_rfregion;
 
-			uint8 m_initVersion;								// Version of the Serial API used by the controller.
-			uint8 m_initCaps;									// Set of flags indicating the serial API capabilities (See IsSlave, HasTimerSupport, IsPrimaryController and IsStaticUpdateController above).
+			uint8 m_initVersion;							// Version of the Serial API used by the controller.
+			uint8 m_chipType;								// See INS12350-17 - Serial API Host Appl. Prg. Guide.pdf.pdf FUNC_ID_SERIAL_API_GET_INIT_DATA
+			uint8 m_chipVersion;
+			uint8 m_initCaps;								// Set of flags indicating the serial API capabilities (See IsSlave, HasTimerSupport, IsPrimaryController and IsStaticUpdateController above).
 			uint8 m_controllerCaps;							// Set of flags indicating the controller's capabilities (See IsInclusionController above).
 			bool m_hasExtendedTxStatus;						// True if the controller accepted SERIAL_API_SETUP_CMD_TX_STATUS_REPORT
 			uint8 m_Controller_nodeId;						// Z-Wave Controller's own node ID.
