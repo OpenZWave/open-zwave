@@ -166,26 +166,14 @@ Manager::Manager() :
 	int nSaveLogLevel = (int) LogLevel_Detail;
 
 	Options::Get()->GetOptionAsInt("SaveLogLevel", &nSaveLogLevel);
-	if ((nSaveLogLevel == 0) || (nSaveLogLevel > LogLevel_StreamDetail))
+	if ((nSaveLogLevel == 0) || (nSaveLogLevel < LogLevel_StreamDetail))
 	{
 		Log::Write(LogLevel_Warning, "Invalid LogLevel Specified for SaveLogLevel in Options.xml");
 		nSaveLogLevel = (int) LogLevel_Detail;
 	}
 
-	int nQueueLogLevel = (int) LogLevel_Debug;
-	Options::Get()->GetOptionAsInt("QueueLogLevel", &nQueueLogLevel);
-	if ((nQueueLogLevel == 0) || (nQueueLogLevel > LogLevel_StreamDetail))
-	{
-		Log::Write(LogLevel_Warning, "Invalid LogLevel Specified for QueueLogLevel in Options.xml");
-		nQueueLogLevel = (int) LogLevel_Debug;
-	}
-
-	int nDumpTrigger = (int) LogLevel_Warning;
-	Options::Get()->GetOptionAsInt("DumpTriggerLevel", &nDumpTrigger);
-
 	string logFilename = userPath + logFileNameBase;
 	Log::Create(logFilename, bAppend, bConsoleOutput, (LogLevel) nSaveLogLevel);
-	Log::SetLoggingState(logging);
 
 	Internal::CC::CommandClasses::RegisterCommandClasses();
 	// petergebruers replace getVersionAsString() with getVersionLongAsString() because

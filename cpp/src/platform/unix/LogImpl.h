@@ -47,17 +47,14 @@ namespace OpenZWave
 				private:
 					friend class OpenZWave::Log;
 
-					LogImpl(string const& _filename, bool const _bAppendLog, bool const _bConsoleOutput, LogLevel const _saveLevel);
+					LogImpl(string const& _filename, bool const _bAppendLog, bool const _bConsoleOutput);
 					~LogImpl();
 
 					void Write(LogLevel _level, uint8 const _nodeId, char const* _format, va_list _args);
-					void SetLoggingState(LogLevel _saveLevel);
 					void SetLogFileName(const string &_filename);
 
-					string GetTimeStampString();
 					string GetNodeString(uint8 const _nodeId);
 					string GetThreadId();
-					string GetLogLevelString(LogLevel _level);
 					unsigned int toEscapeCode(LogLevel _level);
 					void OpenLogFile();
 					void CloseLogFile();

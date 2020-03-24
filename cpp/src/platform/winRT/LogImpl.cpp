@@ -29,6 +29,7 @@
 #include <list>
 
 #include "Defs.h"
+#include "platform/TimeStamp.h"
 #include "LogImpl.h"
 
 #ifdef MINGW
@@ -68,16 +69,12 @@ namespace OpenZWave
 //	<LogImpl::LogImpl>
 //	Constructor
 //-----------------------------------------------------------------------------
-			LogImpl::LogImpl(string const& _filename, bool const _bAppendLog, bool const _bConsoleOutput, LogLevel const _saveLevel) :
+			LogImpl::LogImpl(string const& _filename, bool const _bAppendLog, bool const _bConsoleOutput) :
 					m_filename(_filename),					// name of log file
 					m_bAppendLog(_bAppendLog),				// true to append (and not overwrite) any existing log
-					m_bConsoleOutput(_bConsoleOutput),		// true to provide a copy of output to console
-					m_saveLevel(_saveLevel)					// level of messages to log to file
+					m_bConsoleOutput(_bConsoleOutput)		// true to provide a copy of output to console
 			{
 				string accessType;
-
-				// create an adjusted file name and timestamp string
-				string timeStr = GetTimeStampString();
 
 				if (m_bAppendLog)
 				{
@@ -88,11 +85,13 @@ namespace OpenZWave
 					accessType = "w";
 				}
 
-				FILE* pFile;
-				if (!fopen_s(&pFile, m_filename.c_str(), accessType.c_str()))
-				{
-					fprintf(pFile, "\nLogging started %s\n\n", timeStr.c_str());
-					fclose(pFile);
+				if (!m_filename.empty()) { 
+					FILE* pFile;
+					if (!fopen_s(&pFile, m_filename.c_str(), accessType.c_str()))
+					{
+						fprintf(pFile, "\nLogging started %s\n\n", timeStr.c_str());
+						fclose(pFile);
+					}
 				}
 			}
 
@@ -120,79 +119,36 @@ namespace OpenZWave
 			void LogImpl::Write(LogLevel _logLevel, uint8 const _nodeId, char const* _format, va_list _args)
 			{
 				// create a timestamp string
-				string timeStr = GetTimeStampString();
+				TimeStamp timeStr;
 				string nodeStr = GetNodeString(_nodeId);
 				string logLevelStr = GetLogLevelString(_logLevel);
 
-				// handle this message
-				if (_logLevel <= m_saveLevel)	// we're going to do something with this message...
+				char lineBuf[1024];
+				if (!_format || (_format[0] == 0))
 				{
-					char lineBuf[1024];
-					if (!_format || (_format[0] == 0))
-					{
-						strcpy_s(lineBuf, 1024, "");
-					}
-					else
-					{
-						vsprintf_s(lineBuf, sizeof(lineBuf), _format, _args);
-					}
+					strcpy_s(lineBuf, 1024, "");
+				}
+				else
+				{
+					vsprintf_s(lineBuf, sizeof(lineBuf), _format, _args);
+				}
 
+				if (!m_filename.empty()) { 
 					// save to file
 					FILE* pFile = NULL;
-					if (!fopen_s(&pFile, m_filename.c_str(), "a") || m_bConsoleOutput)
+					if (!fopen_s(&pFile, m_filename.c_str(), "a"))
 					{
-						if (_logLevel != LogLevel_Internal)						// don't add a second timestamp to display of queued messages
-						{
-							if (pFile != NULL)
-							{
-								fprintf(pFile, "%s%s%s", timeStr.c_str(), logLevelStr.c_str(), nodeStr.c_str());
-							}
-							if (m_bConsoleOutput)
-							{
-								printf("%s%s%s", timeStr.c_str(), logLevelStr.c_str(), nodeStr.c_str());
-							}
-						}
-
-						// print message to file (and possibly screen)
 						if (pFile != NULL)
 						{
-							fprintf(pFile, "%s", lineBuf);
-							fprintf(pFile, "\n");
+							fprintf(pFile, "%s%s%s%s\n", timeStr.GetAsString().c_str(), logLevelStr.c_str(), nodeStr.c_str(), lineBuf);
 							fclose(pFile);
 						}
-						if (m_bConsoleOutput)
-						{
-							printf("%s", lineBuf);
-							printf("\n");
-						}
-
 					}
-			}
-
-//-----------------------------------------------------------------------------
-//	<LogImpl::SetLoggingState>
-//	Sets the various log state variables
-//-----------------------------------------------------------------------------
-			void LogImpl::SetLoggingState(LogLevel _saveLevel)
-			{
-				m_saveLevel = _saveLevel;
-			}
-
-//-----------------------------------------------------------------------------
-//	<LogImpl::GetTimeStampAndThreadId>
-//	Generate a string with formatted current time
-//-----------------------------------------------------------------------------
-			string LogImpl::GetTimeStampString()
-			{
-				// Get a timestamp
-				SYSTEMTIME time;
-				::GetLocalTime(&time);
-
-				// create a time stamp string for the log message
-				char buf[100];
-				sprintf_s(buf, sizeof(buf), "%04d-%02d-%02d %02d:%02d:%02d.%03d ", time.wYear, time.wMonth, time.wDay, time.wHour, time.wMinute, time.wSecond, time.wMilliseconds);
-				string str = buf;
-				return str;
+				}
+				if (m_bConsoleOutput)
+				{
+					printf("%s%s%s%s\n", timeStr.GetAsString().c_str(), logLevelStr.c_str(), nodeStr.c_str(), lineBuf);
+				}
 			}
 
 //-----------------------------------------------------------------------------
@@ -237,21 +193,6 @@ namespace OpenZWave
 			void LogImpl::SetLogFileName(const string &_filename)
 			{
 				m_filename = _filename;
-			}
-//-----------------------------------------------------------------------------
-//	<LogImpl::GetLogLevelString>
-//	Provide a new log file name (applicable to future writes)
-//-----------------------------------------------------------------------------
-			string LogImpl::GetLogLevelString(LogLevel _level)
-			{
-				if ((_level >= LogLevel_None) && (_level <= LogLevel_Internal))
-				{
-					char buf[20];
-					snprintf(buf, sizeof(buf), "%s, ", LogLevelString[_level]);
-					return buf;
-				}
-				else
-					return "Unknown, ";
 			}
 		} // namespace Platform
 	} // namespace Internal

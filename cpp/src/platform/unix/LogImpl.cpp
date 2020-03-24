@@ -30,6 +30,7 @@
 #include <pthread.h>
 #include <iostream>
 #include "Defs.h"
+#include "platform/TimeStamp.h"
 #include "LogImpl.h"
 
 namespace OpenZWave
@@ -43,11 +44,10 @@ namespace OpenZWave
 //	<LogImpl::LogImpl>
 //	Constructor
 //-----------------------------------------------------------------------------
-			LogImpl::LogImpl(string const& _filename, bool const _bAppendLog, bool const _bConsoleOutput, LogLevel const _saveLevel) :
+			LogImpl::LogImpl(string const& _filename, bool const _bAppendLog, bool const _bConsoleOutput) :
 					m_filename(_filename),					// name of log file
 					m_bConsoleOutput(_bConsoleOutput),		// true to provide a copy of output to console
 					m_bAppendLog(_bAppendLog),				// true to append (and not overwrite) any existing log
-					m_saveLevel(_saveLevel),					// level of messages to log to file
 					pFile( NULL)
 			{
 				OpenLogFile();
@@ -152,81 +152,42 @@ namespace OpenZWave
 			void LogImpl::Write(LogLevel _logLevel, uint8 const _nodeId, char const* _format, va_list _args)
 			{
 				// create a timestamp string
-				string timeStr = GetTimeStampString();
+				TimeStamp timeStr;
 				string nodeStr = GetNodeString(_nodeId);
 				string loglevelStr = GetLogLevelString(_logLevel);
 
-				// handle this message
-				if (_logLevel <= m_saveLevel)	// we're going to do something with this message...
+				char lineBuf[1024] = { 0 };
+				//int lineLen = 0;
+				if (_format != NULL && _format[0] != '\0')
 				{
-					char lineBuf[1024] = { 0 };
-					//int lineLen = 0;
-					if (_format != NULL && _format[0] != '\0')
-					{
-						va_list saveargs;
-						va_copy(saveargs, _args);
+					va_list saveargs;
+					va_copy(saveargs, _args);
 
-						vsnprintf(lineBuf, sizeof(lineBuf), _format, _args);
-						va_end(saveargs);
-					}
-
-					std::string outBuf;
-
-					if (this->pFile != NULL || m_bConsoleOutput)
-					{
-						outBuf.append(timeStr);
-						outBuf.append(loglevelStr);
-						outBuf.append(nodeStr);
-						outBuf.append(lineBuf);
-						outBuf.append("\n");
-
-						// print message to file (and possibly screen)
-						if (this->pFile != NULL)
-						{
-							fputs(outBuf.c_str(), pFile);
-						}
-						if (m_bConsoleOutput)
-						{
-							fprintf(stdout, "\x1B[%02um", toEscapeCode(_logLevel));
-							fputs(outBuf.c_str(), stdout);
-							fprintf(stdout, "\x1b[39m");
-							/* always return to normal */
-							fprintf(stdout, "\x1B[%02um", toEscapeCode(LogLevel_Info));
-						}
-					}
+					vsnprintf(lineBuf, sizeof(lineBuf), _format, _args);
+					va_end(saveargs);
 				}
-			}
 
+				std::string outBuf;
 
-//-----------------------------------------------------------------------------
-//	<LogImpl::SetLoggingState>
-//	Sets the various log state variables
-//-----------------------------------------------------------------------------
-			void LogImpl::SetLoggingState(LogLevel _saveLevel)
-			{
-				m_saveLevel = _saveLevel;
-			}
+				outBuf.append(timeStr.GetAsString());
+				outBuf.append(loglevelStr);
+				outBuf.append(nodeStr);
+				outBuf.append(lineBuf);
+				outBuf.append("\n");
 
-//-----------------------------------------------------------------------------
-//	<LogImpl::GetTimeStampString>
-//	Generate a string with formatted current time
-//-----------------------------------------------------------------------------
-			std::string LogImpl::GetTimeStampString()
-			{
-				// Get a timestamp
-				struct timeval tv;
-				gettimeofday(&tv, NULL);
-				// use threadsafe verion of localtime. Reported by nihilus, 2019-04
-				// https://www.gnu.org/software/libc/manual/html_node/Broken_002ddown-Time.html#Broken_002ddown-Time
-				struct tm *tm, xtm;
-				memset(&xtm, 0, sizeof(xtm));
-				tm = localtime_r(&tv.tv_sec, &xtm);
-
-				// create a time stamp string for the log message
-				char buf[100];
-				snprintf(buf, sizeof(buf), "%04d-%02d-%02d %02d:%02d:%02d.%03d ", tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec, (int) tv.tv_usec / 1000);
-				string str = buf;
-				return str;
+				// print message to file (and possibly screen)
+				if (this->pFile != NULL)
+				{
+					fputs(outBuf.c_str(), pFile);
+				}
+				if (m_bConsoleOutput)
+				{
+					fprintf(stdout, "\x1B[%02um", toEscapeCode(_logLevel));
+					fputs(outBuf.c_str(), stdout);
+					fprintf(stdout, "\x1b[39m");
+					/* always return to normal */
+					fprintf(stdout, "\x1B[%02um", toEscapeCode(LogLevel_Info));
+				}
 			}
 
 //-----------------------------------------------------------------------------
@@ -269,24 +230,11 @@ namespace OpenZWave
 //-----------------------------------------------------------------------------
 			void LogImpl::SetLogFileName(const string &_filename)
 			{
+				CloseLogFile();
 				m_filename = _filename;
+				OpenLogFile();
 			}
 
-//-----------------------------------------------------------------------------
-//	<LogImpl::GetLogLevelString>
-//	Provide a new log file name (applicable to future writes)
-//-----------------------------------------------------------------------------
-			std::string LogImpl::GetLogLevelString(LogLevel _level)
-			{
-				if ((_level >= LogLevel_None) && (_level <= LogLevel_Internal))
-				{
-					char buf[20];
-					snprintf(buf, sizeof(buf), "%s, ", LogLevelString[_level]);
-					return buf;
-				}
-				else
-					return "Unknown, ";
-			}
 		} // namespace Platform
 	} // namespace Internal
 } // namespace OpenZWave

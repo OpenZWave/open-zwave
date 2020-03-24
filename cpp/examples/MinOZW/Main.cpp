@@ -213,17 +213,6 @@ void OnNotification
 		{
 			g_homeId = _notification->GetHomeId();
 			printf("Driver ready with HomeID: 0x%.8x\n", g_homeId);
-			bool ext_tx = Manager::Get()->HasExtendedTxStatus(g_homeId);
-
-			if (ext_tx)
-			{
-				printf("Controller has extended TxStatus.\n");
-			}
-			else
-			{
-				printf("Controller does not have extended TxStatus.\n");
-			}
-
 			break;
 		}
 
@@ -294,8 +283,6 @@ int main( int argc, char* argv[] )
 	// the log file will appear in the program's working directory.
 	Options::Create( "../../../config/", "", "" );
 	Options::Get()->AddOptionInt( "SaveLogLevel", LogLevel_Detail );
-	Options::Get()->AddOptionInt( "QueueLogLevel", LogLevel_Debug );
-	Options::Get()->AddOptionInt( "DumpTrigger", LogLevel_Error );
 	Options::Get()->AddOptionInt( "PollInterval", 500 );
 	Options::Get()->AddOptionBool( "IntervalBetweenPolls", true );
 	Options::Get()->AddOptionBool("ValidateValueChanges", true);

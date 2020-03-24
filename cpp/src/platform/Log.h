@@ -51,19 +51,19 @@ namespace OpenZWave
 	 */
 	enum LogLevel
 	{
-		LogLevel_Invalid, /**< Invalid Log Status */
-		LogLevel_None, /**< Disable all logging */
-		LogLevel_Always, /**< These messages should always be shown */
-		LogLevel_Fatal, /**< A likely fatal issue in the library */
-		LogLevel_Error, /**< A serious issue with the library or the network */
-		LogLevel_Warning, /**< A minor issue from which the library should be able to recover */
-		LogLevel_Alert, /**< Something unexpected by the library about which the controlling application should be aware */
-		LogLevel_Info, /**< Everything is working fine...these messages provide streamlined feedback on each message */
-		LogLevel_Detail, /**< Detailed information on the progress of each message */
-		LogLevel_Debug, /**< Very detailed information on progress that will create a huge log file quickly
+		LogLevel_Invalid = 11, /**< Invalid Log Status */
+		LogLevel_None = 10, /**< Disable all logging */
+		LogLevel_Always = 9, /**< These messages should always be shown */
+		LogLevel_Fatal = 8, /**< A likely fatal issue in the library */
+		LogLevel_Error = 7, /**< A serious issue with the library or the network */
+		LogLevel_Warning = 6, /**< A minor issue from which the library should be able to recover */
+		LogLevel_Alert = 5, /**< Something unexpected by the library about which the controlling application should be aware */
+		LogLevel_Info = 4, /**< Everything is working fine...these messages provide streamlined feedback on each message */
+		LogLevel_Detail = 3, /**< Detailed information on the progress of each message */
+		LogLevel_Debug = 2, /**< Very detailed information on progress that will create a huge log file quickly
 		 But this level (as others) can be queued and sent to the log only on an error or warning */
-		LogLevel_StreamDetail, /**< Will include low-level byte transfers from controller to buffer to application and back */
-		LogLevel_Internal /**< Used only within the log class (uses existing timestamp, etc.) */
+		LogLevel_StreamDetail = 1, /**< Will include low-level byte transfers from controller to buffer to application and back */
+		LogLevel_Internal = 0/**< Used only within the log class (uses existing timestamp, etc.) */
 	};
 
 	/** \brief A Abstract class to create a Custom Logging Method
@@ -84,9 +84,10 @@ namespace OpenZWave
 			}
 			;
 			virtual void Write(LogLevel _level, uint8 const _nodeId, char const* _format, va_list _args) = 0;
-			virtual void SetLoggingState(LogLevel _saveLevel) = 0;
 			virtual void SetLogFileName(const string &_filename) = 0;
 			virtual void ReopenLogFile() = 0;
+			std::string GetLogLevelString(LogLevel _level);
+
 	};
 
 	/** \brief Implements a platform-independent log...written to the console and, optionally, a file.
@@ -133,35 +134,18 @@ namespace OpenZWave
 			 */
 			static bool SetLoggingClass(i_LogImpl *LogClass, bool Append = false);
 
-			/** \brief Enable or disable library logging (retained for backward compatibility)
-			 *
-			 * \param _dologging  If true, logging is enabled; if false, disabled
-			 */
-			static void SetLoggingState(bool _dologging);
-
 			/**\brief Enable or disable library logging.
 			 *
-			 * To disable, set _saveLevel and _queueLevel to LogLevel_None.
+			 * To disable, set _saveLevel to LogLevel_None.
 			 *
 			 * \param _saveLevel	LogLevel of messages to write in real-time
-			 * \param _queueLevel	LogLevel of messages to queue to be dumped in case of an error
-			 * \param _dumpTrigger	LogLevel of message that triggers a queue dump (probably LogLevel_Error or LogLevel_Warning)
 			 */
 			static void SetLoggingState(LogLevel _saveLevel);
 
-			/**\brief Determine whether logging is enabled or not (retained for backward compatibility)
-			 *
-			 * \param _dologging  If true, logging is enabled; if false, disabled
-			 */
-			static bool GetLoggingState();
-
 			/**\brief Obtain the various logging levels.
-			 *
-			 * \param _saveLevel	LogLevel of messages to write in real-time
-			 * \param _queueLevel	LogLevel of messages to queue to be dumped in case of an error
-			 * \param _dumpTrigger	LogLevel of message that triggers a queue dump (probably LogLevel_Error or LogLevel_Warning)
+			 *	
 			 */
-			static void GetLoggingState(LogLevel* _saveLevel);
+			static LogLevel GetLoggingState();
 
 			/** \brief Change the log file name.
 			 *
@@ -203,6 +187,7 @@ namespace OpenZWave
 			static std::vector<i_LogImpl*> m_pImpls; /**< Pointer to an object that encapsulates the platform-specific logging implementation. */
 			static Log* s_instance;
 			Internal::Platform::Mutex* m_logMutex;
+			static LogLevel m_minLogLevel;
 	};
 } // namespace OpenZWave
 

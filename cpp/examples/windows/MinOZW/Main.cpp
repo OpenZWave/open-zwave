@@ -247,8 +247,6 @@ int main( int argc, char* argv[] )
 	// the log file will appear in the program's working directory.
 	Options::Create( "../../../../../config/", "", "" );
 	Options::Get()->AddOptionInt( "SaveLogLevel", LogLevel_Detail );
-	Options::Get()->AddOptionInt( "QueueLogLevel", LogLevel_Debug );
-	Options::Get()->AddOptionInt( "DumpTrigger", LogLevel_Error );
 	Options::Get()->AddOptionInt( "PollInterval", 500 );
 	Options::Get()->AddOptionBool( "IntervalBetweenPolls", true );
 	Options::Get()->AddOptionBool("ValidateValueChanges", true);

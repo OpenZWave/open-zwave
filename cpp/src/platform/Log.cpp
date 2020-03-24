@@ -42,24 +42,42 @@
 using namespace OpenZWave;
 
 char const *OpenZWave::LogLevelString[] =
-{ "Invalid", /**< Invalid Log Level Status - Used to Indicate error from Importing bad Options.xml */
-"None", /**< LogLevel_None Disable all logging */
-"Always", /**< LogLevel_Always These messages should always be shown */
-"Fatal", /**< LogLevel_Fatal A likely fatal issue in the library */
-"Error", /**< LogLevel_Error A serious issue with the library or the network */
-"Warning", /**< LogLevel_Warning A minor issue from which the library should be able to recover */
-"Alert", /**< LogLevel_Alert Something unexpected by the library about which the controlling application should be aware */
-"Info", /**< LogLevel_Info Everything's working fine...these messages provide streamlined feedback on each message */
-"Detail", /**< LogLevel_Detail Detailed information on the progress of each message */
+{ 
+"Internal", /**< LogLevel_Internal Used only within the log class (uses existing timestamp, etc.) */
+"StreamDetail", /**< LogLevel_StreamDetail Will include low-level byte transfers from controller to buffer to application and back */
 "Debug", /**< LogLevel_Debug Very detailed information on progress that will create a huge log file quickly
  But this level (as others) can be queued and sent to the log only on an error or warning */
-"StreamDetail", /**< LogLevel_StreamDetail Will include low-level byte transfers from controller to buffer to application and back */
-"Internal" /**< LogLevel_Internal Used only within the log class (uses existing timestamp, etc.) */
+"Detail", /**< LogLevel_Detail Detailed information on the progress of each message */
+"Info", /**< LogLevel_Info Everything's working fine...these messages provide streamlined feedback on each message */
+"Alert", /**< LogLevel_Alert Something unexpected by the library about which the controlling application should be aware */
+"Warning", /**< LogLevel_Warning A minor issue from which the library should be able to recover */
+"Error", /**< LogLevel_Error A serious issue with the library or the network */
+"Fatal", /**< LogLevel_Fatal A likely fatal issue in the library */
+"Always", /**< LogLevel_Always These messages should always be shown */
+"None", /**< LogLevel_None Disable all logging */	
+"Invalid" /**< Invalid Log Level Status - Used to Indicate error from Importing bad Options.xml */
 };
 
 Log* Log::s_instance = NULL;
 std::vector<i_LogImpl*> Log::m_pImpls;
-static bool s_dologging;
+LogLevel Log::m_minLogLevel = LogLevel_Debug;
+
+
+//-----------------------------------------------------------------------------
+//	<LogImpl::GetLogLevelString>
+//	Provide a new log file name (applicable to future writes)
+//-----------------------------------------------------------------------------
+std::string i_LogImpl::GetLogLevelString(LogLevel _level)
+{
+	if ((_level >= LogLevel_Internal) && (_level <= LogLevel_Invalid))
+	{
+		char buf[20];
+		snprintf(buf, sizeof(buf), "%s, ", LogLevelString[_level]);
+		return buf;
+	}
+	else
+		return "Unknown, ";
+}
 
 //-----------------------------------------------------------------------------
 //	<Log::Create>
@@ -70,13 +88,11 @@ Log* Log::Create(string const& _filename, bool const _bAppend, bool const _bCons
 	if ( NULL == s_instance)
 	{
 		s_instance = new Log(_filename, _bAppend, _bConsoleOutput, _saveLevel);
-		s_dologging = true; // default logging to true so no change to what people experience now
 	}
 	else
 	{
 		Log::Destroy();
 		s_instance = new Log(_filename, _bAppend, _bConsoleOutput, _saveLevel);
-		s_dologging = true; // default logging to true so no change to what people experience now
 	}
 
 	return s_instance;
@@ -111,60 +127,22 @@ bool Log::SetLoggingClass(i_LogImpl *LogClass, bool Append)
 
 //-----------------------------------------------------------------------------
 //	<Log::SetLoggingState>
-//	Set flag to actually write to log or skip it (legacy version)
-//	If logging is enabled, the default log detail settings will be used
-//	Write to file/screen		LogLevel_Detail
-//	Save in queue for errors	LogLevel_Debug
-//	Trigger for dumping queue	LogLevel_Warning
-//	Console output?				Yes
-//	Append to an existing log?	No (overwrite)
+//	Set flag to actually write to log or skip it
 //-----------------------------------------------------------------------------
-void Log::SetLoggingState(bool _dologging)
+void Log::SetLoggingState(LogLevel _saveLevel)
 {
-	bool prevLogging = s_dologging;
-	s_dologging = _dologging;
-
-	if (!prevLogging && s_dologging)
-		Log::Write(LogLevel_Always, "Logging started\n\n");
+	m_minLogLevel = _saveLevel;
 }
 
 //-----------------------------------------------------------------------------
 //	<Log::SetLoggingState>
 //	Set flag to actually write to log or skip it
 //-----------------------------------------------------------------------------
-void Log::SetLoggingState(LogLevel _saveLevel)
+LogLevel Log::GetLoggingState()
 {
-	bool prevLogging = s_dologging;
-	// s_dologging is true if any messages are to be saved in file or queue
-	if (_saveLevel > LogLevel_Always)
-	{
-		s_dologging = true;
-	}
-	else
-	{
-		s_dologging = false;
-	}
-
-	if (s_instance && s_dologging && (s_instance->m_pImpls.size() > 0))
-	{
-		s_instance->m_logMutex->Lock();
-		for (std::vector<i_LogImpl*>::iterator it = s_instance->m_pImpls.begin(); it != s_instance->m_pImpls.end(); it++)
-			(*it)->SetLoggingState(_saveLevel);
-		s_instance->m_logMutex->Unlock();
-	}
-
-	if (!prevLogging && s_dologging)
-		Log::Write(LogLevel_Always, "Logging started\n\n");
+	return m_minLogLevel;
 }
 
-//-----------------------------------------------------------------------------
-//	<Log::GetLoggingState>
-//	Return a flag to indicate whether logging is enabled
-//-----------------------------------------------------------------------------
-bool Log::GetLoggingState()
-{
-	return s_dologging;
-}
 
 //-----------------------------------------------------------------------------
 //	<Log::Write>
@@ -172,16 +150,22 @@ bool Log::GetLoggingState()
 //-----------------------------------------------------------------------------
 void Log::Write(LogLevel _level, char const* _format, ...)
 {
-	if (s_instance && s_dologging && (s_instance->m_pImpls.size() > 0))
+ 	if (_level < m_minLogLevel) 
+		return;
+
+	if (s_instance && (s_instance->m_pImpls.size() > 0))
 	{
-		s_instance->m_logMutex->Lock(); // double locks if recursive
+		if (_level != LogLevel_Internal)
+			s_instance->m_logMutex->Lock();
 		va_list args;
 		va_start(args, _format);
 		for (std::vector<i_LogImpl*>::iterator it = s_instance->m_pImpls.begin(); it != s_instance->m_pImpls.end(); it++)
 			(*it)->Write(_level, 0, _format, args);
 		va_end(args);
-		s_instance->m_logMutex->Unlock();
+		if (_level != LogLevel_Internal)
+			s_instance->m_logMutex->Unlock();
 	}
+
 }
 
 //-----------------------------------------------------------------------------
@@ -190,7 +174,9 @@ void Log::Write(LogLevel _level, char const* _format, ...)
 //-----------------------------------------------------------------------------
 void Log::Write(LogLevel _level, uint8 const _nodeId, char const* _format, ...)
 {
-	if (s_instance && s_dologging && (s_instance->m_pImpls.size() > 0))
+	if (_level <= m_minLogLevel)
+		return;
+	if (s_instance && (s_instance->m_pImpls.size() > 0))
 	{
 		if (_level != LogLevel_Internal)
 			s_instance->m_logMutex->Lock();
@@ -202,6 +188,7 @@ void Log::Write(LogLevel _level, uint8 const _nodeId, char const* _format, ...)
 		if (_level != LogLevel_Internal)
 			s_instance->m_logMutex->Unlock();
 	}
+
 }
 
 //-----------------------------------------------------------------------------
@@ -210,7 +197,7 @@ void Log::Write(LogLevel _level, uint8 const _nodeId, char const* _format, ...)
 //-----------------------------------------------------------------------------
 void Log::SetLogFileName(const string &_filename)
 {
-	if (s_instance && s_dologging && (s_instance->m_pImpls.size() > 0))
+	if (s_instance && (s_instance->m_pImpls.size() > 0))
 	{
 		s_instance->m_logMutex->Lock();
 		for (std::vector<i_LogImpl*>::iterator it = s_instance->m_pImpls.begin(); it !=s_instance->m_pImpls.end(); it++)
@@ -225,7 +212,7 @@ void Log::SetLogFileName(const string &_filename)
 //-----------------------------------------------------------------------------
 void Log::ReopenLogFile()
 {
-  if (s_instance && s_dologging && (s_instance->m_pImpls.size() > 0))
+  if (s_instance && (s_instance->m_pImpls.size() > 0))
 	{
 		s_instance->m_logMutex->Lock();
 		for (std::vector<i_LogImpl*>::iterator it = s_instance->m_pImpls.begin(); it !=s_instance->m_pImpls.end(); it++)
@@ -243,7 +230,8 @@ Log::Log(string const& _filename, bool const _bAppend, bool const _bConsoleOutpu
 {
 	if (m_pImpls.size() == 0)
 	{
-		m_pImpls.push_back(new Internal::Platform::LogImpl(_filename, _bAppend, _bConsoleOutput, _saveLevel));
+		m_pImpls.push_back(new Internal::Platform::LogImpl(_filename, _bAppend, _bConsoleOutput));
+		m_minLogLevel = _saveLevel;
 	}
 }
 
