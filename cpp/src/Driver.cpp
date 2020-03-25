@@ -4793,6 +4793,21 @@ string Driver::GetNodeType(uint8 const _nodeId)
 bool Driver::IsNodeZWavePlus(uint8 const _nodeId)
 {
 	Internal::LockGuard LG(m_nodeMutex);
+	if (GetControllerNodeId() == _nodeId) 
+	{
+		/* fake the Z-Wave Plus Attribute on The Controller Node as we
+		 * can't query the Controller per Normal Mechanisms (see Issue #2168/#2129) 
+		 */
+		if (m_chipType >= 5) 
+		{
+			return true;
+		}
+		else
+		{ 
+			return false;
+		}
+	}
+
 	if (Node* node = GetNode(_nodeId))
 	{
 		return node->IsNodeZWavePlus();
