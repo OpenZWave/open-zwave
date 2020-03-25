@@ -113,7 +113,7 @@
             <Item label="Enabled" value="1"/>
         </Value>
 		
-		<Value genre="config" index="40" instance="1" label="Watt Power Consumption Reporting Threshold for Load" units="" max="100" min="0" size="1" type="short" value="10">
+		<Value genre="config" index="40" instance="1" label="Watt Power Consumption Reporting Threshold for Load" units="" max="100" min="0" size="1" type="byte" value="10">
             <Help>
                 Choose by how much the power consumption needs to increase or decrease to be reported. 
 				Values correspond to percentages, so if 10 is set (by default), the device will report any power consumption changes of 10% or more compared to the last reading.
@@ -158,7 +158,7 @@
     <!-- Association Groups -->
     <CommandClass id="133">
         <Associations num_groups="5">
-		  <Group index="1" label="Lifeline" max_associations="1" auto="true" />
+		  <Group index="1" label="Lifeline" max_associations="1"/>
 		  <Group index="2" label="LEDs on/off" max_associations="5" />
 		  <Group index="3" label="Change of brightness" max_associations="5" />
 		  <Group index="4" label="Change of color" max_associations="5" />
