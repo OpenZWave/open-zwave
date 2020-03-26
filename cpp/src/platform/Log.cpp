@@ -28,8 +28,10 @@
 #include <stdarg.h>
 
 #include "Defs.h"
+#include "Options.h"
 #include "platform/Mutex.h"
 #include "platform/Log.h"
+#include "platform/TimeStamp.h"
 
 #ifdef WIN32
 #include "platform/windows/LogImpl.h"	// Platform-specific implementation of a log
@@ -61,6 +63,8 @@ char const *OpenZWave::LogLevelString[] =
 Log* Log::s_instance = NULL;
 std::vector<i_LogImpl*> Log::m_pImpls;
 LogLevel Log::m_minLogLevel = LogLevel_Debug;
+uint32 Log::m_currentDay = -1;
+bool Log::m_doRotate = false;
 
 
 //-----------------------------------------------------------------------------
@@ -153,6 +157,15 @@ void Log::Write(LogLevel _level, char const* _format, ...)
  	if (_level < m_minLogLevel) 
 		return;
 
+	if (Log::m_doRotate)
+	{ 
+		Internal::Platform::TimeStamp ts;
+		if (Log::m_currentDay != ts.getDay())
+		{
+			Log::RotateLogFile();
+			Log::m_currentDay = ts.getDay();
+		}
+	}
 	if (s_instance && (s_instance->m_pImpls.size() > 0))
 	{
 		if (_level != LogLevel_Internal)
@@ -176,6 +189,17 @@ void Log::Write(LogLevel _level, uint8 const _nodeId, char const* _format, ...)
 {
 	if (_level <= m_minLogLevel)
 		return;
+	
+	if (Log::m_doRotate)
+	{ 
+		Internal::Platform::TimeStamp ts;
+		if (Log::m_currentDay != ts.getDay())
+		{
+			Log::RotateLogFile();
+			Log::m_currentDay = ts.getDay();
+		}
+	}	
+	
 	if (s_instance && (s_instance->m_pImpls.size() > 0))
 	{
 		if (_level != LogLevel_Internal)
@@ -210,13 +234,13 @@ void Log::SetLogFileName(const string &_filename)
 //	<Log::ReopenLogFile>
 //	Reopens currently open log file. (So for example logrotate can do its job)
 //-----------------------------------------------------------------------------
-void Log::ReopenLogFile()
+void Log::RotateLogFile()
 {
   if (s_instance && (s_instance->m_pImpls.size() > 0))
 	{
 		s_instance->m_logMutex->Lock();
 		for (std::vector<i_LogImpl*>::iterator it = s_instance->m_pImpls.begin(); it !=s_instance->m_pImpls.end(); it++)
-			(*it)->ReopenLogFile();
+			(*it)->RotateLogFile();
 		s_instance->m_logMutex->Unlock();
 	}
 }
@@ -233,6 +257,7 @@ Log::Log(string const& _filename, bool const _bAppend, bool const _bConsoleOutpu
 		m_pImpls.push_back(new Internal::Platform::LogImpl(_filename, _bAppend, _bConsoleOutput));
 		m_minLogLevel = _saveLevel;
 	}
+
 }
 
 //-----------------------------------------------------------------------------
@@ -247,4 +272,16 @@ Log::~Log()
 		delete lc;
 		it = s_instance->m_pImpls.erase(it);
 	}
+}
+
+//-----------------------------------------------------------------------------
+//	<Log::SetupLogFileRotation>
+//	Sets the Log Class to do Automatic Log Rotation at Midnight
+//-----------------------------------------------------------------------------
+
+void Log::SetupLogFileRotation()
+{
+	Options::Get()->GetOptionAsBool("RotateLogFile", &Log::m_doRotate);
+	Internal::Platform::TimeStamp ts;
+	Log::m_currentDay = ts.getDay();
 }

@@ -141,6 +141,23 @@ namespace OpenZWave
 			}
 
 			/**
+			 * FileRename. Rename a File
+			 * \param string. source file name.
+			 * \param string. destination file name
+			 * \return Bool value indicating success.
+			 */
+			bool FileOps::FileRename(const string &_fileName, const string &_destfileName)
+			{
+
+				if (s_instance != NULL)
+				{
+					return s_instance->m_pImpl->FileRename(_fileName, _destfileName);
+				}
+				return false;
+			}
+
+
+			/**
 			 * FolderCreate. Create a Folder
 			 * \param string. folder name
 			 * \return Bool value indicating success.

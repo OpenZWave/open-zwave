@@ -82,6 +82,14 @@ namespace OpenZWave
 					 */
 					int32 operator-(TimeStampImpl const& _other);
 
+					uint32 getYear() const;
+					uint32 getMonth() const;
+					uint32 getDay() const;
+					uint32 getHour() const;
+					uint32 getMinute() const;
+					uint32 getSecond() const;
+					uint32 getMilliSecond() const;
+
 				private:
 					TimeStampImpl(TimeStampImpl const&);					// prevent copy
 					TimeStampImpl& operator =(TimeStampImpl const&);			// prevent assignment

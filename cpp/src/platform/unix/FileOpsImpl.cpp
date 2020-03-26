@@ -111,16 +111,9 @@ namespace OpenZWave
 					newFile.append(".").append(intToString(i));
 				}
 				/* copy the file */
-				if (!FileCopy(_filename, newFile))
+				if (!FileRename(_filename, newFile))
 				{
 					Log::Write(LogLevel_Warning, "File Rotate Failed: %s -> %s", _filename.c_str(), newFile.c_str());
-					return false;
-				}
-
-				/* remove the old file */
-				if (remove(_filename.c_str()))
-				{
-					Log::Write(LogLevel_Warning, "File Removal failed: %s", _filename.c_str());
 					return false;
 				}
 				return true;
@@ -158,6 +151,32 @@ namespace OpenZWave
 				} while (in.gcount() > 0);
 				in.close();
 				out.close();
+				return true;
+			}
+
+			bool FileOpsImpl::FileRename(const string _curname, const string _newname) 
+			{
+				if (!FileExists(_curname))
+				{
+					Log::Write(LogLevel_Warning, "Source File %s doesn't exist in FileRename", _curname.c_str());
+					return false;
+				}
+				if (FileExists(_newname))
+				{
+					Log::Write(LogLevel_Warning, "Destination File %s exists in FileRename", _newname.c_str());
+					return false;
+				}
+
+				/* make sure the Destination Folder Exists */
+				if (!FolderExists(ozwdirname(_newname)))
+				{
+					Log::Write(LogLevel_Warning, "Destination Folder %s Doesn't Exist", ozwdirname(_newname).c_str());
+					return false;
+				}
+				if(std::rename(_curname.c_str(), _newname.c_str()) < 0) {
+				    Log::Write(LogLevel_Warning, "Rename File failed: %s", strerror(errno));
+					return false;
+  				}				
 				return true;
 			}
 

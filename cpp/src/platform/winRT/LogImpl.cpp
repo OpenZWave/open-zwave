@@ -30,6 +30,7 @@
 
 #include "Defs.h"
 #include "platform/TimeStamp.h"
+#include "platform/FileOps.h"
 #include "LogImpl.h"
 
 #ifdef MINGW
@@ -109,8 +110,9 @@ namespace OpenZWave
 //	Currently empty, because this implementation
 //	opens/closes logfile at every write
 //-----------------------------------------------------------------------------
-			void LogImpl::ReopenLogFile()
+			void LogImpl::RotateLogFile()
 			{
+				FileOps::FileRotate(m_filename);
 			}
 
 //-----------------------------------------------------------------------------

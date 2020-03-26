@@ -83,6 +83,18 @@ namespace OpenZWave
 					 */
 					int32 operator-(TimeStamp const& _other);
 
+					/** Get the Time Components. 
+					 * Year as 4 Digit, and Hour as 24 Hour Time
+					 */
+					uint32 getYear() const;
+					uint32 getMonth() const;
+					uint32 getDay() const;
+					uint32 getHour() const;
+					uint32 getMinute() const;
+					uint32 getSecond() const;
+					uint32 getMilliSecond() const;
+
+
 				private:
 					TimeStamp(TimeStamp const&);				// prevent copy
 					TimeStamp& operator =(TimeStamp const&);	// prevent assignment

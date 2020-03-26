@@ -104,6 +104,76 @@ namespace OpenZWave
 			{
 				return (int32) ((m_stamp - _other.m_stamp) / 10000LL);
 			}
+//-----------------------------------------------------------------------------
+//	<TimeStampImpl::getYear>
+//	Get the 4 Digit Year for this TimeStamp */
+//-----------------------------------------------------------------------------
+			uint32 TimeStampImpl::getYear() const
+			{
+				SYSTEMTIME time;
+				::FileTimeToSystemTime((FILETIME*) &m_stamp, &time);
+				return time.wYear;
+			}
+//-----------------------------------------------------------------------------
+//	<TimeStampImpl::getMonth>
+//	Get the Month for this TimeStamp */
+//-----------------------------------------------------------------------------
+			uint32 TimeStampImpl::getMonth() const
+			{
+				SYSTEMTIME time;
+				::FileTimeToSystemTime((FILETIME*) &m_stamp, &time);
+				return time.wMonth;
+			}
+//-----------------------------------------------------------------------------
+//	<TimeStampImpl::getDay>
+//	Get the Daythis TimeStamp */
+//-----------------------------------------------------------------------------
+			uint32 TimeStampImpl::getDay() const 
+			{
+				SYSTEMTIME time;
+				::FileTimeToSystemTime((FILETIME*) &m_stamp, &time);
+				return time.wDay;
+			}
+//-----------------------------------------------------------------------------
+//	<TimeStampImpl::getHour>
+//	Get the 24 Hour for this TimeStamp */
+//-----------------------------------------------------------------------------
+			uint32 TimeStampImpl::getHour() const
+			{
+				SYSTEMTIME time;
+				::FileTimeToSystemTime((FILETIME*) &m_stamp, &time);
+				return time.wHour;
+			}
+//-----------------------------------------------------------------------------
+//	<TimeStampImpl::getMinute>
+//	Get the minute or this TimeStamp */
+//-----------------------------------------------------------------------------
+			uint32 TimeStampImpl::getMinute() const 
+			{
+				SYSTEMTIME time;
+				::FileTimeToSystemTime((FILETIME*) &m_stamp, &time);
+				return time.wMinute;
+			}
+//-----------------------------------------------------------------------------
+//	<TimeStampImpl::getSecond>
+//	Get the second for this TimeStamp */
+//-----------------------------------------------------------------------------
+			uint32 TimeStampImpl::getSecond() const 
+			{
+				SYSTEMTIME time;
+				::FileTimeToSystemTime((FILETIME*) &m_stamp, &time);
+				return time.wSeconds;
+			}
+//-----------------------------------------------------------------------------
+//	<TimeStampImpl::getMilliSecond>
+//	Get the Milli Second for this TimeStamp */
+//-----------------------------------------------------------------------------
+			uint32 TimeStampImpl::getMilliSecond() const 
+			{
+				SYSTEMTIME time;
+				::FileTimeToSystemTime((FILETIME*) &m_stamp, &time);
+				return time.wMilliseconds;
+			}			
 		} // namespace Platform
 	} // namespace Internal
 } // namespace OpenZWave

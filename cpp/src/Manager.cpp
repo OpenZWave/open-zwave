@@ -174,7 +174,8 @@ Manager::Manager() :
 
 	string logFilename = userPath + logFileNameBase;
 	Log::Create(logFilename, bAppend, bConsoleOutput, (LogLevel) nSaveLogLevel);
-
+	Log::SetupLogFileRotation();
+	
 	Internal::CC::CommandClasses::RegisterCommandClasses();
 	// petergebruers replace getVersionAsString() with getVersionLongAsString() because
 	// the latter prints more information, based on the status of the repository

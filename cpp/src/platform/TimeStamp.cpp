@@ -98,6 +98,65 @@ namespace OpenZWave
 			{
 				return (int32) (m_pImpl - _other.m_pImpl);
 			}
+
+//-----------------------------------------------------------------------------
+//	<TimeStamp::getYear>
+//	get 4 Digit Year
+//-----------------------------------------------------------------------------
+					uint32 TimeStamp::getYear() const
+					{
+						return m_pImpl->getYear();
+					}
+//-----------------------------------------------------------------------------
+//	<TimeStamp::getMonth>
+//	Get the Month 
+//-----------------------------------------------------------------------------
+					uint32 TimeStamp::getMonth() const 
+					{
+						return m_pImpl->getMonth();
+					}
+//-----------------------------------------------------------------------------
+//	<TimeStamp::getDay>
+//	Get the Day
+//-----------------------------------------------------------------------------
+					uint32 TimeStamp::getDay() const
+					{
+						return m_pImpl->getDay();
+					}
+//-----------------------------------------------------------------------------
+//	<TimeStamp::getHour>
+//	Get The 24 Hour
+//-----------------------------------------------------------------------------
+					uint32 TimeStamp::getHour() const
+					{
+						return m_pImpl->getHour();
+					}
+//-----------------------------------------------------------------------------
+//	<TimeStamp::getMinute>
+//	Get the Minute
+//-----------------------------------------------------------------------------
+					uint32 TimeStamp::getMinute() const
+					{
+						return m_pImpl->getMinute();
+					}
+//-----------------------------------------------------------------------------
+//	<TimeStamp::getSecond>
+//	Get The Second
+//-----------------------------------------------------------------------------
+					uint32 TimeStamp::getSecond() const
+					{
+						return m_pImpl->getSecond();
+					}
+//-----------------------------------------------------------------------------
+//	<TimeStamp::getMilliSecond>
+//	The the  milliseconds
+//-----------------------------------------------------------------------------
+					uint32 TimeStamp::getMilliSecond() const 
+					{
+						return m_pImpl->getMilliSecond();
+					}
+
+
 		} // namespace Platform
 	} // namespace Internal
 } // namespace OpenZWave

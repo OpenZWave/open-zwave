@@ -31,6 +31,7 @@
 #include <iostream>
 #include "Defs.h"
 #include "platform/TimeStamp.h"
+#include "platform/FileOps.h"
 #include "LogImpl.h"
 
 namespace OpenZWave
@@ -96,9 +97,10 @@ namespace OpenZWave
 //	<LogImpl::ReopenLogFile>
 //	Reopens log file so that for example Logrotate can do its job
 //-----------------------------------------------------------------------------
-			void LogImpl::ReopenLogFile()
+			void LogImpl::RotateLogFile()
 			{
 				CloseLogFile();
+				FileOps::FileRotate(m_filename);
 				OpenLogFile();
 			}
 

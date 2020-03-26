@@ -85,7 +85,7 @@ namespace OpenZWave
 			;
 			virtual void Write(LogLevel _level, uint8 const _nodeId, char const* _format, va_list _args) = 0;
 			virtual void SetLogFileName(const string &_filename) = 0;
-			virtual void ReopenLogFile() = 0;
+			virtual void RotateLogFile() = 0;
 			std::string GetLogLevelString(LogLevel _level);
 
 	};
@@ -176,10 +176,17 @@ namespace OpenZWave
 			 * \see Create, Destroy
 			 */
 			static void Write(LogLevel _level, uint8 const _nodeId, char const* _format, ...);
-			/**
-			 * Reopen log file
+			/**\brief Rotate the Log File
+			 * 
+			 * Starts writting to a new Log File and Moves the Current Logfile to a old file
+			 * 
 			 */
-			static void ReopenLogFile();
+			static void RotateLogFile();
+			/** \brief Setup LogFile Rotation
+			 * 
+			 * Sets up the Log Class to do Automatic Log File Rotation At Midnight
+			 */
+			static void SetupLogFileRotation();
 		private:
 			Log(string const& _filename, bool const _bAppend, bool const _bConsoleOutput, LogLevel _saveLevel);
 			~Log();
@@ -188,6 +195,8 @@ namespace OpenZWave
 			static Log* s_instance;
 			Internal::Platform::Mutex* m_logMutex;
 			static LogLevel m_minLogLevel;
+			static uint32 m_currentDay;
+			static bool m_doRotate;
 	};
 } // namespace OpenZWave
 

@@ -53,6 +53,7 @@ namespace OpenZWave
 					bool FileWriteable(const string _filename);
 					bool FileRotate(const string _filename);
 					bool FileCopy(const string, const string);
+					bool FileRename(const string, const string);
 					bool FolderCreate(const string _dirname);
 
 			};

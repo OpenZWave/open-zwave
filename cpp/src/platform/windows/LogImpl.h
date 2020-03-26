@@ -56,7 +56,7 @@ namespace OpenZWave
 					string GetNodeString(uint8 const _nodeId);
 					string GetThreadId();
 					unsigned int toEscapeCode(LogLevel _level);
-					void ReopenLogFile();
+					void RotateLogFile();
 
 					string m_filename; /**< filename specified by user (default is ozw_log.txt) */
 					bool m_bConsoleOutput; /**< if true, send log output to console as well as to the file */

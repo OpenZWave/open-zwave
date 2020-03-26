@@ -96,6 +96,15 @@ namespace OpenZWave
 					static bool FileCopy(const string &_fileName, const string &_destinationfile);
 
 					/**
+					 * FileRename. Rename a File
+					 * \param string. source file name.
+					 * \param string. destination file name
+					 * \return Bool value indicating success.
+					 */
+					static bool FileRename(const string &_fileName, const string &_destinationfile);
+
+
+					/**
 					 * FolderCreate. Create a Folder
 					 * \param string. folder name
 					 * \return Bool value indicating success.

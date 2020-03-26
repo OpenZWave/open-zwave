@@ -132,6 +132,80 @@ namespace OpenZWave
 
 				return diff;
 			}
+//-----------------------------------------------------------------------------
+//	<TimeStampImpl::getYear>
+//	Get the 4 Digit Year for this TimeStamp */
+//-----------------------------------------------------------------------------
+					uint32 TimeStampImpl::getYear() const
+					{
+						struct tm *tm, xtm;
+						memset(&xtm, 0, sizeof(xtm));
+						tm = localtime_r(&m_stamp.tv_sec, &xtm);
+						return tm->tm_year + 1900;
+					}
+//-----------------------------------------------------------------------------
+//	<TimeStampImpl::getMonth>
+//	Get the Month for this TimeStamp */
+//-----------------------------------------------------------------------------
+					uint32 TimeStampImpl::getMonth() const
+					{
+						struct tm *tm, xtm;
+						memset(&xtm, 0, sizeof(xtm));
+						tm = localtime_r(&m_stamp.tv_sec, &xtm);
+						return tm->tm_mon +1;
+					}
+//-----------------------------------------------------------------------------
+//	<TimeStampImpl::getDay>
+//	Get the Daythis TimeStamp */
+//-----------------------------------------------------------------------------
+					uint32 TimeStampImpl::getDay() const 
+					{
+						struct tm *tm, xtm;
+						memset(&xtm, 0, sizeof(xtm));
+						tm = localtime_r(&m_stamp.tv_sec, &xtm);
+						return tm->tm_mday;
+					}
+//-----------------------------------------------------------------------------
+//	<TimeStampImpl::getHour>
+//	Get the 24 Hour for this TimeStamp */
+//-----------------------------------------------------------------------------
+					uint32 TimeStampImpl::getHour() const
+					{
+						struct tm *tm, xtm;
+						memset(&xtm, 0, sizeof(xtm));
+						tm = localtime_r(&m_stamp.tv_sec, &xtm);
+						return tm->tm_hour;
+					}
+//-----------------------------------------------------------------------------
+//	<TimeStampImpl::getMinute>
+//	Get the minute or this TimeStamp */
+//-----------------------------------------------------------------------------
+					uint32 TimeStampImpl::getMinute() const 
+					{
+						struct tm *tm, xtm;
+						memset(&xtm, 0, sizeof(xtm));
+						tm = localtime_r(&m_stamp.tv_sec, &xtm);
+						return tm->tm_min;
+					}
+//-----------------------------------------------------------------------------
+//	<TimeStampImpl::getSecond>
+//	Get the second for this TimeStamp */
+//-----------------------------------------------------------------------------
+					uint32 TimeStampImpl::getSecond() const 
+					{
+						struct tm *tm, xtm;
+						memset(&xtm, 0, sizeof(xtm));
+						tm = localtime_r(&m_stamp.tv_sec, &xtm);
+						return tm->tm_sec;
+					}
+//-----------------------------------------------------------------------------
+//	<TimeStampImpl::getMilliSecond>
+//	Get the Milli Second for this TimeStamp */
+//-----------------------------------------------------------------------------
+					uint32 TimeStampImpl::getMilliSecond() const 
+					{
+						return (uint32) (m_stamp.tv_nsec / (1000 * 1000));
+					}
 		} // namespace Platform
 	} // namespace Internal
 } // namespace OpenZWave

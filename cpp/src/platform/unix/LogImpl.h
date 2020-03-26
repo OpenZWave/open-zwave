@@ -58,7 +58,7 @@ namespace OpenZWave
 					unsigned int toEscapeCode(LogLevel _level);
 					void OpenLogFile();
 					void CloseLogFile();
-					void ReopenLogFile();
+					void RotateLogFile();
 
 					string m_filename; /**< filename specified by user (default is ozw_log.txt) */
 					bool m_bConsoleOutput; /**< if true, send log output to console as well as to the file */

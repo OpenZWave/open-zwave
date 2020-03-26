@@ -134,6 +134,7 @@ Options* Options::Create(string const& _configPath, string const& _userPath, str
 		s_instance->AddOptionInt( "ThreadTerminateTimeout", -1);						// Since threads cannot be terminated in WinRT, Thread::Terminate will simply wait for them to exit on there own
 #endif
 		s_instance->AddOptionString("RFRegion", "", false);					// RFRegion to set the Stick too. Blank - Don't change
+		s_instance->AddOptionBool("RotateLogFile", true);					// Automaticallly Rotate the Log File at Midnight
 	}
 
 	return s_instance;
