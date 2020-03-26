@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ManufacturerSpecificData Revision="83" xmlns="https://github.com/OpenZWave/open-zwave">
+
+<ManufacturerSpecificData Revision="84" xmlns="https://github.com/OpenZWave/open-zwave">
   <Manufacturer id="0028" name="2B Electronics"></Manufacturer>
   <Manufacturer id="0098" name="2GIG Technologies">
     <Product config="2gig/ct50e.xml" id="015e" name="CT50e Thermostat" type="3200"/>
@@ -1388,7 +1389,8 @@
     <Product config="qubino/ZMNHZDx.xml" id="0053" name="ZMNHZDx Weather Station" type="0007"/>
     <Product config="qubino/ZMNHXDx.xml" id="0054" name="ZMNHXDx 3-phase Smart Meter" type="0007"/>
     <Product config="qubino/ZMNKIDx.xml" id="0054" name="ZMNKIDx OnOff Thermostat 2" type="0005"/>
-	<Product config="qubino/ZMNHQDx.xml" id="0051" name="ZMNHQDx LUXY Smart Light" type="0008"/>
+    <Product config="qubino/ZMNHQDx.xml" id="0051" name="ZMNHQDx LUXY Smart Light" type="0008"/>
+    <Product config="qubino/ZMNKADx.xml" id="0052" name="ZMNKADx LUXY Smart Switch" type="0008"/>
   </Manufacturer>
   <Manufacturer id="0130" name="Quby">
     <Product config="quby/qb2.xml" id="0001" name="Energy Management System" type="0001"/>
