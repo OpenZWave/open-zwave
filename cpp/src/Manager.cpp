@@ -163,13 +163,13 @@ Manager::Manager() :
 	bool bConsoleOutput = true;
 	Options::Get()->GetOptionAsBool("ConsoleOutput", &bConsoleOutput);
 
-	int nSaveLogLevel = (int) LogLevel_Detail;
+	int nSaveLogLevel = (int) LogLevel_Debug;
 
 	Options::Get()->GetOptionAsInt("SaveLogLevel", &nSaveLogLevel);
-	if ((nSaveLogLevel == 0) || (nSaveLogLevel < LogLevel_StreamDetail))
+	if ((nSaveLogLevel == 0) || (nSaveLogLevel < LogLevel_Always))
 	{
 		Log::Write(LogLevel_Warning, "Invalid LogLevel Specified for SaveLogLevel in Options.xml");
-		nSaveLogLevel = (int) LogLevel_Detail;
+		nSaveLogLevel = (int) LogLevel_Debug;
 	}
 
 	string logFilename = userPath + logFileNameBase;

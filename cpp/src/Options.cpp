@@ -102,7 +102,7 @@ Options* Options::Create(string const& _configPath, string const& _userPath, str
 		s_instance->AddOptionString("LogFileName", "OZW_Log.txt", false);	// Name of the log file (can be changed via Log::SetLogFileName)
 		s_instance->AddOptionBool("AppendLogFile", false);					// Append new session logs to existing log file (false = overwrite)
 		s_instance->AddOptionBool("ConsoleOutput", true);						// Display log information on console (as well as save to disk)
-		s_instance->AddOptionInt("SaveLogLevel", LogLevel_Detail);			// Save (to file) log messages equal to or above LogLevel_Detail
+		s_instance->AddOptionInt("SaveLogLevel", LogLevel_Debug);			// Save (to file) log messages equal to or above LogLevel_Detail
 
 		s_instance->AddOptionBool("Associate", true);						// Enable automatic association of the controller with group one of every device.
 		s_instance->AddOptionString("Exclude", string(""), true);		// Remove support for the listed command classes.

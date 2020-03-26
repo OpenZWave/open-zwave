@@ -110,35 +110,21 @@ namespace OpenZWave
 
 				switch (_level)
 				{
-					case LogLevel_Internal:
-					case LogLevel_StreamDetail:
-						code = 97;
-						break;   // 97=bright white
 					case LogLevel_Debug:
 						code = 36;
 						break;   // 36=cyan
-					case LogLevel_Detail:
-						code = 94;
-						break;	 // 94=bright blue
 					case LogLevel_Info:
 						code = 39;
 						break;   // 39=white
-					case LogLevel_Alert:
-						code = 93;
-						break;   // 93=bright yellow
 					case LogLevel_Warning:
 						code = 33;
 						break;   // 33=yellow
 					case LogLevel_Error:
 						code = 31;
 						break;   // 31=red
-					case LogLevel_Fatal:
-						code = 95;
-						break;	 // 95=bright magenta
 					case LogLevel_Always:
 						code = 32;
 						break;   // 32=green
-					case LogLevel_Invalid:
 					case LogLevel_None:
 						code = 39;
 						break;   // 39=white (reset to default)

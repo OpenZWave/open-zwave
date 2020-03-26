@@ -106,8 +106,6 @@ namespace OpenZWave
 					m_tail += _size;
 				}
 
-				LogData(_buffer, _size, "      Read (buffer->application): ");
-
 				m_dataSize -= _size;
 				m_mutex->Unlock();
 				return true;
@@ -135,17 +133,13 @@ namespace OpenZWave
 
 					memcpy(&m_buffer[m_head], _buffer, block1);
 					memcpy(m_buffer, &_buffer[block1], block2);
-					uint8 * logpos = m_buffer + m_head;
 					m_head = block2;
-					LogData(logpos, block1, "      Read (controller->buffer):  ");
-					LogData(m_buffer, block2, "      Read (controller->buffer):  ");
 				}
 				else
 				{
 					// There is enough space before we reach the end of the buffer
 					memcpy(&m_buffer[m_head], _buffer, _size);
 					m_head += _size;
-					LogData(m_buffer + m_head - _size, _size, "      Read (controller->buffer):  ");
 				}
 
 				m_dataSize += _size;
@@ -178,30 +172,6 @@ namespace OpenZWave
 			bool Stream::IsSignalled()
 			{
 				return (m_dataSize >= m_signalSize);
-			}
-
-//-----------------------------------------------------------------------------
-//	<Stream::LogData>
-//	Format the stream buffer data for log output
-//-----------------------------------------------------------------------------
-			void Stream::LogData(uint8* _buffer, uint32 _length, const string &_function)
-			{
-				if (!_length)
-					return;
-
-				string str = "";
-				for (uint32 i = 0; i < _length; ++i)
-				{
-					if (i)
-					{
-						str += ", ";
-					}
-
-					char byteStr[8];
-					snprintf(byteStr, sizeof(byteStr), "0x%.2x", _buffer[i]);
-					str += byteStr;
-				}
-				Log::Write(LogLevel_StreamDetail, "%s%s", _function.c_str(), str.c_str());
 			}
 		} // namespace Platform
 	} // namespace Internal

@@ -156,9 +156,6 @@ namespace OpenZWave
 					return 0;
 				}
 
-				Log::Write(LogLevel_StreamDetail, "      SerialController::Write (sent to controller)");
-				LogData(_buffer, _length, "      Write: ");
-
 				return (m_pImpl->Write(_buffer, _length));
 			}
 		} // namespace Platform

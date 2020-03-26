@@ -175,7 +175,7 @@ void Node::AdvanceQueries()
 	// assumptions are made in later code (RemoveMsg) that this is the case. This means
 	// each stage is only visited once.
 
-	Log::Write(LogLevel_Detail, m_nodeId, "AdvanceQueries queryPending=%d queryRetries=%d queryStage=%s live=%d", m_queryPending, m_queryRetries, c_queryStageNames[m_queryStage], m_nodeAlive);
+	Log::Write(LogLevel_Debug, m_nodeId, "AdvanceQueries queryPending=%d queryRetries=%d queryStage=%s live=%d", m_queryPending, m_queryRetries, c_queryStageNames[m_queryStage], m_nodeAlive);
 	bool addQSC = false;			// We only want to add a query stage complete if we did some work.
 	while (!m_queryPending && m_nodeAlive)
 	{
@@ -193,7 +193,7 @@ void Node::AdvanceQueries()
 				// determines, among other things, whether this node is a listener, its maximum baud rate and its device classes
 				if (!ProtocolInfoReceived())
 				{
-					Log::Write(LogLevel_Detail, m_nodeId, "QueryStage_ProtocolInfo");
+					Log::Write(LogLevel_Debug, m_nodeId, "QueryStage_ProtocolInfo");
 
 					Internal::Msg* msg = new Internal::Msg("Get Node Protocol Info", m_nodeId, REQUEST, FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO, false);
 					msg->Append(m_nodeId);
@@ -211,7 +211,7 @@ void Node::AdvanceQueries()
 			}
 			case QueryStage_Probe:
 			{
-				Log::Write(LogLevel_Detail, m_nodeId, "QueryStage_Probe");
+				Log::Write(LogLevel_Debug, m_nodeId, "QueryStage_Probe");
 
 				//
 				// Send a NoOperation message to see if the node is awake
@@ -237,7 +237,7 @@ void Node::AdvanceQueries()
 			{
 				// For sleeping devices other than controllers, we need to defer the usual requests until
 				// we have told the device to send it's wake-up notifications to the PC controller.
-				Log::Write(LogLevel_Detail, m_nodeId, "QueryStage_WakeUp");
+				Log::Write(LogLevel_Debug, m_nodeId, "QueryStage_WakeUp");
 
 				Internal::CC::WakeUp* wakeUp = static_cast<Internal::CC::WakeUp*>(GetCommandClass(Internal::CC::WakeUp::StaticGetCommandClassId()));
 
@@ -266,7 +266,7 @@ void Node::AdvanceQueries()
 				if (!NodeInfoReceived() && m_nodeInfoSupported && (GetDriver()->GetControllerNodeId() != m_nodeId))
 				{
 					// obtain from the node a list of command classes that it 1) supports and 2) controls (separated by a mark in the buffer)
-					Log::Write(LogLevel_Detail, m_nodeId, "QueryStage_NodeInfo");
+					Log::Write(LogLevel_Debug, m_nodeId, "QueryStage_NodeInfo");
 					Internal::Msg* msg = new Internal::Msg("Request Node Info", m_nodeId, REQUEST, FUNC_ID_ZW_REQUEST_NODE_INFO, false, true, FUNC_ID_ZW_APPLICATION_UPDATE);
 					msg->Append(m_nodeId);
 					GetDriver()->SendMsg(msg, Driver::MsgQueue_Query);
@@ -283,7 +283,7 @@ void Node::AdvanceQueries()
 			}
 			case QueryStage_NodePlusInfo:
 			{
-				Log::Write(LogLevel_Detail, m_nodeId, "QueryStage_NodePlusInfo");
+				Log::Write(LogLevel_Debug, m_nodeId, "QueryStage_NodePlusInfo");
 				Internal::CC::ZWavePlusInfo* pluscc = static_cast<Internal::CC::ZWavePlusInfo*>(GetCommandClass(Internal::CC::ZWavePlusInfo::StaticGetCommandClassId()));
 
 				if (pluscc)
@@ -309,7 +309,7 @@ void Node::AdvanceQueries()
 				/* For Devices that Support the Security Class, we have to request a list of
 				 * Command Classes that Require Security.
 				 */
-				Log::Write(LogLevel_Detail, m_nodeId, "QueryStage_SecurityReport");
+				Log::Write(LogLevel_Debug, m_nodeId, "QueryStage_SecurityReport");
 
 				Internal::CC::Security* seccc = static_cast<Internal::CC::Security*>(GetCommandClass(Internal::CC::Security::StaticGetCommandClassId()));
 
@@ -336,7 +336,7 @@ void Node::AdvanceQueries()
 			case QueryStage_Versions:
 			{
 				// Get the version information of CommandClasses that have not had their Version Retrieved So far. (most Likely ManufacturerSpecific)
-				Log::Write(LogLevel_Detail, m_nodeId, "QueryStage_Versions");
+				Log::Write(LogLevel_Debug, m_nodeId, "QueryStage_Versions");
 				if (GetDriver()->GetControllerNodeId() == m_nodeId)
 				{
 					m_queryStage = QueryStage_ManufacturerSpecific1;
@@ -380,12 +380,12 @@ void Node::AdvanceQueries()
 				// Obtain manufacturer, product type and product ID code from the node device
 				// Manufacturer Specific data is requested before the other command class data so
 				// that we can modify the supported command classes list through the product XML files.
-				Log::Write(LogLevel_Detail, m_nodeId, "QueryStage_ManufacturerSpecific1");
+				Log::Write(LogLevel_Debug, m_nodeId, "QueryStage_ManufacturerSpecific1");
 
 				/* if its the Controller, then we can just load up the XML straight away */
 				if (GetDriver()->GetControllerNodeId() == m_nodeId)
 				{
-					Log::Write(LogLevel_Detail, m_nodeId, "Load Controller Manufacturer Specific Config");
+					Log::Write(LogLevel_Debug, m_nodeId, "Load Controller Manufacturer Specific Config");
 					Internal::CC::ManufacturerSpecific* cc = static_cast<Internal::CC::ManufacturerSpecific*>(GetCommandClass(Internal::CC::ManufacturerSpecific::StaticGetCommandClassId()));
 					if (cc)
 					{
@@ -398,7 +398,7 @@ void Node::AdvanceQueries()
 				}
 				else
 				{
-					Log::Write(LogLevel_Detail, m_nodeId, "Checking for ManufacturerSpecific CC and Requesting values if present on this node");
+					Log::Write(LogLevel_Debug, m_nodeId, "Checking for ManufacturerSpecific CC and Requesting values if present on this node");
 					Internal::CC::ManufacturerSpecific* cc = static_cast<Internal::CC::ManufacturerSpecific*>(GetCommandClass(Internal::CC::ManufacturerSpecific::StaticGetCommandClassId()));
 					if (cc)
 					{
@@ -417,13 +417,13 @@ void Node::AdvanceQueries()
 			case QueryStage_Instances:
 			{
 				// if the device at this node supports multiple instances, obtain a list of these instances
-				Log::Write(LogLevel_Detail, m_nodeId, "QueryStage_Instances");
+				Log::Write(LogLevel_Debug, m_nodeId, "QueryStage_Instances");
 				Internal::CC::MultiInstance* micc = static_cast<Internal::CC::MultiInstance*>(GetCommandClass(Internal::CC::MultiInstance::StaticGetCommandClassId()));
 				if (micc)
 				{
 					if (micc->IsAfterMark())
 					{
-						Log::Write(LogLevel_Detail, m_nodeId, "Skipping RequestInstances() because MultiChannel CC is \"after mark\"");
+						Log::Write(LogLevel_Debug, m_nodeId, "Skipping RequestInstances() because MultiChannel CC is \"after mark\"");
 					}
 					else
 					{
@@ -452,7 +452,7 @@ void Node::AdvanceQueries()
 					// Obtain manufacturer, product type and product ID code from the node device
 					// Manufacturer Specific data is requested before the other command class data so
 					// that we can modify the supported command classes list through the product XML files.
-					Log::Write(LogLevel_Detail, m_nodeId, "QueryStage_ManufacturerSpecific2");
+					Log::Write(LogLevel_Debug, m_nodeId, "QueryStage_ManufacturerSpecific2");
 					Internal::CC::ManufacturerSpecific* cc = static_cast<Internal::CC::ManufacturerSpecific*>(GetCommandClass(Internal::CC::ManufacturerSpecific::StaticGetCommandClassId()));
 					/* don't do this if its the Controller Node */
 					if (cc && (GetDriver()->GetControllerNodeId() != m_nodeId))
@@ -484,7 +484,7 @@ void Node::AdvanceQueries()
 			{
 				// Request any other static values associated with each command class supported by this node
 				// examples are supported thermostat operating modes, setpoints and fan modes
-				Log::Write(LogLevel_Detail, m_nodeId, "QueryStage_Static");
+				Log::Write(LogLevel_Debug, m_nodeId, "QueryStage_Static");
 				for (map<uint8, Internal::CC::CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it)
 				{
 					it->second->CreateVars();
@@ -520,7 +520,7 @@ void Node::AdvanceQueries()
 				 */
 			case QueryStage_CacheLoad:
 			{
-				Log::Write(LogLevel_Detail, m_nodeId, "QueryStage_CacheLoad");
+				Log::Write(LogLevel_Debug, m_nodeId, "QueryStage_CacheLoad");
 				Log::Write(LogLevel_Info, GetNodeId(), "Loading Cache for node %d: Manufacturer=%s, Product=%s", GetNodeId(), GetManufacturerName().c_str(), GetProductName().c_str());
 				Log::Write(LogLevel_Info, GetNodeId(), "Node Identity Codes: %.4x:%.4x:%.4x", GetManufacturerId(), GetProductType(), GetProductId());
 				/* Don't do this if its to the Controller */
@@ -547,7 +547,7 @@ void Node::AdvanceQueries()
 			case QueryStage_Associations:
 			{
 				// if this device supports COMMAND_CLASS_ASSOCIATION, determine to which groups this node belong
-				Log::Write(LogLevel_Detail, m_nodeId, "QueryStage_Associations");
+				Log::Write(LogLevel_Debug, m_nodeId, "QueryStage_Associations");
 				Internal::CC::MultiChannelAssociation* macc = static_cast<Internal::CC::MultiChannelAssociation*>(GetCommandClass(Internal::CC::MultiChannelAssociation::StaticGetCommandClassId()));
 				if (macc)
 				{
@@ -576,7 +576,7 @@ void Node::AdvanceQueries()
 			case QueryStage_Neighbors:
 			{
 				// retrieves this node's neighbors and stores the neighbor bitmap in the node object
-				Log::Write(LogLevel_Detail, m_nodeId, "QueryStage_Neighbors");
+				Log::Write(LogLevel_Debug, m_nodeId, "QueryStage_Neighbors");
 				GetDriver()->RequestNodeNeighbors(m_nodeId, 0);
 				m_queryPending = true;
 				addQSC = true;
@@ -586,7 +586,7 @@ void Node::AdvanceQueries()
 			{
 				// Request the session values from the command classes in turn
 				// examples of Session information are: current thermostat setpoints, node names and climate control schedules
-				Log::Write(LogLevel_Detail, m_nodeId, "QueryStage_Session");
+				Log::Write(LogLevel_Debug, m_nodeId, "QueryStage_Session");
 				for (map<uint8, Internal::CC::CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it)
 				{
 					if (!it->second->IsAfterMark())
@@ -606,7 +606,7 @@ void Node::AdvanceQueries()
 			{
 				// Request the dynamic values from the node, that can change at any time
 				// Examples include on/off state, heating mode, temperature, etc.
-				Log::Write(LogLevel_Detail, m_nodeId, "QueryStage_Dynamic");
+				Log::Write(LogLevel_Debug, m_nodeId, "QueryStage_Dynamic");
 				m_queryPending = RequestDynamicValues();
 				addQSC = m_queryPending;
 
@@ -620,7 +620,7 @@ void Node::AdvanceQueries()
 			case QueryStage_Configuration:
 			{
 				// Request the configurable parameter values from the node.
-				Log::Write(LogLevel_Detail, m_nodeId, "QueryStage_Configuration");
+				Log::Write(LogLevel_Debug, m_nodeId, "QueryStage_Configuration");
 				if (m_queryConfiguration)
 				{
 					if (RequestAllConfigParams(0))
@@ -641,7 +641,7 @@ void Node::AdvanceQueries()
 			{
 				ClearAddingNode();
 				// Notify the watchers that the queries are complete for this node
-				Log::Write(LogLevel_Detail, m_nodeId, "QueryStage_Complete");
+				Log::Write(LogLevel_Debug, m_nodeId, "QueryStage_Complete");
 				Notification* notification = new Notification(Notification::Type_NodeQueriesComplete);
 				notification->SetHomeAndNodeIds(m_homeId, m_nodeId);
 				GetDriver()->QueueNotification(notification);

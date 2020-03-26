@@ -332,7 +332,7 @@ namespace OpenZWave
 				Log::Write(LogLevel_Warning, _sendingNode, "Failed to Decrypt Packet");
 				return false;
 			}
-			Log::Write(LogLevel_Detail, _sendingNode, "Decrypted Packet: %s", Internal::PktToString(m_buffer, encryptedpacketsize).c_str());
+			Log::Write(LogLevel_Debug, _sendingNode, "Decrypted Packet: %s", Internal::PktToString(m_buffer, encryptedpacketsize).c_str());
 #endif
 			uint8 mac[32];
 			/* we have to regenerate the IV as the ofb decryption routine will alter it. */

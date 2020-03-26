@@ -45,19 +45,12 @@ using namespace OpenZWave;
 
 char const *OpenZWave::LogLevelString[] =
 { 
-"Internal", /**< LogLevel_Internal Used only within the log class (uses existing timestamp, etc.) */
-"StreamDetail", /**< LogLevel_StreamDetail Will include low-level byte transfers from controller to buffer to application and back */
-"Debug", /**< LogLevel_Debug Very detailed information on progress that will create a huge log file quickly
- But this level (as others) can be queued and sent to the log only on an error or warning */
-"Detail", /**< LogLevel_Detail Detailed information on the progress of each message */
+"None", /**< LogLevel_Internal Used only within the log class (uses existing timestamp, etc.) */
+"Debug", /**< LogLevel_Debug Very detailed information on progress */
 "Info", /**< LogLevel_Info Everything's working fine...these messages provide streamlined feedback on each message */
-"Alert", /**< LogLevel_Alert Something unexpected by the library about which the controlling application should be aware */
 "Warning", /**< LogLevel_Warning A minor issue from which the library should be able to recover */
 "Error", /**< LogLevel_Error A serious issue with the library or the network */
-"Fatal", /**< LogLevel_Fatal A likely fatal issue in the library */
 "Always", /**< LogLevel_Always These messages should always be shown */
-"None", /**< LogLevel_None Disable all logging */	
-"Invalid" /**< Invalid Log Level Status - Used to Indicate error from Importing bad Options.xml */
 };
 
 Log* Log::s_instance = NULL;
@@ -73,7 +66,7 @@ bool Log::m_doRotate = false;
 //-----------------------------------------------------------------------------
 std::string i_LogImpl::GetLogLevelString(LogLevel _level)
 {
-	if ((_level >= LogLevel_Internal) && (_level <= LogLevel_Invalid))
+	if ((_level >= LogLevel_None) && (_level <= LogLevel_Always))
 	{
 		char buf[20];
 		snprintf(buf, sizeof(buf), "%s, ", LogLevelString[_level]);
@@ -168,15 +161,13 @@ void Log::Write(LogLevel _level, char const* _format, ...)
 	}
 	if (s_instance && (s_instance->m_pImpls.size() > 0))
 	{
-		if (_level != LogLevel_Internal)
-			s_instance->m_logMutex->Lock();
+		s_instance->m_logMutex->Lock();
 		va_list args;
 		va_start(args, _format);
 		for (std::vector<i_LogImpl*>::iterator it = s_instance->m_pImpls.begin(); it != s_instance->m_pImpls.end(); it++)
 			(*it)->Write(_level, 0, _format, args);
 		va_end(args);
-		if (_level != LogLevel_Internal)
-			s_instance->m_logMutex->Unlock();
+		s_instance->m_logMutex->Unlock();
 	}
 
 }
@@ -202,15 +193,13 @@ void Log::Write(LogLevel _level, uint8 const _nodeId, char const* _format, ...)
 	
 	if (s_instance && (s_instance->m_pImpls.size() > 0))
 	{
-		if (_level != LogLevel_Internal)
-			s_instance->m_logMutex->Lock();
+		s_instance->m_logMutex->Lock();
 		va_list args;
 		va_start(args, _format);
 		for (std::vector<i_LogImpl*>::iterator it = s_instance->m_pImpls.begin(); it != s_instance->m_pImpls.end(); it++)
 			(*it)->Write(_level, _nodeId, _format, args);
 		va_end(args);
-		if (_level != LogLevel_Internal)
-			s_instance->m_logMutex->Unlock();
+		s_instance->m_logMutex->Unlock();
 	}
 
 }

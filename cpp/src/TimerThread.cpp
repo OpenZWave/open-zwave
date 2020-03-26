@@ -93,7 +93,7 @@ namespace OpenZWave
 
 			while (1)
 			{
-				Log::Write(LogLevel_Detail, "Timer: waiting with timeout %d ms", m_timerTimeout);
+				Log::Write(LogLevel_Debug, "Timer: waiting with timeout %d ms", m_timerTimeout);
 				int32 res = Internal::Platform::Wait::Multiple(waitObjects, count, m_timerTimeout);
 
 				if (res == 0)

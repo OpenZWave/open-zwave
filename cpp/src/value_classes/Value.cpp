@@ -483,7 +483,7 @@ namespace OpenZWave
 				// if this is the first read of a value, assume it is valid (and notify as a change)
 				if (!IsSet())
 				{
-					Log::Write(LogLevel_Detail, m_id.GetNodeId(), "Initial read of value");
+					Log::Write(LogLevel_Debug, m_id.GetNodeId(), "Initial read of value");
 					Value::OnValueChanged();
 					return 2;		// confirmed change of value
 				}
@@ -494,40 +494,40 @@ namespace OpenZWave
 						case ValueID::ValueType_Button:			// Button is stored as a bool
 						case ValueID::ValueType_Bool:			// bool
 						{
-							Log::Write(LogLevel_Detail, m_id.GetNodeId(), "Refreshed Value: old value=%s, new value=%s, type=%s", *((bool*) _originalValue) ? "true" : "false", *((uint8*) _newValue) ? "true" : "false", GetTypeNameFromEnum(_type));
+							Log::Write(LogLevel_Debug, m_id.GetNodeId(), "Refreshed Value: old value=%s, new value=%s, type=%s", *((bool*) _originalValue) ? "true" : "false", *((uint8*) _newValue) ? "true" : "false", GetTypeNameFromEnum(_type));
 							break;
 						}
 						case ValueID::ValueType_Byte:			// byte
 						{
-							Log::Write(LogLevel_Detail, m_id.GetNodeId(), "Refreshed Value: old value=%d, new value=%d, type=%s", *((uint8*) _originalValue), *((uint8*) _newValue), GetTypeNameFromEnum(_type));
+							Log::Write(LogLevel_Debug, m_id.GetNodeId(), "Refreshed Value: old value=%d, new value=%d, type=%s", *((uint8*) _originalValue), *((uint8*) _newValue), GetTypeNameFromEnum(_type));
 							break;
 						}
 						case ValueID::ValueType_Decimal:		// decimal is stored as a string, so treat it as a string here
 						case ValueID::ValueType_String:			// string
 						{
-							Log::Write(LogLevel_Detail, m_id.GetNodeId(), "Refreshed Value: old value=%s, new value=%s, type=%s", ((string*) _originalValue)->c_str(), ((string*) _newValue)->c_str(), GetTypeNameFromEnum(_type));
+							Log::Write(LogLevel_Debug, m_id.GetNodeId(), "Refreshed Value: old value=%s, new value=%s, type=%s", ((string*) _originalValue)->c_str(), ((string*) _newValue)->c_str(), GetTypeNameFromEnum(_type));
 							break;
 						}
 						case ValueID::ValueType_Short:			// short
 						{
-							Log::Write(LogLevel_Detail, m_id.GetNodeId(), "Refreshed Value: old value=%d, new value=%d, type=%s", *((short*) _originalValue), *((short*) _newValue), GetTypeNameFromEnum(_type));
+							Log::Write(LogLevel_Debug, m_id.GetNodeId(), "Refreshed Value: old value=%d, new value=%d, type=%s", *((short*) _originalValue), *((short*) _newValue), GetTypeNameFromEnum(_type));
 							break;
 						}
 						case ValueID::ValueType_List:			// List Type is treated as a int32
 						case ValueID::ValueType_Int:			// int32
 						case ValueID::ValueType_BitSet:			// BitSet
 						{
-							Log::Write(LogLevel_Detail, m_id.GetNodeId(), "Refreshed Value: old value=%d, new value=%d, type=%s", *((int32*) _originalValue), *((int32*) _newValue), GetTypeNameFromEnum(_type));
+							Log::Write(LogLevel_Debug, m_id.GetNodeId(), "Refreshed Value: old value=%d, new value=%d, type=%s", *((int32*) _originalValue), *((int32*) _newValue), GetTypeNameFromEnum(_type));
 							break;
 						}
 						case ValueID::ValueType_Raw:			// raw
 						{
-							Log::Write(LogLevel_Detail, m_id.GetNodeId(), "Refreshed Value: old value=%x, new value=%x, type=%s", _originalValue, _newValue, GetTypeNameFromEnum(_type));
+							Log::Write(LogLevel_Debug, m_id.GetNodeId(), "Refreshed Value: old value=%x, new value=%x, type=%s", _originalValue, _newValue, GetTypeNameFromEnum(_type));
 							break;
 						}
 						case ValueID::ValueType_Schedule:		// Schedule Type
 						{
-							Log::Write(LogLevel_Detail, m_id.GetNodeId(), "Refreshed Value: old value=%s, new value=%s, type=%s", _originalValue, _newValue, GetTypeNameFromEnum(_type));
+							Log::Write(LogLevel_Debug, m_id.GetNodeId(), "Refreshed Value: old value=%s, new value=%s, type=%s", _originalValue, _newValue, GetTypeNameFromEnum(_type));
 							/* we cant support verifyChanges yet... so always unset this */
 							m_verifyChanges = false;
 							break;
@@ -538,7 +538,7 @@ namespace OpenZWave
 
 				// check whether changes in this value should be verified (since some devices will report values that always
 				// change, where confirming changes is difficult or impossible)
-				Log::Write(LogLevel_Detail, m_id.GetNodeId(), "Changes to this value are %sverified", m_verifyChanges ? "" : "not ");
+				Log::Write(LogLevel_Debug, m_id.GetNodeId(), "Changes to this value are %sverified", m_verifyChanges ? "" : "not ");
 
 				if (!m_verifyChanges)
 				{

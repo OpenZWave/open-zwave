@@ -207,7 +207,7 @@ namespace OpenZWave
 					if (GetVersion() >= 2)
 					{
 						identical = _data[2] & 0x01;
-						Log::Write(LogLevel_Detail, GetNodeId(), "CentralScene: all scenes identical? %i", identical);
+						Log::Write(LogLevel_Debug, GetNodeId(), "CentralScene: all scenes identical? %i", identical);
 						if (GetVersion() >= 3)
 							m_slowrefresh = (_data[2] & 0x80) == 1 ? true : false;
 					}
