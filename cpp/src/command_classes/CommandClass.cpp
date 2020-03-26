@@ -301,7 +301,7 @@ namespace OpenZWave
 				_ccElement->QueryIntAttribute("Instance", &temp);
 				rcc->instance = (uint8) temp;
 				_ccElement->QueryIntAttribute("Index", &temp);
-				rcc->index = (uint8) temp;
+				rcc->index = (uint16) temp;
 				Log::Write(LogLevel_Info, GetNodeId(), "Value Refresh triggered by CommandClass: %s, Genre: %d, Instance: %d, Index: %d for:", GetCommandClassName().c_str(), rcc->genre, rcc->instance, rcc->index);
 				TiXmlElement const* child = _ccElement->FirstChildElement();
 				while (child)
@@ -339,7 +339,7 @@ namespace OpenZWave
 								child = child->NextSiblingElement();
 								continue;
 							}
-							arcc->index = (uint8) temp;
+							arcc->index = (uint16) temp;
 							Log::Write(LogLevel_Info, GetNodeId(), "    CommandClass: %s, RequestFlags: %d, Instance: %d, Index: %d", CommandClasses::GetName(arcc->cc).c_str(), arcc->genre, arcc->instance, arcc->index);
 							rcc->RefreshClasses.push_back(arcc);
 							ok = true;

@@ -200,9 +200,11 @@ DISTFILES =	.gitignore \
 	config/enerwave/zwn-sc7.xml \
 	config/enerwave/zwnrsm1plus.xml \
 	config/enerwave/zwnrsm2plus.xml \
+	config/eurotronic/eur_airquality.xml \
 	config/eurotronic/eur_cometz.xml \
 	config/eurotronic/eur_spiritz.xml \
 	config/eurotronic/eur_stellaz.xml \
+	config/eurotronic/eur_temphumin.xml \
 	config/everspring/ad146.xml \
 	config/everspring/ad147.xml \
 	config/everspring/an145.xml \
@@ -365,6 +367,7 @@ DISTFILES =	.gitignore \
 	config/homeseer/hsm100.xml \
 	config/homeseer/hsm200.xml \
 	config/homeseer/ztroller.xml \
+	config/honeywell/39348-ZW4005.xml \
 	config/honeywell/39348-zw4008.xml \
 	config/honeywell/39351-ZW3005.xml \
 	config/honeywell/39351-ZW3010.xml \
@@ -519,9 +522,11 @@ DISTFILES =	.gitignore \
 	config/images/enerwave/zw20rm.png \
 	config/images/enerwave/zwn-bpc.png \
 	config/images/enerwave/zwnrsm1plus.png \
+	config/images/eurotronic/eur_airquality.png \
 	config/images/eurotronic/eur_cometz.png \
 	config/images/eurotronic/eur_spiritz.png \
 	config/images/eurotronic/eur_stellaz.png \
+	config/images/eurotronic/eur_temphumid.png \
 	config/images/everspring/ad146.png \
 	config/images/everspring/ad147.png \
 	config/images/everspring/an157.png \
@@ -654,6 +659,7 @@ DISTFILES =	.gitignore \
 	config/images/homeseer/hs-ws100plus.png \
 	config/images/homeseer/hs-ws200plus.png \
 	config/images/homeseer/hsm200.png \
+	config/images/honeywell/39348-ZW4005.png \
 	config/images/honeywell/39348-zw4008.png \
 	config/images/honeywell/39351-ZW3005.png \
 	config/images/honeywell/39357-ZW3004.png \
@@ -700,6 +706,7 @@ DISTFILES =	.gitignore \
 	config/images/linear/WD500Z5-1.png \
 	config/images/linear/gd00z-7.png \
 	config/images/linear/ngd00z.png \
+	config/images/logicsoft/ZDB5100.png \
 	config/images/logicsoft/ZHC5010.png \
 	config/images/mcohome/mh7h.png \
 	config/images/mcohome/mhp220.png \
@@ -953,6 +960,7 @@ DISTFILES =	.gitignore \
 	config/linear/WT00Z-1.xml \
 	config/linear/gd00z-7.xml \
 	config/linear/ngd00z.xml \
+	config/logicsoft/ZDB5100.xml \
 	config/logicsoft/ZHC5002.xml \
 	config/logicsoft/ZHC5010.xml \
 	config/manufacturer_specific.xml \
@@ -1068,6 +1076,7 @@ DISTFILES =	.gitignore \
 	config/qubino/ZMNHXDx.xml \
 	config/qubino/ZMNHYDx.xml \
 	config/qubino/ZMNHZDx.xml \
+	config/qubino/ZMNKADx.xml \
 	config/qubino/ZMNKIDx.xml \
 	config/quby/qb2.xml \
 	config/rcs/em52-zw.xml \

@@ -619,10 +619,20 @@ namespace OpenZWave
 						if (instance == 0)
 							instance = 1;
 						Log::Write(LogLevel_Info, GetNodeId(), "Received a MultiChannelEncap from node %d, endpoint %d for Command Class %s", GetNodeId(), endPoint, pCommandClass->GetCommandClassName().c_str());
-						if (!pCommandClass->IsAfterMark())
-							pCommandClass->HandleMsg(&_data[4], _length - 4, instance);
+						if (!pCommandClass->IsAfterMark()) 
+						{
+							if (!pCommandClass->HandleMsg(&_data[4], _length - 4, instance)) 
+							{
+								Log::Write(LogLevel_Warning, GetNodeId(), "MultiChannel Encap CommandClass %s HandleMsg returned false", pCommandClass->GetCommandClassName().c_str());
+							}
+						}
 						else
-							pCommandClass->HandleIncomingMsg(&_data[4], _length - 4, instance);
+						{
+							if (!pCommandClass->HandleIncomingMsg(&_data[4], _length - 4, instance))
+							{
+								Log::Write(LogLevel_Warning, GetNodeId(), "MultiChannel Encap CommandClass %s HandleIncomingMsg returned false", pCommandClass->GetCommandClassName().c_str());	
+							}
+						}
 					}
 					else
 					{
