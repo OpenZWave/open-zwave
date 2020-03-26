@@ -162,7 +162,7 @@ namespace OpenZWave
 			{
 				SYSTEMTIME time;
 				::FileTimeToSystemTime((FILETIME*) &m_stamp, &time);
-				return time.wSeconds;
+				return time.wSecond;
 			}
 //-----------------------------------------------------------------------------
 //	<TimeStampImpl::getMilliSecond>

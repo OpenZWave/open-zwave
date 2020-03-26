@@ -178,7 +178,10 @@ namespace OpenZWave
 					return false;
 				}
 
-				if (MoveFileA(_curname.c_str(), _newname.c_str()) == 0)
+				wstring wSrcFileName(_curname.begin(), _curname.end());
+				wstring wDstFileName(_newname.begin(), _newname.end());
+
+				if (MoveFile(wSrcFileName, wDstFileName) == 0)
 				{
 					Log::Write(LogLevel_Warning, "File Rename Failed %s - %s ", _curname.c_str(), _newname.c_str());
 					return false;
