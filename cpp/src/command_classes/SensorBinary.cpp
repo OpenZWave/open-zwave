@@ -111,7 +111,7 @@ namespace OpenZWave
 			{
 				if (_requestFlags & RequestFlag_Dynamic)
 				{
-					return RequestValue(_requestFlags, 0, _instance, _queue);
+					return RequestValue(_requestFlags, ValueID_Index_SensorBinary::Sensor_1, _instance, _queue);
 				}
 
 				return false;
@@ -152,7 +152,7 @@ namespace OpenZWave
 			{
 				if (SensorBinaryCmd_Report == (SensorBinaryCmd) _data[0])
 				{
-					if (_length > 2)
+					if (_length > 3)
 					{
 						uint8 index = m_sensorsMap[_data[2]];
 
@@ -199,7 +199,7 @@ namespace OpenZWave
 				{
 					if (WakeUp* wakeUp = static_cast<WakeUp*>(node->GetCommandClass(WakeUp::StaticGetCommandClassId())))
 					{
-						if (!wakeUp->IsAwake())
+						if (!wakeUp->IsAwake() || !m_com.GetFlagBool(COMPAT_FLAG_GETSUPPORTED))
 						{
 							if (Internal::VC::ValueBool* value = static_cast<Internal::VC::ValueBool*>(GetValue(_instance, 0)))
 							{

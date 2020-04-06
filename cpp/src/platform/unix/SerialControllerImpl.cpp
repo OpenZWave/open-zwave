@@ -192,9 +192,10 @@ namespace OpenZWave
 					goto SerialOpenFailure;
 				}
 
-				if (flock(m_hSerialController, LOCK_EX | LOCK_NB) == -1)
+				if (flock(m_hSerialController, LOCK_EX | LOCK_NB) != 0)
 				{
 					Log::Write(LogLevel_Error, "ERROR: Cannot get exclusive lock for serial port %s. Error code %d", device.c_str(), errno);
+					goto SerialOpenFailure;
 				}
 
 				int bits;

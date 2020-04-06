@@ -211,59 +211,62 @@ namespace OpenZWave
 						uint8 maxAssociations = _data[2];		// If the maxAssociations is zero, this is not a supported group.
 						uint8 numReportsToFollow = _data[3];	// If a device supports a lot of associations, they may come in more than one message.
 
-						if (maxAssociations)
-						{
-							if (_length >= 5)
+						if (groupIdx != 0) { 
+							if (maxAssociations)
 							{
-								uint8 numAssociations = _length - 5;
-
-								Log::Write(LogLevel_Info, GetNodeId(), "Received Association report from node %d, group %d, containing %d associations", GetNodeId(), groupIdx, numAssociations);
-								if (numAssociations)
+								if (_length >= 5)
 								{
-									Log::Write(LogLevel_Info, GetNodeId(), "  The group contains:");
-									for (i = 0; i < numAssociations; ++i)
+									uint8 numAssociations = _length - 5;
+
+									Log::Write(LogLevel_Info, GetNodeId(), "Received Association report from node %d, group %d, containing %d associations", GetNodeId(), groupIdx, numAssociations);
+									if (numAssociations)
 									{
-										Log::Write(LogLevel_Info, GetNodeId(), "    Node %d", _data[i + 4]);
-										m_pendingMembers.push_back(_data[i + 4]);
+										Log::Write(LogLevel_Info, GetNodeId(), "  The group contains:");
+										for (i = 0; i < numAssociations; ++i)
+										{
+											Log::Write(LogLevel_Info, GetNodeId(), "    Node %d", _data[i + 4]);
+											m_pendingMembers.push_back(_data[i + 4]);
+										}
 									}
 								}
-							}
 
-							if (numReportsToFollow)
-							{
-								// We're expecting more reports for this group
-								Log::Write(LogLevel_Info, GetNodeId(), "%d more association reports expected for node %d, group %d", numReportsToFollow, GetNodeId(), groupIdx);
-								return true;
+								if (numReportsToFollow)
+								{
+									// We're expecting more reports for this group
+									Log::Write(LogLevel_Info, GetNodeId(), "%d more association reports expected for node %d, group %d", numReportsToFollow, GetNodeId(), groupIdx);
+									return true;
+								}
+								else
+								{
+									// No more reports to come for this group, so we can apply the pending list
+									Group* group = node->GetGroup(groupIdx);
+									if ( NULL == group)
+									{
+										// Group has not been created yet
+										group = new Group(GetHomeId(), GetNodeId(), groupIdx, maxAssociations);
+										node->AddGroup(group);
+									}
+
+									// Update the group with its new contents
+									group->OnGroupChanged(m_pendingMembers);
+									m_pendingMembers.clear();
+								}
 							}
 							else
 							{
-								// No more reports to come for this group, so we can apply the pending list
-								Group* group = node->GetGroup(groupIdx);
-								if ( NULL == group)
-								{
-									// Group has not been created yet
-									group = new Group(GetHomeId(), GetNodeId(), groupIdx, maxAssociations);
-									node->AddGroup(group);
-								}
-
-								// Update the group with its new contents
-								group->OnGroupChanged(m_pendingMembers);
-								m_pendingMembers.clear();
+								// maxAssociations is zero, so we've reached the end of the query process
+								Log::Write(LogLevel_Info, GetNodeId(), "Max associations for node %d, group %d is zero.  Querying associations for this node is complete.", GetNodeId(), groupIdx);
+								node->AutoAssociate();
+								m_queryAll = false;
 							}
+						} else {
+							Log::Write(LogLevel_Warning, GetNodeId(), "Recieved Group 0 Assocation - Invalid");
 						}
-						else
-						{
-							// maxAssociations is zero, so we've reached the end of the query process
-							Log::Write(LogLevel_Info, GetNodeId(), "Max associations for node %d, group %d is zero.  Querying associations for this node is complete.", GetNodeId(), groupIdx);
-							node->AutoAssociate();
-							m_queryAll = false;
-						}
-
 						if (m_queryAll)
 						{
 							// Work out which is the next group we will query.
 							// If we are currently on group 255, the next group will be 1.
-							uint8 nextGroup = groupIdx + 1;
+							uint8 nextGroup = m_currentGroupQuery + 1;
 							if (!nextGroup)
 							{
 								nextGroup = 1;
@@ -280,6 +283,7 @@ namespace OpenZWave
 								Log::Write(LogLevel_Info, GetNodeId(), "Querying associations for node %d is complete.", GetNodeId());
 								node->AutoAssociate();
 								m_queryAll = false;
+								m_currentGroupQuery = 0;
 							}
 						}
 
@@ -307,6 +311,8 @@ namespace OpenZWave
 					msg->Append(_groupIdx);
 					msg->Append(GetDriver()->GetTransmitOptions());
 					GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
+					if (m_queryAll) 
+						m_currentGroupQuery = _groupIdx;
 					return;
 				}
 				else

@@ -68,7 +68,8 @@ namespace OpenZWave
 				m_com.EnableFlag(COMPAT_FLAG_CREATEVARS, true);
 				m_com.EnableFlag(COMPAT_FLAG_REFRESHONWAKEUP, false);
 				m_com.EnableFlag(COMPAT_FLAG_VERIFYCHANGED, false);
-				m_dom.EnableFlag(STATE_FLAG_CCVERSION, 1);
+				m_com.EnableFlag(COMPAT_FLAG_NO_REFRESH_AFTER_SET, false);
+				m_dom.EnableFlag(STATE_FLAG_CCVERSION, 0);
 				m_dom.EnableFlag(STATE_FLAG_STATIC_REQUESTS, 0);
 				m_dom.EnableFlag(STATE_FLAG_AFTERMARK, false);
 				m_dom.EnableFlag(STATE_FLAG_ENCRYPTED, false);
@@ -179,10 +180,6 @@ namespace OpenZWave
 				if (!m_instances.IsSet(_endPoint))
 				{
 					m_instances.Set(_endPoint);
-					if (m_com.GetFlagBool(COMPAT_FLAG_CREATEVARS))
-					{
-						CreateVars(_endPoint);
-					}
 				}
 			}
 
@@ -304,7 +301,7 @@ namespace OpenZWave
 				_ccElement->QueryIntAttribute("Instance", &temp);
 				rcc->instance = (uint8) temp;
 				_ccElement->QueryIntAttribute("Index", &temp);
-				rcc->index = (uint8) temp;
+				rcc->index = (uint16) temp;
 				Log::Write(LogLevel_Info, GetNodeId(), "Value Refresh triggered by CommandClass: %s, Genre: %d, Instance: %d, Index: %d for:", GetCommandClassName().c_str(), rcc->genre, rcc->instance, rcc->index);
 				TiXmlElement const* child = _ccElement->FirstChildElement();
 				while (child)
@@ -342,7 +339,7 @@ namespace OpenZWave
 								child = child->NextSiblingElement();
 								continue;
 							}
-							arcc->index = (uint8) temp;
+							arcc->index = (uint16) temp;
 							Log::Write(LogLevel_Info, GetNodeId(), "    CommandClass: %s, RequestFlags: %d, Instance: %d, Index: %d", CommandClasses::GetName(arcc->cc).c_str(), arcc->genre, arcc->instance, arcc->index);
 							rcc->RefreshClasses.push_back(arcc);
 							ok = true;
@@ -803,11 +800,40 @@ namespace OpenZWave
 				}
 			}
 
+//-----------------------------------------------------------------------------
+// <CommandClass::HandleIncomingMsg>
+// Handles Messages for Controlling CC's (Not Controlled, which is the default)
+//-----------------------------------------------------------------------------
 			bool CommandClass::HandleIncomingMsg(uint8 const* _data, uint32 const _length, uint32 const _instance)
 			{
 				Log::Write(LogLevel_Warning, GetNodeId(), "Routing HandleIncomingMsg to HandleMsg - Please Report: %s ", GetCommandClassName().c_str());
 				return HandleMsg(_data, _length, _instance);
 			}
+//-----------------------------------------------------------------------------
+// <CommandClass::CreateVars>
+// Calls CreateVars on the CC for each instance registered with this CC
+//-----------------------------------------------------------------------------
+			void CommandClass::CreateVars()
+			{
+				if (m_com.GetFlagBool(COMPAT_FLAG_CREATEVARS))
+				{
+					for (Bitfield::Iterator it = m_instances.Begin(); it != m_instances.End(); ++it)
+					{
+						Log::Write(LogLevel_Info, GetNodeId(), "Creating ValueIDs for Instance %d on %s", (uint8)*it, GetCommandClassLabel().c_str());
+						CreateVars((uint8) *it);
+					}
+				}
+			}
+
+//-----------------------------------------------------------------------------
+// <CommandClass::CreateVars>
+// Create ValueID's for Specific Instances. CC's should override this. 
+//-----------------------------------------------------------------------------
+			void CommandClass::CreateVars(uint8 const _instance)
+			{
+			}
+
+
 		} // namespace CC
 	} // namespace Internal
 } // namespace OpenZWave

@@ -728,7 +728,7 @@ namespace OpenZWave
 					msg->Append(colvals[COLORIDX_GREEN]);
 					msg->Append(COLORIDX_BLUE);
 					msg->Append(colvals[COLORIDX_BLUE]);
-					if (colvalset[COLORIDX_WARMWHITE] & !colvalset[COLORIDX_COLDWHITE])
+					if (colvalset[COLORIDX_WARMWHITE] && !colvalset[COLORIDX_COLDWHITE])
 					{
 						msg->Append(COLORIDX_WARMWHITE);
 						msg->Append(colvals[COLORIDX_WARMWHITE]);

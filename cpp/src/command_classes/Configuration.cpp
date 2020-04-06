@@ -123,7 +123,7 @@ namespace OpenZWave
 					else
 					{
 						char label[16];
-						snprintf(label, 16, "Parameter #%d", parameter);
+						snprintf(label, 16, "Parameter #%hu", parameter);
 
 						// Create a new value
 						if (Node* node = GetNodeUnsafe())

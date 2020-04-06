@@ -195,8 +195,13 @@ Manager::Manager() :
 	// when "make" was run. A Makefile gets this info from git describe --long --tags --dirty
 	Log::Write(LogLevel_Always, "OpenZwave Version %s Starting Up", getVersionLongAsString().c_str());
 	Log::Write(LogLevel_Always, "Using Language Localization %s", Internal::Localization::Get()->GetSelectedLang().c_str());
-	Internal::NotificationCCTypes::Create();
-	Internal::SensorMultiLevelCCTypes::Create();
+	if (!Internal::NotificationCCTypes::Create()) {
+		Log::Write(LogLevel_Error, "mgr,     Cannot Create NotificationCCTypes!");
+	}
+	if (!Internal::SensorMultiLevelCCTypes::Create()) {
+		Log::Write(LogLevel_Error, "mgr,     Cannot Create SensorMultiLevelCCTypes!");
+	}
+
 }
 
 //-----------------------------------------------------------------------------
@@ -274,6 +279,8 @@ Manager::~Manager()
 	}
 	Node::s_nodeTypes.clear();
 
+	Node::s_deviceClassesLoaded = false;
+	
 	Log::Destroy();
 }
 
@@ -956,33 +963,76 @@ uint8 Manager::GetNodeBasic(uint32 const _homeId, uint8 const _nodeId)
 }
 
 //-----------------------------------------------------------------------------
+// <Manager::GetNodeBasic>
+// Get the basic type of a node
+//-----------------------------------------------------------------------------
+string Manager::GetNodeBasicString(uint32 const _homeId, uint8 const _nodeId)
+{
+	if (Driver* driver = GetDriver(_homeId))
+	{
+		return driver->GetNodeBasicString(_nodeId);
+	}
+
+	return "Unknown";
+}
+
+
+//-----------------------------------------------------------------------------
 // <Manager::GetNodeGeneric>
 // Get the generic type of a node
 //-----------------------------------------------------------------------------
-uint8 Manager::GetNodeGeneric(uint32 const _homeId, uint8 const _nodeId)
+uint8 Manager::GetNodeGeneric(uint32 const _homeId, uint8 const _nodeId, uint8 const _instance)
 {
 	uint8 genericType = 0;
 	if (Driver* driver = GetDriver(_homeId))
 	{
-		genericType = driver->GetNodeGeneric(_nodeId);
+		genericType = driver->GetNodeGeneric(_nodeId, _instance);
 	}
 
 	return genericType;
+}
+//-----------------------------------------------------------------------------
+// <Manager::GetNodeGeneric>
+// Get the generic type of a node
+//-----------------------------------------------------------------------------
+
+string Manager::GetNodeGenericString(uint32 const _homeId, uint8 const _nodeId, uint8 const _instance) 
+{
+	if (Driver *driver = GetDriver(_homeId))
+	{
+		return driver->GetNodeGenericString(_nodeId, _instance);
+	}
+	return "Unknown";
+}
+
+
+//-----------------------------------------------------------------------------
+// <Manager::GetNodeSpecific>
+// Get the specific type of a node
+//-----------------------------------------------------------------------------
+uint8 Manager::GetNodeSpecific(uint32 const _homeId, uint8 const _nodeId, uint8 const _instance)
+{
+	uint8 specific = 0;
+	if (Driver* driver = GetDriver(_homeId))
+	{
+		specific = driver->GetNodeSpecific(_nodeId, _instance);
+	}
+
+	return specific;
 }
 
 //-----------------------------------------------------------------------------
 // <Manager::GetNodeSpecific>
 // Get the specific type of a node
 //-----------------------------------------------------------------------------
-uint8 Manager::GetNodeSpecific(uint32 const _homeId, uint8 const _nodeId)
+string Manager::GetNodeSpecificString(uint32 const _homeId, uint8 const _nodeId, uint8 const _instance)
 {
-	uint8 specific = 0;
 	if (Driver* driver = GetDriver(_homeId))
 	{
-		specific = driver->GetNodeSpecific(_nodeId);
+		return driver->GetNodeSpecificString(_nodeId, _instance);
 	}
 
-	return specific;
+	return "Unknown";
 }
 
 //-----------------------------------------------------------------------------
@@ -1350,6 +1400,14 @@ bool Manager::GetNodeClassInformation(uint32 const _homeId, uint8 const _nodeId,
 	}
 
 	return result;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetCommandClassName>
+// Get a String representing the Command Class Name
+//-----------------------------------------------------------------------------
+string Manager::GetCommandClassName(uint8 const _commandClassId) {
+	return OpenZWave::Internal::CC::CommandClasses::GetName(_commandClassId);
 }
 
 //-----------------------------------------------------------------------------
@@ -3571,6 +3629,8 @@ uint32 Manager::GetAssociations(uint32 const _homeId, uint8 const _nodeId, uint8
 //-----------------------------------------------------------------------------
 // <Manager::GetAssociations>
 // Gets the associations for a group
+// struct InstanceAssociation is defined in Group.h and contains
+// a (NodeID, End Point) pair.
 //-----------------------------------------------------------------------------
 uint32 Manager::GetAssociations(uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx, InstanceAssociation** o_associations)
 {
@@ -3627,11 +3687,11 @@ string Manager::GetGroupLabel(uint32 const _homeId, uint8 const _nodeId, uint8 c
 // <Manager::AddAssociation>
 // Adds a node to an association group
 //-----------------------------------------------------------------------------
-void Manager::AddAssociation(uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx, uint8 const _targetNodeId, uint8 const _instance)
+void Manager::AddAssociation(uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx, uint8 const _targetNodeId, uint8 const _endPoint)
 {
 	if (Driver* driver = GetDriver(_homeId))
 	{
-		driver->AddAssociation(_nodeId, _groupIdx, _targetNodeId, _instance);
+		driver->AddAssociation(_nodeId, _groupIdx, _targetNodeId, _endPoint);
 	}
 }
 
@@ -3639,11 +3699,11 @@ void Manager::AddAssociation(uint32 const _homeId, uint8 const _nodeId, uint8 co
 // <Manager::RemoveAssociation>
 // Removes a node from an association group
 //-----------------------------------------------------------------------------
-void Manager::RemoveAssociation(uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx, uint8 const _targetNodeId, uint8 const _instance)
+void Manager::RemoveAssociation(uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx, uint8 const _targetNodeId, uint8 const _endPoint)
 {
 	if (Driver* driver = GetDriver(_homeId))
 	{
-		driver->RemoveAssociation(_nodeId, _groupIdx, _targetNodeId, _instance);
+		driver->RemoveAssociation(_nodeId, _groupIdx, _targetNodeId, _endPoint);
 	}
 }
 

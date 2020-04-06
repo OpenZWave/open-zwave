@@ -1,0 +1,30 @@
+{
+    "problemMatcher": [
+        {
+            "owner": "xmltest",
+            "pattern": [
+                {
+                    "regexp": "^(.*\/open.zwave\/)(.*):([0-9]*):.?(.*)$",
+                    "fromPath": 1,
+                    "file": 2,
+                    "line": 3,
+                    "message": 4
+                }
+            ]
+        },
+        {
+            "owner": "ConfigDatabase",
+            "pattern": [
+                {
+                    "regexp": "^Errors: [0-9]*\\. \\(Please Correct before Submitting to OZW\\)$"
+                },
+                {
+                    "regexp": "^(.*):.(.*)$",
+                    "file": 1,
+                    "message": 2,
+                    "loop": true
+                }
+            ]
+        }
+    ]
+}

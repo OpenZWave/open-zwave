@@ -323,7 +323,8 @@ namespace OpenZWave
 					}
 
 					uint8 endPoint = _data[1] & 0x7f;
-
+					m_endPointGenericType.insert(std::pair<uint8, uint8>(endPoint, _data[2]));
+					m_endPointSpecificType.insert(std::pair<uint8, uint8>(endPoint, _data[3]));
 					Log::Write(LogLevel_Info, GetNodeId(), "Received MultiChannelCapabilityReport from node %d for endpoint %d", GetNodeId(), endPoint);
 					Log::Write(LogLevel_Info, GetNodeId(), "    Endpoint is%sdynamic, and is a %s", dynamic ? " " : " not ", node->GetEndPointDeviceClassLabel(_data[2], _data[3]).c_str());
 					Log::Write(LogLevel_Info, GetNodeId(), "    Command classes supported by the endpoint are:");
@@ -346,8 +347,6 @@ namespace OpenZWave
 							continue;
 						}
 
-						m_endPointCommandClasses.insert(commandClassId);
-
 						// Ensure the node supports this command class
 						CommandClass* cc = node->GetCommandClass(commandClassId);
 
@@ -355,6 +354,9 @@ namespace OpenZWave
 						{
 							cc = node->AddCommandClass(commandClassId);
 						}
+
+
+
 						if (cc && afterMark)
 						{
 							cc->SetAfterMark();
@@ -364,7 +366,9 @@ namespace OpenZWave
 						{
 							Log::Write(LogLevel_Info, GetNodeId(), "        %s", cc->GetCommandClassName().c_str());
 						}
-						/* The AddCommandClass will bitch about unsupported CC's so we don't need to duplicate that output */
+						/* The AddCommandClass above will bitch about unsupported CC's so we don't need to duplicate that output */
+
+						m_endPointCommandClasses.insert(commandClassId);
 					}
 
 					// Create internal library instances for each command class in the list
@@ -395,6 +399,11 @@ namespace OpenZWave
 								CommandClass* cc = node->GetCommandClass(commandClassId);
 								if (cc)
 								{
+									if (cc->supportsMultiInstance() == false) {
+										Log::Write(LogLevel_Info, GetNodeId(), "%s doesn't support MultiInstance - Not adding Instance", cc->GetCommandClassName().c_str());
+										continue;
+									}
+
 									cc->SetInstance(i);
 									if (m_com.GetFlagBool(COMPAT_FLAG_MI_MAPROOTTOENDPOINT) != false || i != 1)
 									{
@@ -446,6 +455,11 @@ namespace OpenZWave
 							CommandClass* cc = node->GetCommandClass(commandClassId);
 							if (cc)
 							{
+								if (cc->supportsMultiInstance() == false) {
+									Log::Write(LogLevel_Info, GetNodeId(), "%s doesn't support MultiInstance. Not adding Instances", cc->GetCommandClassName().c_str());
+									continue;
+								}
+
 								// get instance gets an instance for an endpoint
 								// but i'm only interested if there is a related instance for an endpoint and not in the actual result
 								// soo if the result is != 0, the endpoint is already handled
@@ -605,10 +619,20 @@ namespace OpenZWave
 						if (instance == 0)
 							instance = 1;
 						Log::Write(LogLevel_Info, GetNodeId(), "Received a MultiChannelEncap from node %d, endpoint %d for Command Class %s", GetNodeId(), endPoint, pCommandClass->GetCommandClassName().c_str());
-						if (!pCommandClass->IsAfterMark())
-							pCommandClass->HandleMsg(&_data[4], _length - 4, instance);
+						if (!pCommandClass->IsAfterMark()) 
+						{
+							if (!pCommandClass->HandleMsg(&_data[4], _length - 4, instance)) 
+							{
+								Log::Write(LogLevel_Warning, GetNodeId(), "MultiChannel Encap CommandClass %s HandleMsg returned false", pCommandClass->GetCommandClassName().c_str());
+							}
+						}
 						else
-							pCommandClass->HandleIncomingMsg(&_data[4], _length - 4, instance);
+						{
+							if (!pCommandClass->HandleIncomingMsg(&_data[4], _length - 4, instance))
+							{
+								Log::Write(LogLevel_Warning, GetNodeId(), "MultiChannel Encap CommandClass %s HandleIncomingMsg returned false", pCommandClass->GetCommandClassName().c_str());	
+							}
+						}
 					}
 					else
 					{
@@ -617,8 +641,8 @@ namespace OpenZWave
 				}
 			}
 //-----------------------------------------------------------------------------
-// <MultiInstance::HandleMultiChannelEncap>
-// Handle a message from the Z-Wave network
+// <MultiInstance::SetInstanceLabel>
+// Set the Generic Label for a Instance
 //-----------------------------------------------------------------------------
 			void MultiInstance::SetInstanceLabel(uint8 const _instance, char *label)
 			{
@@ -629,6 +653,29 @@ namespace OpenZWave
 					node->SetInstanceLabel(_instance, label);
 				}
 			}
+//-----------------------------------------------------------------------------
+// <MultiInstance::GetGenericInstanceDeviceType>
+// Get the Generic DeviceType for a EndPoint
+//-----------------------------------------------------------------------------
+			uint8 MultiInstance::GetGenericInstanceDeviceType(uint8 _instance) 
+			{
+				if (m_endPointGenericType.find(_instance) != m_endPointGenericType.end())
+					return m_endPointGenericType.at(_instance);
+					
+				return 0;
+			}
+//-----------------------------------------------------------------------------
+// <MultiInstance::GetSpecificEndpointDeviceType>
+// Get the Specific DeviceType for a Endpoint
+//-----------------------------------------------------------------------------
+			uint8 MultiInstance::GetSpecificInstanceDeviceType(uint8 _instance) 
+			{
+				if (m_endPointSpecificType.find(_instance) != m_endPointSpecificType.end())
+					return m_endPointSpecificType.at(_instance);
+
+				return 0;
+			}
+
 		} // namespace CC
 	} // namespace Internal
 } // namespace OpenZWave

@@ -74,9 +74,23 @@ namespace OpenZWave
 //-----------------------------------------------------------------------------
 			bool SwitchMultilevel::RequestState(uint32 const _requestFlags, uint8 const _instance, Driver::MsgQueue const _queue)
 			{
+				if (_requestFlags & RequestFlag_Static) {
+					if (GetVersion() >= 3)
+					{
+						// Request the supported switch types
+						Msg* msg = new Msg("SwitchMultilevelCmd_SupportedGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
+						msg->Append(GetNodeId());
+						msg->Append(2);
+						msg->Append(GetCommandClassId());
+						msg->Append(SwitchMultilevelCmd_SupportedGet);
+						msg->Append(GetDriver()->GetTransmitOptions());
+						GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
+					}
+					return true;
+				}
 				if (_requestFlags & RequestFlag_Dynamic)
 				{
-					return RequestValue(_requestFlags, 0, _instance, _queue);
+					return RequestValue(_requestFlags, ValueID_Index_SwitchMultiLevel::Level, _instance, _queue);
 				}
 
 				return false;
@@ -100,6 +114,7 @@ namespace OpenZWave
 						msg->Append(SwitchMultilevelCmd_Get);
 						msg->Append(GetDriver()->GetTransmitOptions());
 						GetDriver()->SendMsg(msg, _queue);
+						
 						return true;
 					}
 					else
@@ -108,28 +123,6 @@ namespace OpenZWave
 					}
 				}
 				return false;
-			}
-
-			bool SwitchMultilevel::HandleIncomingMsg(uint8 const* _data, uint32 const _length, uint32 const _instance	// = 1
-					)
-			{
-				if (SwitchMultilevelCmd_Set == (SwitchMultilevelCmd) _data[0])
-				{
-					Log::Write(LogLevel_Info, GetNodeId(), "Received SwitchMultiLevel Set: level=%d", _data[1]);
-					return true;
-				}
-				else if (SwitchMultilevelCmd_StartLevelChange == (SwitchMultilevelCmd) _data[0])
-				{
-					Log::Write(LogLevel_Info, GetNodeId(), "Received SwitchMultiLevel StartLevelChange: level=%d", _data[1]);
-
-				}
-				else if (SwitchMultilevelCmd_StopLevelChange == (SwitchMultilevelCmd) _data[0])
-				{
-					Log::Write(LogLevel_Info, GetNodeId(), "Received SwitchMultiLevel StopLevelChange: level=%d", _data[1]);
-
-				}
-
-				return true;
 			}
 
 //-----------------------------------------------------------------------------
@@ -225,33 +218,8 @@ namespace OpenZWave
 					}
 					return true;
 				}
-
+				Log::Write(LogLevel_Warning, GetNodeId(), "Recieved a Unhandled SwitchMultiLevel Command: %d", _data[0]);
 				return false;
-			}
-
-//-----------------------------------------------------------------------------
-// <SwitchMultilevel::SetVersion>
-// Set the command class version
-//-----------------------------------------------------------------------------
-			void SwitchMultilevel::SetVersion(uint8 const _version)
-			{
-				CommandClass::SetVersion(_version);
-
-				if (_version >= 3)
-				{
-					// Request the supported switch types
-					Msg* msg = new Msg("SwitchMultilevelCmd_SupportedGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
-					msg->Append(GetNodeId());
-					msg->Append(2);
-					msg->Append(GetCommandClassId());
-					msg->Append(SwitchMultilevelCmd_SupportedGet);
-					msg->Append(GetDriver()->GetTransmitOptions());
-					GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
-
-					// Set the request flag again - it will be cleared when we get a
-					// response to the SwitchMultilevelCmd_SupportedGet message.
-					SetStaticRequest(StaticRequest_Version);
-				}
 			}
 
 //-----------------------------------------------------------------------------

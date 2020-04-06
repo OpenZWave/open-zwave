@@ -35,6 +35,7 @@
 #include "command_classes/Association.h"
 #include "command_classes/AssociationCommandConfiguration.h"
 #include "command_classes/MultiChannelAssociation.h"
+#include "command_classes/MultiInstance.h"
 #include "platform/Log.h"
 
 #include "tinyxml.h"
@@ -107,14 +108,20 @@ Group::Group(uint32 const _homeId, uint8 const _nodeId, TiXmlElement const* _gro
 
 			if (associationElement->QueryIntAttribute("id", &intVal) == TIXML_SUCCESS)
 			{
-				InstanceAssociation association;
-				association.m_nodeId = (uint8) intVal;
-				if (associationElement->QueryIntAttribute("instance", &intVal) == TIXML_SUCCESS)
-					association.m_instance = (uint8) intVal;
-				else
-					association.m_instance = 0x00;
+				/* intVal is a Int, so refuse to load anything high thatn 254 */
+				if (intVal >= 255) {
+					Log::Write(LogLevel_Warning, m_nodeId, "Broadcast Address was found in cache for Association Group %d - Ignoring", m_groupIdx);
+					/* we really should go and Delete it from the Node, but since this is a cache, lets just ignore it here */
+				} else { 
+					InstanceAssociation association;
+					association.m_nodeId = (uint8) intVal;
+					if (associationElement->QueryIntAttribute("instance", &intVal) == TIXML_SUCCESS)
+						association.m_instance = (uint8) intVal;
+					else
+						association.m_instance = 0x00;
 
-				pending.push_back(association);
+					pending.push_back(association);
+				}
 			}
 		}
 
@@ -187,15 +194,18 @@ void Group::WriteXML(TiXmlElement* _groupElement)
 	{
 		TiXmlElement* associationElement = new TiXmlElement("Node");
 
-		snprintf(str, 16, "%d", it->first.m_nodeId);
-		associationElement->SetAttribute("id", str);
-		if (it->first.m_instance != 0)
-		{
-			snprintf(str, 16, "%d", it->first.m_instance);
-			associationElement->SetAttribute("instance", str);
+		if (it->first.m_nodeId == 255) {
+			Log::Write(LogLevel_Warning, m_nodeId, "Broadcast Address was found in Association Group %d when writing cache. Ignoring", m_groupIdx);
+		} else { 
+			snprintf(str, 16, "%d", it->first.m_nodeId);
+			associationElement->SetAttribute("id", str);
+			if (it->first.m_instance != 0)
+			{
+				snprintf(str, 16, "%d", it->first.m_instance);
+				associationElement->SetAttribute("instance", str);
+			}
+			_groupElement->LinkEndChild(associationElement);
 		}
-
-		_groupElement->LinkEndChild(associationElement);
 	}
 }
 
@@ -203,11 +213,11 @@ void Group::WriteXML(TiXmlElement* _groupElement)
 // <Group::Contains>
 // Whether a group contains a particular node
 //-----------------------------------------------------------------------------
-bool Group::Contains(uint8 const _nodeId, uint8 const _instance)
+bool Group::Contains(uint8 const _nodeId, uint8 const _endPoint)
 {
 	for (map<InstanceAssociation, AssociationCommandVec, classcomp>::iterator it = m_associations.begin(); it != m_associations.end(); ++it)
 	{
-		if ((it->first.m_nodeId == _nodeId) && (it->first.m_instance == _instance))
+		if ((it->first.m_nodeId == _nodeId) && (it->first.m_instance == _endPoint))
 		{
 			return true;
 		}
@@ -219,19 +229,30 @@ bool Group::Contains(uint8 const _nodeId, uint8 const _instance)
 // <Group::AddAssociation>
 // Associate a node with this group
 //-----------------------------------------------------------------------------
-void Group::AddAssociation(uint8 const _nodeId, uint8 const _instance)
+void Group::AddAssociation(uint8 const _nodeId, uint8 const _endPoint)
 {
+	if (_nodeId == 255) {
+		Log::Write(LogLevel_Warning, m_nodeId, "Attemping to add broadcast address to Association Group %d - Ignoring", m_groupIdx);
+		return;
+	}
+	
 	if (Driver* driver = Manager::Get()->GetDriver(m_homeId))
 	{
 		if (Node* node = driver->GetNodeUnsafe(m_nodeId))
 		{
 			Internal::CC::MultiChannelAssociation* cc = static_cast<Internal::CC::MultiChannelAssociation*>(node->GetCommandClass(Internal::CC::MultiChannelAssociation::StaticGetCommandClassId()));
+			Internal::CC::MultiInstance *mc = static_cast<Internal::CC::MultiInstance*>(node->GetCommandClass(Internal::CC::MultiInstance::StaticGetCommandClassId()));
 			if (cc && IsMultiInstance())
 			{
-				cc->Set(m_groupIdx, _nodeId, _instance);
-				cc->QueryGroup(m_groupIdx, 0);
+				if (mc) { 
+					cc->Set(m_groupIdx, _nodeId, _endPoint);
+					cc->QueryGroup(m_groupIdx, 0);
+					return;
+				} else {
+					Log::Write(LogLevel_Warning, m_nodeId, "MultiChannelAssociation is Present, but MultiChannel CC is not. Trying Plain Association...");
+				}
 			}
-			else if (Internal::CC::Association* cc = static_cast<Internal::CC::Association*>(node->GetCommandClass(Internal::CC::Association::StaticGetCommandClassId())))
+			if (Internal::CC::Association* cc = static_cast<Internal::CC::Association*>(node->GetCommandClass(Internal::CC::Association::StaticGetCommandClassId())))
 			{
 				cc->Set(m_groupIdx, _nodeId);
 				cc->QueryGroup(m_groupIdx, 0);
@@ -248,7 +269,7 @@ void Group::AddAssociation(uint8 const _nodeId, uint8 const _instance)
 // <Group:RemoveAssociation>
 // Remove a node from this group
 //-----------------------------------------------------------------------------
-void Group::RemoveAssociation(uint8 const _nodeId, uint8 const _instance)
+void Group::RemoveAssociation(uint8 const _nodeId, uint8 const _endPoint)
 {
 	if (Driver* driver = Manager::Get()->GetDriver(m_homeId))
 	{
@@ -257,7 +278,7 @@ void Group::RemoveAssociation(uint8 const _nodeId, uint8 const _instance)
 			Internal::CC::MultiChannelAssociation* cc = static_cast<Internal::CC::MultiChannelAssociation*>(node->GetCommandClass(Internal::CC::MultiChannelAssociation::StaticGetCommandClassId()));
 			if (cc && IsMultiInstance())
 			{
-				cc->Remove(m_groupIdx, _nodeId, _instance);
+				cc->Remove(m_groupIdx, _nodeId, _endPoint);
 				cc->QueryGroup(m_groupIdx, 0);
 			}
 			else if (Internal::CC::Association* cc = static_cast<Internal::CC::Association*>(node->GetCommandClass(Internal::CC::Association::StaticGetCommandClassId())))
@@ -432,11 +453,11 @@ uint32 Group::GetAssociations(InstanceAssociation** o_associations)
 // <Group::ClearCommands>
 // Clear all the commands for the specified node
 //-----------------------------------------------------------------------------
-bool Group::ClearCommands(uint8 const _nodeId, uint8 const _instance)
+bool Group::ClearCommands(uint8 const _nodeId, uint8 const _endPoint)
 {
 	for (map<InstanceAssociation, AssociationCommandVec, classcomp>::iterator it = m_associations.begin(); it != m_associations.end(); ++it)
 	{
-		if ((it->first.m_nodeId == _nodeId) && (it->first.m_instance == _instance))
+		if ((it->first.m_nodeId == _nodeId) && (it->first.m_instance == _endPoint))
 		{
 			it->second.clear();
 			return true;
@@ -450,11 +471,11 @@ bool Group::ClearCommands(uint8 const _nodeId, uint8 const _instance)
 // <Group::AddCommand>
 // Add a command to the list for the specified node
 //-----------------------------------------------------------------------------
-bool Group::AddCommand(uint8 const _nodeId, uint8 const _length, uint8 const* _data, uint8 const _instance)
+bool Group::AddCommand(uint8 const _nodeId, uint8 const _length, uint8 const* _data, uint8 const _endPoint)
 {
 	for (map<InstanceAssociation, AssociationCommandVec, classcomp>::iterator it = m_associations.begin(); it != m_associations.end(); ++it)
 	{
-		if ((it->first.m_nodeId == _nodeId) && (it->first.m_instance == _instance))
+		if ((it->first.m_nodeId == _nodeId) && (it->first.m_instance == _endPoint))
 		{
 			it->second.push_back(AssociationCommand(_length, _data));
 			return true;
