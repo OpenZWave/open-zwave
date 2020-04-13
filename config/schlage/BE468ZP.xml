@@ -99,7 +99,7 @@ https://instructions.allegion.com/instr/86/2543
       <Item label="Enable" value="255"/>
       <Item label="Disable" value="0"/>
     </Value>
-    <Value genre="config" index="16" label="User code legnth " max="8" min="4" size="1" type="byte" units="" value="4">
+    <Value genre="config" index="16" label="User code length " max="8" min="4" size="1" type="byte" units="" value="4">
       <Help>
 				Choose user code length between 4 and 8 digits.
 				IMPORTANT: All user codes must be the same length.
