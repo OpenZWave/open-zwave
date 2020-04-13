@@ -860,6 +860,7 @@ DISTFILES =	.gitignore \
 	config/images/wenzhou/tz67.png \
 	config/images/wenzhou/tz68.png \
 	config/images/wenzhou/tz69.png \
+	config/images/wenzhou/tz78.png \
 	config/images/wenzhou/tz88.png \
 	config/images/widom/DRY.png \
 	config/images/widom/UBS104.png \
@@ -1189,6 +1190,7 @@ DISTFILES =	.gitignore \
 	config/wenzhou/tz68.xml \
 	config/wenzhou/tz69.xml \
 	config/wenzhou/tz74.xml \
+	config/wenzhou/tz78.xml \
 	config/wenzhou/tz79.xml \
 	config/wenzhou/tz88.xml \
 	config/widom/DRY.xml \
