@@ -141,7 +141,7 @@ tap-tap-tap-and-hold: factory reset
 			<Item label="Enabled" value="1"/>
 		</Value>
 		<Value type="list" genre="config" index="14" label="Enable/Disable Double-tap" size="1" min="0" max="2" value="0">
-			<Help>Enables/Disables the double-tap fucntion and assign brightness to single tap.  Last level: single tap returns to last brightness level.  Full/Max level: single tap returns to full/max level</Help>
+			<Help>Enables/Disables the double-tap function and assign brightness to single tap.  Last level: single tap returns to last brightness level.  Full/Max level: single tap returns to full/max level</Help>
 			<Item label="Enabled" value="0"/>
 			<Item label="Disabled (last level)" value="1"/>
 			<Item label="Disabled (full/max level)" value="2"/>
