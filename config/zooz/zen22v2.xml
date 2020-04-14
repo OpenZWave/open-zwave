@@ -68,36 +68,36 @@ tap-tap-tap-and-hold: factory reset
 	<!-- Configuration Parameters -->
 	<CommandClass id="112" name="COMMAND_CLASS_CONFIGURATION" version="1" request_flags="4" innif="true">
 		<Instance index="1" />
-		<Value type="list" genre="config" instance="1" index="1" label="On/Off Paddle Orientation" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="2" vindex="0" size="1">
+		<Value type="list" genre="config" instance="1" index="1" label="On/Off Paddle Orientation" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="2" value="0" size="1">
 			<Help>Choose if you want the upper paddle to turn the light on or turn the light off when tapped</Help>
 			<Item label="Upper paddle turns the light on, lower paddle turns it off (default)" value="0" />
 			<Item label="Upper paddle turns the light off, lower paddle turns it on" value="1" />
 			<Item label="Any paddle turns light on/off" value="2" />
 		</Value>
-		<Value type="list" genre="config" instance="1" index="2" label="LED Indicator Control" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="3" vindex="0" size="1">
+		<Value type="list" genre="config" instance="1" index="2" label="LED Indicator Control" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="3" value="0" size="1">
 			<Help>Choose if you want the LED indicator to turn on when the switch (light) is on or off, or if you want it to remain on or off at all times</Help>
 			<Item label="LED indicator is on when switch is off, LED indicator is off when switch is on (default)" value="0" />
 			<Item label="LED indicator is on when switch is on, LED indicator is off when switch is off" value="1" />
 			<Item label="LED indicator is always OFF" value="2" />
 			<Item label="LED indicator is always ON" value="3" />
 		</Value>
-		<Value type="list" genre="config" instance="1" index="3" label="Auto Turn-off Timer" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="1" vindex="0" size="1">
+		<Value type="list" genre="config" instance="1" index="3" label="Auto Turn-off Timer" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="1" value="0" size="1">
 			<Help>Use this parameter to enable or disable the auto turn-off timer function</Help>
 			<Item label="Disabled" value="0" />
 			<Item label="Enabled" value="1" />
 		</Value>
-		<Value type="int" genre="config" instance="1" index="4" label="Timer-off Time" units="minutes" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="1" max="65535" value="60" size="4">
+		<Value type="int" genre="config" instance="1" index="4" label="Timer-off Time" units="minutes" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="1" max="65535" value="60">
 			<Help>Use this parameter to set the time after which you want the switch to automatically turn off once it has been turned on. The number entered as value corresponds to the number of minutes</Help>
 		</Value>
-		<Value type="list" genre="config" instance="1" index="5" label="Auto Turn-On Timer" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="1" vindex="0" size="1">
+		<Value type="list" genre="config" instance="1" index="5" label="Auto Turn-On Timer" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="1" value="0" size="1">
 			<Help>Use this parameter to enable or disable the auto turn-off timer function</Help>
 			<Item label="Disabled" value="0" />
 			<Item label="Enabled" value="1" />
 		</Value>
-		<Value type="int" genre="config" instance="1" index="6" label="Timer-On Time" units="minutes" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="1" max="65535" value="60" size="4">
+		<Value type="int" genre="config" instance="1" index="6" label="Timer-On Time" units="minutes" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="1" max="65535" value="60">
 			<Help>Use this parameter to set the time after which you want the switch to automatically turn on once it has been turned off. The number entered as value corresponds to the number of minutes</Help>
 		</Value>
-		<Value type="list" genre="config" instance="1" index="7" label="Association Reports" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="15" vindex="15" size="1">
+		<Value type="list" genre="config" instance="1" index="7" label="Association Reports" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="15" value="15" size="1">
 			<Help>Choose which physical and Z-Wave triggers should prompt the switch to send a status change report to associated devices.</Help>
 			<Item label="none" value="0" />
 			<Item label="physical tap on ZEN22 only" value="1" />
@@ -116,72 +116,72 @@ tap-tap-tap-and-hold: factory reset
 			<Item label="physical tap on ZEN22 / connected 3-way switch, Z-Wave command from hub, or timer" value="14" />
 			<Item label="all of the above. (default)" value="15" />
 		</Value>
-		<Value type="list" genre="config" instance="1" index="8" label="On Off Status after Power Failure" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="2" vindex="2" size="1">
+		<Value type="list" genre="config" instance="1" index="8" label="On Off Status after Power Failure" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="2" value="2" size="1">
 			<Help>Set the on off status for switch after power failure</Help>
 			<Item label="forced to OFF (regardless of state prior to power outage)" value="0" />
 			<Item label="forced to ON (regardless of state prior to power outage)" value="1" />
 			<Item label="remembers and restores on/off status after power failure" value="2" />
 		</Value>
-		<Value type="int" genre="config" instance="1" index="9" label="Ramp Rate Control" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="99" vindex="1" size="1">
+		<Value type="byte" genre="config" instance="1" index="9" label="Ramp Rate Control" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="99" value="1">
 			<Help>Adjust the physical ramp rate for your dimmer (fade-in / fade-out effect for on / off operation). Values correspond to the number of seconds it take for the dimmer to reach full brightness or turn off when operated manually. This setting is for physical taps only, see parameter 17 to adjust Z-Wave ramp rate. Values: 1 – 99 (seconds). 0 – instant on/off. Default: 1</Help>
 		</Value>
-		<Value type="int" genre="config" instance="1" index="10" label="Minimum Brightness" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="1" max="99" vindex="1" size="1">
+		<Value type="byte" genre="config" instance="1" index="10" label="Minimum Brightness" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="1" max="99" value="1">
 			<Help>Set the minimum brightness level (in %) for your dimmer. You won’t be able to dim the light below the set value. Default: 1</Help>
 		</Value>
-		<Value type="int" genre="config" instance="1" index="11" label="Maximum Brightness" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="1" max="99" vindex="99" size="1">
+		<Value type="byte" genre="config" instance="1" index="11" label="Maximum Brightness" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="1" max="99" value="99">
 			<Help>Set the maximum brightness level (in %) for your dimmer. You won’t be able to add brightness to the light beyond the set value. Note: if Parameter 12 is set to value 0, Parameter 11 is automatically disabled. Default: 99</Help>
 		</Value>
-		<Value type="list" genre="config" instance="1" index="12" label="Double Tap Function" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="1" vindex="0" size="1">
+		<Value type="list" genre="config" instance="1" index="12" label="Double Tap Function" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="1" value="0" size="1">
 			<Help>Choose if you want the dimmer to turn on to full brightness or custom brightness level after you double-tap the upper paddle.</Help>
 			<Item label="the light will turn on to full brightness with double tap (default)" value="0" />
 			<Item label="the light will turn on to the maximum brightness level set in Parameter 11 with double tap" value="1" />
 		</Value>
-		<Value type="list" genre="config" instance="1" index="13" label="Enable/Disable Scene Control" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="1" vindex="0" size="1">
+		<Value type="list" genre="config" instance="1" index="13" label="Enable/Disable Scene Control" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="1" value="0" size="1">
 			<Help>Enable or disable scene control functionality for quick double tap triggers.</Help>
 			<Item label="scene control disabled (default)" value="0" />
 			<Item label="scene control enabled" value="1" />
 		</Value>
-		<Value type="list" genre="config" instance="1" index="14" label="Enable/Disable Double Tap Function" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="2" vindex="0" size="1">
+		<Value type="list" genre="config" instance="1" index="14" label="Enable/Disable Double Tap Function" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="2" value="0" size="1">
 			<Help>Enable or disable the double tap function and assign brightness level to single tap.</Help>
 			<Item label="double tap to full / maximum brightness level enabled (default)" value="0" />
 			<Item label="double tap to full / maximum brightness level disabled, single tap turns light on to last brightness level" value="1" />
 			<Item label="double tap to full / maximum brightness level disabled, single tap turns light on to full / maximum brightness level" value="2" />
 		</Value>
-		<Value type="list" genre="config" instance="1" index="15" label="Smart Bulb Mode: Enable/Disable Paddle / Z-Wave Control" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="2" vindex="1" size="1">
+		<Value type="list" genre="config" instance="1" index="15" label="Smart Bulb Mode: Enable/Disable Paddle / Z-Wave Control" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="2" value="1" size="1">
 			<Help>Enable or disable local on/off control. If enabled, you’ll only be able to control the connected light via Z-Wave. Scenes and other functionality will still be available through paddles.</Help>
 			<Item label="physical paddle control disabled" value="0" />
 			<Item label="physical paddle control enabled (default)" value="1" />
 			<Item label="physical paddle and Z-Wave control disabled" value="2" />
 		</Value>
-		<Value type="int" genre="config" instance="1" index="16" label="Physical Dimming Speed" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="1" max="99" vindex="4" size="1">
+		<Value type="byte" genre="config" instance="1" index="16" label="Physical Dimming Speed" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="1" max="99" value="4">
 			<Help>Set the time it takes to get from 0% to 100% brightness when pressing and holding the paddle (physical dimming). The number entered as value corresponds to the number of seconds. Default: 4</Help>
 		</Value>
-		<Value type="list" genre="config" instance="1" index="17" label="Zwave Ramp Rate Control" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="1" vindex="1" size="1">
+		<Value type="list" genre="config" instance="1" index="17" label="Zwave Ramp Rate Control" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="1" value="1" size="1">
 			<Help>Choose if you want to set the Z-Wave ramp rate independently of the physical ramp rate (using an appropriate command in your hub) or if you want them to match.</Help>
 			<Item label="Z-Wave ramp rate matches the physical ramp rate set in parameter 9" value="0" />
 			<Item label="Z-Wave ramp rate is set independently using appropriate Z-Wave commands (default)" value="1" />
 		</Value>
-		<Value type="int" genre="config" instance="1" index="18" label="Custom Brightness Level On" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="99" vindex="0" size="1">
+		<Value type="byte" genre="config" instance="1" index="18" label="Custom Brightness Level On" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="99" value="0">
 			<Help>Set the custom brightness level (instead of the last set brightness level) you want the dimmer to come on to when you single tap the upper paddle. Default: 0 - last brightness level</Help>
 		</Value>
-		<Value type="list" genre="config" instance="1" index="19" label="3-Way Switch Type" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="3" vindex="0" size="1">
+		<Value type="list" genre="config" instance="1" index="19" label="3-Way Switch Type" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="3" value="0" size="1">
 			<Help>Choose the type of 3-way switch you want to use with this dimmer in a 3-way set-up. Changing this setting can allow you to control brightness and dim the light from both 3-way locations. Use a regular momentary switch (like the Zooz ZAC99 accessory switch) if value is set to 2.</Help>
 			<Item label="regular mechanical 3-way on/off switch, use the connected 3-way switch to turn the light off or on to the last brightness level, dimming only available from the Zooz Z-Wave dimmer and from the hub (or through voice control if smart speaker is integrated with your Z-Wave hub) (default)" value="0" />
 			<Item label="regular mechanical 3-way on/off switch, tap the paddles once to change state (light on or off), tap the paddles twice quickly to turn light on to full brightness, tap the paddles quickly 3 times to enable a dimming sequence (the light will start dimming up and down in a loop) and tap the switch again to set the selected brightness level" value="1" />
 			<Item label="momentary switch, click once to change status (light on or off), click twice quickly to turn light on to full brightness, press and hold to adjust brightness (dim up / dim down in sequence)" value="2" />
 			<Item label="momentary switch, click once to change status (light on or off), click twice quickly to turn light on to full brightness, press and hold to adjust brightness (dim up / dim down in sequence but always reduce brightness after double click)" value="3" />
 		</Value>
-		<Value type="list" genre="config" instance="1" index="20" label="Zwave tap and hold Control" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="1" vindex="0" size="1">
+		<Value type="list" genre="config" instance="1" index="20" label="Zwave tap and hold Control" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="1" value="0" size="1">
 			<Help>Choose how you'd like the dimmer to report when paddles are tapped and held and physical / Z-Wave control is enabled or disabled.</Help>
 			<Item label="report each brightness level to hub when physical / Z-Wave control is disabled for physical dimming (final level only reported if physical / Z-Wave control is enabled)" value="0" />
 			<Item label="report final brightness level only for physical dimming, regardless of the physical / Z-Wave control mode" value="1" />
 		</Value>
-		<Value type="list" genre="config" instance="1" index="21" label="Reporting behavior with disabled physical control" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="1" vindex="0" size="1">
+		<Value type="list" genre="config" instance="1" index="21" label="Reporting behavior with disabled physical control" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="1" value="0" size="1">
 			<Help>Set reporting behavior for disabled physical control.</Help>
 			<Item label="switch reports on/off status and changes LED indicator state even if physical and Z-Wave control is disabled (default)" value="0" />
 			<Item label="switch doesn't report on/off status or change LED indicator state when physical (and Z-Wave) control is disabled" value="1" />
 		</Value>
-		<Value type="int" genre="config" instance="1" index="22" label="Night Light Mode" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="99" vindex="22" size="1">
+		<Value type="byte" genre="config" instance="1" index="22" label="Night Light Mode" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="99" value="22">
 			<Help>Set the brightness level the dimmer will turn on to when off and when lower paddle is held DOWN for a second. Default: 20</Help>
 		</Value>
 	</CommandClass>
