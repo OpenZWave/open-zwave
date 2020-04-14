@@ -1,7 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
-  <!-- Configuration Parameters -->
-  <CommandClass id="112">
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
+  <MetaData>
+		<MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/027a:1e1c:b111</MetaDataItem>
+		<MetaDataItem name="ProductPic">images/zooz/zen21.png</MetaDataItem>
+		<MetaDataItem id="1e1c" name="ZWProductPage" type="b111">https://products.z-wavealliance.org/products/3667?selectedFrequencyId=2</MetaDataItem>
+		<MetaDataItem name="ResetDescription">If your primary controller is missing or inoperable, you may need to reset the device to factory settings. To complete the reset process manually, tap-tap-tap’n’hold the upper paddle for at least 10 seconds. The LED indicator will flash to confirm successful reset.
+NOTE: All previously recorded activity and custom settings will be erased from the device’s memory.</MetaDataItem>
+		<MetaDataItem name="ExclusionDescription">1. Bring your Z-Wave gateway (hub) close to the switch if possible
+2. Put the Z-Wave hub into exclusion mode (not sure how to do that?
+ask@getzooz.com)
+3. Tap the lower paddle on the switch 3 times quickly</MetaDataItem>
+		<MetaDataItem name="InclusionDescription">1. Initiate inclusion (pairing) in the app (or web interface) of your hub.
+2. Tap the upper paddle on the switch 3 times quickly.</MetaDataItem>
+		<MetaDataItem id="1e1c" name="FrequencyName" type="b111">U.S. / Canada / Mexico</MetaDataItem>
+		<MetaDataItem id="1e1c" name="Identifier" type="b111">ZEN21</MetaDataItem>
+		<MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&filename=product_documents/3667/zooz-z-wave-plus-on-off-switch-zen21-ver3.1-manual.pdf</MetaDataItem>
+		<MetaDataItem name="Name">Z-WAVE PLUS ON / OFF LIGHT SWITCH</MetaDataItem>
+		<MetaDataItem name="Description">FEATURES:
+- Manual and remote on/off control for lights and small appliances
+- Unique Direct 3-Way Solution: no add-on switch needed, extra savings! (Neutral wire required, use in 4-Way only if direct connection to load and line are in the same box)
+- Scene control on selected hubs
+- Reports on/off status to your controller instantly
+- NEW VERSION: more advanced settings (timer, turn switch on/off with any paddle, choose state after power failure), improved manual and packaging
+- White (no other color available)
+- Restores on/off status after power failure
+- Can be associated with other Z-Wave devices by scheduling scenes and customizing events
+- Compatible with LED, CFL, and incandescent bulbs
+- Screw terminal installation - requires Line (Hot), Load, Neutral, and Ground wires
+- New and improved Z-Wave Plus 500 series chip for faster, stronger wireless connectivity
+- Built-in repeater that strengthens your Z-Wave network
+- Blue LED indicator to easily locate the switch in the dark and signal Z-Wave communication
+- Use a standard-size wall plate for single gang installations (wall plate not included)
+- UL-listed and Z-Wave Plus certified
+
+SPECIFICATIONS:
+- Model Number: ZEN21
+
+- Z-Wave Frequency: 908.42 MHz (US)
+- Power: 120 VAC, 60 Hz
+- Maximum Loads: 960W Incandescent, 150W LED and CFL bulbs, 1800W (15A) Resistive
+- Z-Wave Range: Up to 100 feet line of sight between the Wireless Controller and the closest Z-Wave receiver module
+- Operating Temperature: 32-104° F (0-40° C)
+- Installation: Indoor use only
+
+https://www.support.getzooz.com/kb/article/316-zooz-on-off-switch-zen21-ver-3-04-advanced-settings/
+MANUAL CONTROL
+Upper Paddle:
+1 x tap: load on; Scene 1, attribute 00 (button 1)
+2 x tap: Scene 1, attribute 03 (button 3)
+3 x tap: enter inclusion (pairing) mode; Scene 1, attribute 04 (button 5)
+4 x tap: Scene 1, attribute 05 (button 7)
+6 x tap: change LED indicator mode (see parameter 2)
+10 x tap: change physical / Z-Wave control mode (see parameter 11)
+tap-tap-tap-and-hold: factory reset
+
+Lower Paddle:
+1 x tap: load off; Scene 2, attribute 00 (button 2)
+2 x tap: Scene 2, attribute 03 (button 4)
+3 x tap: enter exclusion (unpairing) mode; Scene 2, attribute 04 (button 6)
+4 x tap: Scene 2, attribute 05 (button 8)
+tap-tap-tap-and-hold: factory reset
+	</MetaDataItem>
+		<ChangeLog>
+			<Entry author="Brad Parker - https://github.com/bepsoccer" date="13 April 2020" revision="2">Updated for firmware version 3.04</Entry>
+		</ChangeLog>
+	</MetaData>
+	<!-- Configuration Parameters -->
     <Value genre="config" index="1" value="0" label="Paddle Control" units="" size="1" min="0" max="2" type="list">
       <Help>Controls the on/off orientation of the rocker switch</Help>
       <Item value="0" label="Upper paddle turns on"/>
