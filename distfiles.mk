@@ -1547,6 +1547,7 @@ DISTFILES =	.gitignore \
 	cpp/src/platform/unix/TimeStampImpl.h \
 	cpp/src/platform/unix/WaitImpl.cpp \
 	cpp/src/platform/unix/WaitImpl.h \
+	cpp/src/platform/unix/android.h \
 	cpp/src/platform/winRT/DNSImpl.cpp \
 	cpp/src/platform/winRT/DNSImpl.h \
 	cpp/src/platform/winRT/EventImpl.cpp \
