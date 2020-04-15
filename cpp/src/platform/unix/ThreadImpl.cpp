@@ -31,6 +31,10 @@
 #include "platform/Thread.h"
 #include "ThreadImpl.h"
 
+#ifdef __ANDROID__
+#include "android.h"
+#endif
+
 #ifdef DARWIN
 #define pthread_yield pthread_yield_np
 #endif
