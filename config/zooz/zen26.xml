@@ -92,7 +92,7 @@ tap-tap-tap-and-hold: factory reset
 		<Value type="int" genre="config" index="6" label="Auto Turn-On Timer Duration" size="2" min="1" max="65535" value="60" units="minutes">
 			<Help>Set the time (in minutes) after which you want the switch to automatically turn on once it has been turned off.</Help>
 		</Value>
-		<Value type="list" genre="config" instance="1" index="7" label="Association Reports" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="15" value="15" size="1">
+		<Value type="list" genre="config" instance="1" index="7" label="Association Reports" units="" min="0" max="15" value="15" size="1">
 			<Help>Choose which physical and Z-Wave triggers should prompt the switch to send a status change report to associated devices.</Help>
 			<Item label="none" value="0" />
 			<Item label="physical tap on ZEN26 only" value="1" />
@@ -122,13 +122,13 @@ tap-tap-tap-and-hold: factory reset
 			<Item label="Disabled" value="0"/>
 			<Item label="Enabled" value="1"/>
 		</Value>
-		<Value type="list" genre="config" instance="1" index="11" label="Smart Bulb Mode: Enable/Disable Paddle / Z-Wave Control" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="2" value="1" size="1">
+		<Value type="list" genre="config" instance="1" index="11" label="Smart Bulb Mode: Enable/Disable Paddle / Z-Wave Control" units="" min="0" max="2" value="1" size="1">
 			<Help>Enable or disable local on/off control. If enabled, you’ll only be able to control the connected light via Z-Wave. Scenes and other functionality will still be available through paddles.</Help>
 			<Item label="physical paddle control disabled" value="0" />
 			<Item label="physical paddle control enabled (default)" value="1" />
 			<Item label="physical paddle and Z-Wave control disabled" value="2" />
 		</Value>
-		<Value type="list" genre="config" instance="1" index="13" label="Reporting behavior with disabled physical control" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="1" value="0" size="1">
+		<Value type="list" genre="config" instance="1" index="13" label="Reporting behavior with disabled physical control" units="" min="0" max="1" value="0" size="1">
 			<Help>Set reporting behavior for disabled physical control.</Help>
 			<Item label="switch reports on/off status and changes LED indicator state even if physical and Z-Wave control is disabled (default)" value="0" />
 			<Item label="switch doesn't report on/off status or change LED indicator state when physical (and Z-Wave) control is disabled" value="1" />

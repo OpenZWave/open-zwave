@@ -96,7 +96,7 @@ tap-tap-tap-and-hold: factory reset
 		<Value type="int" genre="config" index="6" label="Auto Turn-On Timer Duration" size="2" min="1" max="65535" value="60" units="minutes">
 			<Help>Set the time (in minutes) after which you want the switch to automatically turn on once it has been turned off.</Help>
 		</Value>
-		<Value type="list" genre="config" instance="1" index="7" label="Association Reports" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="15" value="15" size="1">
+		<Value type="list" genre="config" instance="1" index="7" label="Association Reports" units="" min="0" max="15" value="15" size="1">
 			<Help>Choose which physical and Z-Wave triggers should prompt the switch to send a status change report to associated devices.</Help>
 			<Item label="none" value="0" />
 			<Item label="physical tap on ZEN27 only" value="1" />
@@ -146,34 +146,34 @@ tap-tap-tap-and-hold: factory reset
 			<Item label="Disabled (last level)" value="1"/>
 			<Item label="Disabled (full/max level)" value="2"/>
 		</Value>
-		<Value type="list" genre="config" instance="1" index="15" label="Smart Bulb Mode: Enable/Disable Paddle / Z-Wave Control" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="2" value="1" size="1">
+		<Value type="list" genre="config" instance="1" index="15" label="Smart Bulb Mode: Enable/Disable Paddle / Z-Wave Control" units="" min="0" max="2" value="1" size="1">
 			<Help>Enable or disable local on/off control. If enabled, you’ll only be able to control the connected light via Z-Wave. Scenes and other functionality will still be available through paddles.</Help>
 			<Item label="physical paddle control disabled" value="0" />
 			<Item label="physical paddle control enabled (default)" value="1" />
 			<Item label="physical paddle and Z-Wave control disabled" value="2" />
 		</Value>
-		<Value type="byte" genre="config" instance="1" index="16" label="Physical Dimming Speed" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="1" max="99" value="4">
+		<Value type="byte" genre="config" instance="1" index="16" label="Physical Dimming Speed" units="" min="1" max="99" value="4">
 			<Help>Set the time it takes to get from 0% to 100% brightness when pressing and holding the paddle (physical dimming). The number entered as value corresponds to the number of seconds. Default: 4</Help>
 		</Value>
-		<Value type="list" genre="config" instance="1" index="17" label="Zwave Ramp Rate Control" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="1" value="1" size="1">
+		<Value type="list" genre="config" instance="1" index="17" label="Zwave Ramp Rate Control" units="" min="0" max="1" value="1" size="1">
 			<Help>Choose if you want to set the Z-Wave ramp rate independently of the physical ramp rate (using an appropriate command in your hub) or if you want them to match.</Help>
 			<Item label="Z-Wave ramp rate matches the physical ramp rate set in parameter 9" value="0" />
 			<Item label="Z-Wave ramp rate is set independently using appropriate Z-Wave commands (default)" value="1" />
 		</Value>
-		<Value type="byte" genre="config" instance="1" index="18" label="Custom Brightness Level On" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="99" value="0">
+		<Value type="byte" genre="config" instance="1" index="18" label="Custom Brightness Level On" units="" min="0" max="99" value="0">
 			<Help>Set the custom brightness level (instead of the last set brightness level) you want the dimmer to come on to when you single tap the upper paddle. Default: 0 - last brightness level</Help>
 		</Value>
-		<Value type="list" genre="config" instance="1" index="20" label="Zwave tap and hold Control" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="1" value="0" size="1">
+		<Value type="list" genre="config" instance="1" index="20" label="Zwave tap and hold Control" units="" min="0" max="1" value="0" size="1">
 			<Help>Choose how you'd like the dimmer to report when paddles are tapped and held and physical / Z-Wave control is enabled or disabled.</Help>
 			<Item label="report each brightness level to hub when physical / Z-Wave control is disabled for physical dimming (final level only reported if physical / Z-Wave control is enabled)" value="0" />
 			<Item label="report final brightness level only for physical dimming, regardless of the physical / Z-Wave control mode" value="1" />
 		</Value>
-		<Value type="list" genre="config" instance="1" index="21" label="Reporting behavior with disabled physical control" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="1" value="0" size="1">
+		<Value type="list" genre="config" instance="1" index="21" label="Reporting behavior with disabled physical control" units="" min="0" max="1" value="0" size="1">
 			<Help>Set reporting behavior for disabled physical control.</Help>
 			<Item label="switch reports on/off status and changes LED indicator state even if physical and Z-Wave control is disabled (default)" value="0" />
 			<Item label="switch doesn't report on/off status or change LED indicator state when physical (and Z-Wave) control is disabled" value="1" />
 		</Value>
-		<Value type="byte" genre="config" instance="1" index="22" label="Night Light Mode" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="99" value="22">
+		<Value type="byte" genre="config" instance="1" index="22" label="Night Light Mode" units="" min="0" max="99" value="20">
 			<Help>Set the brightness level the dimmer will turn on to when off and when lower paddle is held DOWN for a second. Default: 20</Help>
 		</Value>
 	</CommandClass>
