@@ -73,7 +73,7 @@ namespace OpenZWave
 			void Basic::ReadXML(TiXmlElement const* _ccElement)
 			{
 				CommandClass::ReadXML(_ccElement);
-				SetMapping(m_com.GetFlagByte(COMPAT_FLAG_BASIC_MAPPING), false);
+				SetMapping(m_com.GetFlagByte(COMPAT_FLAG_BASIC_MAPPING));
 			}
 
 //-----------------------------------------------------------------------------
@@ -169,6 +169,10 @@ namespace OpenZWave
 							value->OnValueRefreshed(_data[1]);
 							value->Release();
 						}
+						else
+						{
+							Log::Write(LogLevel_Warning, GetNodeId(), "No Valid Mapping for Basic Command Class and No ValueID Exported. Error?");
+						}
 					}
 					else
 					{
@@ -218,7 +222,7 @@ namespace OpenZWave
 //-----------------------------------------------------------------------------
 			void Basic::CreateVars(uint8 const _instance)
 			{
-				if (m_com.GetFlagByte(COMPAT_FLAG_BASIC_MAPPING) == 0)
+				if (m_com.GetFlagBool(COMPAT_FLAG_BASIC_IGNOREREMAPPING) || (m_com.GetFlagByte(COMPAT_FLAG_BASIC_MAPPING) == 0))
 				{
 					Log::Write(LogLevel_Info, GetNodeId(), "COMMAND_CLASS_BASIC is not mapped to another CC. Exposing ValueID");
 					if (Node* node = GetNodeUnsafe())
@@ -248,35 +252,33 @@ namespace OpenZWave
 // <Basic::SetMapping>
 // Map COMMAND_CLASS_BASIC messages to another command class
 //-----------------------------------------------------------------------------
-			bool Basic::SetMapping(uint8 const _commandClassId, bool const _doLog)
+			bool Basic::SetMapping(uint8 const _commandClassId)
 			{
 				bool res = false;
 
 				if (_commandClassId != NoOperation::StaticGetCommandClassId())
 				{
-					if (_doLog)
+					char str[16];
+					snprintf(str, sizeof(str), "0x%02x", _commandClassId);
+					string ccstr = str;
+					if (Node const* node = GetNodeUnsafe())
 					{
-						char str[16];
-						snprintf(str, sizeof(str), "0x%02x", _commandClassId);
-						string ccstr = str;
-						if (Node const* node = GetNodeUnsafe())
+						if (CommandClass* cc = node->GetCommandClass(_commandClassId))
 						{
-							if (CommandClass* cc = node->GetCommandClass(_commandClassId))
-							{
-								ccstr = cc->GetCommandClassName();
-							}
-						}
-						if (m_com.GetFlagBool(COMPAT_FLAG_BASIC_IGNOREREMAPPING))
-						{
-							Log::Write(LogLevel_Info, GetNodeId(), "    COMMAND_CLASS_BASIC will not be mapped to %s (ignored)", ccstr.c_str());
-						}
-						else
-						{
-							Log::Write(LogLevel_Info, GetNodeId(), "    COMMAND_CLASS_BASIC will be mapped to %s", ccstr.c_str());
+							ccstr = cc->GetCommandClassName();
 						}
 					}
-					m_com.SetFlagByte(COMPAT_FLAG_BASIC_MAPPING, _commandClassId);
-					RemoveValue(1, ValueID_Index_Basic::Set);
+					if (m_com.GetFlagBool(COMPAT_FLAG_BASIC_IGNOREREMAPPING))
+					{
+						Log::Write(LogLevel_Info, GetNodeId(), "    COMMAND_CLASS_BASIC will not be mapped to %s (ignored)", ccstr.c_str());
+						m_com.SetFlagByte(COMPAT_FLAG_BASIC_MAPPING, 0);
+					}
+					else
+					{
+						Log::Write(LogLevel_Info, GetNodeId(), "    COMMAND_CLASS_BASIC will be mapped to %s", ccstr.c_str());
+						m_com.SetFlagByte(COMPAT_FLAG_BASIC_MAPPING, _commandClassId);
+						RemoveValue(1, ValueID_Index_Basic::Set);
+					}
 					res = true;
 				}
 				return res;
