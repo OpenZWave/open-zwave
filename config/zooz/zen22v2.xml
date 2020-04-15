@@ -14,7 +14,7 @@ ask@getzooz.com)
 2. Tap the upper paddle on the switch 3 times quickly.</MetaDataItem>
 		<MetaDataItem id="1f1c" name="FrequencyName" type="b112">U.S. / Canada / Mexico</MetaDataItem>
 		<MetaDataItem id="1f1c" name="Identifier" type="b112">ZEN22</MetaDataItem>
-		<MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&filename=MarketCertificationFiles/1946/zooz-z-wave-plus-dimmer-switch-zen22-manual.pdf</MetaDataItem>
+		<MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&amp;filename=MarketCertificationFiles/1946/zooz-z-wave-plus-dimmer-switch-zen22-manual.pdf</MetaDataItem>
 		<MetaDataItem name="Name">Zooz Z-Wave Dimmer Light Switch</MetaDataItem>
 		<MetaDataItem name="Description">FEATURES:
 - Manual and wireless control from your smart phone or computer (when synced with a Z-Wave gateway controller)

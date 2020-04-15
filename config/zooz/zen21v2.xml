@@ -14,7 +14,7 @@ ask@getzooz.com)
 2. Tap the upper paddle on the switch 3 times quickly.</MetaDataItem>
 		<MetaDataItem id="1e1c" name="FrequencyName" type="b111">U.S. / Canada / Mexico</MetaDataItem>
 		<MetaDataItem id="1e1c" name="Identifier" type="b111">ZEN21</MetaDataItem>
-		<MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&filename=product_documents/3667/zooz-z-wave-plus-on-off-switch-zen21-ver3.1-manual.pdf</MetaDataItem>
+		<MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&amp;filename=product_documents/3667/zooz-z-wave-plus-on-off-switch-zen21-ver3.1-manual.pdf</MetaDataItem>
 		<MetaDataItem name="Name">Z-WAVE PLUS ON / OFF LIGHT SWITCH</MetaDataItem>
 		<MetaDataItem name="Description">FEATURES:
 - Manual and remote on/off control for lights and small appliances
