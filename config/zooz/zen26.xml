@@ -81,7 +81,7 @@ tap-tap-tap-and-hold: factory reset
 			<Item label="Disabled" value="0"/>
 			<Item label="Enabled" value="1"/>
 		</Value>
-		<Value type="int" genre="config" index="4" label="Auto Turn-Off Timer Duration" size="2" min="1" max="65535" value="60" units="minutes">
+		<Value type="int" genre="config" index="4" label="Auto Turn-Off Timer Duration" size="4" min="1" max="65535" value="60" units="minutes">
 			<Help>Time, in minutes, for auto-off timer delay.</Help>
 		</Value>
 		<Value type="list" genre="config" index="5" label="Enable Auto Turn-On Timer" size="1" min="0" max="1" value="0">
@@ -89,7 +89,7 @@ tap-tap-tap-and-hold: factory reset
 			<Item label="Disabled" value="0"/>
 			<Item label="Enabled" value="1"/>
 		</Value>
-		<Value type="int" genre="config" index="6" label="Auto Turn-On Timer Duration" size="2" min="1" max="65535" value="60" units="minutes">
+		<Value type="int" genre="config" index="6" label="Auto Turn-On Timer Duration" size="4" min="1" max="65535" value="60" units="minutes">
 			<Help>Set the time (in minutes) after which you want the switch to automatically turn on once it has been turned off.</Help>
 		</Value>
 		<Value type="list" genre="config" instance="1" index="7" label="Association Reports" units="" min="0" max="15" value="15" size="1">
