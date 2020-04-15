@@ -66,7 +66,7 @@ tap-tap-tap-and-hold: factory reset
 		</ChangeLog>
 	</MetaData>
 	<!-- Configuration Parameters -->
-	<CommandClass id="112" name="COMMAND_CLASS_CONFIGURATION" version="1" request_flags="4" innif="true">
+	<CommandClass id="112">
 		<Value type="list" genre="config" index="1" label="Paddle Control" size="1" min="0" max="2" value="0">
 			<Help>Normal mode: Upper paddle turns the light on, lower paddle turns the light off.  Reverse mode: Upper paddle turns the light off, lower paddle turns the light on.  Toggle mode: Either paddle toggles the light.</Help>
 			<Item label="Normal" value="0"/>
