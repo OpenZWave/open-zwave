@@ -59,7 +59,7 @@ namespace OpenZWave
 						return "COMMAND_CLASS_BASIC";
 					}
 
-					bool SetMapping(uint8 const _commandClassId, bool const _doLog = true);	// Map COMMAND_CLASS_BASIC messages to another command class
+					bool SetMapping(uint8 const _commandClassId);	// Map COMMAND_CLASS_BASIC messages to another command class
 					uint8_t GetMapping()
 					{
 						return m_com.GetFlagByte(COMPAT_FLAG_BASIC_MAPPING);
