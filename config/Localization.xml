@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Localization xmlns="https://github.com/OpenZWave/open-zwave" Revision="8">
+<Localization xmlns="https://github.com/OpenZWave/open-zwave" Revision="9">
 	<CommandClass id="113">
 		<!-- Please keep Localization.xml in sync with NotificationCCTypes.xml -->
 		<!-- If you are adding new Types or Params, Please also consider updating ValueIDIndexesDefines.def -->
