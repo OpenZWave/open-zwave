@@ -85,6 +85,18 @@ namespace OpenZWave
 				DoorLockState_Secured = 0xFF
 			};
 
+			enum DoorLockCondition
+			{
+				DoorLockCondition_Unlatched_Locked_Open = 0x00,
+				DoorLockCondition_Unlatched_Locked_Closed = 0x01,
+				DoorLockCondition_Unlatched_Unlocked_Open = 0x02,
+				DoorLockCondition_Unlatched_Unlocked_Closed = 0x03,
+				DoorLockCondition_Latched_Locked_Open = 0x04,
+				DoorLockCondition_Latched_Locked_Closed = 0x05,
+				DoorLockCondition_Latched_Unlocked_Open = 0x06,
+				DoorLockCondition_Latched_Unlocked_Closed = 0x07,
+			};
+
 			static char const* c_LockStateNames[] =
 			{ "Unsecure", "Unsecured with Timeout", "Inside Handle Unsecured", "Inside Handle Unsecured with Timeout", "Outside Handle Unsecured", "Outside Handle Unsecured with Timeout", "Secured", "Invalid" };
 
@@ -192,6 +204,11 @@ namespace OpenZWave
 					if (Internal::VC::ValueList* value = static_cast<Internal::VC::ValueList*>(GetValue(_instance, ValueID_Index_DoorLock::Lock_Mode)))
 					{
 						value->OnValueRefreshed(lockState);
+						value->Release();
+					}
+					if (Internal::VC::ValueList* value = static_cast<Internal::VC::ValueList*>(GetValue(_instance, ValueID_Index_DoorLock::Door_Condition)))
+					{
+						value->OnValueRefreshed(_data[3]);
 						value->Release();
 					}
 					return true;

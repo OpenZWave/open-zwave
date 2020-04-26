@@ -35,6 +35,18 @@ time.</MetaDataItem>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="2">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2624/xml</Entry>
     </ChangeLog>
   </MetaData>
+    <!-- Configuration Parameters -->
+  <CommandClass id="98">
+    <Value genre="config" type="list" index="7" instance="1" label="DoorSense" min="0" max="3" size="1" value="2">
+      <Help>
+       State of Door and Bolt
+      </Help>
+      <Item label="Locked/Open" value="0" />
+      <Item label="Locked/Closed" value="1" />
+      <Item label="Unlocked/Open" value="2" />
+      <Item label="Unlocked/Closed" value="3" />
+    </Value>
+  </CommandClass>
   <!-- Association Groups -->
   <CommandClass id="133">
     <Associations num_groups="2">

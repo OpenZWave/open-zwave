@@ -587,6 +587,10 @@
 			<Help>State of the Interior Handle Control</Help>
 			<Label>Inside Handle Control</Label>
 		</Value>
+		<Value index="7">
+			<Help>State of Latch, Bolt, and Door</Help>
+			<Label>Door Condition</Label>
+		</Value>
 	</CommandClass>
 	<CommandClass id="76">
 		<Label>COMMAND_CLASS_DOOR_LOCK_LOGGING</Label>
