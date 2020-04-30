@@ -712,6 +712,7 @@
     <Product config="fibaro/fgcd001.xml" id="1000" name="FGSD001 CO Sensor" type="1201"/>
     <Product config="fibaro/fgcd001.xml" id="1001" name="FGSD001 CO Sensor" type="1201"/>
     <Product config="fibaro/fgt001.xml" id="1000" name="FGT001 Heat Controller" type="1301"/>
+    <Product config="fibaro/fgt001.xml" id="1001" name="FGT001 Heat Controller" type="1301"/>
     <Product config="fibaro/fgwpg111.xml" id="2000" name="FGWPG111 US Wall Plug" type="1701"/>
     <Product config="fibaro/fgwpg111.xml" id="1000" name="FGWPG111 UK Wall Plug" type="1801"/>
     <Product config="fibaro/fgwds221.xml" id="1000" name="FGWDS221 Walli Double Switch" type="1B01"/>
