@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ManufacturerSpecificData Revision="86" xmlns="https://github.com/OpenZWave/open-zwave">
+<ManufacturerSpecificData Revision="87" xmlns="https://github.com/OpenZWave/open-zwave">
   <Manufacturer id="0028" name="2B Electronics"></Manufacturer>
   <Manufacturer id="0098" name="2GIG Technologies">
     <Product config="2gig/ct50e.xml" id="015e" name="CT50e Thermostat" type="3200"/>
@@ -1821,6 +1821,7 @@
   <Manufacturer id="037D" name="Xiamen AcTEC Electronics"></Manufacturer>
   <Manufacturer id="0000" name="Z-Wave (Sigma Designs)">
     <Product id="0001" name="UZB Z-Wave USB Adapter" type="0001"/>
+    <Product id="0008" name="UZB3 Z-Wave USB Adapter" type="0003"/>
   </Manufacturer>
   <Manufacturer id="031D" name="Z-Wave Alliance"></Manufacturer>
   <Manufacturer id="004F" name="Z-Wave Technologia"></Manufacturer>
