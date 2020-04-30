@@ -157,6 +157,7 @@ DISTFILES =	.gitignore \
 	config/dlink/dch-z110.xml \
 	config/dlink/dch-z120.xml \
 	config/dlink/dch-z510.xml \
+	config/dlink/dch-z210.xml \
 	config/dome/0002.xml \
 	config/dome/0083.xml \
 	config/dome/0085.xml \
@@ -997,6 +998,8 @@ DISTFILES =	.gitignore \
 	config/northq/nq92021.xml \
 	config/oomi/ft100.xml \
 	config/oomi/ft111.xml \
+	config/oomi/ft112.xml \
+	config/oomi/ft118.xml \
 	config/options.xml \
 	config/options.xsd \
 	config/permundo/psc132zw.xml \
