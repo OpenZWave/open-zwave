@@ -1,4 +1,4 @@
-<!-- Oomi Door/Window Sensor 6 --><Product Revision="6" xmlns="https://github.com/OpenZWave/open-zwave">
+<!-- Oomi Door/Window Sensor 6 --><Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="ExclusionDescription">Turn the primary controller into exclusion mode, short press the product’s Action Button that you can find in back of the product.</MetaDataItem>
     <MetaDataItem name="WakeupDescription">Press the Action Button once, which will trigger sending out the Wake up notification command, press and hold the Action Button for 3 seconds, which will toggle on/off the Sensor be waked up for 10 minutes.</MetaDataItem>
