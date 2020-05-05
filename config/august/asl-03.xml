@@ -1,4 +1,4 @@
-<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/033F:0001:0001</MetaDataItem>
     <MetaDataItem name="ProductPic">images/august/asl-03.png</MetaDataItem>
@@ -33,21 +33,8 @@ time.</MetaDataItem>
     <MetaDataItem id="0001" name="FrequencyName" type="0001">U.S. / Canada / Mexico</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="2">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2624/xml</Entry>
-      <Entry author="Quinn Hosler - https://github.com/quinnhosler" date="26 April 2020" revision="3">DoorSense(TM) support</Entry>
     </ChangeLog>
   </MetaData>
-    <!-- Configuration Parameters -->
-  <CommandClass id="98">
-    <Value genre="config" type="list" index="7" instance="1" label="DoorSense" min="0" max="3" size="1" value="2">
-      <Help>
-       State of Door and Bolt
-      </Help>
-      <Item label="Locked/Open" value="0" />
-      <Item label="Locked/Closed" value="1" />
-      <Item label="Unlocked/Open" value="2" />
-      <Item label="Unlocked/Closed" value="3" />
-    </Value>
-  </CommandClass>
   <!-- Association Groups -->
   <CommandClass id="133">
     <Associations num_groups="2">
