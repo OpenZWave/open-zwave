@@ -52,23 +52,26 @@ SPECIFICATIONS:
       <Item label="relays 1/2 restore, 3/4 forced off" value="3"/>
       <Item label="relays 1/2 restore, 3/4 forced on" value="4"/>
     </Value>
-    <Value type="list" genre="config" index="2" label="Switch Type for Relay 1 (Sw1)" size="1" min="0" max="2" value="2">
+    <Value type="list" genre="config" index="2" label="Switch Type for Relay 1 (Sw1)" size="1" min="0" max="3" value="2">
       <Help>Switch Type for Relay 1 (Sw1).  Choose the wall switch type you want to connect to the Sw1 terminal.  Default: toggle switch (state changes whenever the switch is toggled)</Help>
       <Item label="momentary switch" value="0"/>
       <Item label="toggle switch (light on when switch is up/off when down)" value="1"/>
       <Item label="toggle switch (state changes whenever the switch is toggled)" value="2"/>
+      <Item label="garage door (momentary mode for Z-Wave control)" value="3"/>
     </Value>
-    <Value type="list" genre="config" index="3" label="Switch Type for Relay 2 (Sw2)" size="1" min="0" max="2" value="2">
+    <Value type="list" genre="config" index="3" label="Switch Type for Relay 2 (Sw2)" size="1" min="0" max="3" value="2">
       <Help>Switch Type for Relay 2 (Sw2).  Choose the wall switch type you want to connect to the Sw2 terminal.  Default: toggle switch (state changes whenever the switch is toggled)</Help>
       <Item label="momentary switch" value="0"/>
       <Item label="toggle switch (light on when switch is up/off when down)" value="1"/>
       <Item label="toggle switch (state changes whenever the switch is toggled)" value="2"/>
+      <Item label="garage door (momentary mode for Z-Wave control)" value="3"/>
     </Value>
-    <Value type="list" genre="config" index="4" label="Switch Type for Relay 3 (Sw3)" size="1" min="0" max="2" value="2">
+    <Value type="list" genre="config" index="4" label="Switch Type for Relay 3 (Sw3)" size="1" min="0" max="3" value="2">
       <Help>Switch Type for Relay 3 (Sw3).  Choose the wall switch type you want to connect to the Sw3 terminal.  Default: toggle switch (state changes whenever the switch is toggled)</Help>
       <Item label="momentary switch" value="0"/>
       <Item label="toggle switch (light on when switch is up/off when down)" value="1"/>
       <Item label="toggle switch (state changes whenever the switch is toggled)" value="2"/>
+      <Item label="garage door (momentary mode for Z-Wave control)" value="3"/>
     </Value>
     <Value type="list" genre="config" index="5" label="LED Indicator Control" size="1" min="0" max="3" value="0">
       <Help>LED Indicator Control.  Choose if you want the LED indicator to turn on when any of the relays are on or if all of them are off, or if you want it to remain on or off at all times.  Default: On when all relays are off</Help>
