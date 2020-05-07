@@ -77,8 +77,8 @@ SPECIFICATIONS:
       <Help>LED Indicator Control.  Choose if you want the LED indicator to turn on when any of the relays are on or if all of them are off, or if you want it to remain on or off at all times.  Default: On when all relays are off</Help>
       <Item label="On when all relays are off" value="0"/>
       <Item label="On when any relays are on" value="1"/>
-      <Item label="Always On" value="2"/>
-      <Item label="Always Off" value="3"/>
+      <Item label="Always Off" value="2"/>
+      <Item label="Always On" value="3"/>
     </Value>
     <Value type="int" genre="config" index="6" label="Auto Turn-Off Timer for Relay 1" size="4" min="0" max="65535" value="0" units="minutes">
       <Help>Auto Turn-Off Timer for Relay 1.  Sets the time (in minutes) after which you want relay 1 to automatically turn off once it has been turned on.  Range: 1-65535.  Default: 0 (disabled)</Help>
