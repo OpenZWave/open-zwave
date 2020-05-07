@@ -98,20 +98,23 @@ SPECIFICATIONS:
     <Value type="int" genre="config" index="11" label="Auto Turn-On Timer for Relay 3" size="4" min="0" max="65535" value="0" units="minutes">
       <Help>Auto Turn-On Timer for Relay 3.  Sets the time (in minutes) after which you want relay 3 to automatically turn on once it has been turned off.  Range: 1-65535.  Default: 0 (disabled)</Help>
     </Value>
-    <Value type="list" genre="config" index="12" label="Enable/Disable Manual Control for SW1" size="1" min="0" max="1" value="1">
+    <Value type="list" genre="config" index="12" label="Enable/Disable Manual Control for SW1" size="1" min="0" max="2" value="1">
       <Help>Enable/Disable Manual Control for SW1.  Default: enabled</Help>
       <Item label="disabled" value="0"/>
       <Item label="enabled" value="1"/>
+      <Item label="local control disabled with enable on/off reports" value="2"/>
     </Value>
-    <Value type="list" genre="config" index="13" label="Enable/Disable Manual Control for SW2" size="1" min="0" max="1" value="1">
+    <Value type="list" genre="config" index="13" label="Enable/Disable Manual Control for SW2" size="1" min="0" max="2" value="1">
       <Help>Enable/Disable Manual Control for SW2.  Default: enabled</Help>
       <Item label="disabled" value="0"/>
       <Item label="enabled" value="1"/>
+      <Item label="local control disabled with enable on/off reports" value="2"/>
     </Value>
-    <Value type="list" genre="config" index="14" label="Enable/Disable Manual Control for SW3" size="1" min="0" max="1" value="1">
+    <Value type="list" genre="config" index="14" label="Enable/Disable Manual Control for SW3" size="1" min="0" max="2" value="1">
       <Help>Enable/Disable Manual Control for SW3.  Default: enabled</Help>
       <Item label="disabled" value="0"/>
       <Item label="enabled" value="1"/>
+      <Item label="local control disabled with enable on/off reports" value="2"/>
     </Value>
   </CommandClass>
 
