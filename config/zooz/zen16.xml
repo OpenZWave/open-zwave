@@ -116,6 +116,42 @@ SPECIFICATIONS:
       <Item label="enabled" value="1"/>
       <Item label="local control disabled with enable on/off reports" value="2"/>
     </Value>
+    <Value type="list" genre="config" index="15" label="Auto Turn-Off Timer Unit for Relay 1" size="1" min="0" max="2" value="0">
+      <Help>Choose between second, minutes, and hours as the unit for Auto Turn-Off time for Relay 1.  Default: minutes</Help>
+      <Item label="minutes" value="0"/>
+      <Item label="seconds" value="1"/>
+      <Item label="hours" value="2"/>
+    </Value>
+    <Value type="list" genre="config" index="16" label="Auto Turn-On Timer Unit for Relay 1" size="1" min="0" max="2" value="0">
+      <Help>Choose between second, minutes, and hours as the unit for Auto Turn-On time for Relay 1.  Default: minutes</Help>
+      <Item label="minutes" value="0"/>
+      <Item label="seconds" value="1"/>
+      <Item label="hours" value="2"/>
+    </Value>
+    <Value type="list" genre="config" index="17" label="Auto Turn-Off Timer Unit for Relay 2" size="1" min="0" max="2" value="0">
+      <Help>Choose between second, minutes, and hours as the unit for Auto Turn-Off time for Relay 2.  Default: minutes</Help>
+      <Item label="minutes" value="0"/>
+      <Item label="seconds" value="1"/>
+      <Item label="hours" value="2"/>
+    </Value>
+    <Value type="list" genre="config" index="18" label="Auto Turn-On Timer Unit for Relay 2" size="1" min="0" max="2" value="0">
+      <Help>Choose between second, minutes, and hours as the unit for Auto Turn-On time for Relay 2.  Default: minutes</Help>
+      <Item label="minutes" value="0"/>
+      <Item label="seconds" value="1"/>
+      <Item label="hours" value="2"/>
+    </Value>
+    <Value type="list" genre="config" index="19" label="Auto Turn-Off Timer Unit for Relay 3" size="1" min="0" max="2" value="0">
+      <Help>Choose between second, minutes, and hours as the unit for Auto Turn-Off time for Relay 3.  Default: minutes</Help>
+      <Item label="minutes" value="0"/>
+      <Item label="seconds" value="1"/>
+      <Item label="hours" value="2"/>
+    </Value>
+    <Value type="list" genre="config" index="20" label="Auto Turn-On Timer Unit for Relay 3" size="1" min="0" max="2" value="0">
+      <Help>Choose between second, minutes, and hours as the unit for Auto Turn-On time for Relay 3.  Default: minutes</Help>
+      <Item label="minutes" value="0"/>
+      <Item label="seconds" value="1"/>
+      <Item label="hours" value="2"/>
+    </Value>
   </CommandClass>
 
   <!-- Association Groups -->
