@@ -24,7 +24,7 @@ and release the top or bottom of the wireless smart dimmer
     <MetaDataItem id="3131" name="FrequencyName" type="4944">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem name="Description">Transform any home into a smart home with the Honeywell Z-Wave Fan Control. The in-wall fan control easily replaces any standard in-wall switch remotely controls a ceiling fan in your home and features a three-speed control system. Your home will be equipped with ultimate flexibility with the Honeywell Z-Wave Fan Control, capable of being used by itself or with up to four Honeywell add-on switches. Screw terminal installation provides improved space efficiency when replacing existing switches and the integrated LED indicator light allows you to easily locate the switch in a dark room. The Honeywell Z-Wave Fan Control is compatible with any Z-Wave certified gateway, providing access to many popular home automation systems. Take control of your home lighting with Honeywell Z-Wave Smart Controls! 
 </MetaDataItem>
-    <MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&filename=MarketCertificationFiles/2725/39358-HQSG-v1-para.pdf</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&amp;filename=MarketCertificationFiles/2725/39358-HQSG-v1-para.pdf</MetaDataItem>
     <ChangeLog>
       <Entry author="Nathan Holben - nathan@holben.me" date="09 May 2020" revision="1">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2725/xml</Entry>
     </ChangeLog>
