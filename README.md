@@ -116,3 +116,13 @@ Support this project with your organization. Your logo will show up here with a 
 <a href="https://opencollective.com/ozw/organization/7/website"><img src="https://opencollective.com/ozw/organization/7/avatar.svg"></a>
 <a href="https://opencollective.com/ozw/organization/8/website"><img src="https://opencollective.com/ozw/organization/8/avatar.svg"></a>
 <a href="https://opencollective.com/ozw/organization/9/website"><img src="https://opencollective.com/ozw/organization/9/avatar.svg"></a>
+
+### Sponsors
+
+The Following Organisations Sponsor OpenZWave Development by donating hardware for testing and support
+
+<a href="https://www.aeotec.com/"><img height="47px" width="152px" src="https://aeotec.com/images/aeotec-logo.svg"></a>
+
+<a href="https://qubino.com/"><img height="47px" width="152px" src="https://qubino.com/wp-content/uploads/2019/02/qubino_logo.png"></a>
+
+<a href="https://www.heatit.com/"><img height="47px" width="152px" src="http://utvikling.thermofloor.no/TFWP/wp-content/uploads/2017/07/Heatit_Controls_RGB.png"></a>
