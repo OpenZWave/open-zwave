@@ -991,6 +991,7 @@ DISTFILES =	.gitignore \
 	config/merten/508244.xml \
 	config/merten/50x5xx.xml \
 	config/miyakawaelectric/me-d101.xml \
+	config/namron/1402756.xml \
 	config/nexia/db100z.xml \
 	config/nodon/asp3100SmartPlug.xml \
 	config/nodon/crc3100OctanRemote.xml \
