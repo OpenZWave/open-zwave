@@ -13,7 +13,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: install dependancies
-      run: sudo apt-get install libxml2-utils libxml-simple-perl
+      run: sudo apt update && sudo apt-get install libxml2-utils libxml-simple-perl
     - name: make xmltest
       run: |
         echo "::add-matcher::.github/XMLTestMatcher.json"
