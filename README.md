@@ -102,6 +102,8 @@ Become a financial contributor and help us sustain our community. [[Contribute](
 
 <a href="https://opencollective.com/ozw"><img src="https://opencollective.com/ozw/individuals.svg?width=890"></a>
 
+(We also have many users that support us via Github Sponsors program!)
+
 #### Organizations
 
 Support this project with your organization. Your logo will show up here with a link to your website. [[Contribute](https://opencollective.com/ozw/contribute)]
