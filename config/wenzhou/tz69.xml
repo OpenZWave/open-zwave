@@ -52,7 +52,7 @@ Use the "Reset" procedure only in the event that the network primary controller 
     <Value genre="config" index="5" instance="1" label="Threshold of Kwh for Load Caution" max="10000" min="1" type="short" units="Kwh" value="10000">
       <Help></Help>
     </Value>
-    <Value genre="config" index="6" instance="1" label="Threshold of Watt for Load Caution" max="3000" min="10" type="short" units="Watt" value="3000">
+    <Value genre="config" index="6" instance="1" label="Threshold of Watt for Load Caution" max="3000" min="10" type="short" units="W" value="3000">
       <Help></Help>
     </Value>
   </CommandClass>

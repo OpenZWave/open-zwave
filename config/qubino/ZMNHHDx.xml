@@ -94,7 +94,7 @@
             </Help>
         </Value>
 
-        <Value genre="config" index="70" instance="1" label="Overload safety switch" units="watt" max="255" min="1" type="short" value="200">
+        <Value genre="config" index="70" instance="1" label="Overload safety switch" units="W" max="255" min="1" type="short" value="200">
             <Help>
                 The function allows for turning off the controlled device in case of exceeding the defined power for more than 5s.
                 Controlled device can be turned back on by input I1 or sending a control frame.

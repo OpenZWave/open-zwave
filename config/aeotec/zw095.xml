@@ -42,22 +42,22 @@ Products that are Z-Wave certified can be used and communicate with other Z-Wave
       <Item label="Disable" value="0"/>
       <Item label="Enable" value="1"/>
     </Value>
-    <Value genre="config" index="4" label="Wattage Threshold Whole HEM" max="60000" min="0" type="short" units="watts" value="50">
+    <Value genre="config" index="4" label="Wattage Threshold Whole HEM" max="60000" min="0" type="short" units="W" value="50">
       <Help>
 				Threshold change in wattage to induce a automatic report (whole HEM).
 			</Help>
     </Value>
-    <Value genre="config" index="5" label="Wattage Threshold C1" max="60000" min="0" type="short" units="watts" value="50">
+    <Value genre="config" index="5" label="Wattage Threshold C1" max="60000" min="0" type="short" units="W" value="50">
       <Help>
 				Threshold change in wattage to induce a automatic report (Clamp 1).
 			</Help>
     </Value>
-    <Value genre="config" index="6" label="Wattage Threshold C2" max="60000" min="0" type="short" units="watts" value="50">
+    <Value genre="config" index="6" label="Wattage Threshold C2" max="60000" min="0" type="short" units="W" value="50">
       <Help>
 				Threshold change in wattage to induce a automatic report (Clamp 2).
 			</Help>
     </Value>
-    <Value genre="config" index="7" label="Wattage Threshold C3" max="60000" min="0" type="short" units="watts" value="50">
+    <Value genre="config" index="7" label="Wattage Threshold C3" max="60000" min="0" type="short" units="W" value="50">
       <Help>
 				Threshold change in wattage to induce a automatic report (Clamp 3).
 			</Help>

@@ -90,7 +90,7 @@ All metering values an be requested from the central controller and will be repo
                 0 - 255 -> * 0,01 A
             </Help>
     </Value>
-    <Value genre="config" index="25" instance="1" label="Power Reporting Threshold" max="255" min="0" size="1" type="byte" units="Watts" value="50">
+    <Value genre="config" index="25" instance="1" label="Power Reporting Threshold" max="255" min="0" size="1" type="byte" units="W" value="50">
       <Help>
                 Report the power when the power  has changed by more then X Watt. 
                 When disabled the device will report every 10 minutes regardless of power consumption change.
@@ -99,7 +99,7 @@ All metering values an be requested from the central controller and will be repo
                 1 - 255 -> Watts
             </Help>
     </Value>
-    <Value genre="config" index="26" instance="1" label="Soft Circuit Breaker Threshold" max="3600" min="0" size="2" type="short" units="Watts" value="3600">
+    <Value genre="config" index="26" instance="1" label="Soft Circuit Breaker Threshold" max="3600" min="0" size="2" type="short" units="W" value="3600">
       <Help>
                 When the power draw exceeds the value set in this parameter for a time set in parameter 28 the soft circuit breaker will disconnect the load.
                 0 -> Disabled

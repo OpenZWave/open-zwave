@@ -245,7 +245,7 @@ Default setting: 15</Help>
     <Value genre="config" index="38" instance="1" label="Brightness level correction for flickering loads" max="255" min="0" type="short" value="255">
       <Help>Correction reduces spontaneous flickering of some capacitive load (e.g. dimmable lEDs) at certain brightness levels in 2-wire installation. In countries using ripple-control, correction may cause changes in brightness. In this case it is necessary to disable correction or adjust time of correction for flickering loads. Available settings: 0 - automatic correction disabled 1-254 - duration of correction in seconds 255 - automatic correction always enabled Default setting: 255</Help>
     </Value>
-    <Value genre="config" index="39" instance="1" label="Power limit - OVERLOAD" max="350" min="1" type="short" units="Watt" value="250">
+    <Value genre="config" index="39" instance="1" label="Power limit - OVERLOAD" max="350" min="1" type="short" units="W" value="250">
       <Help>Reaching the defined value will result in turning off the load. Additional apparent power limit of 350VA is active by default. Available settings: 0 - functionality disabled; 1-350 - 1W-350W; Default setting: 250</Help>
     </Value>
     <Value genre="config" index="40" instance="1" label="Response to General Purpose Alarm" size="1" type="list" value="3">
@@ -333,7 +333,7 @@ Default setting: 10 (0,1 kWh)</Help>
       <Item label="approximation based on the calibration data" value="1"/>
       <Item label="approximation based on the control angle" value="2"/>
     </Value>
-    <Value genre="config" index="59" instance="1" label="Approximated power at the maximum brightness level" max="500" min="0" type="short" units="Watt" value="0">
+    <Value genre="config" index="59" instance="1" label="Approximated power at the maximum brightness level" max="500" min="0" type="short" units="W" value="0">
       <Help>This parameter determines the approximate value of the power that will be reported by the device at its maximum brightness level. This parameter works only when parameter 58 has a value other than 0. Available settings: 0-500 (0-500W) - power consumed by the load at the maximum brightness level. Default setting: 0</Help>
     </Value>
   </CommandClass>

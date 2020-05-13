@@ -29,7 +29,7 @@ https://aeotec.freshdesk.com/helpdesk/attachments/6009584526
 	Enable/disable Wattage threshold and percent.
       </Help>
     </Value>
-    <Value type="short" index="91" genre="config" label="Wattage threshold" units="watts" min="0" max="32000" value="50">
+    <Value type="short" index="91" genre="config" label="Wattage threshold" units="W" min="0" max="32000" value="50">
       <Help>
 	The minimum change in wattage for a report to be sent.
       </Help>

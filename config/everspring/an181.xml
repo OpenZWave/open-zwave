@@ -55,7 +55,7 @@ The Metering Plug is designed to control the on/off status of lighting and appli
     <Value genre="config" index="5" label="Energy Auto report" max="32767" min="0" size="2" type="short" units="minutes" value="60">
       <Help>Set the interval for kWh auto report (0 = disabled)</Help>
     </Value>
-    <Value genre="config" index="6" label="Value of Wattage surpassed" max="2500" min="0" size="2" type="short" units="watts" value="0">
+    <Value genre="config" index="6" label="Value of Wattage surpassed" max="2500" min="0" size="2" type="short" units="W" value="0">
       <Help>Auto report is sent when load surpasses the set value of wattage (0 = disabled)</Help>
     </Value>
     <Value genre="config" index="7" label="Change of Wattage surpassed" max="100" min="0" size="1" type="byte" units="%" value="0">

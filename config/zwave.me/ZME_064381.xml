@@ -28,7 +28,7 @@
             <Item label="No, turn off" value="0"/>
             <Item label="Yes" value="1"/>
         </Value>
-        <Value type="short" genre="config" instance="1" index="20" label="Energy consumption" size="2" units="watt" min="0" max="3500" value="0">
+        <Value type="short" genre="config" instance="1" index="20" label="Energy consumption" size="2" units="W" min="0" max="3500" value="0">
             <Help>Specify the consumption of the load in watts, for the calculation of power consumption. Maximum load 1800 W. Unit: Watts, Min: 0, Max: 3500, Default: 0</Help>
         </Value>
         <Value type="list" genre="config" instance="1" index="21" label="Off color" size="1" value="0">

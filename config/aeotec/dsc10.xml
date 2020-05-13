@@ -46,7 +46,7 @@ Aeotec DSC10 Heavy-Duty Smart Switch
 	Enable/disable Wattage threshold and percent.
       </Help>
     </Value>
-    <Value genre="config" index="91" label="Wattage threshold" max="32000" min="0" type="short" units="watts" value="50">
+    <Value genre="config" index="91" label="Wattage threshold" max="32000" min="0" type="short" units="W" value="50">
       <Help>
 	The minimum change in wattage for a report to be sent.
       </Help>

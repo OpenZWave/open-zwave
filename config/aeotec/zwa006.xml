@@ -70,7 +70,7 @@ The Aeotec Smart Boost Time Switch supports consumption meter function. When the
 				When user press the boost button one time, the boost time will increase 30 (the value can be changed) minutes.
             </Help>
     </Value>
-    <Value genre="config" index="7" label="LED threshold setting" max="3000" min="0" type="short" units="watt" value="100">
+    <Value genre="config" index="7" label="LED threshold setting" max="3000" min="0" type="short" units="W" value="100">
       <Help>
                 This parameter is used to configure the power led threshold, unit W.
 				When the load &lt;= 100W, the power led will indicate yellow.
@@ -85,7 +85,7 @@ The Aeotec Smart Boost Time Switch supports consumption meter function. When the
 				1 ~ 10000 - enable report.
             </Help>
     </Value>
-    <Value genre="config" index="21" label="Watt threshold setting" max="2500" min="0" type="short" units="watt" value="100">
+    <Value genre="config" index="21" label="Watt threshold setting" max="2500" min="0" type="short" units="W" value="100">
       <Help>
                 Threshold settings for Watt automatic report, unit W. When Watt above the threshold, it will send a meter report command to gateway.
 				0 - disable report.

@@ -90,10 +90,10 @@
             <Item label="Switch On, Off only (send Basic Set)" value="1"/>
             <Item label="Send Scenes" value="3"/>
         </Value>
-        <Value type="int" index="20" genre="config" label="Energy consumption for first channel" units="watts" min="0" max="708" value="0">
+        <Value type="int" index="20" genre="config" label="Energy consumption for first channel" units="W" min="0" max="708" value="0">
             <Help>Specify the consumption of the load in watts, for the calculation of power consumption. Max load 1800 W. Disabled if zero.</Help>
         </Value>
-        <Value type="int" index="40" genre="config" label="Energy consumption for second channel" units="watts" min="0" max="708" value="0">
+        <Value type="int" index="40" genre="config" label="Energy consumption for second channel" units="W" min="0" max="708" value="0">
             <Help>Specify the consumption of the load in watts, for the calculation of power consumption. Max load 1800 W. Disabled if zero.</Help>
         </Value>
     </CommandClass>

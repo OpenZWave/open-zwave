@@ -268,7 +268,7 @@ Main features of FIBARO Roller Shutter 3:
                 Default setting: 10 (1s).
             </Help>
     </Value>
-    <Value genre="config" index="155" instance="1" label="Motor operation detection" max="255" min="0" size="2" type="short" units="watt" value="10">
+    <Value genre="config" index="155" instance="1" label="Motor operation detection" max="255" min="0" size="2" type="short" units="W" value="10">
       <Help>
                 Power threshold to be interpreted as reaching a limit switch.
                 0: reaching a limit switch will not be detected

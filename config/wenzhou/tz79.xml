@@ -21,7 +21,7 @@
         <Value type="short" genre="config" instance="1" index="4" label="kWh meter report period" min="1" max="32767" units="10 min" value="6">
             <Help>If the setting is configured for 1 hour (value=6), the TZ79 will report its accumulated power consumption (kWh) every 1 hour.</Help>
         </Value>
-        <Value type="short" genre="config" instance="1" index="5" label="Threshold of Watt for Load Caution" min="10" max="3000" units="Watt" value="3000">
+        <Value type="short" genre="config" instance="1" index="5" label="Threshold of Watt for Load Caution" min="10" max="3000" units="W" value="3000">
             <Help></Help>
         </Value>
         <Value type="short" genre="config" instance="1" index="6" label="Threshold of Kwh for Load Caution" min="0" max="10000" units="Kwh" value="0">

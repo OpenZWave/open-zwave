@@ -70,7 +70,7 @@ Main Feature:
       <Item label="Consumed" value="1"/>
       <Item label="Produced" value="2"/>
     </Value>
-    <Value genre="config" index="35" label="UP Power Level" max="11250" min="0" size="2" type="short" units="Watts" value="11250">
+    <Value genre="config" index="35" label="UP Power Level" max="11250" min="0" size="2" type="short" units="W" value="11250">
       <Help>C VERSION. Sets the level of instantaneous power in Watts beyond which time of permanence above this level is calculated. For S VERSION. Sets to 3000 the default and max level of instantaneous power in Watts beyond which time of permanence above this level is calculated.</Help>
     </Value>
     <Value genre="config" index="36" label="UP Power Time" max="10800" min="0" size="2" type="short" units="seconds" value="10">
@@ -86,7 +86,7 @@ Main Feature:
     <Value genre="config" index="38" label="UP Power Associated" max="99" min="-1" size="1" type="byte" value="0">
       <Help>Defines the status of associated devices in the presence of a UP Power event. From: 1 to 99 for dimming purpose. .0 (OFF) and -1(ON) for switching ON/OFF</Help>
     </Value>
-    <Value genre="config" index="39" label="DOWN Power Level" max="11250" min="0" size="2" type="short" units="Watts" value="0">
+    <Value genre="config" index="39" label="DOWN Power Level" max="11250" min="0" size="2" type="short" units="W" value="0">
       <Help>Sets the level of instantaneous power in Watts beyond which time of permanence below this level is calculated.</Help>
     </Value>
     <Value genre="config" index="40" label="DOWN Power Time" max="10800" min="0" size="2" type="short" units="seconds" value="10">

@@ -88,7 +88,7 @@ NOTE: All previously recorded activity and custom settings will be erased from t
       <Item label="Display power consumption always" value="0"/>
       <Item label="Display power consumption at state change" value="1"/>
     </Value>
-    <Value genre="config" index="151" instance="1" label="Power Report Value Threshold" max="65535" min="0" size="2" type="short" units="Watts" value="50">
+    <Value genre="config" index="151" instance="1" label="Power Report Value Threshold" max="65535" min="0" size="2" type="short" units="W" value="50">
       <Help>Minimum change in watts to report</Help>
     </Value>
     <Value genre="config" index="152" instance="1" label="Power Report Percentage Threshold" max="255" min="0" size="1" type="byte" units="%" value="10">

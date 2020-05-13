@@ -62,7 +62,7 @@ Smart Plug is also a security Z-Wave device and supports the Over The Air (OTA) 
       <Item label="The LED follows the load status" value="0"/>
       <Item label="When operating plug, the LED is lit for 5 seconds" value="1"/>
     </Value>
-    <Value genre="config" index="16" label="Send report on change of power consumption (W)" max="2500" min="0" size="2" type="short" units="Watts" value="50">
+    <Value genre="config" index="16" label="Send report on change of power consumption (W)" max="2500" min="0" size="2" type="short" units="W" value="50">
       <Help>
                 This parameter will send a power report automatically if the power value changes of x W (Watts) compared to the last report. Default 50.
             </Help>

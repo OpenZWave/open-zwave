@@ -8,7 +8,7 @@
             <Help>Choose how often you want to send automatic reports, in seconds.
                 Defaults to 60 seconds.</Help>
         </Value>
-        <Value type="int" genre="config" index="2" label="Wattage Threshold" min="5" max="3600" value="50" units="watts">
+        <Value type="int" genre="config" index="2" label="Wattage Threshold" min="5" max="3600" value="50" units="W">
             <Help>Minimum change in wattage to induce an automatic report.
                 Defaults to 50 watts.</Help>
         </Value>

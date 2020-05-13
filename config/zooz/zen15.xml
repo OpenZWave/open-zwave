@@ -95,7 +95,7 @@ Press and HOLD the Z-Wave button for at least 3 seconds
       <Item label="Display whenever the device is plugged in (Default)" value="0"/>
       <Item label="Display power consumption for 5 seconds" value="1"/>
     </Value>
-    <Value genre="config" index="151" label="Power Report Value Threshold" max="65535" min="1" size="2" type="short" units="watts" value="0">
+    <Value genre="config" index="151" label="Power Report Value Threshold" max="65535" min="1" size="2" type="short" units="W" value="0">
       <Help>Number of Watts the appliance needs to go over for the change to be reported</Help>
     </Value>
     <Value genre="config" index="152" label="Power Report Percentage Threshold" max="255" min="1" size="4" type="int" units="%" value="10">

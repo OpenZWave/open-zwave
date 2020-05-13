@@ -102,14 +102,14 @@ By resetting the device, all custom parameters previously set on the device will
                 Default value 300 (power report in Watts is send each 300s).
             </Help>
     </Value>
-    <Value genre="config" index="50" instance="1" label="Down value" max="4000" min="0" size="2" type="short" units="Watts" value="30">
+    <Value genre="config" index="50" instance="1" label="Down value" max="4000" min="0" size="2" type="short" units="W" value="30">
       <Help>
                 Lower power threshold used in param 52.
                 Can not be higher than param 51
                 0-4000 (0.0 to 4000.0W, 0 disables)
             </Help>
     </Value>
-    <Value genre="config" index="51" instance="1" label="Up value" max="4000" min="0" size="2" type="short" units="Watts" value="50">
+    <Value genre="config" index="51" instance="1" label="Up value" max="4000" min="0" size="2" type="short" units="W" value="50">
       <Help>
                 Upper power threshold used in param 52.
                 Can not be higher than param 50
@@ -128,7 +128,7 @@ By resetting the device, all custom parameters previously set on the device will
       <Item label="1 and 4 combined" value="5"/>
       <Item label="2 and 3 combined" value="6"/>
     </Value>
-    <Value genre="config" index="70" instance="1" label="Overload safety switch" max="4000" min="0" size="2" type="short" units="Watts" value="0">
+    <Value genre="config" index="70" instance="1" label="Overload safety switch" max="4000" min="0" size="2" type="short" units="W" value="0">
       <Help>
                 The function allows for turning off the controlled device in case of exceeding the defined power for more than 3.1s.
                 Controlled device can be turned back on by S-button or sending a control frame. By default this function is inactive.

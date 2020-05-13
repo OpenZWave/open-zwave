@@ -178,7 +178,7 @@ The Nano Dimmer is also a security Z-Wave plus device and supports Over The Air 
       <Item label="Disable" value="0"/>
       <Item label="Enable" value="1"/>
     </Value>
-    <Value genre="config" index="91" label="Minimum Change to send Report (Watt)" max="6000" min="0" size="2" type="short" units="watts" value="25">
+    <Value genre="config" index="91" label="Minimum Change to send Report (Watt)" max="6000" min="0" size="2" type="short" units="W" value="25">
       <Help>The value represents the minimum change in wattage for a Report to be sent (default 25 W)</Help>
     </Value>
     <Value genre="config" index="92" label="Minimum Change to send Report (%)" max="100" min="0" type="byte" units="%" value="5">

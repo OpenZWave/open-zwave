@@ -60,7 +60,7 @@ By taking advantage of the Z-Wave mesh network, commands can be routed to their 
     <Value genre="config" index="90" label="Enable Wattage Reports" type="bool" units="" value="1">
       <Help>Enable/disable Wattage threshold and percent.</Help>
     </Value>
-    <Value genre="config" index="91" label="Wattage threshold" max="32000" min="0" type="short" units="watts" value="50">
+    <Value genre="config" index="91" label="Wattage threshold" max="32000" min="0" type="short" units="W" value="50">
       <Help>The minimum change in wattage for a report to be sent.</Help>
     </Value>
     <Value genre="config" index="92" label="Wattage threshold percent" max="99" min="0" type="byte" units="%" value="10">

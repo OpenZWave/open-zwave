@@ -126,7 +126,7 @@
                 Value4: Disable Minute. Valid value are 0-59 and 255. Value 255 means use last valid setting.
             </Help>
         </Value>
-        <Value genre="config" index="91" label="Threshold Power for inducing automatic report" max="2300" min="0" size="2" type="short" units="watts" value="0">
+        <Value genre="config" index="91" label="Threshold Power for inducing automatic report" max="2300" min="0" size="2" type="short" units="W" value="0">
             <Help>
                 0 => Disable.
                 1-2300 => 1-2300W.

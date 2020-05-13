@@ -23,25 +23,25 @@ https://aeotec.freshdesk.com/helpdesk/attachments/6009584527
       <Item label="Disable," value="0"/>
       <Item label="Enable" value="1"/>
     </Value>
-    <Value genre="config" index="5" label="Whole Smart Strip Minimum Change to send Report (Watt) " max="60000" min="0" size="2" type="short" units="watts" value="25">
+    <Value genre="config" index="5" label="Whole Smart Strip Minimum Change to send Report (Watt) " max="60000" min="0" size="2" type="short" units="W" value="25">
       <Help>Threshold change in wattage to induce an automatic report (Whole Smart Strip).</Help>
     </Value>
-    <Value genre="config" index="6" label="Socket 1 Minimum Change to send Report (Watt) " max="60000" min="0" size="2" type="short" units="watts" value="25">
+    <Value genre="config" index="6" label="Socket 1 Minimum Change to send Report (Watt) " max="60000" min="0" size="2" type="short" units="W" value="25">
       <Help>Threshold change in wattage to induce an automatic report (Socket 1).</Help>
     </Value>
-    <Value genre="config" index="7" label="Socket 2 Minimum Change to send Report (Watt) " max="60000" min="0" size="2" type="short" units="watts" value="25">
+    <Value genre="config" index="7" label="Socket 2 Minimum Change to send Report (Watt) " max="60000" min="0" size="2" type="short" units="W" value="25">
       <Help>Threshold change in wattage to induce an automatic report (Socket 2).</Help>
     </Value>
-    <Value genre="config" index="8" label="Socket 3 Minimum Change to send Report (Watt) " max="60000" min="0" size="2" type="short" units="watts" value="25">
+    <Value genre="config" index="8" label="Socket 3 Minimum Change to send Report (Watt) " max="60000" min="0" size="2" type="short" units="W" value="25">
       <Help>Threshold change in wattage to induce an automatic report (Socket 3).</Help>
     </Value>
-    <Value genre="config" index="9" label="Socket 4 Minimum Change to send Report (Watt) " max="60000" min="0" size="2" type="short" units="watts" value="25">
+    <Value genre="config" index="9" label="Socket 4 Minimum Change to send Report (Watt) " max="60000" min="0" size="2" type="short" units="W" value="25">
       <Help>Threshold change in wattage to induce an automatic report (Socket 4).</Help>
     </Value>
-    <Value genre="config" index="10" label="Socket 5 Minimum Change to send Report (Watt) " max="60000" min="0" size="2" type="short" units="watts" value="25">
+    <Value genre="config" index="10" label="Socket 5 Minimum Change to send Report (Watt) " max="60000" min="0" size="2" type="short" units="W" value="25">
       <Help>Threshold change in wattage to induce an automatic report (Socket 5).</Help>
     </Value>
-    <Value genre="config" index="11" label="Socket 6 Minimum Change to send Report (Watt) " max="60000" min="0" size="2" type="short" units="watts" value="25">
+    <Value genre="config" index="11" label="Socket 6 Minimum Change to send Report (Watt) " max="60000" min="0" size="2" type="short" units="W" value="25">
       <Help>Threshold change in wattage to induce an automatic report (Socket 6).</Help>
     </Value>
     <Value genre="config" index="12" label="Whole Smart Strip Minimum Change to send Report (%)" max="100" min="0" type="byte" units="%" value="5">

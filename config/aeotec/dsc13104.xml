@@ -25,7 +25,7 @@ https://aeotec.freshdesk.com/helpdesk/attachments/6009584519
     <Value type="bool" index="90" genre="config" label="Enables/disables parameter 91/92" units="" value="0">
       <Help>Enable/disable Wattage threshold and percent.</Help>
     </Value>
-    <Value type="short" index="91" genre="config" label="Minimum Change to send Report (Watt)" units="watts" min="0" max="32000" size="2" value="25">
+    <Value type="short" index="91" genre="config" label="Minimum Change to send Report (Watt)" units="W" min="0" max="32000" size="2" value="25">
       <Help>The value represents the minimum change in wattage for a Report to be sent (default 25 W)</Help>
     </Value>
     <Value type="byte" index="92" genre="config" label="Minimum Change to send Report (%)" units="%" min="0" max="100" value="5">

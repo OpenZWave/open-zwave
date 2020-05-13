@@ -39,7 +39,7 @@
 			<Item label="Yes (default)" value="1" />
 		</Value>
 		
-		<Value type="short" genre="config" instance="1" index="20" label="Energy consumption" size="2" units="Watts" min="0" max="3500" value="0">
+		<Value type="short" genre="config" instance="1" index="20" label="Energy consumption" size="2" units="W" min="0" max="3500" value="0">
 			<Help>
 			Specify the consumption of the load in Watts, for the calculation of power.
 			0 -> Disabled (default)

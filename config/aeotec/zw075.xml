@@ -64,7 +64,7 @@ Also a tool that can be programmed, scheduled, controlled and communicated with 
     <Value genre="config" index="90" label="Enables/disables parameter 91/92" type="bool" units="" value="0">
       <Help>Enable/disable Wattage threshold and percent.</Help>
     </Value>
-    <Value genre="config" index="91" label="Minimum Change to send Report (Watt)" max="32000" min="0" size="2" type="short" units="watts" value="25">
+    <Value genre="config" index="91" label="Minimum Change to send Report (Watt)" max="32000" min="0" size="2" type="short" units="W" value="25">
       <Help>The value represents the minimum change in wattage for a Report to be sent (default 25 W)</Help>
     </Value>
     <Value genre="config" index="92" label="Minimum Change to send Report (%)" max="100" min="0" type="byte" units="%" value="5">

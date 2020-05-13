@@ -49,7 +49,7 @@ NOTE: All previously recorded activity and custom settings EXCEPT for the kWh re
       <Item label="ON after power restored" value="1"/>
       <Item label="OFF after power restored" value="2"/>
     </Value>
-    <Value genre="config" index="2" label="Power Wattage Report Value Threshold" max="65535" min="0" size="4" type="int" units="watts" value="65535">
+    <Value genre="config" index="2" label="Power Wattage Report Value Threshold" max="65535" min="0" size="4" type="int" units="W" value="65535">
       <Help>0 = power meter disabled; 1-65535 = value in watts for report threshold</Help>
     </Value>
     <Value genre="config" index="3" label="Power Wattage Report Frequency" max="2678400" min="0" size="4" type="int" units="seconds" value="2678400">
@@ -58,7 +58,7 @@ NOTE: All previously recorded activity and custom settings EXCEPT for the kWh re
     <Value genre="config" index="4" label="Energy (kWh) Report Frequency" max="2678400" min="0" size="4" type="int" units="seconds" value="2678400">
       <Help>0 = disabled; 30-2678400 = time in seconds to send energy report</Help>
     </Value>
-    <Value genre="config" index="5" label="Overload Protection" max="1800" min="0" size="2" type="short" units="watts" value="1800">
+    <Value genre="config" index="5" label="Overload Protection" max="1800" min="0" size="2" type="short" units="W" value="1800">
       <Help>0 = disabled; 1-1800 = value in watts for overload protection</Help>
     </Value>
     <Value genre="config" index="6" label="Enable/Disable Auto Turn-Off Timer for CH1" max="1" min="0" size="1" type="list" units="" value="0">

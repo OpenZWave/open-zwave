@@ -12,7 +12,7 @@ https://products.z-wavealliance.org/products/3192
       <Item value="1" label="ON"/>
       <Item value="2" label="OFF"/>
     </Value>
-    <Value type="int" genre="config" index="2" label="Power Wattage Report Value Threshold" units="Watts" size="4" min="0" max="65535" value="5">
+    <Value type="int" genre="config" index="2" label="Power Wattage Report Value Threshold" units="W" size="4" min="0" max="65535" value="5">
       <Help>Minimum change in watts to report</Help>
     </Value>
     <Value type="int" genre="config" index="3" label="Power Wattage Report Frequency" units="seconds" size="4" min="30" max="2678400" value="30">
