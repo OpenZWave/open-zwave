@@ -4124,7 +4124,7 @@ bool Driver::DisablePoll(ValueID const &_valueId)
 				notification->SetValueId(_valueId);
 				QueueNotification(notification);
 				Log::Write(LogLevel_Info, nodeId, "DisablePoll for HomeID 0x%.8x, value(cc=0x%02x,in=0x%02x,id=0x%02x)--poll list has %d items", _valueId.GetHomeId(), _valueId.GetCommandClassId(), _valueId.GetIndex(), _valueId.GetInstance(), m_pollList.size());
-				WriteCache();
+				// WriteCache();        Removed, this function is also called when from the destructor from Node.cpp when several nodes are destructed, leaving a trunacted cache when Polling is switched on for 1 or more devices 
 				return true;
 			}
 		}
