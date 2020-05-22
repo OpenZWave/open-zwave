@@ -152,8 +152,8 @@ DISTFILES =	.gitignore \
 	config/devolo/mt2652.xml \
 	config/devolo/mt2653.xml \
 	config/devolo/mt2756.xml \
-	config/devolo/mt2761.xml \
 	config/devolo/mt2759.xml \
+	config/devolo/mt2761.xml \
 	config/devolo/rs014G0159.xml \
 	config/diehlcontrols/766366.xml \
 	config/dlink/dch-z110.xml \
@@ -497,8 +497,8 @@ DISTFILES =	.gitignore \
 	config/images/devolo/mt2647.png \
 	config/images/devolo/mt2652.png \
 	config/images/devolo/mt2756.png \
-	config/images/devolo/mt2761.png \
 	config/images/devolo/mt2759.png \
+	config/images/devolo/mt2761.png \
 	config/images/diehlcontrols/766366.png \
 	config/images/dlink/dch-z110.png \
 	config/images/dlink/dch-z120.png \
