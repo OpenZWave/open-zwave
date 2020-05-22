@@ -437,6 +437,7 @@
     <Product config="devolo/mt2651.xml" id="04a4" name="Smoke Detector MT2651" type="2004"/>
     <Product config="devolo/mt2651.xml" id="2004" name="Smoke Detector MT2651" type="2004"/>
     <Product config="devolo/mt2761.xml" id="0052" name="Home Control Shutter FM MT2761" type="0003"/>
+    <Product config="devolo/mt2759.xml" id="0052" name="Home Control Switch FM MT2759" type="0002"/>
   </Manufacturer>
   <Manufacturer id="0103" name="Diehl AKO">
     <Product config="diehlcontrols/766366.xml" id="0002" name="Dimmer Actuator" type="0002"/>
