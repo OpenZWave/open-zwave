@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ManufacturerSpecificData Revision="94" xmlns="https://github.com/OpenZWave/open-zwave">
+<ManufacturerSpecificData Revision="95" xmlns="https://github.com/OpenZWave/open-zwave">
   <Manufacturer id="0028" name="2B Electronics"></Manufacturer>
   <Manufacturer id="0098" name="2GIG Technologies">
     <Product config="2gig/ct50e.xml" id="015e" name="CT50e Thermostat" type="3200"/>
@@ -1450,7 +1450,10 @@
   </Manufacturer>
   <Manufacturer id="0216" name="RET Nanjing Intelligence System"></Manufacturer>
   <Manufacturer id="0153" name="Revolv"></Manufacturer>
-  <Manufacturer id="0346" name="Ring"></Manufacturer>
+  <Manufacturer id="0346" name="Ring">
+    <Product config="ring/PIR-SS.xml" id="0201" name="PIR-SS Motion Detector" type="0301"/>
+    <Product id="0201" name="DW-SS Contact Sensor" type="0201"/>
+  </Manufacturer>
   <Manufacturer id="035E" name="RISCO Group"></Manufacturer>
   <Manufacturer id="023B" name="ROC-Connect"></Manufacturer>
   <Manufacturer id="0197" name="RPE Ajax LLC"></Manufacturer>
