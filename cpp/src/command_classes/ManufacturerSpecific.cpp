@@ -378,7 +378,7 @@ namespace OpenZWave
 
 			void ManufacturerSpecific::setLoadedConfigRevision(uint32 rev)
 			{
-				m_latestConfigRevision = rev;
+				m_loadedConfigRevision = rev;
 
 				if (Internal::VC::ValueInt* value = static_cast<Internal::VC::ValueInt*>(GetValue(1, ValueID_Index_ManufacturerSpecific::LoadedConfig)))
 				{

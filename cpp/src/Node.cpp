@@ -1070,7 +1070,6 @@ void Node::ReadXML(TiXmlElement const* _node)
 					}
 
 					Internal::CC::ManufacturerSpecific* cc = static_cast<Internal::CC::ManufacturerSpecific*>(GetCommandClass(Internal::CC::ManufacturerSpecific::StaticGetCommandClassId()));
-					/* don't do this if its the Controller Node */
 					if (cc)
 					{
 						cc->SetProductDetails(manufacturerId, productType, productId);
