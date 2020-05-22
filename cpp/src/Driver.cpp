@@ -178,7 +178,6 @@ Driver::~Driver()
 
 	// append final driver stats output to the log file
 	LogDriverStatistics();
-
 	// Save the driver config before deleting anything else
 	bool save;
 	if (Options::Get()->GetOptionAsBool("SaveConfiguration", &save))
@@ -412,6 +411,9 @@ void Driver::DriverThreadProc(Internal::Platform::Event* _exitEvent)
 					case 0:
 					{
 						// Exit has been signalled
+						m_initMutex->Lock();
+						m_exit = true;
+						m_initMutex->Unlock();
 						return;
 					}
 					case 1:
@@ -468,6 +470,9 @@ void Driver::DriverThreadProc(Internal::Platform::Event* _exitEvent)
 			if (Internal::Platform::Wait::Single(_exitEvent, 5000) == 0)
 			{
 				// Exit signalled.
+				m_initMutex->Lock();
+				m_exit = true;
+				m_initMutex->Unlock();
 				return;
 			}
 		}
@@ -477,6 +482,9 @@ void Driver::DriverThreadProc(Internal::Platform::Event* _exitEvent)
 			if (Internal::Platform::Wait::Single(_exitEvent, 30000) == 0)
 			{
 				// Exit signalled.
+				m_initMutex->Lock();
+				m_exit = true;
+				m_initMutex->Unlock();
 				return;
 			}
 		}
@@ -750,6 +758,11 @@ void Driver::WriteCache()
 		Log::Write(LogLevel_Warning, "WARNING: Tried to write driver config with no home ID set");
 		return;
 	}
+	if (m_exit) {
+		Log::Write(LogLevel_Info, "Skipping Cache Save as we are shutting down");
+		return;
+	}
+
 	Log::Write(LogLevel_Info, "Saving Cache");
 	// Create a new XML document to contain the driver configuration
 	TiXmlDocument doc;
