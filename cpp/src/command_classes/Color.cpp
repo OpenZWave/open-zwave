@@ -116,6 +116,7 @@ namespace OpenZWave
 					if (m_dom.GetFlagShort(STATE_FLAG_COLOR_CHANNELS) == 0)
 					{
 						Msg* msg = new Msg("ColorCmd_CapabilityGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
+						msg->SetInstance(this, _instance);
 						msg->Append(GetNodeId());
 						msg->Append(2);
 						msg->Append(GetCommandClassId());
