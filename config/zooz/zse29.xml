@@ -1,4 +1,4 @@
-<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/027A:0005:0001</MetaDataItem>
     <MetaDataItem name="ProductPic">images/zooz/zse29.png</MetaDataItem>
@@ -46,6 +46,7 @@ NOTE: All previously recorded activity and custom settings will be erased from t
     <MetaDataItem id="0005" name="Identifier" type="0001">ZSE29</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 Jun 2019" revision="2">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/3081/xml</Entry>
+      <Entry author="Brad Parker - https://github.com/bepsoccer" date="27 May 2020" revision="3">Updated for firmware version 2.0</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Zooz ZSE29 Outdoor Motion Sensor -->
