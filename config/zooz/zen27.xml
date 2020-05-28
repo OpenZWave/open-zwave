@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
 	<MetaData>
 		<MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/027a:a002:a000</MetaDataItem>
 		<MetaDataItem name="ProductPic">images/zooz/zen27.png</MetaDataItem>
@@ -60,6 +60,7 @@ tap-tap-tap-and-hold: factory reset
 		<ChangeLog>
 			<Entry author="David Alden - dave@alden.name" date="23 Oct 2019" revision="2">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/3148/xml - this requires v2.0 (or newer) firmware</Entry>
 			<Entry author="Brad Parker - https://github.com/bepsoccer" date="13 April 2020" revision="3">Updated for firmware version 2.08</Entry>
+			<Entry author="Brad Parker - https://github.com/bepsoccer" date="28 May 2020" revision="4">Updated for param 9 min value</Entry>
 		</ChangeLog>
 	</MetaData>
 
