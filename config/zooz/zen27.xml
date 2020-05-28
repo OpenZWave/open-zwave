@@ -121,8 +121,8 @@ tap-tap-tap-and-hold: factory reset
 			<Item label="On" value="1"/>
 			<Item label="Restore" value="2"/>
 		</Value>
-		<Value type="byte" genre="config" index="9" label="Ramp Rate Control" size="1" min="1" max="99" value="1" units="seconds">
-			<Help>Adjust the physical ramp rate for your dimmer (fade-in / fade-out effect for on / off operation). Values correspond to the number of seconds it take for the dimmer to reach full brightness or turn off when operated manually. This setting is for physical taps only, see parameter 17 to adjust Z-Wave ramp rate.</Help>
+		<Value type="byte" genre="config" index="9" label="Ramp Rate Control" size="1" min="0" max="99" value="1" units="seconds">
+			<Help>Adjust the physical ramp rate for your dimmer (fade-in / fade-out effect for on / off operation). Values correspond to the number of seconds it take for the dimmer to reach full brightness or turn off when operated manually. This setting is for physical taps only, see parameter 17 to adjust Z-Wave ramp rate. Values: 1 – 99 (seconds). 0 – instant on/off. Default: 1</Help>
 		</Value>
 		<Value type="byte" genre="config" index="10" label="Minimum Brightness" size="1" min="1" max="99" value="1" units="%">
 			<Help>Set the minimum brightness level (in %) for your dimmer. You won't be able to dim the light below the set value.</Help>
