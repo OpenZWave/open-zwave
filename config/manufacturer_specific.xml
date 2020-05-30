@@ -616,6 +616,7 @@
     <Product config="fibaro/fgbs001.xml" id="3002" name="FGBS001 Universal Binary Sensor" type="0501"/>
     <Product config="fibaro/fgbs001.xml" id="4002" name="FGBS001 Universal Binary Sensor" type="0501"/>
     <Product config="fibaro/fgbs222.xml" id="1000" name="FGBS222 Smart Implant" type="0502"/>
+    <Product config="fibaro/fgbs222.xml" id="2000" name="FGBS222 Smart Implant" type="0502"/>
     <Product config="fibaro/fgd211.xml" id="0104" name="FGD211 Universal Dimmer 500W" type="0100"/>
     <Product config="fibaro/fgd211.xml" id="0106" name="FGD211 Universal Dimmer 500W" type="0100"/>
     <Product config="fibaro/fgd211.xml" id="0107" name="FGD211 Universal Dimmer 500W" type="0100"/>
