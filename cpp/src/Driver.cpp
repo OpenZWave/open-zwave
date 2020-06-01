@@ -395,7 +395,7 @@ void Driver::DriverThreadProc(Internal::Platform::Event* _exitEvent)
 					case -1:
 					{
 						// Wait has timed out - time to resend
-						if (m_currentMsg != NULL)
+						if (m_currentMsg != NULL && !m_currentMsg->isResendDuetoCANorNAK())
 						{
 							Notification* notification = new Notification(Notification::Type_Notification);
 							notification->SetHomeAndNodeIds(m_homeId, m_currentMsg->GetTargetNodeId());
@@ -521,9 +521,14 @@ bool Driver::Init(uint32 _attempts)
 	// Controller opened successfully, so we need to start all the worker threads
 	m_pollThread->Start(Driver::PollThreadEntryPoint, this);
 
+
 	// Send a NAK to the ZWave device
 	uint8 nak = NAK;
 	m_controller->Write(&nak, 1);
+
+	// Purge any Messages in the Serial Buffer 
+	m_controller->Purge();
+
 
 	/* this kicks of the Init Sequence to get the Controller in shape. */
 	SendMsg(new Internal::Msg("FUNC_ID_ZW_GET_VERSION", 0xff, REQUEST, FUNC_ID_ZW_GET_VERSION, false), Driver::MsgQueue_Command);
@@ -1730,6 +1735,7 @@ bool Driver::ReadMsg()
 			if (m_currentMsg != NULL)
 			{
 				m_currentMsg->SetMaxSendAttempts(m_currentMsg->GetMaxSendAttempts() + 1);
+				m_currentMsg->setResendDuetoCANorNAK();
 			}
 			else
 			{
@@ -1744,8 +1750,10 @@ bool Driver::ReadMsg()
 		case NAK:
 		{
 			Log::Write(LogLevel_Warning, GetNodeNumber(m_currentMsg), "WARNING: NAK received...triggering resend");
+			m_currentMsg->SetMaxSendAttempts(m_currentMsg->GetMaxSendAttempts() + 1);
+			m_currentMsg->setResendDuetoCANorNAK();
 			m_NAKCnt++;
-			WriteMsg("NAK");
+			//WriteMsg("NAK");
 			break;
 		}
 
