@@ -68,7 +68,7 @@ namespace OpenZWave
 			{
 				Timer::SetDriver(GetDriver());
 				Options::Get()->GetOptionAsBool("AssumeAwake", &m_awake);
-				m_com.EnableFlag(COMPAT_FLAG_WAKEUP_DELAYNMI, 0);
+				m_com.EnableFlag(COMPAT_FLAG_WAKEUP_DELAYNMI, 1000);
 				SetStaticRequest(StaticRequest_Values);
 			}
 
