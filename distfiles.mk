@@ -797,6 +797,7 @@ DISTFILES =	.gitignore \
 	config/images/remotec/zxt-120.png \
 	config/images/remotec/zxt-310.png \
 	config/images/remotec/zxt-600.png \
+	config/images/ring/PIR-SS.png \
 	config/images/schlage/BE468ZP.png \
 	config/images/schlage/BE469.png \
 	config/images/schlage/BE469ZP.png \
@@ -1105,6 +1106,7 @@ DISTFILES =	.gitignore \
 	config/remotec/zxt-120.xml \
 	config/remotec/zxt-310.xml \
 	config/remotec/zxt-600.xml \
+	config/ring/PIR-SS.xml \
 	config/schlage/BE468.xml \
 	config/schlage/BE468ZP.xml \
 	config/schlage/BE469.xml \
