@@ -7,7 +7,7 @@
     <MetaDataItem name="ProductSupport">https://inovelli.com/shop/smart-sensors/z-wave-4-in-1-sensor/</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">To Exclude your switch, put your HUB in exclusion mode and press the Sensor Button on the back of the device one (1) time.</MetaDataItem>
     <MetaDataItem id="0001" name="FrequencyName" type="0001">U.S. / Canada / Mexico</MetaDataItem>
-    <MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&filename=product_documents/3723/Inovelli%204-1%20Sensor%20Manual.pdf</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&amp;filename=product_documents/3723/Inovelli%204-1%20Sensor%20Manual.pdf</MetaDataItem>
     <MetaDataItem name="Description">Control and Monitor Temperature, Light, Motion, and Humidity with the 4 in 1 Sensor.</MetaDataItem>
     <MetaDataItem name="Name">LZW60 4-in-1 Sensor</MetaDataItem>
     <MetaDataItem id="000d" name="Identifier" type="0001">LZW60</MetaDataItem>
