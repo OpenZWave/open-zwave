@@ -215,7 +215,14 @@ namespace OpenZWave
 				{
 					m_homeId = homeId;
 				}
-				;
+				void setResendDuetoCANorNAK() 
+				{
+					m_resendDuetoCANorNAK = true;
+				}
+				bool isResendDuetoCANorNAK()
+				{
+					return m_resendDuetoCANorNAK;
+				}
 
 				/** Returns a pointer to the driver (interface with a Z-Wave controller)
 				 *  associated with this node.
@@ -248,6 +255,8 @@ namespace OpenZWave
 				uint8 m_nonce[8];
 				uint32 m_homeId;
 				static uint8 s_nextCallbackId;		// counter to get a unique callback id
+				/* we are resending this message due to CAN or NAK messages */
+				bool m_resendDuetoCANorNAK;
 		};
 	} // namespace Internal
 } // namespace OpenZWave
