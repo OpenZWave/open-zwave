@@ -1,16 +1,16 @@
 <Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/031E:000d:0001</MetaDataItem>
-    <MetaDataItem name="ProductPic">images/inovelli/lzw31-sn.png</MetaDataItem>
-    <MetaDataItem id="0001" name="ZWProductPage" type="0001">https://products.z-wavealliance.org/products/3723</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/inovelli/lzw60.png</MetaDataItem>
+    <MetaDataItem id="0001" name="ZWProductPage" type="000d">https://products.z-wavealliance.org/products/3723</MetaDataItem>
     <MetaDataItem name="ProductPage">https://inovelli.com/shop/smart-sensors/z-wave-4-in-1-sensor/</MetaDataItem>
     <MetaDataItem name="ProductSupport">https://inovelli.com/shop/smart-sensors/z-wave-4-in-1-sensor/</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">To Exclude your switch, put your HUB in exclusion mode and press the Sensor Button on the back of the device one (1) time.</MetaDataItem>
-    <MetaDataItem id="0001" name="FrequencyName" type="0001">U.S. / Canada / Mexico</MetaDataItem>
+    <MetaDataItem id="0001" name="FrequencyName" type="000d">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&amp;filename=product_documents/3723/Inovelli%204-1%20Sensor%20Manual.pdf</MetaDataItem>
     <MetaDataItem name="Description">Control and Monitor Temperature, Light, Motion, and Humidity with the 4 in 1 Sensor.</MetaDataItem>
     <MetaDataItem name="Name">LZW60 4-in-1 Sensor</MetaDataItem>
-    <MetaDataItem id="000d" name="Identifier" type="0001">LZW60</MetaDataItem>
+    <MetaDataItem id="0001" name="Identifier" type="000d">LZW60</MetaDataItem>
     <MetaDataItem name="InclusionDescription">To include your switch, start the inclusion process on your HUB and Sensor Button on the back of the device one (1) time.</MetaDataItem>
 
     <ChangeLog>
