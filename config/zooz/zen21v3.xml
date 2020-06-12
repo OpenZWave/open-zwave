@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="3">
 	<MetaData>
 		<MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/027a:1e1c:b111</MetaDataItem>
 		<MetaDataItem name="ProductPic">images/zooz/zen21.png</MetaDataItem>
@@ -63,6 +63,7 @@ tap-tap-tap-and-hold: factory reset
 	</MetaDataItem>
 		<ChangeLog>
 			<Entry author="Brad Parker - https://github.com/bepsoccer" date="13 April 2020" revision="2">Updated for firmware version 3.04</Entry>
+			<Entry author="Matthew Grimes" date="12 June 2020" revision="3">Rename XML for correct hardware version</Entry>
 		</ChangeLog>
 	</MetaData>
 	<!-- Configuration Parameters -->
