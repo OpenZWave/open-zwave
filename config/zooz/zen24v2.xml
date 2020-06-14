@@ -8,7 +8,7 @@
 - Based on universal command classes - supported by most Z-Wave controllers
 - May be associated and grouped with other Z-Wave devices for advanced home automation
 - Air-gap switch to power the dimmer off when changing light bulbs
-- Built-in Z-Wave signal repeater for a stronger and more reliable networ</MetaDataItem>
+- Built-in Z-Wave signal repeater for a stronger and more reliable network
 
 Specifications:
 - Z-Wave Signal Frequency: 908.42 MHz
@@ -39,7 +39,7 @@ Toggle Down:
 3 x tap: enter exclusion (unpairing) mode; Scene 2, attribute 04 (button 6)
 4 x tap: Scene 2, attribute 05 (button 8)
 press and hold: decrease brightness level
-tap-tap-tap-and-hold: factory reset
+tap-tap-tap-and-hold: factory reset</MetaDataItem>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/027a:261c:b112</MetaDataItem>
     <MetaDataItem name="ProductPage">http://getzooz.com/zooz-zen23-24-toggle-switch.html</MetaDataItem>
     <MetaDataItem name="ProductSupport">https://www.support.getzooz.com/kb/tag/4/</MetaDataItem>
