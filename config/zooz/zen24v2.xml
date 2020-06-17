@@ -43,7 +43,7 @@ tap-tap-tap-and-hold: factory reset</MetaDataItem>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/027a:261c:b112</MetaDataItem>
     <MetaDataItem name="ProductPage">http://getzooz.com/zooz-zen23-24-toggle-switch.html</MetaDataItem>
     <MetaDataItem name="ProductSupport">https://www.support.getzooz.com/kb/tag/4/</MetaDataItem>
-    <MetaDataItem name="ProductPic"><images/zooz/zen24v2.png</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/zooz/zen24v2.png</MetaDataItem>
     <MetaDataItem name="ProductManual">https://cdn.shopify.com/s/files/1/0218/7704/files/zooz-z-wave-plus-toggle-dimmer-zen24-ver3-manual_889b0743-e025-445a-ac13-0f7742ba0675.pdf?100</MetaDataItem>
     <MetaDataItem name="InclusionDescription">1. Initiate inclusion at your hub. 2. Toggle up 3 times very quickly at the switch.</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">1. Put the Z-Wave hub into exclusion mode. 2. Toggle the switch down 3 times quickly.</MetaDataItem>
