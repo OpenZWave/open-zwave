@@ -153,8 +153,8 @@ DISTFILES =	.gitignore \
 	config/devolo/mt2653.xml \
 	config/devolo/mt2756.xml \
 	config/devolo/mt2759.xml \
-	config/devolo/mt2761.xml \
 	config/devolo/mt2760.xml \
+	config/devolo/mt2761.xml \
 	config/devolo/rs014G0159.xml \
 	config/diehlcontrols/766366.xml \
 	config/dlink/dch-z110.xml \
@@ -500,8 +500,8 @@ DISTFILES =	.gitignore \
 	config/images/devolo/mt2652.png \
 	config/images/devolo/mt2756.png \
 	config/images/devolo/mt2759.png \
-	config/images/devolo/mt2761.png \
 	config/images/devolo/mt2760.png \
+	config/images/devolo/mt2761.png \
 	config/images/diehlcontrols/766366.png \
 	config/images/dlink/dch-z110.png \
 	config/images/dlink/dch-z120.png \
@@ -699,6 +699,7 @@ DISTFILES =	.gitignore \
 	config/images/inovelli/lzw40.png \
 	config/images/inovelli/lzw41.png \
 	config/images/inovelli/lzw42.png \
+	config/images/inovelli/lzw60.png \
 	config/images/inovelli/simple_module.png \
 	config/images/iwatsu/ne-4ct-2p.png \
 	config/images/iwatsu/ne-4ct.png \
@@ -903,7 +904,9 @@ DISTFILES =	.gitignore \
 	config/images/zooz/zen20.png \
 	config/images/zooz/zen20v2.png \
 	config/images/zooz/zen21.png \
+	config/images/zooz/zen21v3.png \
 	config/images/zooz/zen22.png \
+	config/images/zooz/zen24v2.png \
 	config/images/zooz/zen26.png \
 	config/images/zooz/zen27.png \
 	config/images/zooz/zen30.png \
@@ -932,6 +935,7 @@ DISTFILES =	.gitignore \
 	config/inovelli/lzw40.xml \
 	config/inovelli/lzw41.xml \
 	config/inovelli/lzw42.xml \
+	config/inovelli/lzw60.xml \
 	config/inovelli/nzw1201.xml \
 	config/inovelli/nzw30.xml \
 	config/inovelli/nzw31.xml \
@@ -1235,11 +1239,12 @@ DISTFILES =	.gitignore \
 	config/zooz/zen20.xml \
 	config/zooz/zen20v2.xml \
 	config/zooz/zen21.xml \
-	config/zooz/zen21v2.xml \
+	config/zooz/zen21v3.xml \
 	config/zooz/zen22.xml \
 	config/zooz/zen22v2.xml \
 	config/zooz/zen23.xml \
 	config/zooz/zen24.xml \
+	config/zooz/zen24v2.xml \
 	config/zooz/zen25.xml \
 	config/zooz/zen26.xml \
 	config/zooz/zen27.xml \
