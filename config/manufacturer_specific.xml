@@ -1001,6 +1001,7 @@
     <Product type="0005" id="0001" name="LZW42 Multi-Color Bulb" config="inovelli/lzw42.xml"/>
     <Product type="0006" id="0001" name="LZW41 Multi-White Bulb" config="inovelli/lzw41.xml"/>
     <Product type="0007" id="0001" name="LZW40 Dimmable  Bulb" config="inovelli/lzw40.xml"/>
+    <Product type="000d" id="0001" name="LZW60 4-in-1 Sensor" config="inovelli/lzw60.xml"/>
   </Manufacturer>
   <Manufacturer id="0100" name="Insignia"></Manufacturer>
   <Manufacturer id="0006" name="Intel"></Manufacturer>
