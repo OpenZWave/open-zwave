@@ -1894,7 +1894,7 @@
     <Product config="zooz/zen21v3.xml" id="1e1c" name="ZEN21 Switch V3" type="b111"/>
     <Product config="zooz/zen22v2.xml" id="1f1c" name="ZEN22 Dimmer V2" type="b112"/>
     <Product config="zooz/zen23.xml" id="251c" name="ZEN23 Toggle Switch V2" type="b111"/>
-    <Product config="zooz/zen24v2.xml" id="261c" name="ZEN24 Dimmer Switch V2" type=b112"/>
+    <Product config="zooz/zen24v2.xml" id="261c" name="ZEN24 Dimmer Switch V2" type="b112"/>
     <Product config="zooz/zen25.xml" id="a003" name="ZEN25 S2 Double Plug with USB Port" type="a000"/>
     <Product config="zooz/zen26.xml" id="a001" name="ZEN26 S2 On Off Wall Switch" type="a000"/>
     <Product config="zooz/zen27.xml" id="a002" name="ZEN27 S2 Dimmer Wall Switch" type="a000"/>
