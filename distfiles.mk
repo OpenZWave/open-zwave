@@ -377,6 +377,7 @@ DISTFILES =	.gitignore \
 	config/honeywell/39351-ZW3010.xml \
 	config/honeywell/39357-ZW3004.xml \
 	config/honeywell/39358-ZW4002.xml \
+	config/honeywell/39449-ZW4106.xml \
 	config/honeywell/lynx-touch-l5100.xml \
 	config/honeywell/th6320zw2003.xml \
 	config/honeywell/th8320zw1000.xml \
@@ -672,6 +673,7 @@ DISTFILES =	.gitignore \
 	config/images/honeywell/39351-ZW3005.png \
 	config/images/honeywell/39357-ZW3004.png \
 	config/images/honeywell/39358-ZW4002.png \
+	config/images/honeywell/39449-ZW4106.png \
 	config/images/honeywell/lynx-touch-l5100.png \
 	config/images/honeywell/th6320zw2003.png \
 	config/images/honeywell/th8320zw1000.png \
@@ -799,6 +801,7 @@ DISTFILES =	.gitignore \
 	config/images/remotec/zxt-120.png \
 	config/images/remotec/zxt-310.png \
 	config/images/remotec/zxt-600.png \
+	config/images/ring/PIR-SS.png \
 	config/images/schlage/BE468ZP.png \
 	config/images/schlage/BE469.png \
 	config/images/schlage/BE469ZP.png \
@@ -1107,6 +1110,7 @@ DISTFILES =	.gitignore \
 	config/remotec/zxt-120.xml \
 	config/remotec/zxt-310.xml \
 	config/remotec/zxt-600.xml \
+	config/ring/PIR-SS.xml \
 	config/schlage/BE468.xml \
 	config/schlage/BE468ZP.xml \
 	config/schlage/BE469.xml \
