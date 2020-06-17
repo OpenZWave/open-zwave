@@ -1616,6 +1616,10 @@
   <Manufacturer id="0089" name="Team Precision PCL"></Manufacturer>
   <Manufacturer id="0240" name="Technicolor"></Manufacturer>
   <Manufacturer id="000A" name="Techniku"></Manufacturer>
+  <Manufacturer id="0299" name="TechniSat">
+    <Product type="0002" id="1a90" name="Single-Switch" config="technisat/03009499.xml"/>
+    <Product type="0005" id="1a93" name="Shutter" config="technisat/03009496.xml"/>
+  </Manufacturer>
   <Manufacturer id="012F" name="Tecom"></Manufacturer>
   <Manufacturer id="0012" name="Tell It Online">
     <Product config="icare/zw-66.xml" id="0001" name="Switchkeeper Plug-in Appliance Module" type="0001"/>

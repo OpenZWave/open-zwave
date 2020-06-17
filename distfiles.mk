@@ -829,6 +829,8 @@ DISTFILES =	.gitignore \
 	config/images/sunricher/srzv9101sachpeu.png \
 	config/images/sunricher/zv9101.png \
 	config/images/swiid/swiidinter.png \
+	config/images/technisat/03009496.png \
+	config/images/technisat/03009499.png \
 	config/images/telldus/tzdw100.png \
 	config/images/telldus/tzwp100.png \
 	config/images/telldus/tzwp102.png \
@@ -1149,6 +1151,8 @@ DISTFILES =	.gitignore \
 	config/sunricher/zv9101.xml \
 	config/swiid/swiidinter.xml \
 	config/swiid/swiidplug.xml \
+	config/technisat/03009496.xml \
+	config/technisat/03009499.xml \
 	config/telldus/tzdw100.xml \
 	config/telldus/tzwp100.xml \
 	config/telldus/tzwp102.xml \
