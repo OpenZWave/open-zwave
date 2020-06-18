@@ -88,6 +88,9 @@ namespace OpenZWave
 			static char const* c_LockStateNames[] =
 			{ "Unsecure", "Unsecured with Timeout", "Inside Handle Unsecured", "Inside Handle Unsecured with Timeout", "Outside Handle Unsecured", "Outside Handle Unsecured with Timeout", "Secured", "Invalid" };
 
+			static char const* c_DoorConditionNames[] =
+			{ "Latched/Locked/Open", "Latched/Locked/Closed", "Latched/Unlocked/Open", "Latched/Unlocked/Closed", "Unlatched/Locked/Open", "Unlatched/Locked/Closed", "Unlatched/Unlocked/Open", "Unlatched/Unlocked/Closed"};
+
 //-----------------------------------------------------------------------------
 // <DoorLock::DoorLock>
 // Constructor
@@ -194,6 +197,18 @@ namespace OpenZWave
 						value->OnValueRefreshed(lockState);
 						value->Release();
 					}
+
+					uint8 doorCondition = _data[3];
+					if (doorCondition < 8) { /* size of c_DoorConditionNames */
+						if (Internal::VC::ValueList* value = static_cast<Internal::VC::ValueList*>(GetValue(_instance, ValueID_Index_DoorLock::System_Config_DoorCondition)))
+						{
+							value->OnValueRefreshed(doorCondition);
+							value->Release();
+						}
+					}
+
+					Log::Write(LogLevel_Info, GetNodeId(), "Received DoorCondition report: DoorCondition is %s", c_DoorConditionNames[lockState]);
+
 					return true;
 				}
 				else if (DoorLockCmd_Configuration_Report == (DoorLockCmd) _data[0])
@@ -482,9 +497,21 @@ namespace OpenZWave
 						}
 						node->CreateValueList(ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_DoorLock::System_Config_Mode, "Timeout Mode", "", false, false, 1, items, 0, 0);
 					}
+
+					/* Door Condition for Locks */
+					{
+						vector<Internal::VC::ValueList::Item> items;
+						Internal::VC::ValueList::Item item;
+						for (uint8 i = 0; i < 8; i++) {
+							item.m_label = c_DoorConditionNames[i];
+						item.m_value = i;
+							items.push_back(item);
+						}
+						node->CreateValueList(ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_DoorLock::System_Config_DoorCondition, "Door Condition", "", false, false, 1, items, 0, 0);
+					}
+
 					node->CreateValueByte(ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_DoorLock::System_Config_OutsideHandles, "Outside Handle Control", "", false, false, 0x0F, 0);
 					node->CreateValueByte(ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_DoorLock::System_Config_InsideHandles, "Inside Handle Control", "", false, false, 0x0F, 0);
-
 				}
 			}
 		} // namespace CC

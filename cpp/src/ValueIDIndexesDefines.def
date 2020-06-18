@@ -2156,7 +2156,8 @@ ENUM(ValueID_Index_DoorLock,
 		System_Config_Minutes = 3,
 		System_Config_Seconds = 4,
 		System_Config_OutsideHandles = 5,
-		System_Config_InsideHandles = 6
+		System_Config_InsideHandles = 6,
+		System_Config_DoorCondition = 7
 	);
 ENUM(ValueID_Index_DoorLockLogging,
 		System_Config_MaxRecords = 0,
