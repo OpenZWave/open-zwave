@@ -107,11 +107,11 @@ tap-tap-tap-and-hold: factory reset</MetaDataItem>
       <Item value="0" label="Scene control disabled (default)."/>
       <Item value="1" label="Scene Control enabled"/>
     </Value>
-    <Value genre="config" instance="1" index="11" value="1" label="Smart Bulb Mode: Enable/Disable Paddle / Z-Wave Control" units="" size="1" min="0" max="1" type="list">
+    <Value genre="config" instance="1" index="11" value="1" label="Smart Bulb Mode: Enable/Disable Paddle / Z-Wave Control" units="" size="1" min="0" max="2" type="list">
       <Help>Enable or disable manual on/off control. If enabled, you’ll only be able to control the connected light via Z-Wave. Scenes and other functionality will still be available through the physical switch.</Help>
       <Item value="0" label="Physical toggle control disabled."/>
       <Item value="1" label="Physical toggle control enabled (default)."/>
-	  <Item value="2" label="Physical toggle and Z-Wave control disabled. NOTE: toggle the switch up 10 times quickly to change this mode."/>
+      <Item value="2" label="Physical toggle and Z-Wave control disabled. NOTE: toggle the switch up 10 times quickly to change this mode."/>
     </Value>
 	<Value type="list" genre="config" instance="1" index="13" label="Reporting behavior with disabled physical control" units="" min="0" max="1" value="0" size="1">
       <Help>Set reporting behavior for disabled physical control.</Help>
