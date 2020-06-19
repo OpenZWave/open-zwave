@@ -71,8 +71,8 @@ tap-tap-tap-and-hold: factory reset</MetaDataItem>
     </Value>
     <Value genre="config" instance="1" index="5" value="0" label="Auto Turn-On Timer" units="" size="1" min="0" max="1" type="list">
       <Help>Use this parameter to enable or disable the auto turn-on timer function.</Help>
-      <Item value="0" label="Timer Disabled"/>
-      <Item value="1" label="Timer Enabled"/>
+      <Item value="0" label="Timer disabled (default)"/>
+      <Item value="1" label="Timer enabled"/>
     </Value>
     <Value genre="config" instance="1" index="6" value="60" label="Auto Turn-On Timer Duration" units="minutes" size="4" min="1" max="65535" type="int">
       <Help>Set the time (in minutes) after which you want the switch to automatically turn on once it has been turned off.</Help>
@@ -118,12 +118,10 @@ tap-tap-tap-and-hold: factory reset</MetaDataItem>
 	  <Item label="Switch reports on/off status and changes LED indicator state even if physical and Z-Wave control is disabled (default)" value="0" />
 	  <Item label="Switch doesn't report on/off status or change LED indicator state when physical (and Z-Wave) control is disabled" value="1" />
 	</Value>
-	<Value type="list" genre="config" instance="1" index="19" label="3-Way Switch Type" units="" min="0" max="3" value="0" size="1">
-	  <Help>Choose the type of 3-way switch you want to use with this dimmer in a 3-way set-up. Changing this setting can allow you to control brightness and dim the light from both 3-way locations. Use a regular momentary switch (like the Zooz ZAC99 accessory switch) if value is set to 2.</Help>
-	  <Item label="Toggle switch, use the connected 3-way switch to turn the light off or on to the last brightness level, dimming only available from the Zooz Z-Wave dimmer and from the hub (or through voice control if smart speaker is integrated with your Z-Wave hub)" value="0" />
-	  <Item label="Toggle switch, toggle up or down once to change state (light on or off), toggle twice quickly to turn light on to full brightness, toggle 3 times quickly to enable a dimming sequence (the light will start dimming up and down in a loop) and toggle the switch again to set the selected brightness level" value="1" />
-	  <Item label="Momentary switch, click once to change status (light on or off), click twice quickly to turn light on to full brightness, press and hold to adjust brightness (dim up / dim down in sequence)" value="2" />
-	  <Item label="Momentary switch, click once to change status (light on or off), click twice quickly to turn light on to full brightness, press and hold to adjust brightness (dim up / dim down in sequence but always reduce brightness after double click). Default: 0." value="3" />
+	<Value type="list" genre="config" instance="1" index="19" label="3-Way Switch Type" units="" min="0" max="1" value="0" size="1">
+	  <Help>Choose the type of 3-way switch you want to use in a 3-way set-up.</Help>
+	  <Item label="Regular mechanical 3-way on/off switch, use the connected 3-way switch to turn the light on or off (default)" value="0" />
+	  <Item label="Momentary switch, click once to change status (light on or off)." value="1" />
 	</Value>
   </CommandClass>
  
@@ -132,7 +130,7 @@ tap-tap-tap-and-hold: factory reset</MetaDataItem>
     <Associations num_groups="3">
       <Group index="1" label="Lifeline" max_associations="1" />
       <Group index="2" label="Group 2" max_associations="5" />
-	  <Group index="3" label="Group 3" max_associations="5" />
+      <Group index="3" label="Group 3" max_associations="5" />
     </Associations>
   </CommandClass>
  
