@@ -32,10 +32,10 @@
   <CommandClass id="112">
 
     <Value genre="config" index="1" label="Sensitivity" max="255" min="8" type="byte" units="" value="255">
-      <Help>Sensitivity Level</Help>
+      <Help>Sensitivity Level. Valid values 8 to 255.</Help>
     </Value>
     <Value genre="config" index="2" label="Motion Cleared Time Delay" max="600" min="5" type="int" units="seconds" value="255">
-      <Help>Motion Cleared Time Delay</Help>
+      <Help>Motion Cleared Time Delay.  Valid values 5 to 600 seconds (10 mins).</Help>
     </Value>
     <Value genre="config" index="3" label="Basic Set Level" max="255" min="0" type="byte" units="" value="255">
       <Help>0: Turn Off
@@ -44,25 +44,25 @@
       </Help>
     </Value>
     <Value genre="config" index="4" label="Enable/Disable Motion Detection" max="1" min="0" type="bool" units="" value="1">
-      <Help>Enable/Disable Motion Detection</Help>
+      <Help>On = Enable Motion Detection.</Help>
     </Value>
     <Value genre="config" index="5" label="Group 2 Ambient Light Threshold" max="1000" min="5" type="int" units="lux" value="1000">
-      <Help>Group 2 Ambient Light Threshold</Help>
+      <Help>Group 2 Ambient Light Threshold.  Vaid values 5 to 1000 lux.</Help>
     </Value>
     <Value genre="config" index="6" label="Retrigger Interval" max="8" min="1" type="byte" units="seconds" value="8">
-      <Help>Retrigger Interval</Help>
+      <Help>Retrigger Interval.  Valid values 1 to 8 seconds.</Help>
     </Value>
     <Value genre="config" index="7" label="Light Sensing Interval" max="3600" min="60" type="byte" units="seconds" value="3600">
-      <Help>Light Sensing Interval</Help>
+      <Help>Light Sensing Interval.  Valid values 60 to 3600 seconds</Help>
     </Value>
     <Value genre="config" index="8" label="Enable/Disable Group 2 Ambient Light Threshold" max="1" min="0" type="bool" units="" value="0">
-      <Help>Enable/Disable Group 2 Ambient Light Threshold</Help>
+      <Help>On = Enable Group 2 Ambient Light Threshold.</Help>
     </Value>
     <Value genre="config" index="9" label="Ambient Light Sensitivity Level" max="255" min="0" type="byte" units="lux" value="255">
-      <Help>Ambient Light Sensitivity Level</Help>
+      <Help>Ambient Light Sensitivity Level.  Valid values 0 to 255 lux.</Help>
     </Value>
     <Value genre="config" index="10" label="LED Indicator" max="1" min="0" type="bool" units="" value="1">
-      <Help>Enable or disable the LED Indicator</Help>
+      <Help>On = Enable the LED Indicator</Help>
     </Value>
 
   </CommandClass>
