@@ -299,6 +299,7 @@ DISTFILES =	.gitignore \
 	config/ge/12727.xml \
 	config/ge/14282-plugin-switch.xml \
 	config/ge/14284.xml \
+	config/ge/14285.xml \
 	config/ge/14288-outlet.xml \
 	config/ge/14291-switch.xml \
 	config/ge/14292-toggle-switch.xml \
@@ -608,6 +609,7 @@ DISTFILES =	.gitignore \
 	config/images/ge/12727.png \
 	config/images/ge/14282-plugin-switch.png \
 	config/images/ge/14284.png \
+	config/images/ge/14285.png \
 	config/images/ge/14288-outlet.png \
 	config/images/ge/14291-switch.png \
 	config/images/ge/14292-toggle-switch.png \
@@ -906,6 +908,7 @@ DISTFILES =	.gitignore \
 	config/images/zooz/zen21.png \
 	config/images/zooz/zen21v3.png \
 	config/images/zooz/zen22.png \
+	config/images/zooz/zen23v3.png \
 	config/images/zooz/zen24v2.png \
 	config/images/zooz/zen26.png \
 	config/images/zooz/zen27.png \
@@ -1243,6 +1246,7 @@ DISTFILES =	.gitignore \
 	config/zooz/zen22.xml \
 	config/zooz/zen22v2.xml \
 	config/zooz/zen23.xml \
+	config/zooz/zen23v3.xml \
 	config/zooz/zen24.xml \
 	config/zooz/zen24v2.xml \
 	config/zooz/zen25.xml \
