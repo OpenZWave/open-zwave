@@ -316,29 +316,34 @@ namespace OpenZWave
 				if (c->GetConfigPath().size() > 0)
 				{
 					string path = configPath + c->GetConfigPath();
-
-					/* check if we are downloading already */
-					std::list<string>::iterator iter = std::find(m_downloading.begin(), m_downloading.end(), path);
-					/* check if the file exists */
-					if (iter == m_downloading.end() && !Internal::Platform::FileOps::Create()->FileExists(path))
-					{
-						Log::Write(LogLevel_Warning, "Config File for %s does not exist - %s", c->GetProductName().c_str(), path.c_str());
-						/* try to download it */
-						if (driver->startConfigDownload(c->GetManufacturerId(), c->GetProductType(), c->GetProductId(), path))
+					if (!Internal::Platform::FileOps::Create()->FileExists(path)) { 
+						/* check if we are downloading already */
+						std::list<string>::iterator iter = std::find(m_downloading.begin(), m_downloading.end(), path);
+						/* check if the file exists */
+						if (iter == m_downloading.end())
 						{
-							m_downloading.push_back(path);
+							Log::Write(LogLevel_Warning, "Config File for %s does not exist - %s", c->GetProductName().c_str(), path.c_str());
+							/* try to download it */
+							if (driver->startConfigDownload(c->GetManufacturerId(), c->GetProductType(), c->GetProductId(), path))
+							{
+								m_downloading.push_back(path);
+							}
+							else
+							{
+								Log::Write(LogLevel_Warning, "Can't download file %s", path.c_str());
+								Notification* notification = new Notification(Notification::Type_UserAlerts);
+								notification->SetUserAlertNotification(Notification::Alert_ConfigFileDownloadFailed);
+								driver->QueueNotification(notification);
+							}
 						}
-						else
+						else if (iter != m_downloading.end())
 						{
-							Log::Write(LogLevel_Warning, "Can't download file %s", path.c_str());
-							Notification* notification = new Notification(Notification::Type_UserAlerts);
-							notification->SetUserAlertNotification(Notification::Alert_ConfigFileDownloadFailed);
-							driver->QueueNotification(notification);
+							Log::Write(LogLevel_Debug, "Config file for %s already queued", c->GetProductName().c_str());
 						}
 					}
-					else if (iter != m_downloading.end())
+					else 
 					{
-						Log::Write(LogLevel_Debug, "Config file for %s already queued", c->GetProductName().c_str());
+						checkConfigFileContents(driver, path);	
 					}
 				}
 			}
@@ -367,6 +372,61 @@ namespace OpenZWave
 				checkInitialized();
 			}
 		}
+
+		void ManufacturerSpecificDB::checkConfigFileContents(Driver *driver, string file) 
+		{
+			string configPath;
+			Options::Get()->GetOptionAsString("ConfigPath", &configPath);
+			TiXmlDocument* pDoc = new TiXmlDocument();
+			if (!pDoc->LoadFile(file.c_str(), TIXML_ENCODING_UTF8))
+			{
+				delete pDoc;
+				Log::Write(LogLevel_Info, "Unable to load %s", file.c_str());
+				return;
+			}
+			pDoc->SetUserData((void *) file.c_str());
+			TiXmlElement const* root = pDoc->RootElement();
+
+			TiXmlElement const* metaDataElement = root->FirstChildElement("MetaData");
+			if (metaDataElement) {
+				TiXmlElement const* metaDataItem = metaDataElement->FirstChildElement("MetaDataItem");
+				while (metaDataItem) {
+					char const *str = metaDataItem->Attribute("name");
+					if (str && !strcmp(str, "ProductPic"))
+					{
+						str = metaDataItem->GetText();
+						string imagefile = configPath + str;
+						if (str && !Internal::Platform::FileOps::Create()->FileExists(imagefile)) { 
+							/* check if we are downloading already */
+							std::list<string>::iterator iter = std::find(m_downloading.begin(), m_downloading.end(), imagefile);
+							/* check if the file exists */
+							if (iter == m_downloading.end())
+							{
+								if (driver->startDownload(imagefile, metaDataItem->GetText())) {
+									Log::Write(LogLevel_Info, "Missing Picture %s - Starting Download", imagefile.c_str());
+									m_downloading.push_back(imagefile);
+								}
+							}
+
+						}
+					}
+					metaDataItem = metaDataItem->NextSiblingElement("MetaDataItem");
+				}				
+			}
+		}
+
+		void ManufacturerSpecificDB::fileDownloaded(Driver *, string file, bool success) 
+		{
+			/* check if we are downloading already */
+			std::list<string>::iterator iter = std::find(m_downloading.begin(), m_downloading.end(), file);
+			if (iter != m_downloading.end())
+			{
+				m_downloading.erase(iter);
+			}	
+			checkInitialized();		
+		}
+
+
 
 		void ManufacturerSpecificDB::mfsConfigDownloaded(Driver *driver, string file, bool success)
 		{
