@@ -153,6 +153,7 @@ DISTFILES =	.gitignore \
 	config/devolo/mt2653.xml \
 	config/devolo/mt2756.xml \
 	config/devolo/mt2759.xml \
+	config/devolo/mt2760.xml \
 	config/devolo/mt2761.xml \
 	config/devolo/rs014G0159.xml \
 	config/diehlcontrols/766366.xml \
@@ -376,6 +377,7 @@ DISTFILES =	.gitignore \
 	config/honeywell/39351-ZW3010.xml \
 	config/honeywell/39357-ZW3004.xml \
 	config/honeywell/39358-ZW4002.xml \
+	config/honeywell/39449-ZW4106.xml \
 	config/honeywell/lynx-touch-l5100.xml \
 	config/honeywell/th6320zw2003.xml \
 	config/honeywell/th8320zw1000.xml \
@@ -498,6 +500,7 @@ DISTFILES =	.gitignore \
 	config/images/devolo/mt2652.png \
 	config/images/devolo/mt2756.png \
 	config/images/devolo/mt2759.png \
+	config/images/devolo/mt2760.png \
 	config/images/devolo/mt2761.png \
 	config/images/diehlcontrols/766366.png \
 	config/images/dlink/dch-z110.png \
@@ -670,6 +673,7 @@ DISTFILES =	.gitignore \
 	config/images/honeywell/39351-ZW3005.png \
 	config/images/honeywell/39357-ZW3004.png \
 	config/images/honeywell/39358-ZW4002.png \
+	config/images/honeywell/39449-ZW4106.png \
 	config/images/honeywell/lynx-touch-l5100.png \
 	config/images/honeywell/th6320zw2003.png \
 	config/images/honeywell/th8320zw1000.png \
@@ -695,6 +699,7 @@ DISTFILES =	.gitignore \
 	config/images/inovelli/lzw40.png \
 	config/images/inovelli/lzw41.png \
 	config/images/inovelli/lzw42.png \
+	config/images/inovelli/lzw60.png \
 	config/images/inovelli/simple_module.png \
 	config/images/iwatsu/ne-4ct-2p.png \
 	config/images/iwatsu/ne-4ct.png \
@@ -797,6 +802,7 @@ DISTFILES =	.gitignore \
 	config/images/remotec/zxt-120.png \
 	config/images/remotec/zxt-310.png \
 	config/images/remotec/zxt-600.png \
+	config/images/ring/PIR-SS.png \
 	config/images/schlage/BE468ZP.png \
 	config/images/schlage/BE469.png \
 	config/images/schlage/BE469ZP.png \
@@ -824,6 +830,8 @@ DISTFILES =	.gitignore \
 	config/images/sunricher/srzv9101sachpeu.png \
 	config/images/sunricher/zv9101.png \
 	config/images/swiid/swiidinter.png \
+	config/images/technisat/03009496.png \
+	config/images/technisat/03009499.png \
 	config/images/telldus/tzdw100.png \
 	config/images/telldus/tzwp100.png \
 	config/images/telldus/tzwp102.png \
@@ -896,7 +904,9 @@ DISTFILES =	.gitignore \
 	config/images/zooz/zen20.png \
 	config/images/zooz/zen20v2.png \
 	config/images/zooz/zen21.png \
+	config/images/zooz/zen21v3.png \
 	config/images/zooz/zen22.png \
+	config/images/zooz/zen24v2.png \
 	config/images/zooz/zen26.png \
 	config/images/zooz/zen27.png \
 	config/images/zooz/zen30.png \
@@ -925,6 +935,7 @@ DISTFILES =	.gitignore \
 	config/inovelli/lzw40.xml \
 	config/inovelli/lzw41.xml \
 	config/inovelli/lzw42.xml \
+	config/inovelli/lzw60.xml \
 	config/inovelli/nzw1201.xml \
 	config/inovelli/nzw30.xml \
 	config/inovelli/nzw31.xml \
@@ -1105,6 +1116,7 @@ DISTFILES =	.gitignore \
 	config/remotec/zxt-120.xml \
 	config/remotec/zxt-310.xml \
 	config/remotec/zxt-600.xml \
+	config/ring/PIR-SS.xml \
 	config/schlage/BE468.xml \
 	config/schlage/BE468ZP.xml \
 	config/schlage/BE469.xml \
@@ -1143,6 +1155,8 @@ DISTFILES =	.gitignore \
 	config/sunricher/zv9101.xml \
 	config/swiid/swiidinter.xml \
 	config/swiid/swiidplug.xml \
+	config/technisat/03009496.xml \
+	config/technisat/03009499.xml \
 	config/telldus/tzdw100.xml \
 	config/telldus/tzwp100.xml \
 	config/telldus/tzwp102.xml \
@@ -1225,11 +1239,12 @@ DISTFILES =	.gitignore \
 	config/zooz/zen20.xml \
 	config/zooz/zen20v2.xml \
 	config/zooz/zen21.xml \
-	config/zooz/zen21v2.xml \
+	config/zooz/zen21v3.xml \
 	config/zooz/zen22.xml \
 	config/zooz/zen22v2.xml \
 	config/zooz/zen23.xml \
 	config/zooz/zen24.xml \
+	config/zooz/zen24v2.xml \
 	config/zooz/zen25.xml \
 	config/zooz/zen26.xml \
 	config/zooz/zen27.xml \
