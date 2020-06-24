@@ -1,7 +1,7 @@
 <Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0090:0541:0003</MetaDataItem>
-    <MetaDataItem name="ProductPic">images/kwikset/smartcode.png</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/kwikset/888.png</MetaDataItem>
     <MetaDataItem id="0446" name="ZWProductPage" type="0003">https://products.z-wavealliance.org/products/2176</MetaDataItem>
     <MetaDataItem id="0446" name="FrequencyName" type="0003">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem id="0446" name="Identifier" type="0003">888</MetaDataItem>
