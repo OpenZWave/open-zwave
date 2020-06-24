@@ -1054,7 +1054,7 @@
     <Product config="kwikset/smartcode.xml" id="0440" name="SmartCode 914" type="0003"/>
     <Product config="kwikset/smartcode.xml" id="0440" name="SmartCode 10" type="0006"/>
     <Product config="kwikset/914c.xml" id="0446" name="Convert 914" type="0003"/>
-    <Product config="kwikset/914c.xml" id="0541" name="Smartcode 888" type="0003"/>
+    <Product config="kwikset/888.xml" id="0541" name="Smartcode 888" type="0003"/>
   </Manufacturer>
   <Manufacturer id="0051" name="Lagotek Corp"></Manufacturer>
   <Manufacturer id="0173" name="Leak Intelligence LLC"></Manufacturer>
