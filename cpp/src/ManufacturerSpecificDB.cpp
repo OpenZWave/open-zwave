@@ -395,19 +395,22 @@ namespace OpenZWave
 					if (str && !strcmp(str, "ProductPic"))
 					{
 						str = metaDataItem->GetText();
-						string imagefile = configPath + str;
-						if (str && !Internal::Platform::FileOps::Create()->FileExists(imagefile)) { 
-							/* check if we are downloading already */
-							std::list<string>::iterator iter = std::find(m_downloading.begin(), m_downloading.end(), imagefile);
-							/* check if the file exists */
-							if (iter == m_downloading.end())
-							{
-								if (driver->startDownload(imagefile, metaDataItem->GetText())) {
-									Log::Write(LogLevel_Info, "Missing Picture %s - Starting Download", imagefile.c_str());
-									m_downloading.push_back(imagefile);
+						if (str) 
+						{ 
+							string imagefile = configPath + str;
+							if (!Internal::Platform::FileOps::Create()->FileExists(imagefile)) 
+							{ 
+								/* check if we are downloading already */
+								std::list<string>::iterator iter = std::find(m_downloading.begin(), m_downloading.end(), imagefile);
+								/* check if the file exists */
+								if (iter == m_downloading.end())
+								{
+									if (driver->startDownload(imagefile, metaDataItem->GetText())) {
+										Log::Write(LogLevel_Info, "Missing Picture %s - Starting Download", imagefile.c_str());
+										m_downloading.push_back(imagefile);
+									}
 								}
 							}
-
 						}
 					}
 					metaDataItem = metaDataItem->NextSiblingElement("MetaDataItem");
