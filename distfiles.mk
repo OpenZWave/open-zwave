@@ -401,6 +401,7 @@ DISTFILES =	.gitignore \
 	config/images/BeNext/AlarmSound.png \
 	config/images/BeNext/DoorSensor.png \
 	config/images/BeNext/Molite.png \
+	config/images/BeNext/P1dongle.png \
 	config/images/BeNext/TagReader.png \
 	config/images/BeNext/TagReader500.png \
 	config/images/BeNext/mydisplay.png \
@@ -506,6 +507,7 @@ DISTFILES =	.gitignore \
 	config/images/diehlcontrols/766366.png \
 	config/images/dlink/dch-z110.png \
 	config/images/dlink/dch-z120.png \
+	config/images/dlink/dch-z210.png \
 	config/images/dlink/dch-z510.png \
 	config/images/dome/0002.png \
 	config/images/dome/0085.png \
@@ -585,6 +587,7 @@ DISTFILES =	.gitignore \
 	config/images/fibaro/fgsd002.png \
 	config/images/fibaro/fgt001.png \
 	config/images/fibaro/fgwd111.png \
+	config/images/fibaro/fgwds221.png \
 	config/images/fibaro/fgwoe.png \
 	config/images/fibaro/fgwpe.png \
 	config/images/fibaro/fgwpfzw5.png \
@@ -730,6 +733,7 @@ DISTFILES =	.gitignore \
 	config/images/merten/506004.png \
 	config/images/merten/508244.png \
 	config/images/miyakawaelectric/me-d101.png \
+	config/images/namron/1402756.png \
 	config/images/nexia/db100z.png \
 	config/images/nodon/asp3100SmartPlug.png \
 	config/images/nodon/crc3100OctanRemote.png \
@@ -739,6 +743,8 @@ DISTFILES =	.gitignore \
 	config/images/northq/nq92021.png \
 	config/images/oomi/ft100.png \
 	config/images/oomi/ft111.png \
+	config/images/oomi/ft112.png \
+	config/images/oomi/ft118.png \
 	config/images/permundo/psc132zw.png \
 	config/images/permundo/psc234zw.png \
 	config/images/philio/pad02.png \
@@ -785,11 +791,13 @@ DISTFILES =	.gitignore \
 	config/images/qubino/ZMNHIDx.png \
 	config/images/qubino/ZMNHNDx.png \
 	config/images/qubino/ZMNHODx.png \
+	config/images/qubino/ZMNHQDx.png \
 	config/images/qubino/ZMNHSDx.png \
 	config/images/qubino/ZMNHTDx.png \
 	config/images/qubino/ZMNHVDx.png \
 	config/images/qubino/ZMNHWD1.png \
 	config/images/qubino/ZMNHYDx.png \
+	config/images/qubino/ZMNKADx.png \
 	config/images/qubino/zmnhxdx.png \
 	config/images/quby/qb2.png \
 	config/images/rcs/em52-zw.png \
@@ -816,6 +824,7 @@ DISTFILES =	.gitignore \
 	config/images/shenzen_neo/nas-ab01z.png \
 	config/images/shenzen_neo/nas-ds01z.png \
 	config/images/shenzen_neo/nas-pd01z.png \
+	config/images/shenzen_neo/nas-pd02z.png \
 	config/images/shenzen_neo/nas-wr01z.png \
 	config/images/shenzen_neo/nas-ws02z.png \
 	config/images/simon/10002034-13X.png \
@@ -929,6 +938,7 @@ DISTFILES =	.gitignore \
 	config/images/zwave.me/popp_kfob-c.png \
 	config/images/zwave.me/zme_raz5.png \
 	config/images/zwave.me/zweather.png \
+	config/images/zwp/PA-100.png \
 	config/images/zwp/WD-100.png \
 	config/ingersoll/dwzwave1.xml \
 	config/inovelli/lzw30-sn.xml \
