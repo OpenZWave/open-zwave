@@ -550,7 +550,7 @@ enum Indicator_Property_offset {
 					msg->Append(GetCommandClassId());
 					msg->Append(IndicatorCmd_Set);
 					msg->Append(0);
-					for (int i = 0; i < payload.size(); i++) {
+					for (unsigned int i = 0; i < payload.size(); i++) {
 						msg->Append(payload.at(i));
 					}
 					msg->Append(GetDriver()->GetTransmitOptions());
