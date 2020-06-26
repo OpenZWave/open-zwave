@@ -79,6 +79,7 @@ namespace OpenZWave
 					{
 						return 3;
 					}
+					virtual void SetValueBasic(uint8 const _instance, uint8 const _value) override;
 				protected:
 					virtual void CreateVars(uint8 const _instance) override;
 

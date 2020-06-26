@@ -769,12 +769,44 @@ enum Indicator_Property_offset {
 					}
 				}
 			}
+
+//-----------------------------------------------------------------------------
+// <Indicator::Indicator>
+// Refresh The Indicator ID's Values. this is called from the timer when a indicator is active. 
+//-----------------------------------------------------------------------------
 			void Indicator::refreshIndicator(uint32 id)
 			{
 				uint16 index = (id & 0xFFFF);
 				uint8 instance = (id & 0xF0000) >> 16;
 				RequestValue(0, index, instance, Driver::MsgQueue_Query);		
 			}
+
+//-----------------------------------------------------------------------------
+// <SwitchBinary::SetValueBasic>
+// Update class values based in BASIC mapping
+//-----------------------------------------------------------------------------
+			void Indicator::SetValueBasic(uint8 const _instance, uint8 const _value)
+			{
+				// Send a request for new value to synchronize it with the BASIC set/report.
+				// In case the device is sleeping, we set the value anyway so the BASIC set/report
+				// stays in sync with it. We must be careful mapping the uint8 BASIC value
+				// into a class specific value.
+				// When the device wakes up, the real requested value will be retrieved.
+				if (GetVersion() == 1) 
+				{
+					RequestValue(0, 0, _instance, Driver::MsgQueue_Query);
+					return;
+				}
+				for (int i = 1; i <= ValueID_Index_Indicator::Buzzer; i++) {
+					if (Internal::VC::Value *value = GetValue(_instance, i))
+					{
+						RequestValue(0, i, _instance, Driver::MsgQueue_Query);
+						value->Release();
+					}
+				}
+				return;
+			}
+
 
 		} // namespace CC
 	} // namespace Internal
