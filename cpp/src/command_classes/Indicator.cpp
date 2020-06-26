@@ -59,7 +59,7 @@ namespace OpenZWave
 				{ValueID_Index_Indicator::Not_Armed, "Indicator: Not Armed"},
 				{ValueID_Index_Indicator::Ready, "Indicator: Ready"},
 				{ValueID_Index_Indicator::Fault, "Indicator: Fault"},
-				{ValueID_Index_Indicator::Busy, "Indicator: Budy"},
+				{ValueID_Index_Indicator::Busy, "Indicator: Busy"},
 				{ValueID_Index_Indicator::Enter_ID, "Indicator: Enter ID"},
 				{ValueID_Index_Indicator::Enter_PIN, "Indicator: Enter PIN"},
 				{ValueID_Index_Indicator::Code_Accepted, "Indicator: Code Accepted"},
@@ -319,7 +319,7 @@ enum Indicator_Property_offset {
 					idprops->properties = propertiessupported;
 					this->m_indicatorLists.insert(std::pair<uint8, std::shared_ptr<Properties> >(id, idprops));
 
-					if (GetVersion() >= 4) 
+					if ((GetVersion() >= 4) && (id >= 0x80) && (id <= 0x9f))
 					{
 						Msg* msg = new Msg("IndicatorCmd_Description_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
 						msg->SetInstance(this, _instance);
