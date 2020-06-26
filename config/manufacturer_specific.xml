@@ -1819,7 +1819,9 @@
     <Product config="widom/UMS2.xml" id="0800" name="UMS2 Smart Roller Shutter" type="1214"/>
   </Manufacturer>
   <Manufacturer id="012D" name="Wilshine Holding"></Manufacturer>
-  <Manufacturer id="017F" name="Wink"></Manufacturer>
+  <Manufacturer id="017F" name="Wink">
+    <Product config="wink/wnk-mot1.xml"  id="0001" name="WNK-MOT1 Motion Sensor" type="0101" />
+  </Manufacturer>
   <Manufacturer id="004c" name="Woodward Labs"></Manufacturer>
   <Manufacturer id="0242" name="Winytechnology"></Manufacturer>
   <Manufacturer id="0199" name="Wireless Maingate AB"></Manufacturer>
