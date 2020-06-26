@@ -795,6 +795,7 @@
     <Product id="3130" name="45604 Outdoor Module" type="5250"/>
     <Product id="3031" name="12720 Outdoor Smart Switch" type="4f50"/>
     <Product config="ge/14284.xml" id="3032" name="14284 Outdoor Smart Switch" type="4f50"/>
+    <Product config="ge/14285.xml" id="3032" name="14285 Outdoor Smart Switch" type="4f44"/>
     <Product config="ge/receptacle.xml" id="3530" name="45605 Duplex Receptacle" type="5252"/>
     <Product config="ge/28167-plugin-dimmer.xml" id="3038" name="28167/ZW3104 Plug-In Smart Dimmer (Single Plug)" type="5044"/>
     <Product config="ge/receptacle.xml" id="3133" name="14288 Duplex Receptacle" type="4952"/>
@@ -1050,9 +1051,17 @@
   <Manufacturer id="023A" name="KUMHO ELECTRIC INC"></Manufacturer>
   <Manufacturer id="0090" name="Kwikset (Spectrum Brands)">
     <Product config="kwikset/smartcode.xml" id="0001" name="Touchpad Electronic Deadbolt" type="0001"/>
+    <Product config="kwikset/smartcode.xml" id="0642" name="SmartCode 916" type="0001"/>
     <Product config="kwikset/smartcode.xml" id="0642" name="SmartCode 916" type="0003"/>
+    <Product config="kwikset/smartcode.xml" id="4006" name="SmartCode 914" type="0003"/>
     <Product config="kwikset/smartcode.xml" id="0440" name="SmartCode 914" type="0003"/>
+    <Product config="kwikset/smartcode.xml" id="0236" name="SmartCode 912" type="0003"/>
+    <Product config="kwikset/smartcode.xml" id="0339" name="SmartCode 912" type="0003"/>
+    <Product config="kwikset/smartcode.xml" id="0236" name="SmartCode 910" type="0001"/>
+    <Product config="kwikset/smartcode.xml" id="0238" name="SmartCode 910" type="0003"/>
+    <Product config="kwikset/smartcode.xml" id="0001" name="SmartCode 910" type="0001"/>    
     <Product config="kwikset/smartcode.xml" id="0440" name="SmartCode 10" type="0006"/>
+    <Product config="kwikset/smartcode.xml" id="0742" name="Obsidian" type="0003"/>
     <Product config="kwikset/914c.xml" id="0446" name="Convert 914" type="0003"/>
   </Manufacturer>
   <Manufacturer id="0051" name="Lagotek Corp"></Manufacturer>

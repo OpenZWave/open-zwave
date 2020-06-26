@@ -88,6 +88,7 @@ namespace OpenZWave
 				case HttpDownload::File:
 				case HttpDownload::Config:
 				case HttpDownload::MFSConfig:
+				case HttpDownload::Image:
 					/* make sure it has everything */
 					if ((transfer->url.size() <= 0) || (transfer->filename.size() <= 0))
 					{
