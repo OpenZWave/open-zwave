@@ -49,7 +49,9 @@ namespace OpenZWave
 				IndicatorCmd_Get = 0x02,
 				IndicatorCmd_Report = 0x03,
 				IndicatorCmd_Supported_Get = 0x04,
-				IndicatorCmd_Supported_Report = 0x05
+				IndicatorCmd_Supported_Report = 0x05,
+				IndicatorCmd_Description_Get = 0x06,
+				IndicatorCmd_Description_Report = 0x07
 			};
 			std::map<uint32, string> IndicatorTypes = { 
 				{ValueID_Index_Indicator::Indicator, "Indicator"},
@@ -311,7 +313,29 @@ enum Indicator_Property_offset {
 						propertiessupported = _data[4+i] << (8*i);
 					}
 					Log::Write(LogLevel_Info, GetNodeId(), "Indicator Supported Report for %d - Support %d - Next Indicator %d", id, propertiessupported, nextid);
-					this->createIndicatorConfigValues(id, _instance, propertiessupported);
+					std::shared_ptr<Properties> idprops = std::make_shared<Properties>();
+					idprops->id = id;
+					idprops->instance = _instance;
+					idprops->properties = propertiessupported;
+					this->m_indicatorLists.insert(std::pair<uint8, std::shared_ptr<Properties> >(id, idprops));
+
+					if (GetVersion() >= 4) 
+					{
+						Msg* msg = new Msg("IndicatorCmd_Description_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
+						msg->SetInstance(this, _instance);
+						msg->Append(GetNodeId());
+						msg->Append(3);
+						msg->Append(GetCommandClassId());
+						msg->Append(IndicatorCmd_Description_Get);
+						msg->Append(id);
+						msg->Append(GetDriver()->GetTransmitOptions());
+						GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
+					}
+					else 
+					{
+						this->createIndicatorConfigValues(id);
+					}
+
 					/* Get the Next Indicator */
 					if (nextid > 0)
 					{
@@ -397,7 +421,29 @@ enum Indicator_Property_offset {
 					}
 					return true;
 				}
-
+				if (IndicatorCmd_Description_Report == (IndicatorCmd) _data[0])
+				{
+					uint8 id = _data[1];
+					uint8 length = _data[2];
+					string label("Unknown Indicator");
+					if (m_indicatorLists.find(id) != m_indicatorLists.end())
+					{
+						if (length == 0) 
+						{
+							/* use the default label */
+							if (IndicatorTypes.find(id) != IndicatorTypes.end()) {
+								m_indicatorLists[id]->label = IndicatorTypes.at(id);
+							}
+						}
+						else 
+						{
+							string description((const char *) &_data[3], length);
+							if (!description.empty())
+								m_indicatorLists[id]->label = description;
+						}
+						this->createIndicatorConfigValues(id);
+					}
+				}
 				return false;
 			}
 
@@ -598,7 +644,7 @@ enum Indicator_Property_offset {
 // Create the Config Values for each Indicator ID
 //-----------------------------------------------------------------------------
 
-			void Indicator::createIndicatorConfigValues(uint8 id, uint8 _instance, uint32 propertiessupported) {
+			void Indicator::createIndicatorConfigValues(uint8 id) {
 				/* Value Indexes are as follows:
 				 * Assume that we can have 32 Properties per Index 
 				 * 0 - 256 - Actual Indicator ValueID
@@ -606,82 +652,95 @@ enum Indicator_Property_offset {
 				 * 289 - 320 - Indicator 2 Properties
 				 * 321 - 352 - Indicator 3 Properties 
 				 * and so on. */
+				if (m_indicatorLists.find(id) == m_indicatorLists.end()) 
+				{
+					Log::Write(LogLevel_Warning, GetNodeId(), "Cant find Indicator %d in List", id);
+					return;
+				}
 				Log::Write(LogLevel_Info, GetNodeId(), "Indicator Support:");
 				if (Node* node = GetNodeUnsafe())
 				{
 					string label("Unknown Indicator");
-					if (IndicatorTypes.find(id) != IndicatorTypes.end()) {
-						label = IndicatorTypes.at(id);
+					if (m_indicatorLists[id]->label.empty())
+					{
+						if (IndicatorTypes.find(id) != IndicatorTypes.end()) {
+							label = IndicatorTypes.at(id);
+						}
 					}
+					else
+					{
+						label = m_indicatorLists[id]->label;
+					}
+					
 					uint32 propertiesSet = 0;
 
-					if (propertiessupported & Indicator_Property_Bit::MultiLevel_Bit) {
+					if (m_indicatorLists[id]->properties & Indicator_Property_Bit::MultiLevel_Bit) {
 						/* MultiLevel Property */
 						Log::Write(LogLevel_Info, GetNodeId(), "\tMultiLevel Property - Index %d", (256 + (32 * id) + Indicator_Property_offset::Multilevel_Prop));
-						node->CreateValueByte(ValueID::ValueGenre_Config, GetCommandClassId(), _instance, (256 + (32 * id) + Indicator_Property_offset::Multilevel_Prop), label + ": Brightness/Level", "", false, false, 0, 0);
+						node->CreateValueByte(ValueID::ValueGenre_Config, GetCommandClassId(), m_indicatorLists[id]->instance, (256 + (32 * id) + Indicator_Property_offset::Multilevel_Prop), label + ": Brightness/Level", "", false, false, 0, 0);
 						propertiesSet |= (1 << Indicator_Property_Group::MultiLevel_Grp);
 					}
-					if (propertiessupported & Indicator_Property_Bit::Binary_Bit) 
+					if (m_indicatorLists[id]->properties & Indicator_Property_Bit::Binary_Bit) 
 					{
 						/* Binary Property */
 						Log::Write(LogLevel_Info, GetNodeId(), "\tBinary  Property - Index %d", (256 + (32 * id) + Indicator_Property_offset::Binary_Prop));
-						node->CreateValueBool(ValueID::ValueGenre_Config, GetCommandClassId(), _instance, (256 + (32 * id) + Indicator_Property_offset::Binary_Prop), label + ": On/Off", "", false, false, false, 0);
+						node->CreateValueBool(ValueID::ValueGenre_Config, GetCommandClassId(), m_indicatorLists[id]->instance, (256 + (32 * id) + Indicator_Property_offset::Binary_Prop), label + ": On/Off", "", false, false, false, 0);
 						propertiesSet |= (1 << Indicator_Property_Group::Binary_Grp);
 					}
-					if (propertiessupported & Indicator_Property_Bit::OnOffPeriod_Bit)
+					if (m_indicatorLists[id]->properties & Indicator_Property_Bit::OnOffPeriod_Bit)
 					{
 						/* On/Off Period Property */
 						Log::Write(LogLevel_Info, GetNodeId(), "\tOn/Off Period Property - Index %d", (256 + (32 * id) + Indicator_Property_offset::OnOffPeriod_Prop));
-						node->CreateValueByte(ValueID::ValueGenre_Config, GetCommandClassId(), _instance, (256 + (32 * id) + Indicator_Property_offset::OnOffPeriod_Prop), label + ": On/Off Period", "Seconds", false, false, 0, 0);
+						node->CreateValueByte(ValueID::ValueGenre_Config, GetCommandClassId(), m_indicatorLists[id]->instance, (256 + (32 * id) + Indicator_Property_offset::OnOffPeriod_Prop), label + ": On/Off Period", "Seconds", false, false, 0, 0);
 						propertiesSet |= (1 << Indicator_Property_Group::Toogle_Grp);
 					}
-					if (propertiessupported & Indicator_Property_Bit::OnOffCycle_Bit)
+					if (m_indicatorLists[id]->properties & Indicator_Property_Bit::OnOffCycle_Bit)
 					{
 						/* On/Off Cycles */
 						Log::Write(LogLevel_Info, GetNodeId(), "\tOn/Off Cycles Property - Index %d", (256 + (32 * id) + Indicator_Property_offset::OnOffCycle_Prop));
-						node->CreateValueByte(ValueID::ValueGenre_Config, GetCommandClassId(), _instance, (256 + (32 * id) + Indicator_Property_offset::OnOffCycle_Prop), label + ": On/Off Cycles", "", false, false, 0, 0);
+						node->CreateValueByte(ValueID::ValueGenre_Config, GetCommandClassId(), m_indicatorLists[id]->instance, (256 + (32 * id) + Indicator_Property_offset::OnOffCycle_Prop), label + ": On/Off Cycles", "", false, false, 0, 0);
 						propertiesSet |= (1 << Indicator_Property_Group::Toogle_Grp);
 					}
-					if (propertiessupported & Indicator_Property_Bit::OnTimeWithPeriod_Bit)
+					if (m_indicatorLists[id]->properties & Indicator_Property_Bit::OnTimeWithPeriod_Bit)
 					{
 						/* On Time with On/Off Period combination */
 						Log::Write(LogLevel_Info, GetNodeId(), "\tOn Time with On/Off Period Property - Index %d", (256 + (32 * id) + Indicator_Property_offset::OnTimeWithPeriod_Prop));
-						node->CreateValueByte(ValueID::ValueGenre_Config, GetCommandClassId(), _instance, (256 + (32 * id) + Indicator_Property_offset::OnTimeWithPeriod_Prop), label + ": On time within an On/Off period", "Seconds", false, false, 0, 0); 
+						node->CreateValueByte(ValueID::ValueGenre_Config, GetCommandClassId(), m_indicatorLists[id]->instance, (256 + (32 * id) + Indicator_Property_offset::OnTimeWithPeriod_Prop), label + ": On time within an On/Off period", "Seconds", false, false, 0, 0); 
 						propertiesSet |= (1 << Indicator_Property_Group::Toogle_Grp);
 					}
-					if (propertiessupported & Indicator_Property_Bit::Timeout_Min_Bit)
+					if (m_indicatorLists[id]->properties & Indicator_Property_Bit::Timeout_Min_Bit)
 					{
 						/* Timeout (Minutes) */
 						Log::Write(LogLevel_Info, GetNodeId(), "\tTimeout (Minutes) Property - Index %d", (256 + (32 * id) + Indicator_Property_offset::Timeout_Min_Prop));
-						node->CreateValueByte(ValueID::ValueGenre_Config, GetCommandClassId(), _instance, (256 + (32 * id) + Indicator_Property_offset::Timeout_Min_Prop), label + ": Timeout (Minutes)", "Minutes", false, false, 0, 0);
+						node->CreateValueByte(ValueID::ValueGenre_Config, GetCommandClassId(), m_indicatorLists[id]->instance, (256 + (32 * id) + Indicator_Property_offset::Timeout_Min_Prop), label + ": Timeout (Minutes)", "Minutes", false, false, 0, 0);
 						propertiesSet |= (1 << Indicator_Property_Group::Timeout_Grp);
 					}
-					if (propertiessupported & Indicator_Property_Bit::Timeout_Sec_Bit)
+					if (m_indicatorLists[id]->properties & Indicator_Property_Bit::Timeout_Sec_Bit)
 					{
 						/* Timeout (Seconds) */
 						Log::Write(LogLevel_Info, GetNodeId(), "\tTimeout (Seconds) Property - Index %d", (256 + (32 * id) + Indicator_Property_offset::Timeout_Sec_Prop));
-						node->CreateValueByte(ValueID::ValueGenre_Config, GetCommandClassId(), _instance, (256 + (32 * id) + Indicator_Property_offset::Timeout_Sec_Prop), label + ": Timeout (Seconds)", "Seconds", false, false, 0, 0);
+						node->CreateValueByte(ValueID::ValueGenre_Config, GetCommandClassId(), m_indicatorLists[id]->instance, (256 + (32 * id) + Indicator_Property_offset::Timeout_Sec_Prop), label + ": Timeout (Seconds)", "Seconds", false, false, 0, 0);
 						propertiesSet |= (1 << Indicator_Property_Group::Timeout_Grp);
 					}
-					if (propertiessupported & Indicator_Property_Bit::Timeout_MS_Bit)
+					if (m_indicatorLists[id]->properties & Indicator_Property_Bit::Timeout_MS_Bit)
 					{
 						/* Timeout (1/100 of seconds) */
 						Log::Write(LogLevel_Info, GetNodeId(), "\tTimeout (1/100 of seconds) Property - Index %d", (256 + (32 * id) + Indicator_Property_offset::Timeout_Ms_Prop));
-						node->CreateValueByte(ValueID::ValueGenre_Config, GetCommandClassId(), _instance, (256 + (32 * id) + Indicator_Property_offset::Timeout_Ms_Prop), label + ": Timeout (1/100 of seconds)", "Miliseconds", false, false, 0, 0); 
+						node->CreateValueByte(ValueID::ValueGenre_Config, GetCommandClassId(), m_indicatorLists[id]->instance, (256 + (32 * id) + Indicator_Property_offset::Timeout_Ms_Prop), label + ": Timeout (1/100 of seconds)", "Miliseconds", false, false, 0, 0); 
 						propertiesSet |= (1 << Indicator_Property_Group::Timeout_Grp);
 					}
-					if (propertiessupported & Indicator_Property_Bit::SoundLevel_Bit)
+					if (m_indicatorLists[id]->properties & Indicator_Property_Bit::SoundLevel_Bit)
 					{
 						/* Multilevel Sound level */
 						Log::Write(LogLevel_Info, GetNodeId(), "\tMultilevel Sound Property - Index %d", (256 + (32 * id) + Indicator_Property_offset::Sound_Prop));
-						node->CreateValueByte(ValueID::ValueGenre_Config, GetCommandClassId(), _instance, (256 + (32 * id) + Indicator_Property_offset::Sound_Prop), label + ": Multilevel Sound level", "", false, false, 0, 0);
+						node->CreateValueByte(ValueID::ValueGenre_Config, GetCommandClassId(), m_indicatorLists[id]->instance, (256 + (32 * id) + Indicator_Property_offset::Sound_Prop), label + ": Multilevel Sound level", "", false, false, 0, 0);
 						propertiesSet |= Indicator_Property_Group::Sound_Grp;
 					}
-					if (propertiessupported & Indicator_Property_Bit::LowPower_Bit)
+					if (m_indicatorLists[id]->properties & Indicator_Property_Bit::LowPower_Bit)
 					{
 						/* ADVERTISE: Low power */
 						Log::Write(LogLevel_Info, GetNodeId(), "\tADVERTISE: Low power Property - Index %d", (256 + (32 * id) + Indicator_Property_offset::Adv_Low_Power_Prop));
-						node->CreateValueBool(ValueID::ValueGenre_Config, GetCommandClassId(), _instance, (256 + (32 * id) + Indicator_Property_offset::Adv_Low_Power_Prop), label + ": Low Power Capable", "", true, false, false, 0);
+						node->CreateValueBool(ValueID::ValueGenre_Config, GetCommandClassId(), m_indicatorLists[id]->instance, (256 + (32 * id) + Indicator_Property_offset::Adv_Low_Power_Prop), label + ": Low Power Capable", "", true, false, false, 0);
 						propertiesSet |= Indicator_Property_Group::Advertised_Grp;
 					}
 					/* Create the Actual Indicator */
@@ -724,8 +783,8 @@ enum Indicator_Property_offset {
 						item.m_label = "Sound Level";
 						item.m_value = Indicator_Property_Group::Sound_Grp;
 						items.push_back(item);
-					}					
-					node->CreateValueList(ValueID::ValueGenre_User, GetCommandClassId(), _instance, id, label, "", false, false, 0, items, 0, 0);
+					}	
+					node->CreateValueList(ValueID::ValueGenre_User, GetCommandClassId(), m_indicatorLists[id]->instance, id, label, "", false, false, 0, items, 0, 0);					
 				}
 			}
 

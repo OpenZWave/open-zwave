@@ -77,17 +77,24 @@ namespace OpenZWave
 					virtual bool SetValue(Internal::VC::Value const& _value) override;
 					virtual uint8 GetMaxVersion() override
 					{
-						return 3;
+						return 4;
 					}
 					virtual void SetValueBasic(uint8 const _instance, uint8 const _value) override;
 				protected:
 					virtual void CreateVars(uint8 const _instance) override;
 
 				private:
-					void createIndicatorConfigValues(uint8 id, uint8 _instance, uint32 propertiessupported);
+					struct Properties {
+						uint8 id;
+						uint8 instance;
+						uint8 properties;
+						string label;
+					};
+					void createIndicatorConfigValues(uint8 id);
 					void setIndicatorValue(uint8 id, uint8 _instance, uint8 property, uint8 value);
 					void refreshIndicator(uint32 id);
 					Indicator(uint32 const _homeId, uint8 const _nodeId);
+					std::map<uint8, std::shared_ptr<Properties> > m_indicatorLists;
 			};
 		} // namespace CC
 	} // namespace Internal
