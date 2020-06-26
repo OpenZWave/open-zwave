@@ -674,7 +674,7 @@ DISTFILES =	.gitignore \
 	config/images/homeseer/hs-ws200plus.png \
 	config/images/homeseer/hsm200.png \
 	config/images/honeywell/39348-ZW4005.png \
-	config/images/honeywell/39348-zw4008.png \
+	config/images/honeywell/39348-ZW4008.png \
 	config/images/honeywell/39351-ZW3005.png \
 	config/images/honeywell/39357-ZW3004.png \
 	config/images/honeywell/39358-ZW4002.png \
