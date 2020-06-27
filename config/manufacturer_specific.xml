@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ManufacturerSpecificData Revision="101" xmlns="https://github.com/OpenZWave/open-zwave">
+<ManufacturerSpecificData Revision="102" xmlns="https://github.com/OpenZWave/open-zwave">
   <Manufacturer id="0028" name="2B Electronics"></Manufacturer>
   <Manufacturer id="0098" name="2GIG Technologies">
     <Product config="2gig/ct50e.xml" id="015e" name="CT50e Thermostat" type="3200"/>
@@ -369,7 +369,7 @@
   <Manufacturer id="0140" name="Computime"></Manufacturer>
   <Manufacturer id="011B" name="Connected Object"></Manufacturer>
   <Manufacturer id="0179" name="ConnectHome">
-    <Product id="0001" name="CH-201 Thermostat" type="0001"/>
+    <Product config="connecthome/ch-201.xml" id="0021" name="CH-201 Thermostat" type="0013"/>
   </Manufacturer>
   <Manufacturer id="0285" name="CONNECTION TECHNOLOGY SYSTEMS"></Manufacturer>
   <Manufacturer id="025D" name="Contec intelligent housing"></Manufacturer>
