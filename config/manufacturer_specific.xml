@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ManufacturerSpecificData Revision="101" xmlns="https://github.com/OpenZWave/open-zwave">
+<ManufacturerSpecificData Revision="102" xmlns="https://github.com/OpenZWave/open-zwave">
   <Manufacturer id="0028" name="2B Electronics"></Manufacturer>
   <Manufacturer id="0098" name="2GIG Technologies">
     <Product config="2gig/ct50e.xml" id="015e" name="CT50e Thermostat" type="3200"/>
@@ -1101,6 +1101,7 @@
     <Product config="leviton/dz15s.xml" id="0001" name="DZ15S-1BZ Decora Smart Switch" type="3401"/>
     <Product config="leviton/dzpd3.xml" id="0001" name="DZPD3-2BW Decora 300W Plug-In Smart Dimmer" type="3501"/>
     <Product config="leviton/dz15s.xml" id="0001" name="Leviton DZPA1 Plug-In Outlet" type="3601"/>
+    <Product config="leviton/vrpa1.xml" id="0334" name="Leviton VRPA1 Plug-In Outlet" type="1805" />
   </Manufacturer>
   <Manufacturer id="0015" name="Lexel"></Manufacturer>
   <Manufacturer id="015B" name="LG Electronics"></Manufacturer>
