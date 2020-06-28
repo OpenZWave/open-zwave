@@ -794,6 +794,7 @@
     <Product config="ge/45604.xml" id="3030" name="45603 Plugin Appliance Module" type="5250"/>
     <Product id="3130" name="45604 Outdoor Module" type="5250"/>
     <Product id="3031" name="12720 Outdoor Smart Switch" type="4f50"/>
+    <Product config="ge/12720.xml" id="3130" name="12720 Outdoor Smart Switch" type="6363"/>
     <Product config="ge/14284.xml" id="3032" name="14284 Outdoor Smart Switch" type="4f50"/>
     <Product config="ge/14285.xml" id="3032" name="14285 Outdoor Smart Switch" type="4f44"/>
     <Product config="ge/receptacle.xml" id="3530" name="45605 Duplex Receptacle" type="5252"/>
