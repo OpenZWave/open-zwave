@@ -29,6 +29,8 @@
 #define _Indicator_H
 
 #include "command_classes/CommandClass.h"
+#include "TimerThread.h"
+
 
 namespace OpenZWave
 {
@@ -40,7 +42,7 @@ namespace OpenZWave
 			/** \brief Implements COMMAND_CLASS_INDICATOR (0x87), a Z-Wave device command class.
 			 * \ingroup CommandClass
 			 */
-			class Indicator: public CommandClass
+			class Indicator: public CommandClass, private Timer
 			{
 				public:
 					static CommandClass* Create(uint32 const _homeId, uint8 const _nodeId)
@@ -73,15 +75,26 @@ namespace OpenZWave
 					}
 					virtual bool HandleMsg(uint8 const* _data, uint32 const _length, uint32 const _instance = 1) override;
 					virtual bool SetValue(Internal::VC::Value const& _value) override;
-
+					virtual uint8 GetMaxVersion() override
+					{
+						return 4;
+					}
+					virtual void SetValueBasic(uint8 const _instance, uint8 const _value) override;
 				protected:
 					virtual void CreateVars(uint8 const _instance) override;
 
 				private:
-					Indicator(uint32 const _homeId, uint8 const _nodeId) :
-							CommandClass(_homeId, _nodeId)
-					{
-					}
+					struct Properties {
+						uint8 id;
+						uint8 instance;
+						uint8 properties;
+						string label;
+					};
+					void createIndicatorConfigValues(uint8 id);
+					void setIndicatorValue(uint8 id, uint8 _instance, uint8 property, uint8 value);
+					void refreshIndicator(uint32 id);
+					Indicator(uint32 const _homeId, uint8 const _nodeId);
+					std::map<uint8, std::shared_ptr<Properties> > m_indicatorLists;
 			};
 		} // namespace CC
 	} // namespace Internal
