@@ -367,7 +367,7 @@ namespace OpenZWave
 				try
 				{
 					/* very strange - We throw a exception if its out of range, but its not caught? */
-					if (m_items.size() < m_valueIdx)
+					if (m_items.size() < (uint32)m_valueIdx)
 					{
 						Log::Write(LogLevel_Warning, "Invalid Index Set on ValueList %s: %d", GetID().GetAsString().c_str(), m_valueIdx);
 						return NULL;
