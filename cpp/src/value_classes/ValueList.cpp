@@ -85,12 +85,12 @@ namespace OpenZWave
 					}
 					else
 					{
-						Log::Write(LogLevel_Warning, "Value size is invalid (%d). Only 1, 2 & 4 supported for node %d, class 0x%02x, instance %d, index %d", intSize, _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex());
+						Log::Write(LogLevel_Warning, "Value size is invalid (%d). Only 1, 2 & 4 supported for node %d, class 0x%02x, instance %d, index %d - %s", intSize, _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex(), GetID().GetAsString().c_str());
 					}
 				}
 				else
 				{
-					Log::Write(LogLevel_Warning, "Value list size is not set, assuming 4 bytes for node %d, class 0x%02x, instance %d, index %d", _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex());
+					Log::Write(LogLevel_Warning, "Value list size is not set, assuming 4 bytes for node %d, class 0x%02x, instance %d, index %d - %s", _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex(), GetID().GetAsString().c_str());
 				}
 
 				TiXmlElement const* itemElement = _valueElement->FirstChildElement();
@@ -125,11 +125,11 @@ namespace OpenZWave
 						int value = 0;
 						if (itemElement->QueryIntAttribute("value", &value) != TIXML_SUCCESS)
 						{
-							Log::Write(LogLevel_Warning, "Item value %s is wrong type or does not exist in xml configuration for node %d, class 0x%02x, instance %d, index %d", labelStr, _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex());
+							Log::Write(LogLevel_Warning, "Item value %s is wrong type or does not exist in xml configuration for node %d, class 0x%02x, instance %d, index %d - %s", labelStr, _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex(), GetID().GetAsString().c_str());
 						}
 						else if ((m_size == 1 && value > 255) || (m_size == 2 && value > 65535))
 						{
-							Log::Write(LogLevel_Warning, "Item value %s is incorrect size in xml configuration for node %d, class 0x%02x, instance %d, index %d", labelStr, _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex());
+							Log::Write(LogLevel_Warning, "Item value %s is incorrect size in xml configuration for node %d, class 0x%02x, instance %d, index %d - %s", labelStr, _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex(), GetID().GetAsString().c_str());
 						}
 						else
 						{
@@ -166,7 +166,7 @@ namespace OpenZWave
 					}
 					else
 					{
-						Log::Write(LogLevel_Warning, "Value is not found in xml configuration for node %d, class 0x%02x, instance %d, index %d", _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex());
+						Log::Write(LogLevel_Warning, "Value is not found in xml configuration for node %d, class 0x%02x, instance %d, index %d - %s", _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex(), GetID().GetAsString().c_str());
 					}
 				}
 
@@ -182,12 +182,12 @@ namespace OpenZWave
 					}
 					else
 					{
-						Log::Write(LogLevel_Warning, "Vindex is out of range for index in xml configuration for node %d, class 0x%02x, instance %d, index %d", _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex());
+						Log::Write(LogLevel_Warning, "Vindex is out of range for index in xml configuration for node %d, class 0x%02x, instance %d, index %d - %s", _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex(), GetID().GetAsString().c_str());
 					}
 				}
 				if (!valSet && !indSet)
 				{
-					Log::Write(LogLevel_Warning, "Missing default list value or vindex from xml configuration: node %d, class 0x%02x, instance %d, index %d", _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex());
+					Log::Write(LogLevel_Warning, "Missing default list value or vindex from xml configuration: node %d, class 0x%02x, instance %d, index %d - %s", _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex(), GetID().GetAsString().c_str());
 				}
 
 			}
@@ -249,7 +249,7 @@ namespace OpenZWave
 				if (index < 0)
 				{
 					// Item not found
-					Log::Write(LogLevel_Warning, "Attempt to Set a Invalid Label %s for ValueList in OnValueRefreshed", _label.c_str());
+					Log::Write(LogLevel_Warning, "Attempt to Set a Invalid Label %s for ValueList in OnValueRefreshed %s", _label.c_str(), GetID().GetAsString().c_str());
 					return false;
 				}
 
@@ -267,7 +267,7 @@ namespace OpenZWave
 				if (index < 0)
 				{
 					// Item not found
-					Log::Write(LogLevel_Warning, "Attempt to Set a Invalid Index %d for ValueList in OnValueRefreshed", _value);
+					Log::Write(LogLevel_Warning, "Attempt to Set a Invalid Index %d for ValueList in OnValueRefreshed %s", _value, GetID().GetAsString().c_str());
 					return;
 				}
 
@@ -299,7 +299,7 @@ namespace OpenZWave
 						return i;
 					}
 				}
-				Log::Write(LogLevel_Warning, "Attempt to get a Invalid Label %s from ValueList", _label.c_str());
+				Log::Write(LogLevel_Warning, "Attempt to get a Invalid Label %s from ValueList %s", _label.c_str(), GetID().GetAsString().c_str());
 				return -1;
 			}
 
@@ -316,7 +316,7 @@ namespace OpenZWave
 						return i;
 					}
 				}
-				Log::Write(LogLevel_Warning, "Attempt to get a Invalid Index %d on ValueList", _value);
+				Log::Write(LogLevel_Warning, "Attempt to get a Invalid Index %d on ValueList %s", _value, GetID().GetAsString().c_str());
 				return -1;
 			}
 
@@ -335,7 +335,7 @@ namespace OpenZWave
 
 					return true;
 				}
-				Log::Write(LogLevel_Error, "o_items passed to ValueList::GetItemLabels is null");
+				Log::Write(LogLevel_Error, "o_items passed to ValueList::GetItemLabels is null: %s", GetID().GetAsString().c_str());
 				return false;
 			}
 
@@ -354,7 +354,7 @@ namespace OpenZWave
 
 					return true;
 				}
-				Log::Write(LogLevel_Error, "o_values passed to ValueList::GetItemLabels is null");
+				Log::Write(LogLevel_Error, "o_values passed to ValueList::GetItemLabels is null: %s", GetID().GetAsString().c_str());
 				return false;
 			}
 
@@ -366,11 +366,17 @@ namespace OpenZWave
 			{
 				try
 				{
+					/* very strange - We throw a exception if its out of range, but its not caught? */
+					if (m_items.size() < m_valueIdx)
+					{
+						Log::Write(LogLevel_Warning, "Invalid Index Set on ValueList %s: %d", GetID().GetAsString().c_str(), m_valueIdx);
+						return NULL;
+					}
 					return &m_items.at(m_valueIdx);
 				}
-				catch (const std::out_of_range& oor)
+				catch (std::out_of_range const& oor)
 				{
-					Log::Write(LogLevel_Warning, "Invalid Index Set on ValueList: %s", oor.what());
+					Log::Write(LogLevel_Warning, "Invalid Index Set on ValueList %s: %s", GetID().GetAsString().c_str(), oor.what());
 					return NULL;
 				}
 			}
