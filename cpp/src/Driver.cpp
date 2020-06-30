@@ -156,6 +156,7 @@ Driver::Driver(string const& _controllerPath, ControllerInterface const& _interf
 	Options::Get()->GetOptionAsBool("IntervalBetweenPolls", &m_bIntervalBetweenPolls);
 
 	m_httpClient = new Internal::HttpClient(this);
+    m_httpClientIsExternal = false;
 
 	m_mfs = Internal::ManufacturerSpecificDB::Create();
 
@@ -294,7 +295,8 @@ Driver::~Driver()
 	m_eventMutex->Release();
 	delete this->AuthKey;
 	delete this->EncryptKey;
-	delete this->m_httpClient;
+    if(!m_httpClientIsExternal)
+    	delete this->m_httpClient;
 }
 
 //-----------------------------------------------------------------------------
@@ -6969,9 +6971,10 @@ void Driver::processConfigRevision(Internal::DNSLookup *result)
 
 bool Driver::setHttpClient(Internal::i_HttpClient *client)
 {
-	if (m_httpClient)
+	if (m_httpClient && !m_httpClientIsExternal)
 		delete m_httpClient;
 	m_httpClient = client;
+    m_httpClientIsExternal = true;
 	return true;
 }
 

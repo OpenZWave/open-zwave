@@ -995,7 +995,7 @@ namespace OpenZWave
 			bool refreshNodeConfig(uint8 node);
 			void processDownload(Internal::HttpDownload *);
 			Internal::i_HttpClient *m_httpClient;
-
+            bool m_httpClientIsExternal;
 			//-----------------------------------------------------------------------------
 			//	Metadata Related
 			//-----------------------------------------------------------------------------
