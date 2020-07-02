@@ -1887,7 +1887,8 @@ ENUM(ValueID_Index_Color,
 		Color = 0,
 		Index = 1,
 		Channels_Capabilities = 2,
-		Duration = 4
+		Duration = 4,
+		Target = 5
 	);
 ENUM(ValueID_Index_Configuration,
 		Parameter_1 = 1,
