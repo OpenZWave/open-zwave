@@ -220,10 +220,8 @@ namespace OpenZWave
 					typedef struct RefreshValue
 					{
 							uint8 cc;
-							uint8 genre;
-							uint8 instance;
+							uint8 requestflags;
 							uint16 index;
-							std::vector<RefreshValue *> RefreshClasses;
 					} RefreshValue;
 
 				protected:
@@ -242,7 +240,7 @@ namespace OpenZWave
 					map<uint8, uint8> m_endPointMap;
 					map<uint8, string> m_instanceLabel;
 					bool m_SecureSupport; 	// Does this commandclass support secure encryption (eg, the Security CC doesn't encrypt itself, so it doesn't support encryption)
-					std::vector<RefreshValue *> m_RefreshClassValues; // what Command Class Values should we refresh ?
+					multimap<uint16, RefreshValue *> m_RefreshClassValues; // what Command Class Values should we refresh ?
 					string m_commandClassLabel;
 					//-----------------------------------------------------------------------------
 					// Record which items of static data have been read from the device
