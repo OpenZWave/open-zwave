@@ -563,6 +563,35 @@ namespace OpenZWave
 			}
 
 //-----------------------------------------------------------------------------
+// <CommandClass::decodeDuration>
+// Decode the Duration Field to Seconds - CC:0000.00.00.11.016
+//-----------------------------------------------------------------------------
+
+			int32 CommandClass::decodeDuration(uint8 data) const
+			{
+				if (data <= 0x7f)
+					return data;
+				if ((data > 0x7f) && (data <= 0xFD))
+					return (data*60);
+				/* 0xFE - Unknown Duration - so lets say 0
+				 * 0xFF - Invalid Duration - Also say 0
+				 */
+				return 0;
+			}
+
+			uint8 CommandClass::encodeDuration(int32 seconds) const
+			{
+				if (seconds <= 0x7f)
+					return (seconds & 0xFF);
+				/* 15180 seconds is the max that can fit into our scale */
+				if (seconds > 15180)
+					return 0xFD;
+				return (uint8)((seconds/60) & 0xFF);
+			}
+
+
+
+//-----------------------------------------------------------------------------
 // <CommandClass::AppendValue>
 // Add a value to a message as a sequence of bytes
 //-----------------------------------------------------------------------------
