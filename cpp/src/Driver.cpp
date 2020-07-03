@@ -201,14 +201,12 @@ Driver::~Driver()
 
 	m_dnsThread->Stop();
 	m_dnsThread->Release();
-	delete m_dns;
 
 	m_driverThread->Stop();
 	m_driverThread->Release();
 
 	m_timerThread->Stop();
 	m_timerThread->Release();
-	delete m_timer;
 
 	m_sendMutex->Release();
 
@@ -295,6 +293,10 @@ Driver::~Driver()
 	delete this->AuthKey;
 	delete this->EncryptKey;
 	delete this->m_httpClient;
+	delete this->m_timer;
+	delete this->m_dns;
+
+
 }
 
 //-----------------------------------------------------------------------------
@@ -7003,6 +7005,17 @@ bool Driver::startMFSDownload(string configfile)
 	return m_httpClient->StartDownload(download);
 }
 
+bool Driver::startDownload(string target, string file)
+{
+	Internal::HttpDownload *download = new Internal::HttpDownload();
+	download->url = "http://download.db.openzwave.com/" + file;
+	download->filename = target;
+	download->operation = Internal::HttpDownload::Image;
+	Log::Write(LogLevel_Info, "Queuing download for %s (Node %d)", download->url.c_str(), download->node);
+	return m_httpClient->StartDownload(download);
+}
+
+
 bool Driver::refreshNodeConfig(uint8 _nodeId)
 {
 	Internal::LockGuard LG(m_nodeMutex);
@@ -7120,6 +7133,10 @@ void Driver::processDownload(Internal::HttpDownload *download)
 		else if (download->operation == Internal::HttpDownload::MFSConfig)
 		{
 			m_mfs->mfsConfigDownloaded(this, download->filename);
+		} 
+		else if (download->operation == Internal::HttpDownload::Image) 
+		{
+			m_mfs->fileDownloaded(this, download->filename);
 		}
 	}
 	else
@@ -7132,6 +7149,10 @@ void Driver::processDownload(Internal::HttpDownload *download)
 		else if (download->operation == Internal::HttpDownload::MFSConfig)
 		{
 			m_mfs->mfsConfigDownloaded(this, download->filename, false);
+		}
+		else if (download->operation == Internal::HttpDownload::Image) 
+		{
+			m_mfs->fileDownloaded(this, download->filename, false);
 		}
 		Notification* notification = new Notification(Notification::Type_UserAlerts);
 		notification->SetUserAlertNotification(Notification::Alert_ConfigFileDownloadFailed);

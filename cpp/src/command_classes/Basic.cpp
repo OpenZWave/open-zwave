@@ -36,6 +36,7 @@
 #include "platform/Log.h"
 
 #include "value_classes/ValueByte.h"
+#include "value_classes/ValueInt.h"
 #include "command_classes/NoOperation.h"
 
 #include "tinyxml.h"
@@ -74,6 +75,8 @@ namespace OpenZWave
 			{
 				CommandClass::ReadXML(_ccElement);
 				SetMapping(m_com.GetFlagByte(COMPAT_FLAG_BASIC_MAPPING));
+				if (m_com.GetFlagBool(COMPAT_FLAG_BASIC_SETASREPORT))
+					SetAfterMark();
 			}
 
 //-----------------------------------------------------------------------------
@@ -102,6 +105,9 @@ namespace OpenZWave
 			bool Basic::RequestValue(uint32 const _requestFlags, uint16 const _dummy1,	// = 0 (not used)
 					uint8 const _instance, Driver::MsgQueue const _queue)
 			{
+				if (IsAfterMark())
+					return false;
+
 				if (m_com.GetFlagBool(COMPAT_FLAG_GETSUPPORTED))
 				{
 					Msg* msg = new Msg("BasicCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
@@ -141,16 +147,36 @@ namespace OpenZWave
 					Log::Write(LogLevel_Info, GetNodeId(), "Received Basic report from node %d: level=%d", GetNodeId(), _data[1]);
 					if (!m_com.GetFlagBool(COMPAT_FLAG_BASIC_IGNOREREMAPPING) && m_com.GetFlagByte(COMPAT_FLAG_BASIC_MAPPING) != 0)
 					{
-						UpdateMappedClass(_instance, m_com.GetFlagByte(COMPAT_FLAG_BASIC_MAPPING), _data[1]);
+						/* update our Mapped Class with the Target Values */
+						if (GetVersion() >= 2 && _length == 4)
+							UpdateMappedClass(_instance, m_com.GetFlagByte(COMPAT_FLAG_BASIC_MAPPING), _data[2]);
+						else
+							UpdateMappedClass(_instance, m_com.GetFlagByte(COMPAT_FLAG_BASIC_MAPPING), _data[1]);
 					}
-					else if (Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>(GetValue(_instance, ValueID_Index_Basic::Set)))
-					{
-						value->OnValueRefreshed(_data[1]);
-						value->Release();
-					}
-					else
-					{
-						Log::Write(LogLevel_Warning, GetNodeId(), "No Valid Mapping for Basic Command Class and No ValueID Exported. Error?");
+					else 
+					{ 
+						if (Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>(GetValue(_instance, ValueID_Index_Basic::Set)))
+						{
+							value->OnValueRefreshed(_data[1]);
+							value->Release();
+						}
+						else
+						{
+							Log::Write(LogLevel_Warning, GetNodeId(), "No Valid Mapping for Basic Command Class and No ValueID Exported. Error?");
+						}
+						if (_length == 4)
+						{
+							if (Internal::VC::ValueByte* target = static_cast<Internal::VC::ValueByte*>(GetValue(_instance, ValueID_Index_Basic::Target)))
+							{
+								target->OnValueRefreshed(_data[2]);
+								target->Release();
+							}
+							if (Internal::VC::ValueInt* duration = static_cast<Internal::VC::ValueInt *>(GetValue(_instance, ValueID_Index_Basic::Duration)))
+							{
+								duration->OnValueRefreshed(decodeDuration(_data[3]));
+								duration->Release();
+							}
+						}
 					}
 					return true;
 				}
@@ -162,16 +188,37 @@ namespace OpenZWave
 						Log::Write(LogLevel_Info, GetNodeId(), "Received Basic set from node %d: level=%d. Treating it as a Basic report.", GetNodeId(), _data[1]);
 						if (!m_com.GetFlagBool(COMPAT_FLAG_BASIC_IGNOREREMAPPING) && m_com.GetFlagByte(COMPAT_FLAG_BASIC_MAPPING) != 0)
 						{
-							UpdateMappedClass(_instance, m_com.GetFlagByte(COMPAT_FLAG_BASIC_MAPPING), _data[1]);
+							/* update our Mapped Class with the Target Values */
+							if (GetVersion() >= 2 && _length == 4)
+								UpdateMappedClass(_instance, m_com.GetFlagByte(COMPAT_FLAG_BASIC_MAPPING), _data[2]);
+							else
+								UpdateMappedClass(_instance, m_com.GetFlagByte(COMPAT_FLAG_BASIC_MAPPING), _data[1]);
 						}
-						else if (Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>(GetValue(_instance, ValueID_Index_Basic::Set)))
+						else 
 						{
-							value->OnValueRefreshed(_data[1]);
-							value->Release();
-						}
-						else
-						{
-							Log::Write(LogLevel_Warning, GetNodeId(), "No Valid Mapping for Basic Command Class and No ValueID Exported. Error?");
+							if (Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>(GetValue(_instance, ValueID_Index_Basic::Set)))
+							{
+								value->OnValueRefreshed(_data[1]);
+								value->Release();
+							}
+							else
+							{
+								Log::Write(LogLevel_Warning, GetNodeId(), "No Valid Mapping for Basic Command Class and No ValueID Exported. Error?");
+							}
+							
+							if (_length == 4)
+							{
+								if (Internal::VC::ValueByte* target = static_cast<Internal::VC::ValueByte*>(GetValue(_instance, ValueID_Index_Basic::Target)))
+								{
+									target->OnValueRefreshed(_data[2]);
+									target->Release();
+								}
+								if (Internal::VC::ValueInt* duration = static_cast<Internal::VC::ValueInt *>(GetValue(_instance, ValueID_Index_Basic::Duration)))
+								{
+									duration->OnValueRefreshed(decodeDuration(_data[3]));
+									duration->Release();
+								}
+							}
 						}
 					}
 					else
@@ -196,7 +243,7 @@ namespace OpenZWave
 //-----------------------------------------------------------------------------
 			bool Basic::SetValue(Internal::VC::Value const& _value)
 			{
-				if (ValueID::ValueType_Byte == _value.GetID().GetType())
+				if (ValueID_Index_Basic::Set == _value.GetID().GetIndex())
 				{
 					Internal::VC::ValueByte const* value = static_cast<Internal::VC::ValueByte const*>(&_value);
 
@@ -227,7 +274,12 @@ namespace OpenZWave
 					Log::Write(LogLevel_Info, GetNodeId(), "COMMAND_CLASS_BASIC is not mapped to another CC. Exposing ValueID");
 					if (Node* node = GetNodeUnsafe())
 					{
-						node->CreateValueByte(ValueID::ValueGenre_Basic, GetCommandClassId(), _instance, ValueID_Index_Basic::Set, "Basic", "", false, false, 0, 0);
+						node->CreateValueByte(ValueID::ValueGenre_Basic, GetCommandClassId(), _instance, ValueID_Index_Basic::Set, "Basic", "", IsAfterMark(), false, 0, 0);
+						if ((GetVersion() >= 2) || (IsAfterMark()))
+						{
+							node->CreateValueByte(ValueID::ValueGenre_Basic, GetCommandClassId(), _instance, ValueID_Index_Basic::Target, "Basic Target", "", true, false, 0, 0);
+							node->CreateValueInt(ValueID::ValueGenre_Basic, GetCommandClassId(), _instance, ValueID_Index_Basic::Duration, "Basic Duration", "", true, false, 0, 0);
+						}
 					}
 				}
 
@@ -278,6 +330,8 @@ namespace OpenZWave
 						Log::Write(LogLevel_Info, GetNodeId(), "    COMMAND_CLASS_BASIC will be mapped to %s", ccstr.c_str());
 						m_com.SetFlagByte(COMPAT_FLAG_BASIC_MAPPING, _commandClassId);
 						RemoveValue(1, ValueID_Index_Basic::Set);
+						RemoveValue(1, ValueID_Index_Basic::Target);
+						RemoveValue(1, ValueID_Index_Basic::Duration);
 					}
 					res = true;
 				}

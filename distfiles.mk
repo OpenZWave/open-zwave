@@ -153,6 +153,7 @@ DISTFILES =	.gitignore \
 	config/devolo/mt2653.xml \
 	config/devolo/mt2756.xml \
 	config/devolo/mt2759.xml \
+	config/devolo/mt2760.xml \
 	config/devolo/mt2761.xml \
 	config/devolo/rs014G0159.xml \
 	config/diehlcontrols/766366.xml \
@@ -298,6 +299,7 @@ DISTFILES =	.gitignore \
 	config/ge/12727.xml \
 	config/ge/14282-plugin-switch.xml \
 	config/ge/14284.xml \
+	config/ge/14285.xml \
 	config/ge/14288-outlet.xml \
 	config/ge/14291-switch.xml \
 	config/ge/14292-toggle-switch.xml \
@@ -399,6 +401,7 @@ DISTFILES =	.gitignore \
 	config/images/BeNext/AlarmSound.png \
 	config/images/BeNext/DoorSensor.png \
 	config/images/BeNext/Molite.png \
+	config/images/BeNext/P1dongle.png \
 	config/images/BeNext/TagReader.png \
 	config/images/BeNext/TagReader500.png \
 	config/images/BeNext/mydisplay.png \
@@ -499,10 +502,12 @@ DISTFILES =	.gitignore \
 	config/images/devolo/mt2652.png \
 	config/images/devolo/mt2756.png \
 	config/images/devolo/mt2759.png \
+	config/images/devolo/mt2760.png \
 	config/images/devolo/mt2761.png \
 	config/images/diehlcontrols/766366.png \
 	config/images/dlink/dch-z110.png \
 	config/images/dlink/dch-z120.png \
+	config/images/dlink/dch-z210.png \
 	config/images/dlink/dch-z510.png \
 	config/images/dome/0002.png \
 	config/images/dome/0085.png \
@@ -582,6 +587,7 @@ DISTFILES =	.gitignore \
 	config/images/fibaro/fgsd002.png \
 	config/images/fibaro/fgt001.png \
 	config/images/fibaro/fgwd111.png \
+	config/images/fibaro/fgwds221.png \
 	config/images/fibaro/fgwoe.png \
 	config/images/fibaro/fgwpe.png \
 	config/images/fibaro/fgwpfzw5.png \
@@ -606,6 +612,7 @@ DISTFILES =	.gitignore \
 	config/images/ge/12727.png \
 	config/images/ge/14282-plugin-switch.png \
 	config/images/ge/14284.png \
+	config/images/ge/14285.png \
 	config/images/ge/14288-outlet.png \
 	config/images/ge/14291-switch.png \
 	config/images/ge/14292-toggle-switch.png \
@@ -667,7 +674,7 @@ DISTFILES =	.gitignore \
 	config/images/homeseer/hs-ws200plus.png \
 	config/images/homeseer/hsm200.png \
 	config/images/honeywell/39348-ZW4005.png \
-	config/images/honeywell/39348-zw4008.png \
+	config/images/honeywell/39348-ZW4008.png \
 	config/images/honeywell/39351-ZW3005.png \
 	config/images/honeywell/39357-ZW3004.png \
 	config/images/honeywell/39358-ZW4002.png \
@@ -697,11 +704,13 @@ DISTFILES =	.gitignore \
 	config/images/inovelli/lzw40.png \
 	config/images/inovelli/lzw41.png \
 	config/images/inovelli/lzw42.png \
+	config/images/inovelli/lzw60.png \
 	config/images/inovelli/simple_module.png \
 	config/images/iwatsu/ne-4ct-2p.png \
 	config/images/iwatsu/ne-4ct.png \
 	config/images/jasco/45601.png \
 	config/images/kaipule/im20.png \
+	config/images/kwikset/888.png \
 	config/images/kwikset/914c.png \
 	config/images/kwikset/smartcode.png \
 	config/images/leviton/dz15s.png \
@@ -725,6 +734,7 @@ DISTFILES =	.gitignore \
 	config/images/merten/506004.png \
 	config/images/merten/508244.png \
 	config/images/miyakawaelectric/me-d101.png \
+	config/images/namron/1402756.png \
 	config/images/nexia/db100z.png \
 	config/images/nodon/asp3100SmartPlug.png \
 	config/images/nodon/crc3100OctanRemote.png \
@@ -734,6 +744,8 @@ DISTFILES =	.gitignore \
 	config/images/northq/nq92021.png \
 	config/images/oomi/ft100.png \
 	config/images/oomi/ft111.png \
+	config/images/oomi/ft112.png \
+	config/images/oomi/ft118.png \
 	config/images/permundo/psc132zw.png \
 	config/images/permundo/psc234zw.png \
 	config/images/philio/pad02.png \
@@ -780,11 +792,13 @@ DISTFILES =	.gitignore \
 	config/images/qubino/ZMNHIDx.png \
 	config/images/qubino/ZMNHNDx.png \
 	config/images/qubino/ZMNHODx.png \
+	config/images/qubino/ZMNHQDx.png \
 	config/images/qubino/ZMNHSDx.png \
 	config/images/qubino/ZMNHTDx.png \
 	config/images/qubino/ZMNHVDx.png \
 	config/images/qubino/ZMNHWD1.png \
 	config/images/qubino/ZMNHYDx.png \
+	config/images/qubino/ZMNKADx.png \
 	config/images/qubino/zmnhxdx.png \
 	config/images/quby/qb2.png \
 	config/images/rcs/em52-zw.png \
@@ -811,6 +825,7 @@ DISTFILES =	.gitignore \
 	config/images/shenzen_neo/nas-ab01z.png \
 	config/images/shenzen_neo/nas-ds01z.png \
 	config/images/shenzen_neo/nas-pd01z.png \
+	config/images/shenzen_neo/nas-pd02z.png \
 	config/images/shenzen_neo/nas-wr01z.png \
 	config/images/shenzen_neo/nas-ws02z.png \
 	config/images/simon/10002034-13X.png \
@@ -827,6 +842,8 @@ DISTFILES =	.gitignore \
 	config/images/sunricher/srzv9101sachpeu.png \
 	config/images/sunricher/zv9101.png \
 	config/images/swiid/swiidinter.png \
+	config/images/technisat/03009496.png \
+	config/images/technisat/03009499.png \
 	config/images/telldus/tzdw100.png \
 	config/images/telldus/tzwp100.png \
 	config/images/telldus/tzwp102.png \
@@ -880,6 +897,7 @@ DISTFILES =	.gitignore \
 	config/images/widom/WDS2.png \
 	config/images/widom/WSP.png \
 	config/images/widom/WTED.png \
+	config/images/wink/wnk-mot1.png \
 	config/images/zipato/HS1CA-Z.png \
 	config/images/zipato/HS1CG-Z.png \
 	config/images/zipato/HS1SA-Z.png \
@@ -899,7 +917,10 @@ DISTFILES =	.gitignore \
 	config/images/zooz/zen20.png \
 	config/images/zooz/zen20v2.png \
 	config/images/zooz/zen21.png \
+	config/images/zooz/zen21v3.png \
 	config/images/zooz/zen22.png \
+	config/images/zooz/zen23v3.png \
+	config/images/zooz/zen24v2.png \
 	config/images/zooz/zen26.png \
 	config/images/zooz/zen27.png \
 	config/images/zooz/zen30.png \
@@ -919,6 +940,7 @@ DISTFILES =	.gitignore \
 	config/images/zwave.me/popp_kfob-c.png \
 	config/images/zwave.me/zme_raz5.png \
 	config/images/zwave.me/zweather.png \
+	config/images/zwp/PA-100.png \
 	config/images/zwp/WD-100.png \
 	config/ingersoll/dwzwave1.xml \
 	config/inovelli/lzw30-sn.xml \
@@ -928,6 +950,7 @@ DISTFILES =	.gitignore \
 	config/inovelli/lzw40.xml \
 	config/inovelli/lzw41.xml \
 	config/inovelli/lzw42.xml \
+	config/inovelli/lzw60.xml \
 	config/inovelli/nzw1201.xml \
 	config/inovelli/nzw30.xml \
 	config/inovelli/nzw31.xml \
@@ -944,6 +967,7 @@ DISTFILES =	.gitignore \
 	config/jasco/45601.xml \
 	config/kaipule/im20.xml \
 	config/kaipule/ix32.xml \
+	config/kwikset/888.xml \
 	config/kwikset/914c.xml \
 	config/kwikset/smartcode.xml \
 	config/leviton/dz15s.xml \
@@ -1147,6 +1171,8 @@ DISTFILES =	.gitignore \
 	config/sunricher/zv9101.xml \
 	config/swiid/swiidinter.xml \
 	config/swiid/swiidplug.xml \
+	config/technisat/03009496.xml \
+	config/technisat/03009499.xml \
 	config/telldus/tzdw100.xml \
 	config/telldus/tzwp100.xml \
 	config/telldus/tzwp102.xml \
@@ -1215,6 +1241,7 @@ DISTFILES =	.gitignore \
 	config/widom/WDS2.xml \
 	config/widom/WSP.xml \
 	config/widom/WTED.xml \
+	config/wink/wnk-mot1.xml \
 	config/zipato/MiniKeypad.xml \
 	config/zipato/RGBBulb.xml \
 	config/zipato/RGBBulb2.xml \
@@ -1229,11 +1256,13 @@ DISTFILES =	.gitignore \
 	config/zooz/zen20.xml \
 	config/zooz/zen20v2.xml \
 	config/zooz/zen21.xml \
-	config/zooz/zen21v2.xml \
+	config/zooz/zen21v3.xml \
 	config/zooz/zen22.xml \
 	config/zooz/zen22v2.xml \
 	config/zooz/zen23.xml \
+	config/zooz/zen23v3.xml \
 	config/zooz/zen24.xml \
+	config/zooz/zen24v2.xml \
 	config/zooz/zen25.xml \
 	config/zooz/zen26.xml \
 	config/zooz/zen27.xml \

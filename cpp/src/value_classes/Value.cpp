@@ -103,8 +103,8 @@ namespace OpenZWave
 				uint16 index = 0;
 				if (TIXML_SUCCESS == _valueElement->QueryIntAttribute("index", &intVal))
 				{
-					/* index is only 10 bytes in the ValueID class */
-					index = (uint16) (intVal & 0x3FF);
+					/* index is only 16 bytes in the ValueID class */
+					index = (uint16) (intVal & 0xFFFF);
 				}
 
 				m_id = ValueID(_homeId, _nodeId, genre, _commandClassId, instance, index, type);
@@ -229,7 +229,7 @@ namespace OpenZWave
 				snprintf(str, sizeof(str), "%d", m_id.GetInstance());
 				_valueElement->SetAttribute("instance", str);
 
-				snprintf(str, sizeof(str), "%d", (m_id.GetIndex() & 0x3FF));
+				snprintf(str, sizeof(str), "%d", (m_id.GetIndex() & 0xFFFF));
 				_valueElement->SetAttribute("index", str);
 
 				_valueElement->SetAttribute("label", GetLabel().c_str());

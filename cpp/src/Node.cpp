@@ -479,12 +479,6 @@ void Node::AdvanceQueries()
 				}
 				else
 				{
-					Internal::CC::ManufacturerSpecific* cc = static_cast<Internal::CC::ManufacturerSpecific*>(GetCommandClass(Internal::CC::ManufacturerSpecific::StaticGetCommandClassId()));
-					if (cc)
-					{
-						cc->SetInstance(1);
-						cc->ReLoadConfigXML();
-					}
 					m_queryStage = QueryStage_Static;
 					m_queryRetries = 0;
 				}

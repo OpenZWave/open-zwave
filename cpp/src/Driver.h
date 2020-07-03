@@ -990,6 +990,7 @@ namespace OpenZWave
 			bool setHttpClient(Internal::i_HttpClient *client);
 		private:
 			bool startConfigDownload(uint16 _manufacturerId, uint16 _productType, uint16 _productId, string configfile, uint8 node = 0);
+			bool startDownload(string target, string file);
 			bool startMFSDownload(string configfile);
 			bool refreshNodeConfig(uint8 node);
 			void processDownload(Internal::HttpDownload *);

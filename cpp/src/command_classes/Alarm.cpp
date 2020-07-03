@@ -240,7 +240,7 @@ namespace OpenZWave
 
 						uint8 NotificationType = _data[5];
 						uint8 NotificationEvent = _data[6];
-						bool NotificationSequencePresent = ((_data[7] & 0x80) == 1);
+						bool NotificationSequencePresent = (_data[7] & 0x80);
 						uint8 EventParamLength = (_data[7] & 0x1F);
 						uint8 NotificationSequence = 0;
 						if (NotificationSequencePresent)

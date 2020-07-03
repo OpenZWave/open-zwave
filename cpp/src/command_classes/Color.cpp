@@ -306,6 +306,8 @@ namespace OpenZWave
 
 						if (GetVersion() > 1)
 							node->CreateValueByte(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_Color::Duration, "Duration", "Sec", false, false, 255, 0);
+						if (GetVersion() > 2)
+							node->CreateValueString(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_Color::Target, "Target Color", helpstr, true, false, "#000000", 0);
 
 					}
 					return true;
@@ -339,6 +341,8 @@ namespace OpenZWave
 						}
 					}
 					m_colorvalues[coloridx] = _data[2];
+					if (GetVersion() >= 3)
+						m_colorTargetValues[coloridx] = _data[3];
 
 					/* test if there are any more valid coloridx */
 					for (uint8 idx = coloridx + 1; idx < 9; idx++)
@@ -352,287 +356,270 @@ namespace OpenZWave
 						m_refreshinprogress = false;
 
 					/* if we get here, then we can update our ValueID */
+
+					string colorStr = decodeColor(m_colorvalues);
+
 					if (Internal::VC::ValueString* color = static_cast<Internal::VC::ValueString*>(GetValue(_instance, ValueID_Index_Color::Color)))
 					{
-						/* create a RGB[W] String */
-						std::stringstream ss;
-						std::stringstream ssbuf;
-						bool usingbuf = false;
-						uint16_t f_capabilities = m_dom.GetFlagShort(STATE_FLAG_COLOR_CHANNELS);
-						ss << "#";
-						/* do R */
-						if ((f_capabilities) & (1 << (COLORIDX_RED)))
-							ss << std::setw(2) << std::uppercase << std::hex << std::setfill('0') << (int) m_colorvalues[COLORIDX_RED];
-						else
-							ss << "00";
-						/* do G */
-						if ((f_capabilities) & (1 << (COLORIDX_GREEN)))
-							ss << std::setw(2) << std::uppercase << std::hex << std::setfill('0') << (int) m_colorvalues[COLORIDX_GREEN];
-						else
-							ss << "00";
-						/* do B */
-						if ((f_capabilities) & (1 << (COLORIDX_BLUE)))
-							ss << std::setw(2) << std::uppercase << std::hex << std::setfill('0') << (int) m_colorvalues[COLORIDX_BLUE];
-						else
-							ss << "00";
-
-						/* if both whites are present.... */
-						if (((f_capabilities) & (1 << (COLORIDX_WARMWHITE))) && ((f_capabilities) & (1 << (COLORIDX_COLDWHITE))))
-						{
-							/* append them both */
-							ss << std::setw(2) << std::uppercase << std::hex << std::setfill('0') << (int) m_colorvalues[COLORIDX_WARMWHITE];
-							ss << std::setw(2) << std::uppercase << std::hex << std::setfill('0') << (int) m_colorvalues[COLORIDX_COLDWHITE];
-						}
-						else if ((f_capabilities) & (1 << (COLORIDX_WARMWHITE)))
-						{
-							/* else, if the warm white is present, append that */
-							ss << std::setw(2) << std::uppercase << std::hex << std::setfill('0') << (int) m_colorvalues[COLORIDX_WARMWHITE];
-						}
-						else if ((f_capabilities) & (1 << (COLORIDX_COLDWHITE)))
-						{
-							/* else, if the cold white is present, append that */
-							ss << std::setw(2) << std::uppercase << std::hex << std::setfill('0') << (int) m_colorvalues[COLORIDX_COLDWHITE];
-						}
-						else
-						{
-							/* we put 0000 into our buffer to represent both Warm and Cold white */
-							ssbuf << "0000";
-							usingbuf = true;
-						}
-						if ((f_capabilities) & (1 << (COLORIDX_AMBER)))
-						{
-							/* if AMBER is present, append our buffer if needed */
-							if (usingbuf)
-							{
-								ss << ssbuf.str();
-								ssbuf.str("");
-								ssbuf.clear();
-								usingbuf = false;
-							}
-							/* and then our Color */
-							ss << std::setw(2) << std::uppercase << std::hex << std::setfill('0') << (int) m_colorvalues[COLORIDX_AMBER];
-						}
-						else
-						{
-							/* put 00 into our buffer */
-							ssbuf << "00";
-							usingbuf = true;
-						}
-						if ((f_capabilities) & (1 << (COLORIDX_CYAN)))
-						{
-							/* if CYAN is present, append our buffer if needed */
-							if (usingbuf)
-							{
-								ss << ssbuf.str();
-								ssbuf.str("");
-								ssbuf.clear();
-								usingbuf = false;
-							}
-							/* and then our Color */
-							ss << std::setw(2) << std::uppercase << std::hex << std::setfill('0') << (int) m_colorvalues[COLORIDX_CYAN];
-						}
-						else
-						{
-							/* put 00 into our buffer */
-							ssbuf << "00";
-							usingbuf = true;
-						}
-						if ((f_capabilities) & (1 << (COLORIDX_PURPLE)))
-						{
-							/* if PURPLE is present, append our buffer if needed */
-							if (usingbuf)
-							{
-								ss << ssbuf.str();
-								ssbuf.str("");
-								ssbuf.clear();
-								usingbuf = false;
-							}
-							/* and then our Color */
-							ss << std::setw(2) << std::uppercase << std::hex << std::setfill('0') << (int) m_colorvalues[COLORIDX_PURPLE];
-						}
-						/* No need for a else case here as COLORIDX_PURPLE is the last color. If its not supported, we
-						 * don't put anything in our Color String
-						 */
-
-						Log::Write(LogLevel_Info, GetNodeId(), "Received a updated Color from Device: %s", ss.str().c_str());
-						color->OnValueRefreshed(string(ss.str()));
+						Log::Write(LogLevel_Info, GetNodeId(), "Received a updated Color from Device: %s", colorStr.c_str());
+						color->OnValueRefreshed(colorStr);
 						color->Release();
-
-						/* if we don't support the Color Index then fake it */
-						if (!(f_capabilities & (1 << (COLORIDX_INDEXCOLOR))))
-						{
-							if (Internal::VC::ValueList* coloridx = static_cast<Internal::VC::ValueList*>(GetValue(_instance, ValueID_Index_Color::Index)))
-							{
-								/* it supports the AMBER/CYAN/PURPLE Channels */
-								if (f_capabilities > 31)
-								{
-									/* Custom */
-									coloridx->OnValueRefreshed(17);
-									coloridx->Release();
-									return true;
-								}
-								if ((f_capabilities) & (1 << (COLORIDX_WARMWHITE)))
-								{
-									if (ss.str().substr(0, 9) == "#000000FF")
-									{
-										/* Warm White */
-										coloridx->OnValueRefreshed(2);
-										coloridx->Release();
-										return true;
-									}
-								}
-								if ((f_capabilities) & (1 << (COLORIDX_COLDWHITE)))
-								{
-									if (ss.str().substr(0, 11) == "#00000000FF")
-									{
-										/* Cool White */
-										coloridx->OnValueRefreshed(1);
-										coloridx->Release();
-										return true;
-									}
-								}
-								if (ss.str().substr(0, 7) == "#000000")
-								{
-									/* off */
-									coloridx->OnValueRefreshed(0);
-									coloridx->Release();
-									return true;
-								}
-								else if (ss.str().substr(0, 7) == "#FFFFFF")
-								{
-									/* White */
-									coloridx->OnValueRefreshed(1);
-									coloridx->Release();
-									return true;
-								}
-								else if (ss.str().substr(0, 7) == "#FF9329")
-								{
-									/* warm white */
-									coloridx->OnValueRefreshed(2);
-									coloridx->Release();
-									return true;
-								}
-								else if (ss.str().substr(0, 7) == "#FF0000")
-								{
-									/* red */
-									coloridx->OnValueRefreshed(3);
-									coloridx->Release();
-									return true;
-								}
-								else if (ss.str().substr(0, 7) == "#00FF00")
-								{
-									/* lime */
-									coloridx->OnValueRefreshed(4);
-									coloridx->Release();
-									return true;
-								}
-								else if (ss.str().substr(0, 7) == "#0000FF")
-								{
-									/* blue */
-									coloridx->OnValueRefreshed(5);
-									coloridx->Release();
-									return true;
-								}
-								else if (ss.str().substr(0, 7) == "#FFFF00")
-								{
-									/* yellow */
-									coloridx->OnValueRefreshed(6);
-									coloridx->Release();
-									return true;
-								}
-								else if (ss.str().substr(0, 7) == "#00FFFF")
-								{
-									/* Cyan */
-									coloridx->OnValueRefreshed(7);
-									coloridx->Release();
-									return true;
-								}
-								else if (ss.str().substr(0, 7) == "#FF00FF")
-								{
-									/* Magenta */
-									coloridx->OnValueRefreshed(8);
-									coloridx->Release();
-									return true;
-								}
-								else if (ss.str().substr(0, 7) == "#C0C0C0")
-								{
-									/* Silver */
-									coloridx->OnValueRefreshed(9);
-									coloridx->Release();
-									return true;
-								}
-								else if (ss.str().substr(0, 7) == "#808080")
-								{
-									/* gray */
-									coloridx->OnValueRefreshed(10);
-									coloridx->Release();
-									return true;
-								}
-								else if (ss.str().substr(0, 7) == "#800000")
-								{
-									/* maroon */
-									coloridx->OnValueRefreshed(11);
-									coloridx->Release();
-									return true;
-								}
-								else if (ss.str().substr(0, 7) == "#808000")
-								{
-									/* Olive */
-									coloridx->OnValueRefreshed(12);
-									coloridx->Release();
-									return true;
-								}
-								else if (ss.str().substr(0, 7) == "#008000")
-								{
-									/* green */
-									coloridx->OnValueRefreshed(13);
-									coloridx->Release();
-									return true;
-								}
-								else if (ss.str().substr(0, 7) == "#800080")
-								{
-									/* purple */
-									coloridx->OnValueRefreshed(14);
-									coloridx->Release();
-									return true;
-								}
-								else if (ss.str().substr(0, 7) == "#008080")
-								{
-									/* teal */
-									coloridx->OnValueRefreshed(15);
-									coloridx->Release();
-									return true;
-								}
-								else if (ss.str().substr(0, 7) == "#000080")
-								{
-									/* navy */
-									coloridx->OnValueRefreshed(16);
-									coloridx->Release();
-									return true;
-								}
-								else
-								{
-									/* custom */
-									coloridx->OnValueRefreshed(17);
-									coloridx->Release();
-									return true;
-								}
-
-							}
-						}
 					}
 					/* if we got a updated Color Index Value - Update our ValueID */
-					if ((m_dom.GetFlagShort(STATE_FLAG_COLOR_CHANNELS)) & (1 << (COLORIDX_INDEXCOLOR)))
+					if (Internal::VC::ValueList* coloridx = static_cast<Internal::VC::ValueList*>(GetValue(_instance, ValueID_Index_Color::Index)))
 					{
-						if (Internal::VC::ValueList* coloridx = static_cast<Internal::VC::ValueList*>(GetValue(_instance, ValueID_Index_Color::Index)))
+						if ((m_dom.GetFlagShort(STATE_FLAG_COLOR_CHANNELS)) & (1 << (COLORIDX_INDEXCOLOR)))
 						{
 							coloridx->OnValueRefreshed(m_colorvalues[COLORIDX_INDEXCOLOR]);
-							coloridx->Release();
+						} 
+						else
+						{
+							coloridx->OnValueRefreshed(decodeColorList(colorStr));
+						}
+						coloridx->Release();
+					}
+					if (GetVersion() >= 3) 
+					{
+						string colorTargetStr = decodeColor(m_colorTargetValues);
+
+						if (Internal::VC::ValueString* color = static_cast<Internal::VC::ValueString*>(GetValue(_instance, ValueID_Index_Color::Target)))
+						{
+							Log::Write(LogLevel_Info, GetNodeId(), "Received a updated Color Target from Device: %s", colorStr.c_str());
+							color->OnValueRefreshed(colorStr);
+							color->Release();
 						}
 					}
+
 					return true;
 				}
 				return false;
+			}
+
+			uint8 Color::decodeColorList(string colorStr)
+			{
+				uint16_t f_capabilities = m_dom.GetFlagShort(STATE_FLAG_COLOR_CHANNELS);
+
+				/* if we don't support the Color Index then fake it */
+				if (!(f_capabilities & (1 << (COLORIDX_INDEXCOLOR))))
+				{
+					/* it supports the AMBER/CYAN/PURPLE Channels */
+					if (f_capabilities > 31)
+					{
+						/* Custom */
+						return 17;
+					}
+					if ((f_capabilities) & (1 << (COLORIDX_WARMWHITE)))
+					{
+						if (colorStr.substr(0, 9) == "#000000FF")
+						{
+							/* Warm White */
+							return 2;
+						}
+					}
+					if ((f_capabilities) & (1 << (COLORIDX_COLDWHITE)))
+					{
+						if (colorStr.substr(0, 11) == "#00000000FF")
+						{
+							/* Cool White */
+							return 1;
+						}
+					}
+					if (colorStr.substr(0, 7) == "#000000")
+					{
+						/* off */
+						return 0;
+					}
+					else if (colorStr.substr(0, 7) == "#FFFFFF")
+					{
+						/* White */
+						return 1;
+					}
+					else if (colorStr.substr(0, 7) == "#FF9329")
+					{
+						/* warm white */
+						return 2;
+					}
+					else if (colorStr.substr(0, 7) == "#FF0000")
+					{
+						/* red */
+						return 3;
+					}
+					else if (colorStr.substr(0, 7) == "#00FF00")
+					{
+						/* lime */
+						return 4;
+					}
+					else if (colorStr.substr(0, 7) == "#0000FF")
+					{
+						/* blue */
+						return 5;
+					}
+					else if (colorStr.substr(0, 7) == "#FFFF00")
+					{
+						/* yellow */
+						return 6;
+					}
+					else if (colorStr.substr(0, 7) == "#00FFFF")
+					{
+						/* Cyan */
+						return 7;
+					}
+					else if (colorStr.substr(0, 7) == "#FF00FF")
+					{
+						/* Magenta */
+						return 8;
+					}
+					else if (colorStr.substr(0, 7) == "#C0C0C0")
+					{
+						/* Silver */
+						return 9;
+					}
+					else if (colorStr.substr(0, 7) == "#808080")
+					{
+						/* gray */
+						return 10;
+					}
+					else if (colorStr.substr(0, 7) == "#800000")
+					{
+						/* maroon */
+						return 11;
+					}
+					else if (colorStr.substr(0, 7) == "#808000")
+					{
+						/* Olive */
+						return 12;
+					}
+					else if (colorStr.substr(0, 7) == "#008000")
+					{
+						/* green */
+						return 13;
+					}
+					else if (colorStr.substr(0, 7) == "#800080")
+					{
+						/* purple */
+						return 14;
+					}
+					else if (colorStr.substr(0, 7) == "#008080")
+					{
+						/* teal */
+						return 15;
+					}
+					else if (colorStr.substr(0, 7) == "#000080")
+					{
+						/* navy */
+						return 16;
+					}
+					else
+					{
+						/* custom */
+						return 17;
+					}
+				}
+				return 17;
+			}
+
+			string Color::decodeColor(uint8 valueArray[9])
+			{
+				/* create a RGB[W] String */
+				std::stringstream ss;
+				std::stringstream ssbuf;
+				bool usingbuf = false;
+				uint16_t f_capabilities = m_dom.GetFlagShort(STATE_FLAG_COLOR_CHANNELS);
+				ss << "#";
+				/* do R */
+				if ((f_capabilities) & (1 << (COLORIDX_RED)))
+					ss << std::setw(2) << std::uppercase << std::hex << std::setfill('0') << (int) m_colorvalues[COLORIDX_RED];
+				else
+					ss << "00";
+				/* do G */
+				if ((f_capabilities) & (1 << (COLORIDX_GREEN)))
+					ss << std::setw(2) << std::uppercase << std::hex << std::setfill('0') << (int) m_colorvalues[COLORIDX_GREEN];
+				else
+					ss << "00";
+				/* do B */
+				if ((f_capabilities) & (1 << (COLORIDX_BLUE)))
+					ss << std::setw(2) << std::uppercase << std::hex << std::setfill('0') << (int) m_colorvalues[COLORIDX_BLUE];
+				else
+					ss << "00";
+
+				/* if both whites are present.... */
+				if (((f_capabilities) & (1 << (COLORIDX_WARMWHITE))) && ((f_capabilities) & (1 << (COLORIDX_COLDWHITE))))
+				{
+					/* append them both */
+					ss << std::setw(2) << std::uppercase << std::hex << std::setfill('0') << (int) m_colorvalues[COLORIDX_WARMWHITE];
+					ss << std::setw(2) << std::uppercase << std::hex << std::setfill('0') << (int) m_colorvalues[COLORIDX_COLDWHITE];
+				}
+				else if ((f_capabilities) & (1 << (COLORIDX_WARMWHITE)))
+				{
+					/* else, if the warm white is present, append that */
+					ss << std::setw(2) << std::uppercase << std::hex << std::setfill('0') << (int) m_colorvalues[COLORIDX_WARMWHITE];
+				}
+				else if ((f_capabilities) & (1 << (COLORIDX_COLDWHITE)))
+				{
+					/* else, if the cold white is present, append that */
+					ss << std::setw(2) << std::uppercase << std::hex << std::setfill('0') << (int) m_colorvalues[COLORIDX_COLDWHITE];
+				}
+				else
+				{
+					/* we put 0000 into our buffer to represent both Warm and Cold white */
+					ssbuf << "0000";
+					usingbuf = true;
+				}
+				if ((f_capabilities) & (1 << (COLORIDX_AMBER)))
+				{
+					/* if AMBER is present, append our buffer if needed */
+					if (usingbuf)
+					{
+						ss << ssbuf.str();
+						ssbuf.str("");
+						ssbuf.clear();
+						usingbuf = false;
+					}
+					/* and then our Color */
+					ss << std::setw(2) << std::uppercase << std::hex << std::setfill('0') << (int) m_colorvalues[COLORIDX_AMBER];
+				}
+				else
+				{
+					/* put 00 into our buffer */
+					ssbuf << "00";
+					usingbuf = true;
+				}
+				if ((f_capabilities) & (1 << (COLORIDX_CYAN)))
+				{
+					/* if CYAN is present, append our buffer if needed */
+					if (usingbuf)
+					{
+						ss << ssbuf.str();
+						ssbuf.str("");
+						ssbuf.clear();
+						usingbuf = false;
+					}
+					/* and then our Color */
+					ss << std::setw(2) << std::uppercase << std::hex << std::setfill('0') << (int) m_colorvalues[COLORIDX_CYAN];
+				}
+				else
+				{
+					/* put 00 into our buffer */
+					ssbuf << "00";
+					usingbuf = true;
+				}
+				if ((f_capabilities) & (1 << (COLORIDX_PURPLE)))
+				{
+					/* if PURPLE is present, append our buffer if needed */
+					if (usingbuf)
+					{
+						ss << ssbuf.str();
+						ssbuf.str("");
+						ssbuf.clear();
+						usingbuf = false;
+					}
+					/* and then our Color */
+					ss << std::setw(2) << std::uppercase << std::hex << std::setfill('0') << (int) m_colorvalues[COLORIDX_PURPLE];
+				}
+				/* No need for a else case here as COLORIDX_PURPLE is the last color. If its not supported, we
+				* don't put anything in our Color String
+				*/
+			return ss.str();
 			}
 
 //-----------------------------------------------------------------------------

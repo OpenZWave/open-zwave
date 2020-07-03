@@ -143,6 +143,7 @@ foreach my $metadataitem ($data->{MetaData})
 			}
 			#now make sure required attributes have type/id entries
 			my %params = map { $_ => 1 } @metadatatypeneeded;
+			my $gotpic = 0;
 			foreach my $mdi (@{$metadataitem->{MetaDataItem}}) {
 				if (exists $params{$mdi->{name}}) {
 					if (!defined($mdi->{type})) {
@@ -152,8 +153,21 @@ foreach my $metadataitem ($data->{MetaData})
 						LogError($_[0], 11, "ID Identifier Required for $mdi->{name}");
 					}
 				}
+				if ($mdi->{name} eq 'ProductPic') {
+					$gotpic = 1;
+					if (defined($mdi->{content})) { 
+						if (!-e "config/$mdi->{content}" ) {
+							LogError($_[0], 12, "Image File Missing - config/$mdi->{content}");
+						}
+					} else {
+						LogError($_[0], 13, "Empty ProductPic Entry");
+					}
+					
+				}
 			}
-			
+			if ($gotpic == 0) {
+				LogError($_[0], 13, "No ProductPic Entry in MetaData");
+			}
 		}
 	}
      $data = $xml->XMLin($_[0], ForceArray => [ 'Value', 'MetaDataItem' ], KeyAttr => { CommandClass=>"id"});
