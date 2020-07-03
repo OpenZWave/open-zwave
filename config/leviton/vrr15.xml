@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <MetaDataItem name="Name">VRR15</MetaDataItem>
+    <MetaDataItem name="Description">Scene Capable Receptable</MetaDataItem>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/001D:0334:1603</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/leviton/vrr15.png</MetaDataItem>
+    <MetaDataItem id="0334" name="ZWProductPage" type="1603">https://products.z-wavealliance.org/products/812/</MetaDataItem>
+    <MetaDataItem id="0334" name="FrequencyName" type="1603">U.S. / Canada / Mexico</MetaDataItem>
+    <MetaDataItem id="0334" name="Identifier" type="1603">VRR15-1LZ</MetaDataItem>
+    <ChangeLog>
+      <Entry author="Jeff Brown - jeff.brown@gmail.com" date="29 June 2020" revision="1">Initial creation</Entry>
+    </ChangeLog>
+  </MetaData>
+</Product>

@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
-    <MetaDataItem name="Name">VRCZ4</MetaDataItem>
-    <MetaDataItem name="Description">4-Button Zone Controller with or without Switches</MetaDataItem>
+    <MetaDataItem name="Name">VRCS4</MetaDataItem>
+    <MetaDataItem name="Description">4-Button Scene Controller with or without Switches</MetaDataItem>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/001D:0261:0702</MetaDataItem>
-    <MetaDataItem name="ProductPic">images/leviton/vrcz4.png</MetaDataItem>
-    <MetaDataItem id="0261" name="ZWProductPage" type="0702">https://products.z-wavealliance.org/products/374/</MetaDataItem>
-    <MetaDataItem id="0261" name="FrequencyName" type="0702">U.S. / Canada / Mexico</MetaDataItem>
-    <MetaDataItem id="0261" name="Identifier" type="0702">VRCZ4-M0Z</MetaDataItem>
-    <MetaDataItem id="0243" name="ZWProductPage" type="1202">https://products.z-wavealliance.org/products/288/</MetaDataItem>
-    <MetaDataItem id="0243" name="FrequencyName" type="1202">U.S. / Canada / Mexico</MetaDataItem>
-    <MetaDataItem id="0243" name="Identifier" type="1202">VRCZ4-MRZ</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/leviton/vrcs4.png</MetaDataItem>
+    <MetaDataItem id="0261" name="ZWProductPage" type="0802">https://products.z-wavealliance.org/products/318/</MetaDataItem>
+    <MetaDataItem id="0261" name="FrequencyName" type="0802">U.S. / Canada / Mexico</MetaDataItem>
+    <MetaDataItem id="0261" name="Identifier" type="0802">VRCS4-M0Z</MetaDataItem>
+    <MetaDataItem id="0243" name="ZWProductPage" type="1302">https://products.z-wavealliance.org/products/287/</MetaDataItem>
+    <MetaDataItem id="0243" name="FrequencyName" type="1302">U.S. / Canada / Mexico</MetaDataItem>
+    <MetaDataItem id="0243" name="Identifier" type="1302">VRCS4-MRZ</MetaDataItem>
     <ChangeLog>
-      <Entry author="Jeff Brown - jeff.brown@gmail.com" date="29 June 2020" revision="2">Fixed metadata and groups, added indicators</Entry>
+      <Entry author="Jeff Brown - jeff.brown@gmail.com" date="29 June 2020" revision="1">Initial creation</Entry>
     </ChangeLog>
   </MetaData>
 
   <!-- Association Groups -->
   <CommandClass id="133">
     <Associations num_groups="4">
-      <!-- Each button toggles an individual zone on or off.  Multiple zones can be active at once.
+      <!-- Each button toggles an individual scene on or off.  Only one scene can be active at once.
            If the device has a switch, then by default it will associate group 1 with the local load.
            Do not auto associate the controller with group 1. -->
       <Group index="1" max_associations="232" label="Button 1" auto="false"/>
@@ -61,8 +61,8 @@
        that offer richer control of the device's behavior.
 
        The controller has 8 scene groups:
-         - Groups 1-4 are triggered when buttons 1-4 are toggled to the left side.
-         - Groups 5-8 are triggered when buttons 1-4 are toggled to the right side.
+         - Groups 1-4 are triggered when buttons 1-4 are pressed when their LED is not lit.
+         - Groups 5-8 are triggered when buttons 1-4 are pressed when their LED is already lit.
 
        To configure the scenes, send SCENE_CONTROLLER_CONF_SET to associate scenes with
        each scene group.  The simplest solution is to assign scene groups 1-8 to scenes 1-8
