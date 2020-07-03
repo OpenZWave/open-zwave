@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <MetaDataItem name="Name">PE653</MetaDataItem>
+    <MetaDataItem name="Description">MultiWave Five-Channel Wireless Remote Receiver</MetaDataItem>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0005:0653:5045</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/intermatic/pe653.png</MetaDataItem>
+    <MetaDataItem id="0653" name="ZWProductPage" type="5045">https://products.z-wavealliance.org/products/89/</MetaDataItem>
+    <MetaDataItem id="0653" name="FrequencyName" type="5045">U.S. / Canada / Mexico</MetaDataItem>
+    <MetaDataItem id="0653" name="Identifier" type="5045">PE653</MetaDataItem>
+    <ChangeLog>
+      <Entry author="Jeff Brown - jeff.brown@gmail.com" date="29 June 2020" revision="1">Initial creation, tested with firmware v3.3</Entry>
+    </ChangeLog>
+  </MetaData>
+
+  <!-- This device must be polled.  It also has a strange habit of reporting
+       old state when queried immediately after setting a switch and then
+       reporting the correct state when queried a few moments later. -->
+
+  <!-- This device reports 6 switches but there are only 5 circuits.
+       The switch on the default endpoint is redundant with endpoint 1 so
+       we omit it from the list of instances. -->
+  <CommandClass id="32">
+    <Instance index="1" label="Circuit 1" />
+    <Instance index="2" label="Circuit 2" />
+    <Instance index="3" label="Circuit 3" />
+    <Instance index="4" label="Circuit 4" />
+    <Instance index="5" label="Circuit 5" />
+  </CommandClass>
+  <CommandClass id="37">
+    <Instance index="1" label="Circuit 1" />
+    <Instance index="2" label="Circuit 2" />
+    <Instance index="3" label="Circuit 3" />
+    <Instance index="4" label="Circuit 4" />
+    <Instance index="5" label="Circuit 5" />
+    <Compatibility>
+      <VerifyChanged index="0">true</VerifyChanged>
+    </Compatibility>
+  </CommandClass>
+
+  <CommandClass id="49">
+    <Instance index="1" label="Water Temperature" />
+    <Value type="decimal" genre="user" instance="1" index="1" label="Water Temperature" units="F">
+      <Help>Water Temperature Sensor Value</Help>
+    </Value>
+  </CommandClass>
+
+  <CommandClass id="67">
+    <Instance index="1" label="Pool" />
+    <Instance index="7" label="Spa" />
+    <Value type="decimal" genre="user" instance="1" index="1" label="Pool" units="F">
+      <Help>Set the pool water temperature setpoint</Help>
+    </Value>
+    <Value type="decimal" genre="user" instance="1" index="7" label="Spa" units="F">
+      <Help>Set the spa water temperature setpoint</Help>
+    </Value>
+  </CommandClass>
+</Product>
