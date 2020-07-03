@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ManufacturerSpecificData Revision="101" xmlns="https://github.com/OpenZWave/open-zwave">
+<ManufacturerSpecificData Revision="102" xmlns="https://github.com/OpenZWave/open-zwave">
   <Manufacturer id="0028" name="2B Electronics"></Manufacturer>
   <Manufacturer id="0098" name="2GIG Technologies">
     <Product config="2gig/ct50e.xml" id="015e" name="CT50e Thermostat" type="3200"/>
@@ -1071,26 +1071,30 @@
   <Manufacturer id="0187" name="LEVION Technologies GmbH"></Manufacturer>
   <Manufacturer id="001d" name="Leviton">
     <Product id="0206" name="RZP15-1LW Binary Scene Switch" type="0101"/>
-    <Product config="leviton/vrcs2.xml" id="0206" name="RZP03-1LW Binary Scene Switch" type="0201"/>
-    <Product id="030b" name="VRP03-1LW Lamp Module" type="0202"/>
+    <Product id="0206" name="RZP03-1LW Binary Scene Switch" type="0201"/>
     <Product id="0206" name="RZS15-1LX Binary Scene Switch" type="0301"/>
-    <Product id="0209" name="VRS15-1LZ Binary Scene Switch" type="0301"/>
-    <Product config="leviton/vrs15.xml" id="0334" name="VRS15-1LZ Switch" type="0301"/>
     <Product config="leviton/rzi10.xml" id="0206" name="RZI10-1LX Multilevel Scene Switch" type="0401"/>
-    <Product config="leviton/vri06.xml" id="0209" name="VRI06-1LX Multilevel Scene Switch" type="0401"/>
-    <Product config="leviton/vri10.xml" id="0206" name="VRI10-1LX Multilevel Scene Switch" type="0501"/>
-    <Product config="leviton/vri10.xml" id="0209" name="VRI10-1LZ Scene Capable Dimmer" type="0501"/>
-    <Product config="leviton/vri10.xml" id="0209" name="VRMX1-1LZ Multilevel Scene Switch" type="0602"/>
-    <Product config="leviton/vri10.xml" id="0334" name="VRMX1-1LZ Multilevel Scene Switch" type="0602"/>
-    <Product id="0215" name="VRC51-1LX One Scene Controller" type="0901"/>
-    <Product config="leviton/vrcz4.xml" id="0261" name="VRCZ4-M0Z 4-Button Zone Controller" type="0702"/>
     <Product id="030b" name="VRC0P-1LW Plug-in Serial Interface Module" type="0b02"/>
-    <Product config="leviton/vrcpg.xml" id="0206" name="VRCPG-SG RF Handheld Remote Controller" type="0c01"/>
-    <Product config="leviton/vre06.xml" id="0334" name="VRE06-1LZ Multilevel Scene Switch" type="0e01"/>
-    <Product config="leviton/vrf01.xml" id="0209" name="VRF01-1LZ Scene Capable Quiet Fan Speed Control" type="1001"/>
-    <Product config="leviton/vrf01.xml" id="0334" name="VRF01-1LZ Quiet Fan Speed Control" type="1001"/>
-    <Product id="0243" name="VRCS2-MRZ 2-Button Scene Controller with Switches" type="1102"/>
+    <Product id="0215" name="VRC51-1LX One Scene Controller" type="0901"/>
+    <Product config="leviton/vrcpg.xml" id="0206" name="VRCPG-SG Handheld Remote Controller" type="0c01"/>
+    <Product config="leviton/vrcs2.xml" id="0243" name="VRCS2-MRZ 2-Button Scene Controller with Switches" type="1102"/>
+    <Product config="leviton/vrcs4.xml" id="0261" name="VRCS4-M0Z 4-Button Scene Controller" type="0802"/>
+    <Product config="leviton/vrcs4.xml" id="0243" name="VRCS4-MRZ 4-Button Scene Controller with Switch" type="1302"/>
+    <Product config="leviton/vrcz4.xml" id="0261" name="VRCZ4-M0Z 4-Button Zone Controller" type="0702"/>
     <Product config="leviton/vrcz4.xml" id="0243" name="VRCZ4-MRZ 4-Button Zone Controller with Switch" type="1202"/>
+    <Product config="leviton/vre06.xml" id="0334" name="VRE06-1LZ 600W Electronic Low Voltage Scene Capable Dimmer" type="0e01"/>
+    <Product config="leviton/vrf01.xml" id="0209" name="VRF01-1LZ 1.5A Scene Capable Quiet Fan Speed Control" type="1001"/>
+    <Product config="leviton/vrf01.xml" id="0334" name="VRF01-1LZ 1.5A Scene Capable Quiet Fan Speed Control" type="1001"/>
+    <Product config="leviton/vri06.xml" id="0209" name="VRI06-1LZ 600W Incandescent Scene Capable Dimmer" type="0401"/>
+    <Product config="leviton/vri06.xml" id="0334" name="VRI06-1LZ 600W Incandescent Scene Capable Dimmer" type="0401"/>
+    <Product config="leviton/vri10.xml" id="0206" name="VRI10-1LX 1000W Incandescent Scene Capable Dimmer" type="0501"/>
+    <Product config="leviton/vri10.xml" id="0209" name="VRI10-1LZ 1000W Incandescent Scene Capable Dimmer" type="0501"/>
+    <Product config="leviton/vri10.xml" id="0209" name="VRMX1-1LZ 1000W Magnetic Low Voltage Scene Capable Dimmer" type="0602"/>
+    <Product config="leviton/vri10.xml" id="0334" name="VRMX1-1LZ 1000W Magnetic Low Voltage Scene Capable Dimmer" type="0602"/>
+    <Product id="030b" name="VRP03-1LW 300W Scene Capable Plug-In Dimming Lamp Module" type="0202"/>
+    <Product config="leviton/vrr15.xml" id="0334" name="VRR15-1LZ Scene Capable Receptacle" type="1603"/>
+    <Product config="leviton/vrs15.xml" id="0209" name="VRS15-1LZ 15A Scene Capable Switch" type="0301"/>
+    <Product config="leviton/vrs15.xml" id="0334" name="VRS15-1LZ 15A Scene Capable Switch" type="0301"/>
     <Product id="0334" name="DZPD3-1LW Plug-In Dimming Lamp Module" type="1902"/>
     <Product id="0334" name="DZPA1-1LW Plug-In Appliance Module" type="1a02"/>
     <Product id="0334" name="DZMX1-1LZ Dimmer" type="1b03"/>
