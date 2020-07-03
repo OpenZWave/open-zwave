@@ -1,4 +1,4 @@
-<Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="Name">ZWN-RSM2-PLUS Smart Dual Relay Switch Module</MetaDataItem>
     <MetaDataItem name="Description">ZWN-RSM2-Plus Transform any home into a connected home with the Enerwave Z-Wave Plus Smart Dual Relay Wireless Lighting Control Module. The lighting control enables wireless control of on/off functions for standard table and floor lamps, and is compatible with incandescent, LED, Xenon, Halogen, fluorescent and compact fluorescent bulbs.</MetaDataItem>
@@ -13,6 +13,7 @@
     <MetaDataItem id="0606" name="FrequencyName" type="0111">U.S. / Canada / Mexico</MetaDataItem>
     <ChangeLog>
       <Entry author="Steve28" date="03 Jul 2020" revision="1">Wholesale replacement of placeholder file. Added information from mfg site</Entry>
+      <Entry author="Steve28" date="03 Jul 2020" revision="2">Fixed product URLe</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration Command Class - All Configuration Parameters should be entered into the section below -->
