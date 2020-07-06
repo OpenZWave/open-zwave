@@ -112,6 +112,7 @@ DISTFILES =	.gitignore \
 	config/aeotec/zwa005.xml \
 	config/aeotec/zwa006.xml \
 	config/aeotec/zwa008.xml \
+	config/aeotec/zwa009.xml \
 	config/aeotec/zwa012.xml \
 	config/aeotec/zwa019.xml \
 	config/aeotec/zwa021.xml \
@@ -474,6 +475,7 @@ DISTFILES =	.gitignore \
 	config/images/aeotec/zwa004.png \
 	config/images/aeotec/zwa005.png \
 	config/images/aeotec/zwa006.png \
+	config/images/aeotec/zwa009.png \
 	config/images/aeotec/zwa012.png \
 	config/images/aeotec/zwa019.png \
 	config/images/aeotec/zwa021.png \
@@ -726,6 +728,7 @@ DISTFILES =	.gitignore \
 	config/images/leviton/vrs15.png \
 	config/images/linear/LB60Z-1.png \
 	config/images/linear/WD500Z5-1.png \
+	config/images/linear/WT00Z5-1.png \
 	config/images/linear/gd00z-7.png \
 	config/images/linear/ngd00z.png \
 	config/images/logicsoft/ZDB5100.png \
@@ -997,6 +1000,7 @@ DISTFILES =	.gitignore \
 	config/linear/WD500Z5-1.xml \
 	config/linear/WS15Z-1.xml \
 	config/linear/WT00Z-1.xml \
+	config/linear/WT00Z5-1.xml \
 	config/linear/gd00z-7.xml \
 	config/linear/ngd00z.xml \
 	config/logicsoft/ZDB5100.xml \
