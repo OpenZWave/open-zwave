@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0433:000E:0003</MetaDataItem>  
     <MetaDataItem name="ProductPic">images/q-light/q-light_zerodim_2pol.png</MetaDataItem>	
@@ -49,6 +49,7 @@ SmartStart Learn Mode:
 	</MetaDataItem>
     <ChangeLog>
       <Entry author="Geir Råness - git@winning.no" date="03 July 2020" revision="1">Initial release</Entry>
+      <Entry author="Geir Råness - git@winning.no" date="06 July 2020" revision="2">fix associations</Entry>
     </ChangeLog>
   </MetaData>
   
@@ -111,8 +112,8 @@ Available settings:
   <CommandClass id="133">
     <Associations num_groups="3">
       <Group index="1" label="Lifeline" max_associations="1" />
-      <Group index="2" label="On/Off (rotary nob) / Mirror of endpoint 1, group 2" max_associations="5" auto="true" />
-      <Group index="3" label="Dimmer (rotary nob) / Mirror of endpoint 1, group 3" max_associations="5" auto="true" />
+      <Group index="2" label="On/Off (rotary nob) / Mirror of endpoint 1, group 2" max_associations="5" />
+      <Group index="3" label="Dimmer (rotary nob) / Mirror of endpoint 1, group 3" max_associations="5" />
     </Associations>
   </CommandClass>
 
