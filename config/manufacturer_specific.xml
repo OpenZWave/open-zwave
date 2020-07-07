@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ManufacturerSpecificData Revision="106" xmlns="https://github.com/OpenZWave/open-zwave">
+<ManufacturerSpecificData Revision="107" xmlns="https://github.com/OpenZWave/open-zwave">
   <Manufacturer id="0028" name="2B Electronics"></Manufacturer>
   <Manufacturer id="0098" name="2GIG Technologies">
     <Product config="2gig/ct50e.xml" id="015e" name="CT50e Thermostat" type="3200"/>
@@ -1184,6 +1184,7 @@
     <Product config="mcohome/mhs412.xml" id="5102" name="MH-S412 Two-load" type="4121"/>
     <Product config="mcohome/mh8fceu.xml" id="3102" name="MH8-FC-EU Thermostat" type="0801"/>
     <Product config="mcohome/mh8fceu.xml" id="3102" name="MH8-FC4-EU Thermostat" type="0802"/>
+    <Product config="mcohome/mh8fceu0803.xml" id="3102" name="MH8-FC-EU Thermostat" type="0803"/>
     <Product config="mcohome/mh9co2.xml" id="0201" name="MH9-CO2-WD CO2 Monitor" type="0905"/>
     <Product config="mcohome/mh9co2.xml" id="3102" name="MH9-CO2-WD CO2 Monitor" type="0901"/>
     <Product config="mcohome/mh9co2.xml" id="5102" name="MH9-CO2-WD CO2 Monitor" type="0902"/>
