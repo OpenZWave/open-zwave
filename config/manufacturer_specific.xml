@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ManufacturerSpecificData Revision="104" xmlns="https://github.com/OpenZWave/open-zwave">
+<ManufacturerSpecificData Revision="105" xmlns="https://github.com/OpenZWave/open-zwave">
   <Manufacturer id="0028" name="2B Electronics"></Manufacturer>
   <Manufacturer id="0098" name="2GIG Technologies">
     <Product config="2gig/ct50e.xml" id="015e" name="CT50e Thermostat" type="3200"/>
@@ -1135,6 +1135,7 @@
     <Product config="linear/GC-TBZ48.xml" id="5436" name="GC-TBZ48 Battery Powered Z-Wave Thermostat" type="5442"/>
     <Product config="linear/GC-TBZ48.xml" id="5437" name="GC-TBZ48 Battery Powered Z-Wave Thermostat" type="5442"/>
     <Product config="linear/WD500Z5-1.xml" id="3530" name="WD500Z5-1 Wall Mounted Dimmer" type="5744"/>
+    <Product config="linear/WT00Z5-1.xml" id="3530" name="WT00Z5-1 Smart 3-Way Switch/Dimmer" type="5754"/>
   </Manufacturer>
   <Manufacturer id="035C" name="LINK ELECTRONICS Co. Ltd"></Manufacturer>
   <Manufacturer id="0316" name="Lite Automation"></Manufacturer>

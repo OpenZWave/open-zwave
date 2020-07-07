@@ -732,6 +732,7 @@ DISTFILES =	.gitignore \
 	config/images/leviton/vrs15.png \
 	config/images/linear/LB60Z-1.png \
 	config/images/linear/WD500Z5-1.png \
+	config/images/linear/WT00Z5-1.png \
 	config/images/linear/gd00z-7.png \
 	config/images/linear/ngd00z.png \
 	config/images/logicsoft/ZDB5100.png \
@@ -1006,6 +1007,7 @@ DISTFILES =	.gitignore \
 	config/linear/WD500Z5-1.xml \
 	config/linear/WS15Z-1.xml \
 	config/linear/WT00Z-1.xml \
+	config/linear/WT00Z5-1.xml \
 	config/linear/gd00z-7.xml \
 	config/linear/ngd00z.xml \
 	config/logicsoft/ZDB5100.xml \
