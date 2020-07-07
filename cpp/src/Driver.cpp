@@ -201,14 +201,12 @@ Driver::~Driver()
 
 	m_dnsThread->Stop();
 	m_dnsThread->Release();
-	delete m_dns;
 
 	m_driverThread->Stop();
 	m_driverThread->Release();
 
 	m_timerThread->Stop();
 	m_timerThread->Release();
-	delete m_timer;
 
 	m_sendMutex->Release();
 
@@ -295,6 +293,10 @@ Driver::~Driver()
 	delete this->AuthKey;
 	delete this->EncryptKey;
 	delete this->m_httpClient;
+	delete this->m_timer;
+	delete this->m_dns;
+
+
 }
 
 //-----------------------------------------------------------------------------

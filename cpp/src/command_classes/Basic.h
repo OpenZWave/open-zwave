@@ -83,6 +83,12 @@ namespace OpenZWave
 
 					void Set(uint8 const _level);
 
+					virtual uint8 GetMaxVersion() override
+					{
+						return 2;
+					}
+
+
 				protected:
 					virtual void CreateVars(uint8 const _instance) override;
 
