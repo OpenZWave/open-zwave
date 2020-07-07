@@ -738,6 +738,7 @@ DISTFILES =	.gitignore \
 	config/images/logicsoft/ZDB5100.png \
 	config/images/logicsoft/ZHC5010.png \
 	config/images/mcohome/mh7h.png \
+	config/images/mcohome/mh8fceu0803.png \
 	config/images/mcohome/mhp220.png \
 	config/images/mcohome/mhp511.png \
 	config/images/merten/5044xx.png \
@@ -1018,6 +1019,7 @@ DISTFILES =	.gitignore \
 	config/mcohome/a8-9.xml \
 	config/mcohome/mh7h.xml \
 	config/mcohome/mh8fceu.xml \
+	config/mcohome/mh8fceu0803.xml \
 	config/mcohome/mh9co2.xml \
 	config/mcohome/mhp210.xml \
 	config/mcohome/mhp220.xml \
