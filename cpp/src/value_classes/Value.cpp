@@ -799,7 +799,7 @@ namespace OpenZWave
 				}
 
 				TimerThread::TimerCallback callback = bind(&Value::sendValueRefresh, this, 1);
-				TimerSetEvent(500, callback, 1);
+				TimerSetEvent(timeout, callback, 1);
 				/* signal that the value hasn't changed */
 				return 0;
 			}
