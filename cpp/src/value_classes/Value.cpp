@@ -540,13 +540,6 @@ namespace OpenZWave
 				// change, where confirming changes is difficult or impossible)
 				Log::Write(LogLevel_Detail, m_id.GetNodeId(), "Changes to this value are %sverified", m_verifyChanges ? "" : "not ");
 
-				if (!m_verifyChanges)
-				{
-					// since we're not checking changes in this value, notify ValueChanged (to be on the safe side)
-					Value::OnValueChanged();
-					return 2;				// confirmed change of value
-				}
-
 				// see if the value has changed (result is used whether checking change or not)
 				bool bOriginalEqual = false;
 				switch (_type)
@@ -581,6 +574,16 @@ namespace OpenZWave
 						bOriginalEqual = (((Bitfield *) _originalValue)->GetValue() == ((Bitfield *) _newValue)->GetValue());
 						break;
 				}
+
+				if (!m_verifyChanges)
+				{
+					if (bOriginalEqual)
+						Value::OnValueRefreshed();
+					else
+						Value::OnValueChanged();
+					return 2;				// confirmed change of value
+				}
+
 
 				// if this is the first refresh of the value, test to see if the value has changed
 				if (!IsCheckingChange())
