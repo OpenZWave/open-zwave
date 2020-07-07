@@ -112,6 +112,7 @@ DISTFILES =	.gitignore \
 	config/aeotec/zwa005.xml \
 	config/aeotec/zwa006.xml \
 	config/aeotec/zwa008.xml \
+	config/aeotec/zwa009.xml \
 	config/aeotec/zwa012.xml \
 	config/aeotec/zwa019.xml \
 	config/aeotec/zwa021.xml \
@@ -298,6 +299,7 @@ DISTFILES =	.gitignore \
 	config/frostdale/fdn2311.xml \
 	config/frostdale/fdn2nxx.xml \
 	config/ge/12719-plugin-switch.xml \
+	config/ge/12720.xml \
 	config/ge/12724-dimmer.xml \
 	config/ge/12727.xml \
 	config/ge/14282-plugin-switch.xml \
@@ -475,6 +477,7 @@ DISTFILES =	.gitignore \
 	config/images/aeotec/zwa004.png \
 	config/images/aeotec/zwa005.png \
 	config/images/aeotec/zwa006.png \
+	config/images/aeotec/zwa009.png \
 	config/images/aeotec/zwa012.png \
 	config/images/aeotec/zwa019.png \
 	config/images/aeotec/zwa021.png \
@@ -789,6 +792,9 @@ DISTFILES =	.gitignore \
 	config/images/popp/solar-siren.png \
 	config/images/popp/zweather.png \
 	config/images/prowell/zw-702.png \
+	config/images/q-light/q-light_puck.png \
+	config/images/q-light/q-light_zerodim.png \
+	config/images/q-light/q-light_zerodim_2pol.png \
 	config/images/qees/reto-dimmer-plus.png \
 	config/images/qees/reto-plugin-switch.png \
 	config/images/qubino/ZMNHADx.png \
@@ -1090,6 +1096,9 @@ DISTFILES =	.gitignore \
 	config/popp/solar-siren.xml \
 	config/popp/zweather.xml \
 	config/prowell/zw-702.xml \
+	config/q-light/q-light_puck.xml \
+	config/q-light/q-light_zerodim.xml \
+	config/q-light/q-light_zerodim_2pol.xml \
 	config/qees/reto-dimmer-plus.xml \
 	config/qees/reto-plugin-switch.xml \
 	config/qubino/ZMNHAA2.xml \
@@ -1756,6 +1765,5 @@ DISTFILES =	.gitignore \
 	licenses/lgpl.txt \
 	licenses/license.txt \
 	makedist \
-	openzwave-1.6.1185.tar.gz \
 	tools/imagedownload.pl \
 	cpp/src/vers.cpp
