@@ -130,6 +130,7 @@ DISTFILES =	.gitignore \
 	config/buffalo/hw-100v15a-zw.xml \
 	config/comfort/ucm.xml \
 	config/config-template.xml \
+	config/connecthome/ch-201.xml \
 	config/cooper/RF9501.xml \
 	config/cooper/RF9505-T.xml \
 	config/cooper/RF9505-T.xml.zip \
@@ -298,6 +299,7 @@ DISTFILES =	.gitignore \
 	config/frostdale/fdn2311.xml \
 	config/frostdale/fdn2nxx.xml \
 	config/ge/12719-plugin-switch.xml \
+	config/ge/12720.xml \
 	config/ge/12724-dimmer.xml \
 	config/ge/12727.xml \
 	config/ge/14282-plugin-switch.xml \
@@ -491,6 +493,7 @@ DISTFILES =	.gitignore \
 	config/images/august/asl-03.png \
 	config/images/buffalo/hw-100v15a-zw.png \
 	config/images/comfort/ucm.png \
+	config/images/connecthome/CH_201.png \
 	config/images/cooper/RF9501.png \
 	config/images/cooper/RF9505-T.png \
 	config/images/cooper/RF9517.png \
@@ -540,6 +543,7 @@ DISTFILES =	.gitignore \
 	config/images/enerwave/zw20rm.png \
 	config/images/enerwave/zwn-bpc.png \
 	config/images/enerwave/zwnrsm1plus.png \
+	config/images/enerwave/zwnrsm2plus.png \
 	config/images/eurotronic/eur_airquality.png \
 	config/images/eurotronic/eur_cometz.png \
 	config/images/eurotronic/eur_spiritz.png \
@@ -789,6 +793,9 @@ DISTFILES =	.gitignore \
 	config/images/popp/solar-siren.png \
 	config/images/popp/zweather.png \
 	config/images/prowell/zw-702.png \
+	config/images/q-light/q-light_puck.png \
+	config/images/q-light/q-light_zerodim.png \
+	config/images/q-light/q-light_zerodim_2pol.png \
 	config/images/qees/reto-dimmer-plus.png \
 	config/images/qees/reto-plugin-switch.png \
 	config/images/qubino/ZMNHADx.png \
@@ -1091,6 +1098,9 @@ DISTFILES =	.gitignore \
 	config/popp/solar-siren.xml \
 	config/popp/zweather.xml \
 	config/prowell/zw-702.xml \
+	config/q-light/q-light_puck.xml \
+	config/q-light/q-light_zerodim.xml \
+	config/q-light/q-light_zerodim_2pol.xml \
 	config/qees/reto-dimmer-plus.xml \
 	config/qees/reto-plugin-switch.xml \
 	config/qubino/ZMNHAA2.xml \
