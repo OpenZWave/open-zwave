@@ -545,7 +545,7 @@
     <Product config="enerwave/zw15s.xml" id="0102" name="ZW15S 15A On/Off Switch" type="0101"/>
     <Product config="enerwave/zw20r.xml" id="0603" name="ZW20R 20A TR Duplex Receptacle" type="0101"/>
     <Product config="enerwave/zwnrsm1plus.xml" id="0605" name="ZWN-RSM1 PLUS—Smart Single Relay Switch Module" type="0111"/>
-    <!--<Product type="0111" id="0605" name="ZWN-RSM2-PLUS Smart Single Relay Switch Module" config="enerwave/zwnrsm2plus.xml"/>-->
+    <Product config="enerwave/zwnrsm2plus.xml" id="0606" name="ZWN-RSM2-PLUS Smart Single Relay Switch Module" type="0111"/>
     <Product config="enerwave/zw20rm.xml" id="0101" name="ZW20RM 20A TR Smart Meter Duplex Receptacle" type="0111"/>
     <Product config="enerwave/zw500d.xml" id="0201" name="ZW500D 500W In-Wall Preset Dimmer Switch" type="0102"/>
     <Product config="enerwave/zw15rmplus.xml" id="0105" name="ZW15RM Plus 15A TR Smart Meter Duplex Receptacle" type="0111"/>

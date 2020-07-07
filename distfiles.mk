@@ -540,6 +540,7 @@ DISTFILES =	.gitignore \
 	config/images/enerwave/zw20rm.png \
 	config/images/enerwave/zwn-bpc.png \
 	config/images/enerwave/zwnrsm1plus.png \
+	config/images/enerwave/zwnrsm2plus.png \
 	config/images/eurotronic/eur_airquality.png \
 	config/images/eurotronic/eur_cometz.png \
 	config/images/eurotronic/eur_spiritz.png \
@@ -1755,5 +1756,6 @@ DISTFILES =	.gitignore \
 	licenses/lgpl.txt \
 	licenses/license.txt \
 	makedist \
+	openzwave-1.6.1185.tar.gz \
 	tools/imagedownload.pl \
 	cpp/src/vers.cpp
