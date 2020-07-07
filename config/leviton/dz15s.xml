@@ -61,9 +61,4 @@ For older controllers Traditional Inclusion is supported. Depending on the age o
       <Group index="1" label="Lifeline" max_associations="5"/>
     </Associations>
   </CommandClass>
-  <CommandClass id="134">
-    <Compatibility>
-      <ClassGetVersionSupported>false</ClassGetVersionSupported>
-    </Compatibility>
-  </CommandClass>
 </Product>
