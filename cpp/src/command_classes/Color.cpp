@@ -362,6 +362,8 @@ namespace OpenZWave
 					if (Internal::VC::ValueString* color = static_cast<Internal::VC::ValueString*>(GetValue(_instance, ValueID_Index_Color::Color)))
 					{
 						Log::Write(LogLevel_Info, GetNodeId(), "Received a updated Color from Device: %s", colorStr.c_str());
+						if (GetVersion() >= 3)
+							color->SetTargetValue(decodeColor(m_colorTargetValues), _data[4]);
 						color->OnValueRefreshed(colorStr);
 						color->Release();
 					}

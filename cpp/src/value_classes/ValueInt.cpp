@@ -129,12 +129,23 @@ namespace OpenZWave
 			}
 
 //-----------------------------------------------------------------------------
+// <ValueInt::SetTargetValue>
+// Set the Value Target (Used for Automatic Refresh)
+//-----------------------------------------------------------------------------
+			void ValueInt::SetTargetValue(int32 const _target, uint32 _duration)
+			{
+				m_targetValueSet = true;
+				m_targetValue = _target;
+				m_duration = _duration;
+			}
+
+//-----------------------------------------------------------------------------
 // <ValueInt::OnValueRefreshed>
 // A value in a device has been refreshed
 //-----------------------------------------------------------------------------
 			void ValueInt::OnValueRefreshed(int32 const _value)
 			{
-				switch (VerifyRefreshedValue((void*) &m_value, (void*) &m_valueCheck, (void*) &_value, ValueID::ValueType_Int))
+				switch (VerifyRefreshedValue((void*) &m_value, (void*) &m_valueCheck, (void*) &_value, (void *) &m_targetValue, ValueID::ValueType_Int))
 				{
 					case 0:		// value hasn't changed, nothing to do
 						break;

@@ -60,6 +60,10 @@ namespace OpenZWave
 					m_min(0), m_max(0), m_refreshTime(0), m_verifyChanges(false), m_refreshAfterSet(true), m_id(_homeId, _nodeId, _genre, _commandClassId, _instance, _index, _type), m_units(_units), m_readOnly(_readOnly), m_writeOnly(_writeOnly), m_isSet(_isSet), m_affectsLength(0), m_affects(), m_affectsAll(false), m_checkChange(false), m_pollIntensity(_pollIntensity)
 			{
 				SetLabel(_label);
+				if (Driver* driver = Manager::Get()->GetDriver(m_id.GetHomeId()))
+				{
+						Timer::SetDriver(driver);
+				}
 			}
 
 //-----------------------------------------------------------------------------
@@ -108,6 +112,15 @@ namespace OpenZWave
 				}
 
 				m_id = ValueID(_homeId, _nodeId, genre, _commandClassId, instance, index, type);
+
+				/* For Values Loaded from a XML File - We Need to load the Timer Driver here, as the default
+				 * constructor doens't have a m_id set, hence we can't get the HomeID
+				 */
+
+				if (Driver* driver = Manager::Get()->GetDriver(m_id.GetHomeId()))
+				{
+						Timer::SetDriver(driver);
+				}
 
 				char const* label = _valueElement->Attribute("label");
 				if (label)
@@ -469,9 +482,16 @@ namespace OpenZWave
 // <Value::VerifyRefreshedValue>
 // Check a refreshed value
 //-----------------------------------------------------------------------------
-			int Value::VerifyRefreshedValue(void* _originalValue, void* _checkValue, void* _newValue, ValueID::ValueType _type, int _originalValueLength, // = 0,
+			int Value::VerifyRefreshedValue(
+					void* _originalValue, 
+					void* _checkValue, 
+					void* _newValue, 
+					void* _targetValue,
+					ValueID::ValueType _type, 
+					int _originalValueLength, // = 0,
 					int _checkValueLength, // = 0,
-					int _newValueLength // = 0
+					int _newValueLength, // = 0,
+					int _targetValueLength // = 0,
 					)
 			{
 				// TODO: this is pretty rough code, but it's reused by each value type.  It would be
@@ -494,47 +514,71 @@ namespace OpenZWave
 						case ValueID::ValueType_Button:			// Button is stored as a bool
 						case ValueID::ValueType_Bool:			// bool
 						{
-							Log::Write(LogLevel_Detail, m_id.GetNodeId(), "Refreshed Value: old value=%s, new value=%s, type=%s", *((bool*) _originalValue) ? "true" : "false", *((uint8*) _newValue) ? "true" : "false", GetTypeNameFromEnum(_type));
+							Log::Write(LogLevel_Detail, m_id.GetNodeId(), "Value Updated: old value=%s, new value=%s, type=%s", *((bool*) _originalValue) ? "true" : "false", *((uint8*) _newValue) ? "true" : "false", GetTypeNameFromEnum(_type));
+							if (m_targetValueSet)
+								Log::Write(LogLevel_Detail, m_id.GetNodeId(), "\tTarget Value is Set to %s", *((bool*) _targetValue) ? "true" : "false" );
 							break;
 						}
 						case ValueID::ValueType_Byte:			// byte
 						{
-							Log::Write(LogLevel_Detail, m_id.GetNodeId(), "Refreshed Value: old value=%d, new value=%d, type=%s", *((uint8*) _originalValue), *((uint8*) _newValue), GetTypeNameFromEnum(_type));
+							Log::Write(LogLevel_Detail, m_id.GetNodeId(), "Value Updated: old value=%d, new value=%d, type=%s", *((uint8*) _originalValue), *((uint8*) _newValue), GetTypeNameFromEnum(_type));
+							if (m_targetValueSet)
+								Log::Write(LogLevel_Detail, m_id.GetNodeId(), "\tTarget Value is Set to %d", *((uint8*) _targetValue));
 							break;
 						}
 						case ValueID::ValueType_Decimal:		// decimal is stored as a string, so treat it as a string here
 						case ValueID::ValueType_String:			// string
 						{
-							Log::Write(LogLevel_Detail, m_id.GetNodeId(), "Refreshed Value: old value=%s, new value=%s, type=%s", ((string*) _originalValue)->c_str(), ((string*) _newValue)->c_str(), GetTypeNameFromEnum(_type));
+							Log::Write(LogLevel_Detail, m_id.GetNodeId(), "Value Updated: old value=%s, new value=%s, type=%s", ((string*) _originalValue)->c_str(), ((string*) _newValue)->c_str(), GetTypeNameFromEnum(_type));
+							if (m_targetValueSet)
+								Log::Write(LogLevel_Detail, m_id.GetNodeId(), "\tTarget Value is Set to %d", *((string*) _targetValue)->c_str());
 							break;
 						}
 						case ValueID::ValueType_Short:			// short
 						{
-							Log::Write(LogLevel_Detail, m_id.GetNodeId(), "Refreshed Value: old value=%d, new value=%d, type=%s", *((short*) _originalValue), *((short*) _newValue), GetTypeNameFromEnum(_type));
+							Log::Write(LogLevel_Detail, m_id.GetNodeId(), "Value Updated: old value=%d, new value=%d, type=%s", *((short*) _originalValue), *((short*) _newValue), GetTypeNameFromEnum(_type));
+							if (m_targetValueSet)
+								Log::Write(LogLevel_Detail, m_id.GetNodeId(), "\tTarget Value is Set to %d", *((short*) _targetValue));
 							break;
 						}
 						case ValueID::ValueType_List:			// List Type is treated as a int32
 						case ValueID::ValueType_Int:			// int32
 						case ValueID::ValueType_BitSet:			// BitSet
 						{
-							Log::Write(LogLevel_Detail, m_id.GetNodeId(), "Refreshed Value: old value=%d, new value=%d, type=%s", *((int32*) _originalValue), *((int32*) _newValue), GetTypeNameFromEnum(_type));
+							Log::Write(LogLevel_Detail, m_id.GetNodeId(), "Value Updated: old value=%d, new value=%d, type=%s", *((int32*) _originalValue), *((int32*) _newValue), GetTypeNameFromEnum(_type));
+							if (m_targetValueSet)
+								Log::Write(LogLevel_Detail, m_id.GetNodeId(), "\tTarget Value is Set to %d", *((int32*) _targetValue));
 							break;
 						}
 						case ValueID::ValueType_Raw:			// raw
 						{
-							Log::Write(LogLevel_Detail, m_id.GetNodeId(), "Refreshed Value: old value=%x, new value=%x, type=%s", _originalValue, _newValue, GetTypeNameFromEnum(_type));
+							Log::Write(LogLevel_Detail, m_id.GetNodeId(), "Value Updated: old value=%x, new value=%x, type=%s", _originalValue, _newValue, GetTypeNameFromEnum(_type));
+							if (m_targetValueSet)
+								Log::Write(LogLevel_Detail, m_id.GetNodeId(), "\tTarget Value is Set to %x", _targetValue);
 							break;
 						}
 						case ValueID::ValueType_Schedule:		// Schedule Type
 						{
-							Log::Write(LogLevel_Detail, m_id.GetNodeId(), "Refreshed Value: old value=%s, new value=%s, type=%s", _originalValue, _newValue, GetTypeNameFromEnum(_type));
+							Log::Write(LogLevel_Detail, m_id.GetNodeId(), "Value Updated: old value=%s, new value=%s, type=%s", _originalValue, _newValue, GetTypeNameFromEnum(_type));
+							if (m_targetValueSet)
+								Log::Write(LogLevel_Detail, m_id.GetNodeId(), "\tTarget Value is Set to %x", _targetValue);
 							/* we cant support verifyChanges yet... so always unset this */
 							m_verifyChanges = false;
 							break;
 						}
 					}
+
 				}
 				m_refreshTime = time( NULL);	// update value refresh time
+
+				/* if this is a Value that has a Target Value Set, then lets compare the reported value against the Target Value
+				 * and Trigger a Refresh (based on the Duration, if necessary)
+				 */
+				if (m_targetValueSet)
+				{
+					return CheckTargetValue(_newValue, _targetValue, _type, _newValueLength, _targetValueLength);
+				}
+
 
 				// check whether changes in this value should be verified (since some devices will report values that always
 				// change, where confirming changes is difficult or impossible)
@@ -686,6 +730,102 @@ namespace OpenZWave
 			{
 				Localization::Get()->SetValueLabel(m_id.GetNodeId(), m_id.GetCommandClassId(), m_id.GetIndex(), -1, _label, lang);
 			}
+
+//-----------------------------------------------------------------------------
+// <Value::CheckTargetValue>
+// Check the reported value against the Target Value
+//-----------------------------------------------------------------------------
+			int Value::CheckTargetValue(void* _newValue, void* _targetValue, ValueID::ValueType _type, int _newValueLength, int _targetValueLength)
+			{
+				// see if the value has changed (result is used whether checking change or not)
+				bool bOriginalEqual = false;
+				switch (_type)
+				{
+					case ValueID::ValueType_Decimal:		// Decimal is stored as a string
+					case ValueID::ValueType_String:			// string
+						bOriginalEqual = (strcmp(((string*) _targetValue)->c_str(), ((string*) _newValue)->c_str()) == 0);
+						break;
+					case ValueID::ValueType_Short:			// short
+						bOriginalEqual = (*((short*) _targetValue) == *((short*) _newValue));
+						break;
+					case ValueID::ValueType_List:			// List Type is treated as a int32
+					case ValueID::ValueType_Int:			// int
+						bOriginalEqual = (*((int32*) _targetValue) == *((int32*) _newValue));
+						break;
+					case ValueID::ValueType_Byte:			// uint8
+						bOriginalEqual = (*((uint8*) _targetValue) == *((uint8*) _newValue));
+						break;
+					case ValueID::ValueType_Button:			// Button is stored as a bool
+					case ValueID::ValueType_Bool:			// bool
+						bOriginalEqual = (*((bool*) _targetValue) == *((bool*) _newValue));
+						break;
+					case ValueID::ValueType_Raw:			// raw
+						bOriginalEqual = (_targetValueLength == _newValueLength);	// first check length of arrays
+						if (bOriginalEqual)
+							bOriginalEqual = (memcmp(_targetValue, _newValue, _newValueLength) == 0);	// if length is the same, then check content
+						break;
+					case ValueID::ValueType_Schedule:		// Schedule
+						/* Should not get here */
+						break;
+					case ValueID::ValueType_BitSet:			// BitSet
+						bOriginalEqual = (((Bitfield *) _targetValue)->GetValue() == ((Bitfield *) _newValue)->GetValue());
+						break;
+				}
+				if (bOriginalEqual)
+				{
+					/* reset the Bool around TargetValueSet so we
+					 * can handle situations where Target Value is not supplied in the future
+					 */
+					m_targetValueSet = false;
+
+					Value::OnValueChanged();
+					return 2;				// confirmed change of value
+				}
+				/* They are not equal - So we need to issue a Get, But lets pace the timing of the Get based on Duration
+				 * - Caveat here is that if the outgoing queue is large, then this will be additionally delayed
+				 */
+				int32 timeout;
+				if (m_duration <= 5) 
+				{
+					/* for Durations less than 5 seconds, lets refresh every 1/2 seconds
+					 */
+					timeout = 500;
+				} 
+				else 
+				{
+					/* Everything else is 1 second 
+					 */
+					timeout = 1000;
+				}
+
+				TimerThread::TimerCallback callback = bind(&Value::sendValueRefresh, this, 1);
+				TimerSetEvent(500, callback, 1);
+				/* signal that the value hasn't changed */
+				return 0;
+			}
+
+//-----------------------------------------------------------------------------
+// <Value::sendValueRefresh>
+// Callback from the Timer to send a Get value to refresh a value from the 
+// CheckTargetValue function
+//-----------------------------------------------------------------------------
+			void Value::sendValueRefresh(uint32 _unused)
+			{
+				Log::Write(LogLevel_Info, m_id.GetNodeId(), "Sending Get to Refresh Value after Target Check");
+				if (Driver* driver = Manager::Get()->GetDriver(m_id.GetHomeId()))
+				{
+					Node* node = driver->GetNodeUnsafe(m_id.GetNodeId());
+					if (node != NULL)
+					{
+						if (Internal::CC::CommandClass* cc = node->GetCommandClass(m_id.GetCommandClassId()))
+						{
+							cc->RequestValue( 0, m_id.GetIndex(), m_id.GetInstance(), Driver::MsgQueue_Send );
+						}
+					}
+				}
+			}
+
+
 		} // namespace VC
 	} // namespace Internal
 } // namespace OpenZWave

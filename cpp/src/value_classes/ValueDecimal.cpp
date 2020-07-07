@@ -97,12 +97,24 @@ namespace OpenZWave
 			}
 
 //-----------------------------------------------------------------------------
+// <ValueDecimal::SetTargetValue>
+// Set the Value Target (Used for Automatic Refresh)
+//-----------------------------------------------------------------------------
+			void ValueDecimal::SetTargetValue(string const _target, uint32 _duration)
+			{
+				m_targetValueSet = true;
+				m_targetValue = _target;
+				m_duration = _duration;
+			}
+
+
+//-----------------------------------------------------------------------------
 // <ValueDecimal::OnValueRefreshed>
 // A value in a device has been refreshed
 //-----------------------------------------------------------------------------
 			void ValueDecimal::OnValueRefreshed(string const& _value)
 			{
-				switch (VerifyRefreshedValue((void*) &m_value, (void*) &m_valueCheck, (void*) &_value, ValueID::ValueType_Decimal))
+				switch (VerifyRefreshedValue((void*) &m_value, (void*) &m_valueCheck, (void*) &_value, (void *) &m_targetValue, ValueID::ValueType_Decimal))
 				{
 					case 0:		// value hasn't changed, nothing to do
 						break;

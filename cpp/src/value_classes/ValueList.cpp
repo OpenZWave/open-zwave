@@ -257,6 +257,17 @@ namespace OpenZWave
 			}
 
 //-----------------------------------------------------------------------------
+// <ValueByte::SetTargetValue>
+// Set the Value Target (Used for Automatic Refresh)
+//-----------------------------------------------------------------------------
+			void ValueList::SetTargetValue(int32 const _target, uint32 _duration)
+			{
+				m_targetValueSet = true;
+				m_targetValue = _target;
+				m_duration = _duration;
+			}
+
+//-----------------------------------------------------------------------------
 // <ValueList::OnValueRefreshed>
 // A value in a device has been refreshed
 //-----------------------------------------------------------------------------
@@ -271,7 +282,7 @@ namespace OpenZWave
 					return;
 				}
 
-				switch (VerifyRefreshedValue((void*) &m_valueIdx, (void*) &m_valueIdxCheck, (void*) &index, ValueID::ValueType_List))
+				switch (VerifyRefreshedValue((void*) &m_valueIdx, (void*) &m_valueIdxCheck, (void*) &index, (void*) &m_targetValue, ValueID::ValueType_List))
 				{
 					case 0:		// value hasn't changed, nothing to do
 						break;

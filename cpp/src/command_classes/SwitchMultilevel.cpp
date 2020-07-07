@@ -138,6 +138,9 @@ namespace OpenZWave
 
 					if (Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>(GetValue(_instance, ValueID_Index_SwitchMultiLevel::Level)))
 					{
+						/* Target Value - 0 to 100 is valid values, 0xFF is also valid */
+						if ((GetVersion() >= 4) && ((_data[2] <= 100) || (_data[2] == 0xFF)))
+							value->SetTargetValue(_data[2], _data[3]);
 						value->OnValueRefreshed(_data[1]);
 						value->Release();
 					}
@@ -157,7 +160,7 @@ namespace OpenZWave
 						{
 							if (Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>(GetValue(_instance, ValueID_Index_SwitchMultiLevel::Duration)))
 							{
-								value->OnValueRefreshed(_data[3]);
+								value->OnValueRefreshed(decodeDuration(_data[3]));
 								value->Release();
 							}
 						}
@@ -400,24 +403,13 @@ namespace OpenZWave
 					Internal::VC::ValueByte* durationValue = static_cast<Internal::VC::ValueByte*>(GetValue(_instance, ValueID_Index_SwitchMultiLevel::Duration));
 					uint8 duration = durationValue->GetValue();
 					durationValue->Release();
-					if (duration == 0xff)
-					{
-						Log::Write(LogLevel_Info, GetNodeId(), "  Duration: Default");
-					}
-					else if (duration >= 0x80)
-					{
-						Log::Write(LogLevel_Info, GetNodeId(), "  Duration: %d minutes", duration - 0x7f);
-					}
-					else
-					{
-						Log::Write(LogLevel_Info, GetNodeId(), "  Duration: %d seconds", duration);
-					}
+					Log::Write(LogLevel_Info, GetNodeId(), "  Duration: %d seconds", duration);
 
 					msg->Append(4);
 					msg->Append(GetCommandClassId());
 					msg->Append(SwitchMultilevelCmd_Set);
 					msg->Append(_level);
-					msg->Append(duration);
+					msg->Append(encodeDuration(duration));
 				}
 				else
 				{

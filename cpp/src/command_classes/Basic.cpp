@@ -157,6 +157,9 @@ namespace OpenZWave
 					{ 
 						if (Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>(GetValue(_instance, ValueID_Index_Basic::Set)))
 						{
+							/* Set the Target Value, if it is present */
+							if (_length == 4)
+								value->SetTargetValue(_data[2], _data[3]);
 							value->OnValueRefreshed(_data[1]);
 							value->Release();
 						}

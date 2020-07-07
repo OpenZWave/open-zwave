@@ -107,6 +107,8 @@ namespace OpenZWave
 					// data[1] => Switch state
 					if (Internal::VC::ValueBool* value = static_cast<Internal::VC::ValueBool*>(GetValue(_instance, ValueID_Index_SwitchBinary::Level)))
 					{
+						if (GetVersion() >= 2)
+							value->SetTargetValue(_data[2] != 0, _data[3]);
 						value->OnValueRefreshed(_data[1] != 0);
 						value->Release();
 					}

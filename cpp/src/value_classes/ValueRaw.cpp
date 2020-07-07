@@ -212,12 +212,24 @@ namespace OpenZWave
 			}
 
 //-----------------------------------------------------------------------------
+// <ValueRaw::SetTargetValue>
+// Set the Value Target (Used for Automatic Refresh)
+//-----------------------------------------------------------------------------
+			void ValueRaw::SetTargetValue(uint8 const* _target, uint8 const _length, int32 _duration)
+			{
+				m_targetValueSet = true;
+				memcpy(m_targetValue, _target, _length);
+				m_targetValueLength = _length;
+				m_duration = _duration;
+			}
+
+//-----------------------------------------------------------------------------
 // <ValueRaw::OnValueRefreshed>
 // A value in a device has been refreshed
 //-----------------------------------------------------------------------------
 			void ValueRaw::OnValueRefreshed(uint8 const* _value, uint8 const _length)
 			{
-				switch (VerifyRefreshedValue((void*) m_value, (void*) m_valueCheck, (void*) _value, ValueID::ValueType_Raw, m_valueLength, m_valueCheckLength, _length))
+				switch (VerifyRefreshedValue((void*) m_value, (void*) m_valueCheck, (void*) _value, (void*) m_targetValue, ValueID::ValueType_Raw, m_valueLength, m_valueCheckLength, _length, m_targetValueLength))
 				{
 					case 0:		// value hasn't changed, nothing to do
 						break;
