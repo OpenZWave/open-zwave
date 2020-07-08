@@ -46,7 +46,7 @@ namespace OpenZWave
 // Constructor
 //-----------------------------------------------------------------------------
 			ValueInt::ValueInt(uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint16 const _index, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, int32 const _value, uint8 const _pollIntensity) :
-					Value(_homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Int, _label, _units, _readOnly, _writeOnly, false, _pollIntensity), m_value(_value), m_valueCheck(0)
+					Value(_homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Int, _label, _units, _readOnly, _writeOnly, false, _pollIntensity), m_value(_value), m_valueCheck(0), m_targetValue(0)
 			{
 				m_min = INT_MIN;
 				m_max = INT_MAX;
