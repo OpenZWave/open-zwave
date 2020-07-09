@@ -571,21 +571,20 @@ namespace OpenZWave
 			{
 				if (data <= 0x7f)
 					return data;
-				if ((data > 0x7f) && (data <= 0xFD))
+				if ((data > 0x7f) && (data <= 0xFE))
 					return ((data - 0x7F)*60);
-				/* 0xFE - Unknown Duration - so lets say 0
-				 * 0xFF - Invalid Duration - Also say 0
+				 /* 0xFF - Invalid Duration - say 15300 (default Duration)
 				 */
-				return 0;
+				return 15300;
 			}
 
 			uint8 CommandClass::encodeDuration(int32 seconds) const
 			{
 				if (seconds <= 0x7f)
 					return (seconds & 0xFF);
-				/* 15180 seconds is the max that can fit into our scale */
-				if (seconds > 15180)
-					return 0xFD;
+				/* 15240 seconds is the max that can fit into our scale, so anything above that, use it as the Default Duration */
+				if (seconds > 15240)
+					return 0xFF;
 				return (uint8)0x80 + ((seconds/60) & 0xFF);
 			}
 

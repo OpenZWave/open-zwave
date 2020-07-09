@@ -305,7 +305,7 @@ namespace OpenZWave
 						}
 
 						if (GetVersion() > 1)
-							node->CreateValueByte(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_Color::Duration, "Duration", "Sec", false, false, 255, 0);
+							node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_Color::Duration, "Duration", "Sec", false, false, 15300, 0);
 						if (GetVersion() > 2)
 							node->CreateValueString(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_Color::Target, "Target Color", helpstr, true, false, "#000000", 0);
 
@@ -747,12 +747,12 @@ namespace OpenZWave
 					}
 					if (GetVersion() > 1)
 					{
-						uint8 duration = 0;
-						if (Internal::VC::ValueByte *valduration = static_cast<Internal::VC::ValueByte *>(GetValue(_value.GetID().GetInstance(), ValueID_Index_Color::Duration)))
+						uint32 duration = 15300;
+						if (Internal::VC::ValueInt *valduration = static_cast<Internal::VC::ValueInt *>(GetValue(_value.GetID().GetInstance(), ValueID_Index_Color::Duration)))
 						{
 							duration = valduration->GetValue();
 						}
-						msg->Append(duration);
+						msg->Append(encodeDuration(duration));
 					}
 					msg->Append(GetDriver()->GetTransmitOptions());
 					GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
@@ -786,12 +786,12 @@ namespace OpenZWave
 						msg->Append(index);
 						if (GetVersion() > 1)
 						{
-							uint8 duration = 0;
-							if (Internal::VC::ValueByte *valduration = static_cast<Internal::VC::ValueByte *>(GetValue(_value.GetID().GetInstance(), ValueID_Index_Color::Duration)))
+							uint32 duration = 15300;
+							if (Internal::VC::ValueInt *valduration = static_cast<Internal::VC::ValueInt *>(GetValue(_value.GetID().GetInstance(), ValueID_Index_Color::Duration)))
 							{
 								duration = valduration->GetValue();
 							}
-							msg->Append(duration);
+							msg->Append(encodeDuration(duration));
 						}
 						msg->Append(GetDriver()->GetTransmitOptions());
 						GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
@@ -1059,12 +1059,12 @@ namespace OpenZWave
 						}
 						if (GetVersion() > 1)
 						{
-							uint8 duration = 0;
-							if (Internal::VC::ValueByte *valduration = static_cast<Internal::VC::ValueByte *>(GetValue(_value.GetID().GetInstance(), ValueID_Index_Color::Duration)))
+							uint32 duration = 0;
+							if (Internal::VC::ValueInt *valduration = static_cast<Internal::VC::ValueInt *>(GetValue(_value.GetID().GetInstance(), ValueID_Index_Color::Duration)))
 							{
 								duration = valduration->GetValue();
 							}
-							msg->Append(duration);
+							msg->Append(encodeDuration(duration));
 						}
 						msg->Append(GetDriver()->GetTransmitOptions());
 						GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
@@ -1074,9 +1074,9 @@ namespace OpenZWave
 				else if (ValueID_Index_Color::Duration == _value.GetID().GetIndex())
 				{
 					Log::Write(LogLevel_Info, GetNodeId(), "Color::SetValue - Setting Color Fade Duration");
-					Internal::VC::ValueByte const* value = static_cast<Internal::VC::ValueByte const*>(&_value);
-					uint8 _duration = value->GetValue();
-					if (Internal::VC::ValueByte * m_value = static_cast<Internal::VC::ValueByte *>(GetValue(_value.GetID().GetInstance(), ValueID_Index_Color::Duration)))
+					Internal::VC::ValueInt const* value = static_cast<Internal::VC::ValueInt const*>(&_value);
+					int32 _duration = value->GetValue();
+					if (Internal::VC::ValueInt * m_value = static_cast<Internal::VC::ValueInt *>(GetValue(_value.GetID().GetInstance(), ValueID_Index_Color::Duration)))
 					{
 						m_value->OnValueRefreshed(_duration);
 						m_value->Release();
