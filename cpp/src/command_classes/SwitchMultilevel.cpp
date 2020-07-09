@@ -404,6 +404,8 @@ namespace OpenZWave
 					uint8 duration = durationValue->GetValue();
 					durationValue->Release();
 					Log::Write(LogLevel_Info, GetNodeId(), "  Duration: %d seconds", duration);
+					if (duration > 0x7F)
+						Log::Write(LogLevel_Info, GetNodeId(), "  Rouding to %d Minutes (over 127 seconds)", encodeDuration(duration)-0x80);
 
 					msg->Append(4);
 					msg->Append(GetCommandClassId());

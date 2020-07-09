@@ -572,7 +572,7 @@ namespace OpenZWave
 				if (data <= 0x7f)
 					return data;
 				if ((data > 0x7f) && (data <= 0xFD))
-					return (data*60);
+					return ((data - 0x7F)*60);
 				/* 0xFE - Unknown Duration - so lets say 0
 				 * 0xFF - Invalid Duration - Also say 0
 				 */
@@ -586,7 +586,7 @@ namespace OpenZWave
 				/* 15180 seconds is the max that can fit into our scale */
 				if (seconds > 15180)
 					return 0xFD;
-				return (uint8)((seconds/60) & 0xFF);
+				return (uint8)0x80 + ((seconds/60) & 0xFF);
 			}
 
 
