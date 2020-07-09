@@ -303,9 +303,9 @@ namespace OpenZWave
 					}
 					case ValueID_Index_SwitchMultiLevel::Duration:
 					{
-						if (Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>(GetValue(instance, ValueID_Index_SwitchMultiLevel::Duration)))
+						if (Internal::VC::ValueInt* value = static_cast<Internal::VC::ValueInt*>(GetValue(instance, ValueID_Index_SwitchMultiLevel::Duration)))
 						{
-							value->OnValueRefreshed((static_cast<Internal::VC::ValueByte const*>(&_value))->GetValue());
+							value->OnValueRefreshed((static_cast<Internal::VC::ValueInt const*>(&_value))->GetValue());
 							value->Release();
 						}
 						res = true;
