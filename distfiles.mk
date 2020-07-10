@@ -913,6 +913,7 @@ DISTFILES =	.gitignore \
 	config/images/widom/WSP.png \
 	config/images/widom/WTED.png \
 	config/images/wink/wnk-mot1.png \
+	config/images/wink/wnk-sir1p.png \
 	config/images/zipato/HS1CA-Z.png \
 	config/images/zipato/HS1CG-Z.png \
 	config/images/zipato/HS1SA-Z.png \
@@ -1262,6 +1263,7 @@ DISTFILES =	.gitignore \
 	config/widom/WSP.xml \
 	config/widom/WTED.xml \
 	config/wink/wnk-mot1.xml \
+	config/wink/wnk-sir1p.xml \
 	config/zipato/MiniKeypad.xml \
 	config/zipato/RGBBulb.xml \
 	config/zipato/RGBBulb2.xml \

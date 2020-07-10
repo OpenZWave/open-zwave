@@ -1,4 +1,4 @@
-<Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
   <!-- Please refer to https://github.com/OpenZWave/open-zwave/wiki/Adding-Devices for instructions -->
   <MetaData>
     <MetaDataItem name="Name">Siren</MetaDataItem>
@@ -23,6 +23,7 @@
     <MetaDataItem id="0001" name="Identifier" type="0200">WNK-SIR1P</MetaDataItem>
     <ChangeLog>
       <Entry author="Dejan Zelic" date="9 July 2020" revision="1">Initial information based on Z-Wave alliance database information</Entry>
+      <Entry author="Dejan Zelic" date="9 July 2020" revision="2">Fix list values</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration Command Class - All Configuration Parameters should be entered into the section below -->
@@ -32,15 +33,15 @@
       <Help>Primary Notification Volume Level</Help>
       <Item label="Low Volume" value="1"/>
       <Item label="Medium Volume" value="2"/>
-      <Item label="High Volume" value="2"/>
+      <Item label="High Volume" value="3"/>
     </Value>
 
 	<Value genre="config" index="2" label="Primary Notification Length" max="3" min="-1" size="1" type="list" value="2">
       <Help>Primary Notification Length</Help>
       <Item label="Plays until battery dies" value="1"/>
       <Item label="30 Sec" value="2"/>
-      <Item label="1 Min" value="2"/>
-      <Item label="5 Min" value="2"/>
+      <Item label="1 Min" value="3"/>
+      <Item label="5 Min" value="4"/>
     </Value>
 
 	<Value genre="config" index="3" label="Secondary Notification Length" max="127" min="-128" type="byte" units="" value="1">
@@ -55,7 +56,7 @@
       <Help>Secondary Notification Volume Level</Help>
       <Item label="Low Volume" value="1"/>
       <Item label="Medium Volume" value="2"/>
-      <Item label="High Volume" value="2"/>
+      <Item label="High Volume" value="3"/>
     </Value>
 
 	<Value genre="config" index="5" label="Primary Notification Sound" max="10" min="1" type="byte" units="" value="10">
