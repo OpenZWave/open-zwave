@@ -30,19 +30,19 @@ Note: If the device is not joined to the network.  Press the CLBR button Wait 1 
 		<Compatibility>
 			<GetSupported>false</GetSupported>
 		</Compatibility>
-		<Value type="byte" genre="user" instance="1" index="0" label="Level" units="" read_only="false" write_only="false" verify_changes="false" min="1" max="255" value="2">
+		<Value type="byte" genre="user" instance="1" index="0" label="Level" units="" min="1" max="255" value="2">
 				<Help>The Current Blinds Opening Level</Help>
 		</Value>
-		<Value type="button" genre="user" instance="1" index="1" label="Bright" units="" read_only="false" write_only="true" verify_changes="false" min="0" max="0">
+		<Value type="button" genre="user" instance="1" index="1" label="Bright" units="" min="0" max="0">
 				<Help>Increase the Blinds Tilt</Help>
 		</Value>
-		<Value type="button" genre="user" instance="1" index="2" label="Dim" units="" read_only="false" write_only="true" verify_changes="false" min="0" max="0">
+		<Value type="button" genre="user" instance="1" index="2" label="Dim" units="" min="0" max="0">
 				<Help>Decrease the Blinds Tilt</Help>
 		</Value>
-		<Value type="bool" genre="system" instance="1" index="3" label="Ignore Start Level" units="" read_only="false" write_only="false" verify_changes="false" min="0" max="0" value="True">
+		<Value type="bool" genre="system" instance="1" index="3" label="Ignore Start Level" units="" min="0" max="0" value="True">
 				<Help>Ignore the Start Level of the Device when increasing/decreasing tilt</Help>
 		</Value>
-		<Value type="byte" genre="system" instance="1" index="4" label="Start Level" units="" read_only="false" write_only="false" verify_changes="false" min="0" max="255" value="0">
+		<Value type="byte" genre="system" instance="1" index="4" label="Start Level" units="" min="0" max="255" value="0">
 				<Help>Start Level when Changing the Tilt of a Device</Help>
 		</Value>
 	</CommandClass>
@@ -59,7 +59,7 @@ Note: If the device is not joined to the network.  Press the CLBR button Wait 1 
 
    <!-- Association Groups -->
   <CommandClass id="133">
-    <Associations num_groups="3">
+    <Associations num_groups="1">
       <Group index="1" label="Lifeline" max_associations="5"/>
     </Associations>
   </CommandClass>
