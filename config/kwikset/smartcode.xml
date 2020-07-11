@@ -376,7 +376,7 @@ To perform a factory reset, please perform the following:
 		Lock Status is Changed, but instead send a Alarm Message -
 		So we trigger a Refresh of the DoorLock Command Class when
 		we recieve a Alarm Message Instead -->
-    <TriggerRefreshValue Genre="user" Index="0" Instance="1">
+    <TriggerRefreshValue Genre="user" Index="513" Instance="1">
       <RefreshClassValue CommandClass="98" Index="1" Instance="1" RequestFlags="0"/>
     </TriggerRefreshValue>
   </CommandClass>
