@@ -33,6 +33,7 @@ SmartKey: Re-key the lock in seconds</MetaDataItem>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="12">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2188/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="13">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2237/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="14">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2369/xml</Entry>
+      <Entry author="@firstof9" date="011 Jul 2020" revision="15">Updated TriggerRefresh index based on real world unit test.</Entry>
     </ChangeLog>
     <MetaDataItem id="0642" name="ZWProductPage" type="0003">https://products.z-wavealliance.org/products/2188/</MetaDataItem>
     <MetaDataItem name="WakeupDescription">Even though the lock is sleeping, all buttons are active and can be used to initiate any lock activity.
