@@ -42,7 +42,7 @@ Sensor can be used to trigger scenes and wherever there is a need for informatio
 	<MetaDataItem id="2000" name="FrequencyName" type="0702">U.S. / Canada / Mexico</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="4">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2181/xml</Entry>
-      <Entry author="Justin Dybedahl - madj42@gmail.com" date="12 July 2020" revision="4">Add support for US Model.</Entry>
+      <Entry author="Justin Dybedahl - madj42@gmail.com" date="12 July 2020" revision="5">Add support for US Model.</Entry>
 	</ChangeLog>
   </MetaData>
   <!-- Configuration -->
