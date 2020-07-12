@@ -9,7 +9,7 @@ Dome DMEX1 Range Extender
     <MetaDataItem name="Description">The Dome Range Extender is designed to improve communication between Z-Wave devices. It amplifies Z-Wave signals and increases the reach of your controller, ensuring your devices stay connected. The Extender has an LED light that works as a nightlight and can also act as an indicator in regular mode. The included suction cup lets you mount the Extender onto any smooth surface while using a micro USB power supply. All these features make the Dome Range extender the perfect choice for your home.</MetaDataItem>
     <MetaDataItem name="Name">DMEX1 Range Extender</MetaDataItem>
     <MetaDataItem name="ResetDescription">Press the button 6 times quickly, then immediately press and hold for 10 seconds. Use this procedure only in the event that your primary network controller is missing or inoperable.</MetaDataItem>
-    <MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&filename=MarketCertificationFiles/2984/DomeExtenderAPIManual10-31.pdf</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&amp;filename=MarketCertificationFiles/2984/DomeExtenderAPIManual10-31.pdf</MetaDataItem>
     <MetaDataItem id="0108" name="Identifier" type="0003">DMEX1</MetaDataItem>
     <MetaDataItem name="InclusionDescription">Turn the primary controller of Z-Wave network into inclusion mode, press the button on DMEX1 quickly 3 times in a row.</MetaDataItem>
     <ChangeLog>
