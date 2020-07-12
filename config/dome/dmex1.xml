@@ -24,14 +24,14 @@ Dome DMEX1 Range Extender
   </CommandClass>
   <!-- Configuration Parameters -->
   <CommandClass id="112">
-    <Value genre="config" type="byte" size="2" index="1" label="Night Light “Off” Threshold " min="0" max="10" value="5">
+    <Value genre="config" type="byte" size="1" index="1" label="Night Light “Off” Threshold " min="0" max="10" value="5">
       <Help>
       This parameter sets the luminance (brightness) level at which night light is turned off. This is a unitless value that can be set to any value from 0 - 10, with a default value of 5. The higher this value, the brighter the ambient light must be to turn off the night light.
       Range:0-10
       Default: 5
       </Help>
     </Value>
-	<Value genre="config" type="byte" size="2" index="2" label="Night Light “On” Threshold " min="0" max="10" value="5">
+	<Value genre="config" type="byte" size="1" index="2" label="Night Light “On” Threshold " min="0" max="10" value="5">
       <Help>
 	  This parameter sets the luminance (brightness) level at which night light is turned on. This is a unitless value that can be set to any value from 0 - 10, with a default value of 5. The lower this value, the dimmer the ambient light must be to turn on the night light.
       Range:0-10
