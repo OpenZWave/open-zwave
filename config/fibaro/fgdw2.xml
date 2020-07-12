@@ -1,4 +1,4 @@
-<!-- Fibaro: FGK101 Door Opening Sensor --><Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
+<!-- Fibaro: FGK101 Door Opening Sensor --><Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/010F:1000:0702</MetaDataItem>
     <MetaDataItem name="ProductPic">images/fibaro/fgdw2.png</MetaDataItem>
