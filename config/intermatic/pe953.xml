@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <MetaDataItem name="Name">PE953</MetaDataItem>
+    <MetaDataItem name="Description">MultiWave Five-Channel Wireless Remote Controller</MetaDataItem>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0005:0953:5045</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/intermatic/pe953.png</MetaDataItem>
+    <MetaDataItem id="0953" name="ZWProductPage" type="5045">https://products.z-wavealliance.org/products/598/</MetaDataItem>
+    <MetaDataItem id="0953" name="FrequencyName" type="5045">U.S. / Canada / Mexico</MetaDataItem>
+    <MetaDataItem id="0953" name="Identifier" type="5045">PE953</MetaDataItem>
+    <ChangeLog>
+      <Entry author="Jeff Brown - jeff.brown@gmail.com" date="29 June 2020" revision="1">Initial creation</Entry>
+    </ChangeLog>
+  </MetaData>
+</Product>

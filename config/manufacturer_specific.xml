@@ -1031,6 +1031,8 @@
     <Product id="3500" name="CA3560 Split-Duplex Receptacle" type="4341"/>
     <Product config="intermatic/ca8900.xml" id="8900" name="CA8900 Digital Thermostat" type="4341"/>
     <Product id="9000" name="CA9000 PIR Occupancy Sensor" type="4341"/>
+    <Product config="intermatic/pe653.xml" id="0653" name="PE653 MultiWave 5-Channel Wireless Remote Receiver" type="5045"/>
+    <Product config="intermatic/pe953.xml" id="0953" name="PE953 MultiWave 5-Channel Wireless Remote Controller" type="5045"/>
   </Manufacturer>
   <Manufacturer id="0338" name="International Integrated Systems Inc"></Manufacturer>
   <Manufacturer id="0013" name="Internet Dom"></Manufacturer>
