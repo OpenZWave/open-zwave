@@ -24,7 +24,7 @@ SmartKey: Re-key the lock in seconds</MetaDataItem>
 
     <MetaDataItem name="WakeupDescription">Even though the lock is sleeping, all buttons are active and can be used to initiate any lock activity.
 For the RF side, it will wake up every 1 second to check if there are any requests from your smart home controller.</MetaDataItem>
-    <MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File\?folder\=\&filename\=MarketCertificationFiles/2188/Install_Guide_916_01_23_2017.pdf</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&amp;filename=MarketCertificationFiles/2188/Install_Guide_916_01_23_2017.pdf</MetaDataItem>
     <MetaDataItem name="InclusionDescription">Initiate the process to add the lock to your system at your smart home controller.
 When prompted by your smart home system to add the lock, press button “A” on the lock interior one time. The red LED will illuminate when the lock enters Add Mode.
 Please allow time for the controller to add the lock to your system.</MetaDataItem>
