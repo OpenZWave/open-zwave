@@ -1063,8 +1063,8 @@
   <Manufacturer id="023A" name="KUMHO ELECTRIC INC"></Manufacturer>
   <Manufacturer id="0090" name="Kwikset (Spectrum Brands)">
     <Product config="kwikset/smartcode.xml" id="0001" name="Touchpad Electronic Deadbolt" type="0001"/>
-    <Product config="kwikset/smartcode.xml" id="0642" name="SmartCode 916" type="0001"/>
-    <Product config="kwikset/smartcode.xml" id="0642" name="SmartCode 916" type="0003"/>
+    <Product config="kwikset/916.xml" id="0642" name="SmartCode 916" type="0001"/>
+    <Product config="kwikset/916.xml" id="0642" name="SmartCode 916" type="0003"/>
     <Product config="kwikset/smartcode.xml" id="4006" name="SmartCode 914" type="0003"/>
     <Product config="kwikset/smartcode.xml" id="0440" name="SmartCode 914" type="0003"/>
     <Product config="kwikset/smartcode.xml" id="0236" name="SmartCode 912" type="0003"/>
