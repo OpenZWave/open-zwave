@@ -207,7 +207,7 @@
     <Product config="aeotec/zwa005.xml" id="0005" name="ZWA005 TriSensor" type="0002"/>
     <Product config="aeotec/zwa005.xml" id="0005" name="ZWA005 TriSensor" type="0102"/>
     <Product config="aeotec/zwa005.xml" id="0005" name="ZWA005 TriSensor" type="0202"/>
-    <Product config="aeotec/zwa021.xml" id="0015" name="ZWA021 Thermostatic Valve" type="0002"/>      
+    <Product config="aeotec/zwa021.xml" id="0015" name="ZWA021 Thermostatic Valve" type="0002"/>
     <Product config="aeotec/zw162.xml" id="00a2" name="ZW162 Doorbell 6" type="0003"/>
     <Product config="aeotec/zw162.xml" id="00a2" name="ZW162 Doorbell 6" type="0103"/>
     <Product config="aeotec/zw162.xml" id="00a2" name="ZW162 Doorbell 6" type="0203"/>
@@ -227,8 +227,8 @@
     <Product config="aeotec/zwa019.xml" id="0013" name="ZWA019 Water Sensor 7 Pro" type="0102"/>
     <Product config="aeotec/zwa019.xml" id="0013" name="ZWA019 Water Sensor 7 Pro" type="0202"/>
     <Product config="aeotec/zw141.xml" id="008d" name="ZW141 Nano Shutter" type="0003"/>
-    <Product config="aeotec/zw141.xml" id="008d" name="ZW141 Nano Shutter" type="0103"/>  
-    <Product config="aeotec/zw141.xml" id="008d" name="ZW141 Nano Shutter" type="0203"/>      
+    <Product config="aeotec/zw141.xml" id="008d" name="ZW141 Nano Shutter" type="0103"/>
+    <Product config="aeotec/zw141.xml" id="008d" name="ZW141 Nano Shutter" type="0203"/>
     <Product config="aeotec/zw164.xml" id="00a4" name="ZW164 Indoor Siren 6" type="0003"/>
     <Product config="aeotec/zw164.xml" id="00a4" name="ZW164 Indoor Siren 6" type="0103"/>
     <Product config="aeotec/zw175.xml" id="00af" name="ZW175 Smart Switch 7" type="0003"/>
@@ -488,6 +488,9 @@
   <Manufacturer id="017C" name="EbV"></Manufacturer>
   <Manufacturer id="016B" name="Echostar"></Manufacturer>
   <Manufacturer id="028F" name="Eco Automation"></Manufacturer>
+  <Manufacturer id="0431" name="EcoDim">
+    <Product config="ecodim/0.7.xml" id="0002" name="ECO-DIM.07 Z-Wave LED dimmer" type="0202"/>
+  </Manufacturer>
   <Manufacturer id="037C" name="Eco Life Engineering Co. Ltd."></Manufacturer>
   <Manufacturer id="014a" name="Ecolink">
     <Product config="ecolink/sensor.xml" id="0001" name="Motion Sensor" type="0001"/>
@@ -616,7 +619,7 @@
     <Product config="oomi/ft111.xml" id="006F" name="FT111 In Wall Dimmer" type="0203"/>
     <Product config="oomi/ft111.xml" id="006F" name="FT111 In Wall Dimmer" type="1D03"/>
     <Product config="oomi/ft112.xml" id="0070" name="FT112 Door-window sensor" type="0002"/>
-    <Product config="oomi/ft118.xml" id="0076" name="FT118 Range extender 6" type="0004"/>  
+    <Product config="oomi/ft118.xml" id="0076" name="FT118 Range extender 6" type="0004"/>
   </Manufacturer>
   <Manufacturer id="010f" name="FIBARO System">
     <Product config="fibaro/fgbs001.xml" id="0101" name="FGBS001 Universal Binary Sensor" type="0501"/>
@@ -1071,7 +1074,7 @@
     <Product config="kwikset/smartcode.xml" id="0339" name="SmartCode 912" type="0003"/>
     <Product config="kwikset/smartcode.xml" id="0236" name="SmartCode 910" type="0001"/>
     <Product config="kwikset/smartcode.xml" id="0238" name="SmartCode 910" type="0003"/>
-    <Product config="kwikset/smartcode.xml" id="0001" name="SmartCode 910" type="0001"/>    
+    <Product config="kwikset/smartcode.xml" id="0001" name="SmartCode 910" type="0001"/>
     <Product config="kwikset/smartcode.xml" id="0440" name="SmartCode 10" type="0006"/>
     <Product config="kwikset/smartcode.xml" id="0742" name="Obsidian" type="0003"/>
     <Product config="kwikset/914c.xml" id="0446" name="Convert 914" type="0003"/>
@@ -1341,7 +1344,7 @@
     <Product config="popp/004407.xml" id="0003" name="004407 CO Detector" type="0004"/>
     <Product config="popp/009402.xml" id="0004" name="009402 10-Year Smoke Detector with Siren" type="0004"/>
     <Product config="popp/700342.xml" id="000d" name="700342 10-Year Smoke Detector" type="0004"/>
-    <Product config="popp/700342.xml" id="0010" name="700342 10-Year Smoke Detector" type="0004"/>    
+    <Product config="popp/700342.xml" id="0010" name="700342 10-Year Smoke Detector" type="0004"/>
     <Product config="popp/009501.xml" id="0003" name="009501 Flow Stop" type="0005"/>
     <Product config="popp/700168.xml" id="0011" name="Popp Z-Rain Rain Sensor" type="0004"/>
     <Product config="popp/012501.xml" id="0001" name="012501 Strike Lock Control" type="0005"/>
@@ -1938,7 +1941,7 @@
     <Product config="zooz/zse30.xml" id="0085" name="ZSE30 Water Sensor" type="0003"/>
     <Product config="zooz/zen31.xml" id="2000" name="ZEN31 RGBW Dimmer" type="0902"/>
     <Product config="zooz/zse33.xml" id="0088" name="ZSE33 Smart Chime" type="0003"/>
-    <Product config="zooz/zse40.xml" id="2101" name="ZSE40 4-in-1 sensor" type="2021"/>    
+    <Product config="zooz/zse40.xml" id="2101" name="ZSE40 4-in-1 sensor" type="2021"/>
   </Manufacturer>
   <Manufacturer id="015d" name="Zooz (Willis Electric)">
     <Product config="zooz/zen20.xml" id="f51c" name="ZEN20 Power Strip" type="0651"/>
