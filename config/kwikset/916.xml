@@ -20,6 +20,7 @@ SmartKey: Re-key the lock in seconds</MetaDataItem>
     <MetaDataItem name="ProductSupport">http://www.kwikset.com/Customer-Support/Overview.aspx</MetaDataItem>
     <MetaDataItem name="Name">SmartCode 916 Touchscreen Electronic Deadbolt</MetaDataItem>
     <ChangeLog>
+        <Entry author="firstof9" date="20 Jul 2020" revision="1">Initial Version</Entry>
     </ChangeLog>
 
     <MetaDataItem name="WakeupDescription">Even though the lock is sleeping, all buttons are active and can be used to initiate any lock activity.
