@@ -1,0 +1,44 @@
+<!--
+ABUS Z-Wave Smoke detector SHRM10000
+https://products.z-wavealliance.org/products/3089
+--><Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0403:0003:0002</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/abus/SHRM10000.png</MetaDataItem>
+    <MetaDataItem id="0003" name="ZWProductPage" type="0002">https://products.z-wavealliance.org/products/3089/</MetaDataItem>
+    <MetaDataItem name="Description">The ABUS Z-Wave Smoke detector provides reliable warning of risk of potentially fatal smoke inhalation and sounds an alarm. It's compact design does not compromise the functionality but even convinces with low maintenance due to 5 years of battery life. The Smoke detector also includes a test button for manual self-testing, for test alarms and temporary muting.</MetaDataItem>
+    <MetaDataItem name="InclusionDescription">-  Click [Add] icon in Z-Wave Controller .
+-  Press the Net_Button 3 times within 1.5s, Green LED is Blinking 3 times within 1 second.
+-  If Inclusion Process is successful, Green led will turn off.
+</MetaDataItem>
+    <MetaDataItem name="ExclusionDescription">-  Click [Remove] icon in Z-Wave Controller
+-  Press the Net_Button 3 times within 1.5s
+-  If Exclusion Process is successful, Green led is Blinking 6 times, then turn off.
+</MetaDataItem>
+    <MetaDataItem name="WakeupDescription">-  Wake up Notification is transmitted every 24 hours by default.
+-  Wake up Notification is transmitted after Notification Report is Transmitted </MetaDataItem>
+    <MetaDataItem name="ResetDescription">--Long press Net_Button while installing batteries in the product.
+- Device Reset Locally notification is Transmitted.
+Please use this procedure only when the network primary controller is missing or otherwise inoperable.
+</MetaDataItem>
+    <MetaDataItem id="0003" name="Identifier" type="0002">SHRM10000</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&filename=MarketCertificationFiles/3089/Anleitung%20SHRM10000%20EN.pdf</MetaDataItem>
+    <MetaDataItem name="Name">ABUS Z-Wave Smoke detector
+</MetaDataItem>
+    <MetaDataItem id="0003" name="FrequencyName" type="0002">CEPT (Europe)</MetaDataItem>
+    <ChangeLog>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="24 May 2019" revision="2">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1936/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="3">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2710/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 Jun 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/3006/xml</Entry>
+      <Entry author="Bernd Wachter - bernd-github@wachter.fi" date="20 May 2020" revision="5">Copied from Heiman HS1SA-Z and updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/3089/xml</Entry>
+    </ChangeLog>
+  </MetaData>
+  <!-- Association Groups -->
+  <CommandClass id="133">
+    <Associations num_groups="3">
+      <Group index="1" label="LifeLine" max_associations="1"/>
+      <Group index="2" label="Binary Sensor" max_associations="5"/>
+      <Group index="3" label="Notification" max_associations="5"/>
+    </Associations>
+  </CommandClass>
+</Product>
