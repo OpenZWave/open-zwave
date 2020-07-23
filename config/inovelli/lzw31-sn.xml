@@ -230,7 +230,7 @@ Please Note: If this doesn't work, you can check to see if your switch is within
     </Value>
     <Value genre="config" type="list" size="1" index="52" label="Smart Bulb Mode" min="0" max="1" value="0">
       <Help>
-      Optimize power output to be more compatible with smart bulbs. This prevents the dimmer from being able to dim & makes it act like an ON / OFF switch. (firmware 1.47+)
+      Optimize power output to be more compatible with smart bulbs. This prevents the dimmer from being able to dim and makes it act like an ON / OFF switch. (firmware 1.47+)
     </Help>
     <Item value="0" label="Smart Bulb Mode Disabled (Default)"/>
     <Item value="1" label="Smart Bulb Mode Enabled"/>
