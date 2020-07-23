@@ -332,6 +332,7 @@ DISTFILES =	.gitignore \
 	config/gr/grb3.xml \
 	config/graber/brz1.xml \
 	config/graber/csz1.xml \
+	config/graber/mcz1.xml \
 	config/graber/rsz1.xml \
 	config/graber/vcz1.xml \
 	config/greenwave/gs1110-1-gr-1.xml \
@@ -647,6 +648,7 @@ DISTFILES =	.gitignore \
 	config/images/gr/gr105n.png \
 	config/images/graber/brz1.png \
 	config/images/graber/csz1.png \
+	config/images/graber/mcz1.png \
 	config/images/graber/rsz1.png \
 	config/images/graber/vcz1.png \
 	config/images/greenwave/gs1110-1-gr-1.png \

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ManufacturerSpecificData Revision="109" xmlns="https://github.com/OpenZWave/open-zwave">
+<ManufacturerSpecificData Revision="110" xmlns="https://github.com/OpenZWave/open-zwave">
   <Manufacturer id="0028" name="2B Electronics"></Manufacturer>
   <Manufacturer id="0098" name="2GIG Technologies">
     <Product config="2gig/ct50e.xml" id="015e" name="CT50e Thermostat" type="3200"/>
@@ -1607,6 +1607,7 @@
     <Product config="graber/rsz1.xml" id="5a31" name="RSZ1 Roller Shade" type="5253"/>
     <Product config="graber/vcz1.xml" id="5a31" name="VCZ1 Virtual Cord Remote Control" type="5643"/>
     <Product config="graber/csz1.xml" id="5a31" name="CSZ1 Cellular Shade" type="4353"/>
+    <Product config="graber/mcz1.xml" id="5a31" name="MCZ1 Multi-Channel Remote" type="4d43"/>
   </Manufacturer>
   <Manufacturer id="026F" name="Sprue Safety Products"></Manufacturer>
   <Manufacturer id="0124" name="Square Connect"></Manufacturer>
