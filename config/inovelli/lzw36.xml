@@ -1,4 +1,4 @@
-<Product Revision="6" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="7" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/031E:0001:000e</MetaDataItem>
     <MetaDataItem name="ProductPic">images/inovelli/lzw30.png</MetaDataItem>
@@ -165,7 +165,7 @@ Please Note: If this doesn't work, you can check to see if your switch is within
 
     <Value genre="config" type="short" size="2" index="18" label="Light LED Indicator Color" min="0" max="255" value="170">
       <Help>
-      This is the color of the Light LED strip represented as part of the HUE color wheel. Since the wheel has 360 values and this parameter only has 255, the following equation can be used to determine the color: value/255 * 350 = Hue color wheel value
+      This is the color of the Light LED strip represented as part of the HUE color wheel. Since the wheel has 360 values and this parameter only has 255, the following equation can be used to determine the color: value/255 * 360 = Hue color wheel value
       Range: 0 to 255
       Default: 170
       </Help>
@@ -181,7 +181,7 @@ Please Note: If this doesn't work, you can check to see if your switch is within
 
     <Value genre="config" type="short" size="2" index="20" label="Fan LED Indicator Color" min="0" max="255" value="170">
       <Help>
-      This is the color of the Fan LED strip represented as part of the HUE color wheel. Since the wheel has 360 values and this parameter only has 255, the following equation can be used to determine the color: value/255 * 350 = Hue color wheel value
+      This is the color of the Fan LED strip represented as part of the HUE color wheel. Since the wheel has 360 values and this parameter only has 255, the following equation can be used to determine the color: value/255 * 360 = Hue color wheel value
       Range: 0 to 255
       Default: 170
       </Help>
@@ -211,26 +211,26 @@ Please Note: If this doesn't work, you can check to see if your switch is within
     </Help>
     </Value>
 
-    <Value genre="config" type="int" size="4" index="24" label="Light LED Strip Effect" min="0" max="2147483648" value="0">
+    <Value genre="config" type="int" size="4" index="24" label="Light LED Strip Effect" min="0" max="100600319" value="0">
       <Help>
       Please see website for documentation.
-          Byte 4: Duration - 1 to 60 = seconds, 61 to 120  minutes, 121 -  254 = hours, 255 = Indefinitely
-          Byte 3: Effect - 0 = Solid, 1 = Slow Blink, 2 = Fast Blink, 3 = Chase, 4 = Pulse
+          Byte 4: Effect - 0 = Off, 1 = Solid, 2 = Slow Blink, 3 = Fast Blink, 4 = Chase, 5 = Pulse
+          Byte 3: Duration - 1 to 60 = seconds, 61 to 120  minutes, 121 -  254 = hours, 255 = Indefinitely
           Byte 2: Intensity - 0 to 9.  0 = dim, 9 = bright
-          Byte 1: Color - 0 - 255. Hue color wheel. value/255 * 350 = Hue color wheel value
-      Range: 0-2147483648
+          Byte 1: Color - 0 - 255. Hue color wheel. value/255 * 360 = Hue color wheel value
+      Range: 0-100600319
       Default: 0
       </Help>
     </Value>
 
-        <Value genre="config" type="int" size="4" index="25" label="Fan LED Strip Effect" min="0" max="2147483648" value="0">
+    <Value genre="config" type="int" size="4" index="25" label="Fan LED Strip Effect" min="0" max="100600319" value="0">
       <Help>
       Please see website for documentation.
-          Byte 4: Duration - 1 to 60 = seconds, 61 to 120  minutes, 121 -  254 = hours, 255 = Indefinitely
-          Byte 3: Effect - 0 = Solid, 1 = Slow Blink, 2 = Fast Blink, 3 = Chase, 4 = Pulse
+          Byte 4: Effect - 0 = Off, 1 = Solid, 2 = Slow Blink, 3 = Fast Blink, 4 = Chase, 5 = Pulse
+          Byte 3: Duration - 1 to 60 = seconds, 61 to 120  minutes, 121 -  254 = hours, 255 = Indefinitely
           Byte 2: Intensity - 0 to 9.  0 = dim, 9 = bright
-          Byte 1: Color - 0 - 255. Hue color wheel. value/255 * 350 = Hue color wheel value
-      Range: 0-2147483648
+          Byte 1: Color - 0 - 255. Hue color wheel. value/255 * 360 = Hue color wheel value
+      Range: 0-100600319
       Default: 0
       </Help>
     </Value>
@@ -297,6 +297,15 @@ Please Note: If this doesn't work, you can check to see if your switch is within
       </Help>
     </Value>
 
+    <Value genre="config" type="byte" size="1" index="31" label="Local Protection" min="0" max="3" value="0">
+      <Help>
+      Enable local protection on these buttons. 0 = none, 1 = light, 2 = fan, 3 = both.
+      </Help>
+      <Item value="0" label="None"/>
+      <Item value="1" label="Light Button"/>
+      <Item value="2" label="Fan Button"/>
+      <Item value="3" label="Both Buttons"/>
+    </Value>
   </CommandClass>
 
   <!-- Association Groups -->
