@@ -173,6 +173,7 @@ DISTFILES =	.gitignore \
 	config/dome/0088.xml \
 	config/dome/0101.xml \
 	config/dome/0201.xml \
+	config/dome/dmex1.xml \
 	config/domitech/zb22uk.xml \
 	config/domitech/ze27eu.xml \
 	config/domux/DX1CA-Z.xml \
@@ -310,6 +311,7 @@ DISTFILES =	.gitignore \
 	config/ge/14292-toggle-switch.xml \
 	config/ge/14294-dimmer.xml \
 	config/ge/14295-dimmer-toggle.xml \
+	config/ge/14298.xml \
 	config/ge/26931-motion-switch.xml \
 	config/ge/26933-motion-dimmer.xml \
 	config/ge/28167-plugin-dimmer.xml \
@@ -317,6 +319,7 @@ DISTFILES =	.gitignore \
 	config/ge/45604.xml \
 	config/ge/46201-switch.xml \
 	config/ge/46203-dimmer.xml \
+	config/ge/46204-dimmer-toggle.xml \
 	config/ge/dimmer.xml \
 	config/ge/dimmer_module.xml \
 	config/ge/hinge-pin.xml \
@@ -524,6 +527,7 @@ DISTFILES =	.gitignore \
 	config/images/dome/0086.png \
 	config/images/dome/0088.png \
 	config/images/dome/0201.png \
+	config/images/dome/dmex1.png \
 	config/images/domitech/zb22uk.png \
 	config/images/domitech/ze27eu.png \
 	config/images/dragontech/wd-100.png \
@@ -629,6 +633,7 @@ DISTFILES =	.gitignore \
 	config/images/ge/14292-toggle-switch.png \
 	config/images/ge/14294-dimmer.png \
 	config/images/ge/14295-dimmer-toggle.png \
+	config/images/ge/14298.png \
 	config/images/ge/26931-motion-switch.png \
 	config/images/ge/26933-motion-dimmer.png \
 	config/images/ge/28167-plugin-dimmer.png \
@@ -636,6 +641,7 @@ DISTFILES =	.gitignore \
 	config/images/ge/45604.png \
 	config/images/ge/46201-switch.png \
 	config/images/ge/46203-dimmer.png \
+	config/images/ge/46204-dimmer-toggle.png \
 	config/images/ge/dimmer.png \
 	config/images/ge/dimmer_module.png \
 	config/images/ge/hinge-pin.png \
@@ -724,13 +730,16 @@ DISTFILES =	.gitignore \
 	config/images/kaipule/im20.png \
 	config/images/kwikset/888.png \
 	config/images/kwikset/914c.png \
+	config/images/kwikset/916.jpg \
 	config/images/kwikset/smartcode.png \
 	config/images/leviton/dz15s.png \
 	config/images/leviton/dz6hd.png \
+	config/images/leviton/dzpa1.png \
 	config/images/leviton/dzpd3.png \
 	config/images/leviton/vrcs2.png \
 	config/images/leviton/vrf01.png \
 	config/images/leviton/vri10.png \
+	config/images/leviton/vrpa1.png \
 	config/images/leviton/vrs15.png \
 	config/images/linear/LB60Z-1.png \
 	config/images/linear/WD500Z5-1.png \
@@ -917,6 +926,7 @@ DISTFILES =	.gitignore \
 	config/images/widom/WSP.png \
 	config/images/widom/WTED.png \
 	config/images/wink/wnk-mot1.png \
+	config/images/wink/wnk-sir1p.png \
 	config/images/zipato/HS1CA-Z.png \
 	config/images/zipato/HS1CG-Z.png \
 	config/images/zipato/HS1SA-Z.png \
@@ -966,6 +976,7 @@ DISTFILES =	.gitignore \
 	config/inovelli/lzw30.xml \
 	config/inovelli/lzw31-sn.xml \
 	config/inovelli/lzw31.xml \
+	config/inovelli/lzw36.xml \
 	config/inovelli/lzw40.xml \
 	config/inovelli/lzw41.xml \
 	config/inovelli/lzw42.xml \
@@ -988,9 +999,11 @@ DISTFILES =	.gitignore \
 	config/kaipule/ix32.xml \
 	config/kwikset/888.xml \
 	config/kwikset/914c.xml \
+	config/kwikset/916.xml \
 	config/kwikset/smartcode.xml \
 	config/leviton/dz15s.xml \
 	config/leviton/dz6hd.xml \
+	config/leviton/dzpa1.xml \
 	config/leviton/dzpd3.xml \
 	config/leviton/rzi10.xml \
 	config/leviton/vrcpg.xml \
@@ -1000,6 +1013,7 @@ DISTFILES =	.gitignore \
 	config/leviton/vrf01.xml \
 	config/leviton/vri06.xml \
 	config/leviton/vri10.xml \
+	config/leviton/vrpa1.xml \
 	config/leviton/vrs15.xml \
 	config/linear/GC-TBZ48.xml \
 	config/linear/LB60Z-1.xml \
@@ -1268,6 +1282,7 @@ DISTFILES =	.gitignore \
 	config/widom/WSP.xml \
 	config/widom/WTED.xml \
 	config/wink/wnk-mot1.xml \
+	config/wink/wnk-sir1p.xml \
 	config/zipato/MiniKeypad.xml \
 	config/zipato/RGBBulb.xml \
 	config/zipato/RGBBulb2.xml \
