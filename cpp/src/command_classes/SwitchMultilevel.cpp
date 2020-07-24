@@ -404,9 +404,12 @@ namespace OpenZWave
 					Internal::VC::ValueInt* durationValue = static_cast<Internal::VC::ValueInt*>(GetValue(_instance, ValueID_Index_SwitchMultiLevel::Duration));
 					uint32 duration = durationValue->GetValue();
 					durationValue->Release();
-					Log::Write(LogLevel_Info, GetNodeId(), "  Duration: %d seconds", duration);
-					if (duration > 0x7F)
-						Log::Write(LogLevel_Info, GetNodeId(), "  Rouding to %d Minutes (over 127 seconds)", encodeDuration(duration)-0x80);
+					if (duration > 7620)
+						Log::Write(LogLevel_Info, GetNodeId(), "  Duration: Device Default");
+					else if (duration > 0x7F)
+						Log::Write(LogLevel_Info, GetNodeId(), "  Rouding to %d Minutes (over 127 seconds)", encodeDuration(duration)-0x79);
+					else 
+						Log::Write(LogLevel_Info, GetNodeId(), "  Duration: %d seconds", duration);
 
 					msg->Append(4);
 					msg->Append(GetCommandClassId());
@@ -463,7 +466,7 @@ namespace OpenZWave
 				}
 				Log::Write(LogLevel_Info, GetNodeId(), "  Start Level:        %d", startLevel);
 
-				uint32 duration = 15300;
+				uint32 duration = -1;
 				if (Internal::VC::ValueInt* durationValue = static_cast<Internal::VC::ValueInt*>(GetValue(_instance, ValueID_Index_SwitchMultiLevel::Duration)))
 				{
 					length = 5;
@@ -505,7 +508,7 @@ namespace OpenZWave
 
 				if (length >= 5)
 				{
-					msg->Append(duration);
+					msg->Append(encodeDuration(duration));
 				}
 
 				if (length == 6)
@@ -561,7 +564,7 @@ namespace OpenZWave
 					}
 					if (GetVersion() >= 2)
 					{
-						node->CreateValueInt(ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_SwitchMultiLevel::Duration, "Dimming Duration", "", false, false, 15300, 0);
+						node->CreateValueInt(ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_SwitchMultiLevel::Duration, "Dimming Duration", "", false, false, -1, 0);
 					}
 					node->CreateValueByte(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_SwitchMultiLevel::Level, "Level", "", false, false, 0, 0);
 					node->CreateValueButton(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_SwitchMultiLevel::Bright, "Bright", 0);
