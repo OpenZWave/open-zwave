@@ -33,6 +33,7 @@
 #include <time.h>
 #endif
 #include "Defs.h"
+#include "TimerThread.h"
 #include "platform/Ref.h"
 #include "value_classes/ValueID.h"
 #include "platform/Log.h"
@@ -50,7 +51,7 @@ namespace OpenZWave
 			/** \brief Base class for values associated with a node.
 			 * \ingroup ValueID
 			 */
-			class Value: public Internal::Platform::Ref
+			class Value: public Internal::Platform::Ref, private Timer
 			{
 					friend class OpenZWave::Driver;
 					friend class ValueStore;
@@ -162,6 +163,8 @@ namespace OpenZWave
 						return Ref::Release();
 					}
 #endif
+					void sendValueRefresh(uint32 _unused);
+
 				protected:
 					virtual ~Value();
 
@@ -173,9 +176,15 @@ namespace OpenZWave
 					{
 						m_checkChange = _check;
 					}
+					bool IsTargetValueSet() const
+					{
+						return m_targetValueSet;
+					}
+
 					void OnValueRefreshed();			// A value in a device has been refreshed
 					void OnValueChanged();				// The refreshed value actually changed
-					int VerifyRefreshedValue(void* _originalValue, void* _checkValue, void* _newValue, ValueID::ValueType _type, int _originalValueLength = 0, int _checkValueLength = 0, int _newValueLength = 0);
+					int VerifyRefreshedValue(void* _originalValue, void* _checkValue, void* _newValue, void* _targetValue, ValueID::ValueType _type, int _originalValueLength = 0, int _checkValueLength = 0, int _newValueLength = 0, int _targetValueLength = 0);
+					int CheckTargetValue(void* _newValue, void* _targetValue, ValueID::ValueType _type, int _newValueLength, int _targetValueLength);
 
 					int32 m_min;
 					int32 m_max;
@@ -184,6 +193,8 @@ namespace OpenZWave
 					bool m_verifyChanges;		// if true, apparent changes are verified; otherwise, they're not
 					bool m_refreshAfterSet;		// if true, all value sets are followed by a get to refresh the value manually
 					ValueID m_id;
+					bool m_targetValueSet;		// If the Target Value is Set 
+					uint32 m_duration;			// The Duration, if the CC supports it
 
 				private:
 					string m_units;

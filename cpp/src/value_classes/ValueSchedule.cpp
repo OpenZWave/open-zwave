@@ -155,7 +155,7 @@ namespace OpenZWave
 			{
 				/* Value::VerifyRefreshedValue doesn't handle Schedule Properly yet, but still do this so we can do it eventually */
 
-				switch (VerifyRefreshedValue((void*) "Schedule", (void*) "Schedule", (void*) "Schedule", ValueID::ValueType_Schedule))
+				switch (VerifyRefreshedValue((void*) "Schedule", (void*) "Schedule", (void*) "Schedule", (void *) "Schedule", ValueID::ValueType_Schedule))
 				{
 					case 0:		// value hasn't changed, nothing to do
 						break;

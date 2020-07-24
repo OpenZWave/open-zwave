@@ -60,6 +60,8 @@ namespace OpenZWave
 					bool Set(uint32 const _value);
 					uint32 GetValue() const;
 
+					void SetTargetValue(uint32 const _target, uint32 _duration = 0);
+
 					bool SetBit(uint8 const _idx);
 					bool ClearBit(uint8 const _idx);
 					bool GetBit(uint8 _idx) const;
@@ -92,6 +94,7 @@ namespace OpenZWave
 					uint32 m_BitMask;				// Valid Bits
 					uint8 m_size;					// Number of bytes in size
 					vector<int32> m_bits;
+					uint32 m_targetValue; 		// Target Value, if Supported;
 			};
 		} // namespace VC
 	} // namespace Internal

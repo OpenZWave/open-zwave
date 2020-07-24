@@ -82,12 +82,15 @@ namespace OpenZWave
 
 				protected:
 					virtual void CreateVars(uint8 const _instance) override;
+					string decodeColor(uint8 valueArray[9]);
+					uint8 decodeColorList(string color);
 
 				private:
 					Color(uint32 const _homeId, uint8 const _nodeId);
 					bool m_refreshinprogress;
 					uint8 m_coloridxcount;
 					uint8 m_colorvalues[9];
+					uint8 m_colorTargetValues[9];
 			};
 		} // namespace CC
 	} // namespace Internal
