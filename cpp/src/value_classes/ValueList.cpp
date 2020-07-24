@@ -46,7 +46,7 @@ namespace OpenZWave
 //-----------------------------------------------------------------------------
 			ValueList::ValueList(uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint16 const _index, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, vector<Item> const& _items, int32 const _valueIdx, uint8 const _pollIntensity, uint8 const _size	// = 4
 					) :
-					Value(_homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_List, _label, _units, _readOnly, _writeOnly, false, _pollIntensity), m_items(_items), m_valueIdx(_valueIdx), m_valueIdxCheck(0), m_size(_size)
+					Value(_homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_List, _label, _units, _readOnly, _writeOnly, false, _pollIntensity), m_items(_items), m_valueIdx(_valueIdx), m_valueIdxCheck(0), m_size(_size), m_targetValue(0)
 			{
 				for (vector<Item>::iterator it = m_items.begin(); it != m_items.end(); ++it)
 				{

@@ -867,6 +867,7 @@ DISTFILES =	.gitignore \
 	config/images/thermofloor/Heatit-Z-Push-button-8-white.png \
 	config/images/thermofloor/heatit021.png \
 	config/images/thermofloor/heatit056.png \
+	config/images/thermofloor/heatit20a.png \
 	config/images/thermofloor/heatit_zdim.png \
 	config/images/trane/TZEMT400AB32MAA.png \
 	config/images/trane/TZEMT400BB32MAA.png \
@@ -1202,6 +1203,7 @@ DISTFILES =	.gitignore \
 	config/thermofloor/heatit-zdim.xml \
 	config/thermofloor/heatit021.xml \
 	config/thermofloor/heatit056.xml \
+	config/thermofloor/heatit20a.xml \
 	config/thermofloor/heatitz8.xml \
 	config/trane/TZEMT400AB32MAA.xml \
 	config/trane/TZEMT400BB32MAA.xml \
