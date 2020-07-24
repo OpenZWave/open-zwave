@@ -1,4 +1,4 @@
-<Product Revision="10" 
+<Product Revision="11" 
   xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/010F:1001:0801</MetaDataItem>
