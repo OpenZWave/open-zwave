@@ -46,7 +46,7 @@ namespace OpenZWave
 // Constructor
 //-----------------------------------------------------------------------------
 			ValueBitSet::ValueBitSet(uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint16 const _index, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, uint32 const _value, uint8 const _pollIntensity) :
-					Value(_homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_BitSet, _label, _units, _readOnly, _writeOnly, false, _pollIntensity), m_value(_value), m_valueCheck(false), m_newValue(false), m_BitMask(0xFFFFFFFF), m_size(0)
+					Value(_homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_BitSet, _label, _units, _readOnly, _writeOnly, false, _pollIntensity), m_value(_value), m_valueCheck(false), m_newValue(false), m_BitMask(0xFFFFFFFF), m_size(0), m_targetValue(0)
 			{
 			}
 
@@ -342,12 +342,23 @@ namespace OpenZWave
 			}
 
 //-----------------------------------------------------------------------------
+// <ValueByte::SetTargetValue>
+// Set the Value Target (Used for Automatic Refresh)
+//-----------------------------------------------------------------------------
+			void ValueBitSet::SetTargetValue(uint32 const _target, uint32 _duration)
+			{
+				m_targetValueSet = true;
+				m_targetValue = _target;
+				m_duration = _duration;
+			}
+
+//-----------------------------------------------------------------------------
 // <ValueBitSet::OnValueRefreshed>
 // A value in a device has been refreshed
 //-----------------------------------------------------------------------------
 			void ValueBitSet::OnValueRefreshed(uint32 const _value)
 			{
-				switch (VerifyRefreshedValue((void*) &m_value, (void*) &m_valueCheck, (void*) &_value, ValueID::ValueType_BitSet))
+				switch (VerifyRefreshedValue((void*) &m_value, (void*) &m_valueCheck, (void*) &_value, (void*) &m_targetValue, ValueID::ValueType_BitSet))
 				{
 					case 0:		// value hasn't changed, nothing to do
 						break;

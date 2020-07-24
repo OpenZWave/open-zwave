@@ -27,6 +27,7 @@
 
 #include "command_classes/CommandClasses.h"
 #include "command_classes/Version.h"
+#include "command_classes/Basic.h"
 #include "Defs.h"
 #include "Msg.h"
 #include "Driver.h"
@@ -155,13 +156,16 @@ namespace OpenZWave
 							Log::Write(LogLevel_Info, GetNodeId(), "Received CommandClass Version report from node %d: CommandClass=%s, Version=%d", GetNodeId(), pCommandClass->GetCommandClassName().c_str(), _data[2]);
 							pCommandClass->ClearStaticRequest(StaticRequest_Version);
 							/* some devices advertise CommandClasses, but return version as 0. In General this means
-							 * that the device doesn't actually support the CommandClass. So lets Remove it
+							 * that the device doesn't actually support the CommandClass. So lets Remove it.
 							 */
 
 							if (_data[2] > 0)
 							{
 								pCommandClass->SetVersion(_data[2]);
 							}
+							/* More often than not our Basic CC is needed. */
+							else if (_data[1] == Basic::StaticGetCommandClassId())
+								pCommandClass->SetVersion(pCommandClass->GetMaxVersion());
 							else
 							{
 								Log::Write(LogLevel_Warning, GetNodeId(), "CommandClass Version is 0, Removing CommandClass %s", pCommandClass->GetCommandClassName().c_str());
@@ -184,8 +188,9 @@ namespace OpenZWave
 			{
 				if (m_com.GetFlagBool(COMPAT_FLAG_VERSION_GETCLASSVERSION))
 				{
-//					if (_commandClass->HasStaticRequest(StaticRequest_Version))
-//					{
+					/* if its not a "Controlling" command Class */
+					if ((!_commandClass->IsAfterMark()) && (_commandClass->HasStaticRequest(StaticRequest_Version)))
+					{
 						Msg* msg = new Msg("VersionCmd_CommandClassGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
 						msg->Append(GetNodeId());
 						msg->Append(3);
@@ -195,7 +200,7 @@ namespace OpenZWave
 						msg->Append(GetDriver()->GetTransmitOptions());
 						GetDriver()->SendMsg(msg, Driver::MsgQueue_Query);
 						return true;
-//					}
+					}
 				}
 
 				return false;

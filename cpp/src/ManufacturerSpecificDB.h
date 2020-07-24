@@ -142,6 +142,7 @@ namespace OpenZWave
 				void checkConfigFiles(Driver *);
 				void configDownloaded(Driver *, string file, uint8 node, bool success = true);
 				void mfsConfigDownloaded(Driver *, string file, bool success = true);
+				void fileDownloaded(Driver *, string file, bool success = true);
 				bool isReady();
 				bool updateConfigFile(Driver *, Node *);
 				bool updateMFSConfigFile(Driver *);
@@ -151,6 +152,7 @@ namespace OpenZWave
 				void LoadConfigFileRevision(ProductDescriptor *product);
 				ManufacturerSpecificDB();
 				~ManufacturerSpecificDB();
+				void checkConfigFileContents(Driver *driver, string file);
 
 				Internal::Platform::Mutex* m_MfsMutex; /**< Mutex to ensure its accessed by a single thread at a time */
 

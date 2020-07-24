@@ -45,7 +45,7 @@ namespace OpenZWave
 // Constructor
 //-----------------------------------------------------------------------------
 			ValueBool::ValueBool(uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint16 const _index, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, bool const _value, uint8 const _pollIntensity) :
-					Value(_homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Bool, _label, _units, _readOnly, _writeOnly, false, _pollIntensity), m_value(_value), m_valueCheck(false)
+					Value(_homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Bool, _label, _units, _readOnly, _writeOnly, false, _pollIntensity), m_value(_value), m_valueCheck(false), m_targetValue(false)
 			{
 			}
 
@@ -111,12 +111,23 @@ namespace OpenZWave
 			}
 
 //-----------------------------------------------------------------------------
+// <ValueBool::SetTargetValue>
+// Set the Value Target (Used for Automatic Refresh)
+//-----------------------------------------------------------------------------
+			void ValueBool::SetTargetValue(bool const _target, uint32 _duration)
+			{
+				m_targetValueSet = true;
+				m_targetValue = _target;
+				m_duration = _duration;
+			}
+
+//-----------------------------------------------------------------------------
 // <ValueBool::OnValueRefreshed>
 // A value in a device has been refreshed
 //-----------------------------------------------------------------------------
 			void ValueBool::OnValueRefreshed(bool const _value)
 			{
-				switch (VerifyRefreshedValue((void*) &m_value, (void*) &m_valueCheck, (void*) &_value, ValueID::ValueType_Bool))
+				switch (VerifyRefreshedValue((void*) &m_value, (void*) &m_valueCheck, (void*) &_value, (void *) &m_targetValue, ValueID::ValueType_Bool))
 				{
 					case 0:		// value hasn't changed, nothing to do
 						break;
