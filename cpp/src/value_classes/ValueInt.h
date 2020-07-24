@@ -55,6 +55,8 @@ namespace OpenZWave
 
 					bool Set(int32 const _value);
 					void OnValueRefreshed(int32 const _value);
+					void SetTargetValue(int32 const _target, uint32 _duration = 0);
+
 
 					// From Value
 					virtual string const GetAsString() const;
@@ -70,6 +72,7 @@ namespace OpenZWave
 				private:
 					int32 m_value;				// the current value
 					int32 m_valueCheck;			// the previous value (used for double-checking spurious value reads)
+					int32 m_targetValue;		// Target Value 
 			};
 		} // namespace VC
 	} // namespace Internal

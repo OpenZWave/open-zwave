@@ -44,7 +44,7 @@ namespace OpenZWave
 // Constructor
 //-----------------------------------------------------------------------------
 			ValueRaw::ValueRaw(uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint16 const _index, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, uint8 const* _value, uint8 const _length, uint8 const _pollIntensity) :
-					Value(_homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Raw, _label, _units, _readOnly, _writeOnly, false, _pollIntensity), m_value( NULL), m_valueLength(_length), m_valueCheck( NULL), m_valueCheckLength(0)
+					Value(_homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Raw, _label, _units, _readOnly, _writeOnly, false, _pollIntensity), m_value( NULL), m_valueLength(_length), m_valueCheck( NULL), m_valueCheckLength(0), m_targetValue(NULL), m_targetValueLength(0)
 			{
 				m_value = new uint8[_length];
 				memcpy(m_value, _value, _length);
@@ -212,12 +212,24 @@ namespace OpenZWave
 			}
 
 //-----------------------------------------------------------------------------
+// <ValueRaw::SetTargetValue>
+// Set the Value Target (Used for Automatic Refresh)
+//-----------------------------------------------------------------------------
+			void ValueRaw::SetTargetValue(uint8 const* _target, uint8 const _length, int32 _duration)
+			{
+				m_targetValueSet = true;
+				memcpy(m_targetValue, _target, _length);
+				m_targetValueLength = _length;
+				m_duration = _duration;
+			}
+
+//-----------------------------------------------------------------------------
 // <ValueRaw::OnValueRefreshed>
 // A value in a device has been refreshed
 //-----------------------------------------------------------------------------
 			void ValueRaw::OnValueRefreshed(uint8 const* _value, uint8 const _length)
 			{
-				switch (VerifyRefreshedValue((void*) m_value, (void*) m_valueCheck, (void*) _value, ValueID::ValueType_Raw, m_valueLength, m_valueCheckLength, _length))
+				switch (VerifyRefreshedValue((void*) m_value, (void*) m_valueCheck, (void*) _value, (void*) m_targetValue, ValueID::ValueType_Raw, m_valueLength, m_valueCheckLength, _length, m_targetValueLength))
 				{
 					case 0:		// value hasn't changed, nothing to do
 						break;

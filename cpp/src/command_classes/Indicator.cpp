@@ -219,14 +219,16 @@ enum Indicator_Property_offset {
 //-----------------------------------------------------------------------------
 			bool Indicator::RequestState(uint32 const _requestFlags, uint8 const _instance, Driver::MsgQueue const _queue)
 			{
+				bool ret = false;
 				if (_requestFlags & RequestFlag_Dynamic)
 				{
+
 					if (GetVersion() == 1)
 						return RequestValue(_requestFlags, 0, _instance, _queue);
 					for (int i = 1; i <= ValueID_Index_Indicator::Buzzer; i++) {
 						if (Internal::VC::Value *value = GetValue(_instance, i))
 						{
-							RequestValue(_requestFlags, i, _instance, _queue);
+							ret |= RequestValue(_requestFlags, i, _instance, _queue);
 							value->Release();
 						}
 					}
@@ -245,12 +247,10 @@ enum Indicator_Property_offset {
 						msg->Append(0);
 						msg->Append(GetDriver()->GetTransmitOptions());
 						GetDriver()->SendMsg(msg, _queue);
-						return true;
+						ret = true;
 					}
-
 				}
-
-				return false;
+				return ret;
 			}
 
 //-----------------------------------------------------------------------------

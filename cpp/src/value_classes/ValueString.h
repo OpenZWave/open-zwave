@@ -57,6 +57,7 @@ namespace OpenZWave
 
 					bool Set(string const& _value);
 					void OnValueRefreshed(string const& _value);
+					void SetTargetValue(string const _target, uint32 _duration = 0);
 
 					// From Value
 					virtual string const GetAsString() const
@@ -79,6 +80,7 @@ namespace OpenZWave
 					string m_value;				// the current value
 					string m_valueCheck;			// the previous value (used for double-checking spurious value reads)
 					string m_newValue;				// a new value to be set on the appropriate device
+					string m_targetValue;			// Target Value
 			};
 		} // namespace VC
 	} // namespace Internal

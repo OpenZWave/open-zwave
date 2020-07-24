@@ -90,20 +90,10 @@ namespace OpenZWave
 				}
 				while (!m_RefreshClassValues.empty())
 				{
-					for (unsigned int i = 0; i < m_RefreshClassValues.size(); i++)
+					multimap<uint16, RefreshValue *>::iterator it;
+					for (it = m_RefreshClassValues.begin(); it != m_RefreshClassValues.end(); it++)
 					{
-						RefreshValue *rcc = m_RefreshClassValues.at(i);
-						while (!rcc->RefreshClasses.empty())
-						{
-							delete rcc->RefreshClasses.back();
-							rcc->RefreshClasses.pop_back();
-						}
-						//			for (unsigned int j = 0; j < rcc->RefreshClasses.size(); i++)
-						//			{
-						//				delete rcc->RefreshClasses[j];
-						//			}
-						rcc->RefreshClasses.clear();
-						delete rcc;
+						delete it->second;
 					}
 					m_RefreshClassValues.clear();
 				}
@@ -291,21 +281,25 @@ namespace OpenZWave
 			{
 
 				char const* str;
-				bool ok = false;
-				const char *genre;
-				RefreshValue *rcc = new RefreshValue();
-				rcc->cc = GetCommandClassId();
-				genre = _ccElement->Attribute("Genre");
-				rcc->genre = Internal::VC::Value::GetGenreEnumFromName(genre);
+				uint16 sourceIdx;
+				bool ok = true;
 				int temp;
-				_ccElement->QueryIntAttribute("Instance", &temp);
-				rcc->instance = (uint8) temp;
 				_ccElement->QueryIntAttribute("Index", &temp);
-				rcc->index = (uint16) temp;
-				Log::Write(LogLevel_Info, GetNodeId(), "Value Refresh triggered by CommandClass: %s, Genre: %d, Instance: %d, Index: %d for:", GetCommandClassName().c_str(), rcc->genre, rcc->instance, rcc->index);
+				sourceIdx = (uint16) temp;
+
+				/* check if we have a entry already */
+				if (m_RefreshClassValues.find(sourceIdx) != m_RefreshClassValues.end())
+				{
+						Log::Write(LogLevel_Warning, GetNodeId(), "TriggerRefreshValue - A Entry already exists for CC %s Index %d", GetCommandClassName().c_str(), sourceIdx);
+						return;
+				}
+
+
+				Log::Write(LogLevel_Info, GetNodeId(), "Value Refresh triggered by CommandClass: %s, Index: %d for:", GetCommandClassName().c_str(), sourceIdx);
 				TiXmlElement const* child = _ccElement->FirstChildElement();
 				while (child)
 				{
+					ok = true;
 					str = child->Value();
 					if (str)
 					{
@@ -314,35 +308,44 @@ namespace OpenZWave
 							RefreshValue *arcc = new RefreshValue();
 							if (child->QueryIntAttribute("CommandClass", &temp) != TIXML_SUCCESS)
 							{
-								Log::Write(LogLevel_Warning, GetNodeId(), "    Invalid XML - CommandClass Attribute is wrong type or missing");
+								Log::Write(LogLevel_Warning, GetNodeId(), "\tInvalid XML - CommandClass Attribute is wrong type or missing");
 								child = child->NextSiblingElement();
 								continue;
 							}
 							arcc->cc = (uint8) temp;
 							if (child->QueryIntAttribute("RequestFlags", &temp) != TIXML_SUCCESS)
 							{
-								Log::Write(LogLevel_Warning, GetNodeId(), "    Invalid XML - RequestFlags Attribute is wrong type or missing");
+								Log::Write(LogLevel_Warning, GetNodeId(), "\tInvalid XML - RequestFlags Attribute is wrong type or missing");
 								child = child->NextSiblingElement();
 								continue;
 							}
-							arcc->genre = (uint8) temp;
-							if (child->QueryIntAttribute("Instance", &temp) != TIXML_SUCCESS)
-							{
-								Log::Write(LogLevel_Warning, GetNodeId(), "    Invalid XML - Instance Attribute is wrong type or missing");
-								child = child->NextSiblingElement();
-								continue;
-							}
-							arcc->instance = (uint8) temp;
+							arcc->requestflags = (uint8) temp;
 							if (child->QueryIntAttribute("Index", &temp) != TIXML_SUCCESS)
 							{
-								Log::Write(LogLevel_Warning, GetNodeId(), "    Invalid XML - Index Attribute is wrong type or missing");
+								Log::Write(LogLevel_Warning, GetNodeId(), "\tInvalid XML - Index Attribute is wrong type or missing");
 								child = child->NextSiblingElement();
 								continue;
 							}
 							arcc->index = (uint16) temp;
-							Log::Write(LogLevel_Info, GetNodeId(), "    CommandClass: %s, RequestFlags: %d, Instance: %d, Index: %d", CommandClasses::GetName(arcc->cc).c_str(), arcc->genre, arcc->instance, arcc->index);
-							rcc->RefreshClasses.push_back(arcc);
-							ok = true;
+							/* check for Duplicates */
+							multimap<uint16, RefreshValue *>::iterator it;
+							for (it = m_RefreshClassValues.begin(); it != m_RefreshClassValues.end(); it++)
+							{
+								uint16 idx = it->first;
+								RefreshValue *rv = it->second;
+								if ((idx == sourceIdx) && (rv->cc == arcc->cc) && (rv->requestflags == arcc->requestflags) && (rv->index == arcc->index))
+								{
+									Log::Write(LogLevel_Warning, GetNodeId(), "\tTarget Exists: CC %s Index %d", CommandClasses::GetName(arcc->cc).c_str(), arcc->index);
+									delete arcc;
+									ok = false;
+									break;
+								}
+							}
+							if (ok)
+							{
+								Log::Write(LogLevel_Info, GetNodeId(), "\tCommandClass: %s, RequestFlags: %d, Index: %d", CommandClasses::GetName(arcc->cc).c_str(), arcc->requestflags, arcc->index);
+								m_RefreshClassValues.insert(std::make_pair(sourceIdx, arcc));
+							}
 						}
 						else
 						{
@@ -350,15 +353,6 @@ namespace OpenZWave
 						}
 					}
 					child = child->NextSiblingElement();
-				}
-				if (ok == true)
-				{
-					m_RefreshClassValues.push_back(rcc);
-				}
-				else
-				{
-					Log::Write(LogLevel_Warning, GetNodeId(), "Failed to add a RefreshClassValue from XML");
-					delete rcc;
 				}
 			}
 
@@ -370,30 +364,24 @@ namespace OpenZWave
 
 			bool CommandClass::CheckForRefreshValues(Internal::VC::Value const* _value)
 			{
-				if (m_RefreshClassValues.empty())
-				{
-					//Log::Write(LogLevel_Debug, GetNodeId(), "Bailing out of CheckForRefreshValues");
+				/* if there are no values here... */
+				if (m_RefreshClassValues.find(_value->GetID().GetIndex()) == m_RefreshClassValues.end())
 					return false;
-				}
+
 				Node* node = GetNodeUnsafe();
 				if (node != NULL)
 				{
-					for (uint32 i = 0; i < m_RefreshClassValues.size(); i++)
+					multimap<uint16, RefreshValue *>::iterator it;
+					for (it = m_RefreshClassValues.find(_value->GetID().GetIndex()); it != m_RefreshClassValues.end(); it++)
 					{
-						RefreshValue *rcc = m_RefreshClassValues.at(i);
-						//Log::Write(LogLevel_Debug, GetNodeId(), "Checking Value Against RefreshClassList: CommandClass %s = %s, Genre %d = %d, Instance %d = %d, Index %d = %d", CommandClasses::GetName(rcc->cc).c_str(), CommandClasses::GetName(_value->GetID().GetCommandClassId()).c_str(), rcc->genre, _value->GetID().GetGenre(), rcc->instance, _value->GetID().GetInstance(), rcc->index, _value->GetID().GetIndex());
-						if ((rcc->genre == _value->GetID().GetGenre()) && (rcc->instance == _value->GetID().GetInstance()) && (rcc->index == _value->GetID().GetIndex()))
+						RefreshValue *rcc = it->second;
+						/* just to be sure we have the right index */
+						if (it->first != _value->GetID().GetIndex())
+							return false;
+						Log::Write(LogLevel_Debug, GetNodeId(), "Requesting Refresh of Value: CommandClass: %s Instance %d, Index %d", CommandClasses::GetName(rcc->cc).c_str(), _value->GetID().GetInstance(), rcc->index);
+						if (CommandClass* cc = node->GetCommandClass(rcc->cc))
 						{
-							/* we got a match..... */
-							for (uint32 j = 0; j < rcc->RefreshClasses.size(); j++)
-							{
-								RefreshValue *arcc = rcc->RefreshClasses.at(j);
-								Log::Write(LogLevel_Debug, GetNodeId(), "Requesting Refresh of Value: CommandClass: %s Genre %d, Instance %d, Index %d", CommandClasses::GetName(arcc->cc).c_str(), arcc->genre, arcc->instance, arcc->index);
-								if (CommandClass* cc = node->GetCommandClass(arcc->cc))
-								{
-									cc->RequestValue(arcc->genre, arcc->index, arcc->instance, Driver::MsgQueue_Send);
-								}
-							}
+							cc->RequestValue(rcc->requestflags, rcc->index, _value->GetID().GetInstance(), Driver::MsgQueue_Send);
 						}
 					}
 				}
@@ -451,23 +439,29 @@ namespace OpenZWave
 					}
 				}
 				// Write out the TriggerRefreshValue if it exists
-				for (uint32 i = 0; i < m_RefreshClassValues.size(); i++)
+				multimap<uint16, RefreshValue *>::iterator it;
+				uint16 sourceidx = 0;
+				TiXmlElement* RefreshElement = nullptr;
+
+				for (it = m_RefreshClassValues.begin(); it != m_RefreshClassValues.end(); it++)
 				{
-					RefreshValue *rcc = m_RefreshClassValues.at(i);
-					TiXmlElement* RefreshElement = new TiXmlElement("TriggerRefreshValue");
-					_ccElement->LinkEndChild(RefreshElement);
-					RefreshElement->SetAttribute("Genre", Internal::VC::Value::GetGenreNameFromEnum((ValueID::ValueGenre) rcc->genre));
-					RefreshElement->SetAttribute("Instance", rcc->instance);
-					RefreshElement->SetAttribute("Index", rcc->index);
-					for (uint32 j = 0; j < rcc->RefreshClasses.size(); j++)
-					{
-						RefreshValue *arcc = rcc->RefreshClasses.at(j);
+					RefreshValue *rcc = it->second;
+					if (sourceidx != it->first) { 
+						RefreshElement = new TiXmlElement("TriggerRefreshValue");
+						_ccElement->LinkEndChild(RefreshElement);
+						RefreshElement->SetAttribute("Index", it->first);
+						sourceidx = it->first;
+					}
+					if (RefreshElement) {
 						TiXmlElement *ClassElement = new TiXmlElement("RefreshClassValue");
 						RefreshElement->LinkEndChild(ClassElement);
-						ClassElement->SetAttribute("CommandClass", arcc->cc);
-						ClassElement->SetAttribute("RequestFlags", arcc->genre);
-						ClassElement->SetAttribute("Instance", arcc->instance);
-						ClassElement->SetAttribute("Index", arcc->index);
+						ClassElement->SetAttribute("CommandClass", rcc->cc);
+						ClassElement->SetAttribute("RequestFlags", rcc->requestflags);
+						ClassElement->SetAttribute("Index", rcc->index);
+					}
+					else
+					{
+						Log::Write(LogLevel_Warning, GetNodeId(), "CommandClass::WriteXML: - RefreshElement was empty for index %d", it->first);
 					}
 				}
 			}
@@ -567,6 +561,37 @@ namespace OpenZWave
 
 				return res;
 			}
+
+//-----------------------------------------------------------------------------
+// <CommandClass::decodeDuration>
+// Decode the Duration Field to Seconds - CC:0000.00.00.11.016
+//-----------------------------------------------------------------------------
+
+			uint32 CommandClass::decodeDuration(uint8 data) const
+			{
+				if (data <= 0x7f)
+					return data;
+				if ((data > 0x7f) && (data <= 0xFD))
+					return ((data - 0x7F)*60);
+				 /* a 0xFE means Unknown Duration
+				  * and 0xFF is Reserved - So lets return -1 (to wrap our Int)
+				 */
+				return -1;
+			}
+
+			uint8 CommandClass::encodeDuration(uint32 seconds) const
+			{
+				if (seconds <= 0x7f)
+					return (seconds & 0xFF);
+				/* 7620 seconds is the max that can fit into our scale, so anything above that, use it as the Default Duration 
+				* its 7620 as we only can go upto 127 minutes - See https://github.com/OpenZWave/open-zwave/issues/1321#issuecomment-656532282 */ 
+				if (seconds > 7620)
+					return 0xFF;
+				/* if we get here, seconds is always going to be at least 2 minutes - 0x7F(127) is > 2 minutes */
+				return (uint8)0x79 + ((seconds/60) & 0xFF);
+			}
+
+
 
 //-----------------------------------------------------------------------------
 // <CommandClass::AppendValue>

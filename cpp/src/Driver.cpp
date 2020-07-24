@@ -89,7 +89,8 @@ using namespace OpenZWave;
 // 02: 01-12-2011 - Command class m_afterMark sense corrected, and attribute named to match.
 // 03: 08-04-2011 - Changed command class instance handling for non-sequential MultiChannel endpoints.
 // 04: 12-07-2019 - Changed Interview Order
-uint32 const c_configVersion = 4;
+// 05: 10-07-2020 - Duration ValueID's changed from Byte to Int. Invalidate Any previous caches. 
+uint32 const c_configVersion = 5;
 
 static char const* c_libraryTypeNames[] =
 { "Unknown",			// library type 0
@@ -201,14 +202,12 @@ Driver::~Driver()
 
 	m_dnsThread->Stop();
 	m_dnsThread->Release();
-	delete m_dns;
 
 	m_driverThread->Stop();
 	m_driverThread->Release();
 
 	m_timerThread->Stop();
 	m_timerThread->Release();
-	delete m_timer;
 
 	m_sendMutex->Release();
 
@@ -295,6 +294,10 @@ Driver::~Driver()
 	delete this->AuthKey;
 	delete this->EncryptKey;
 	delete this->m_httpClient;
+	delete this->m_timer;
+	delete this->m_dns;
+
+
 }
 
 //-----------------------------------------------------------------------------

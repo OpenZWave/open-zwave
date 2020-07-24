@@ -37,7 +37,7 @@
 #include "platform/Log.h"
 
 #include "value_classes/ValueBool.h"
-#include "value_classes/ValueByte.h"
+#include "value_classes/ValueInt.h"
 
 namespace OpenZWave
 {
@@ -107,6 +107,8 @@ namespace OpenZWave
 					// data[1] => Switch state
 					if (Internal::VC::ValueBool* value = static_cast<Internal::VC::ValueBool*>(GetValue(_instance, ValueID_Index_SwitchBinary::Level)))
 					{
+						if (GetVersion() >= 2)
+							value->SetTargetValue(_data[2] != 0, _data[3]);
 						value->OnValueRefreshed(_data[1] != 0);
 						value->Release();
 					}
@@ -124,9 +126,9 @@ namespace OpenZWave
 						// data[3] might be duration
 						if (_length > 3)
 						{
-							if (Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>(GetValue(_instance, ValueID_Index_SwitchBinary::Duration)))
+							if (Internal::VC::ValueInt* value = static_cast<Internal::VC::ValueInt*>(GetValue(_instance, ValueID_Index_SwitchBinary::Duration)))
 							{
-								value->OnValueRefreshed(_data[3]);
+								value->OnValueRefreshed(decodeDuration(_data[3]));
 								value->Release();
 							}
 						}
@@ -160,9 +162,9 @@ namespace OpenZWave
 					}
 					case ValueID_Index_SwitchBinary::Duration:
 					{
-						if (Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>(GetValue(instance, ValueID_Index_SwitchBinary::Duration)))
+						if (Internal::VC::ValueInt* value = static_cast<Internal::VC::ValueInt*>(GetValue(instance, ValueID_Index_SwitchBinary::Duration)))
 						{
-							value->OnValueRefreshed((static_cast<Internal::VC::ValueByte const*>(&_value))->GetValue());
+							value->OnValueRefreshed((static_cast<Internal::VC::ValueInt const*>(&_value))->GetValue());
 							value->Release();
 						}
 						res = true;
@@ -218,27 +220,21 @@ namespace OpenZWave
 
 				if (GetVersion() >= 2)
 				{
-					Internal::VC::ValueByte* durationValue = static_cast<Internal::VC::ValueByte*>(GetValue(_instance, ValueID_Index_SwitchBinary::Duration));
-					uint8 duration = durationValue->GetValue();
+					Internal::VC::ValueInt* durationValue = static_cast<Internal::VC::ValueInt*>(GetValue(_instance, ValueID_Index_SwitchBinary::Duration));
+					uint32 duration = durationValue->GetValue();
 					durationValue->Release();
-					if (duration == 0xff)
-					{
-						Log::Write(LogLevel_Info, GetNodeId(), "  Duration: Default");
-					}
-					else if (duration >= 0x80)
-					{
-						Log::Write(LogLevel_Info, GetNodeId(), "  Duration: %d minutes", duration - 0x7f);
-					}
-					else
-					{
+					if (duration > 7620)
+						Log::Write(LogLevel_Info, GetNodeId(), "  Duration: Device Default");
+					else if (duration > 0x7F)
+						Log::Write(LogLevel_Info, GetNodeId(), "  Rouding to %d Minutes (over 127 seconds)", encodeDuration(duration)-0x79);
+					else 
 						Log::Write(LogLevel_Info, GetNodeId(), "  Duration: %d seconds", duration);
-					}
 
 					msg->Append(4);
 					msg->Append(GetCommandClassId());
 					msg->Append(SwitchBinaryCmd_Set);
 					msg->Append(targetValue);
-					msg->Append(duration);
+					msg->Append(encodeDuration(duration));
 				}
 				else
 				{
@@ -263,7 +259,7 @@ namespace OpenZWave
 				{
 					if (GetVersion() >= 2)
 					{
-						node->CreateValueByte(ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_SwitchBinary::Duration, "Transition Duration", "", false, false, 0xff, 0);
+						node->CreateValueInt(ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_SwitchBinary::Duration, "Transition Duration", "Sec", false, false, -1, 0);
 						node->CreateValueBool(ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_SwitchBinary::TargetState, "Target State", "", true, false, true, 0);
 					}
 					node->CreateValueBool(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_SwitchBinary::Level, "Switch", "", false, false, false, 0);

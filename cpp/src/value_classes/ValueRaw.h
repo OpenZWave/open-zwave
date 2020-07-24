@@ -53,6 +53,7 @@ namespace OpenZWave
 
 					bool Set(uint8 const* _value, uint8 const _length);
 					void OnValueRefreshed(uint8 const* _value, uint8 const _length);
+					void SetTargetValue(uint8 const* _target, uint8 const _length, int32 _duration = 0);
 
 					// From Value
 					virtual string const GetAsString() const;
@@ -74,6 +75,8 @@ namespace OpenZWave
 					uint8 m_valueLength;				// fixed length for this instance
 					uint8* m_valueCheck;				// the previous value (used for double-checking spurious value reads)
 					uint8 m_valueCheckLength;			// m_valueCheck array length
+					uint8* m_targetValue;		// Target Value
+					uint8 m_targetValueLength;	// Target Value Array Length
 			};
 		} // namespace VC
 	} // namespace Internal
