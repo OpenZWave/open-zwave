@@ -223,7 +223,12 @@ namespace OpenZWave
 					Internal::VC::ValueInt* durationValue = static_cast<Internal::VC::ValueInt*>(GetValue(_instance, ValueID_Index_SwitchBinary::Duration));
 					uint32 duration = durationValue->GetValue();
 					durationValue->Release();
-					Log::Write(LogLevel_Info, GetNodeId(), "  Duration: %d seconds", duration);
+					if (duration > 7620)
+						Log::Write(LogLevel_Info, GetNodeId(), "  Duration: Device Default");
+					else if (duration > 0x7F)
+						Log::Write(LogLevel_Info, GetNodeId(), "  Rouding to %d Minutes (over 127 seconds)", encodeDuration(duration)-0x79);
+					else 
+						Log::Write(LogLevel_Info, GetNodeId(), "  Duration: %d seconds", duration);
 
 					msg->Append(4);
 					msg->Append(GetCommandClassId());
@@ -254,7 +259,7 @@ namespace OpenZWave
 				{
 					if (GetVersion() >= 2)
 					{
-						node->CreateValueInt(ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_SwitchBinary::Duration, "Transition Duration", "Sec", false, false, 0, 0);
+						node->CreateValueInt(ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_SwitchBinary::Duration, "Transition Duration", "Sec", false, false, -1, 0);
 						node->CreateValueBool(ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_SwitchBinary::TargetState, "Target State", "", true, false, true, 0);
 					}
 					node->CreateValueBool(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_SwitchBinary::Level, "Switch", "", false, false, false, 0);

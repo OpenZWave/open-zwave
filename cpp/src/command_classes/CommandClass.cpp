@@ -567,25 +567,28 @@ namespace OpenZWave
 // Decode the Duration Field to Seconds - CC:0000.00.00.11.016
 //-----------------------------------------------------------------------------
 
-			int32 CommandClass::decodeDuration(uint8 data) const
+			uint32 CommandClass::decodeDuration(uint8 data) const
 			{
 				if (data <= 0x7f)
 					return data;
-				if ((data > 0x7f) && (data <= 0xFE))
+				if ((data > 0x7f) && (data <= 0xFD))
 					return ((data - 0x7F)*60);
-				 /* 0xFF - Invalid Duration - say 15300 (default Duration)
+				 /* a 0xFE means Unknown Duration
+				  * and 0xFF is Reserved - So lets return -1 (to wrap our Int)
 				 */
-				return 15300;
+				return -1;
 			}
 
-			uint8 CommandClass::encodeDuration(int32 seconds) const
+			uint8 CommandClass::encodeDuration(uint32 seconds) const
 			{
 				if (seconds <= 0x7f)
 					return (seconds & 0xFF);
-				/* 15240 seconds is the max that can fit into our scale, so anything above that, use it as the Default Duration */
-				if (seconds > 15240)
+				/* 7620 seconds is the max that can fit into our scale, so anything above that, use it as the Default Duration 
+				* its 7620 as we only can go upto 127 minutes - See https://github.com/OpenZWave/open-zwave/issues/1321#issuecomment-656532282 */ 
+				if (seconds > 7620)
 					return 0xFF;
-				return (uint8)0x80 + ((seconds/60) & 0xFF);
+				/* if we get here, seconds is always going to be at least 2 minutes - 0x7F(127) is > 2 minutes */
+				return (uint8)0x79 + ((seconds/60) & 0xFF);
 			}
 
 
