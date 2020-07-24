@@ -748,6 +748,7 @@ DISTFILES =	.gitignore \
 	config/images/miyakawaelectric/me-d101.png \
 	config/images/namron/1402756.png \
 	config/images/nexia/db100z.png \
+	config/images/nexia/th100nx.png \
 	config/images/nodon/asp3100SmartPlug.png \
 	config/images/nodon/crc3100OctanRemote.png \
 	config/images/nodon/crc360xSofremote.png \
@@ -1040,6 +1041,7 @@ DISTFILES =	.gitignore \
 	config/miyakawaelectric/me-d101.xml \
 	config/namron/1402756.xml \
 	config/nexia/db100z.xml \
+	config/nexia/th100nx.xml \
 	config/nodon/asp3100SmartPlug.xml \
 	config/nodon/crc3100OctanRemote.xml \
 	config/nodon/crc360xSofremote.xml \
