@@ -1,4 +1,4 @@
-<Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
   <!-- Please refer to https://github.com/OpenZWave/open-zwave/wiki/Adding-Devices for instructions -->
   <MetaData>
     <MetaDataItem name="Name">ECO-DIM.07 Z-Wave LED dimmer</MetaDataItem>
@@ -12,7 +12,7 @@ The dimmer is compatible with 95% of all dimmable LED lights.</MetaDataItem>
     <MetaDataItem name="ProductPage">https://www.ecodim.nl/eco-dim07-z-wave-druk-draai-led-dimmer-fase-afsnij.html</MetaDataItem>
     <MetaDataItem name="ProductSupport">https://www.ecodim.nl/service/</MetaDataItem>
     <MetaDataItem name="ProductPic">images/ecodim/0.7.jpg</MetaDataItem>
-    <MetaDataItem name="ProductManual"><![CDATA[https://products.z-wavealliance.org/ProductManual/File?folder=&filename=product_documents/3796/Z-Wave%20Dimmer%20Controller%20V1.4%20(1).pdf]]></MetaDataItem>
+    <MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&amp;filename=product_documents/3796/Z-Wave%20Dimmer%20Controller%20V1.4%20(1).pdf</MetaDataItem>
     <MetaDataItem name="InclusionDescription">Double press the reset button on the device then initiate inclusion on your z-wave controller.</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">Press the reset button three times on the device then initiate exclusion on your z-wave controller.</MetaDataItem>
     <MetaDataItem name="ResetDescription">Push reset button for 5 seconds.</MetaDataItem>
@@ -21,6 +21,7 @@ The dimmer is compatible with 95% of all dimmable LED lights.</MetaDataItem>
     <MetaDataItem id="0001" name="Identifier" type="0202">ECO-DIM.07 Z-Wave</MetaDataItem>
     <ChangeLog>
       <Entry author="Lukas Söder - lukas.l.soder@gmail.com" date="2020-07-02" revision="1">Information from manufacturer website and manual</Entry>
+      <Entry author="Lukas Söder - lukas.l.soder@gmail.com" date="2020-07-24" revision="2">Change ProductManual link format</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration Command Class - All Configuration Parameters should be entered into the section below -->
