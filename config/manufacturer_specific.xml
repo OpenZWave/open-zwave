@@ -803,6 +803,7 @@
     <Product config="ge/14291-switch.xml" id="3036" name="14291 In-Wall Smart Switch" type="4952"/>
     <Product config="ge/46201-switch.xml" id="3135" name="46201 In-Wall Smart Switch" type="4952"/>
     <Product config="ge/46203-dimmer.xml" id="3235" name="46203 In-Wall Smart Dimmer" type="4944"/>
+    <Product config="ge/46204-dimmer-toggle.xml" id="3237" name="In-Wall Smart Toggle Dimmer" type="4944"/>
     <Product config="ge/14292-toggle-switch.xml" id="3037" name="14292 In-Wall Smart Toggle Switch" type="4952"/>
     <Product config="ge/14292-toggle-switch.xml" id="3038" name="14293 In-Wall Smart Toggle Switch" type="4952"/>
     <Product config="ge/45604.xml" id="3030" name="45603 Plugin Appliance Module" type="5250"/>
@@ -1847,7 +1848,8 @@
   </Manufacturer>
   <Manufacturer id="012D" name="Wilshine Holding"></Manufacturer>
   <Manufacturer id="017F" name="Wink">
-    <Product config="wink/wnk-mot1.xml" id="0001" name="WNK-MOT1 Motion Sensor" type="0101" />
+    <Product config="wink/wnk-mot1.xml"  id="0001" name="WNK-MOT1 Motion Sensor" type="0101" />
+    <Product config="wink/wnk-sir1p.xml"  id="0001" name="WNK-SIR1P Siren" type="0200" />
   </Manufacturer>
   <Manufacturer id="004c" name="Woodward Labs"></Manufacturer>
   <Manufacturer id="0242" name="Winytechnology"></Manufacturer>
