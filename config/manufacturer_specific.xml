@@ -1113,7 +1113,7 @@
     <Product config="leviton/dz6hd.xml" id="0001" name="DZ1KD-1BZ Decora 1000W Smart Dimmer" type="3301"/>
     <Product config="leviton/dz15s.xml" id="0001" name="DZ15S-1BZ Decora Smart Switch" type="3401"/>
     <Product config="leviton/dzpd3.xml" id="0001" name="DZPD3-2BW Decora 300W Plug-In Smart Dimmer" type="3501"/>
-    <Product config="leviton/dz15s.xml" id="0001" name="Leviton DZPA1 Plug-In Outlet" type="3601"/>
+    <Product config="leviton/dzpa1.xml" id="0001" name="Leviton DZPA1 Plug-In Outlet" type="3601"/>
   </Manufacturer>
   <Manufacturer id="0015" name="Lexel"></Manufacturer>
   <Manufacturer id="015B" name="LG Electronics"></Manufacturer>
