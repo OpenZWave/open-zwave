@@ -31,45 +31,6 @@ NB! Please use this procedure only when the primary controller/ gateway is missi
       <Entry author="Lars Tobias Skjong-B&#xF8;rsting - larstobi@relatime.no" date="12 Jul 2020" revision="3">Fixed errors</Entry>
     </ChangeLog>
   </MetaData>
-	<CommandClass id="115">
-				<Instance index="1"/>
-				<Value type="list" genre="system" instance="1" index="0" label="Powerlevel" units="dB" read_only="false" write_only="false" verify_changes="false" min="0" max="0" vindex="0" size="1">
-					<Item label="Normal" value="0"/>
-					<Item label="-1dB" value="1"/>
-					<Item label="-2dB" value="2"/>
-					<Item label="-3dB" value="3"/>
-					<Item label="-4dB" value="4"/>
-					<Item label="-5dB" value="5"/>
-					<Item label="-6dB" value="6"/>
-					<Item label="-7dB" value="7"/>
-					<Item label="-8dB" value="8"/>
-					<Item label="-9dB" value="9"/>
-				</Value>
-				<Value type="byte" genre="system" instance="1" index="1" label="Timeout" units="seconds" read_only="false" write_only="false" verify_changes="false" min="0" max="255" value="0"/>
-				<Value type="button" genre="system" instance="1" index="2" label="Set Powerlevel" units="" read_only="false" write_only="true" verify_changes="false" min="0" max="0"/>
-				<Value type="byte" genre="system" instance="1" index="3" label="Test Node" units="" read_only="false" write_only="false" verify_changes="false" min="0" max="255" value="0"/>
-				<Value type="list" genre="system" instance="1" index="4" label="Test Powerlevel" units="dB" read_only="false" write_only="false" verify_changes="false" min="0" max="0" vindex="0" size="1">
-					<Item label="Normal" value="0"/>
-					<Item label="-1dB" value="1"/>
-					<Item label="-2dB" value="2"/>
-					<Item label="-3dB" value="3"/>
-					<Item label="-4dB" value="4"/>
-					<Item label="-5dB" value="5"/>
-					<Item label="-6dB" value="6"/>
-					<Item label="-7dB" value="7"/>
-					<Item label="-8dB" value="8"/>
-					<Item label="-9dB" value="9"/>
-				</Value>
-				<Value type="short" genre="system" instance="1" index="5" label="Frame Count" units="" read_only="false" write_only="false" verify_changes="false" min="-32768" max="32767" value="0"/>
-				<Value type="button" genre="system" instance="1" index="6" label="Test" units="" read_only="false" write_only="true" verify_changes="false" min="0" max="0"/>
-				<Value type="button" genre="system" instance="1" index="7" label="Report" units="" read_only="false" write_only="true" verify_changes="false" min="0" max="0"/>
-				<Value type="list" genre="system" instance="1" index="8" label="Test Status" units="" read_only="true" write_only="false" verify_changes="false" min="0" max="0" vindex="0" size="1">
-					<Item label="Failed" value="0"/>
-					<Item label="Success" value="1"/>
-					<Item label="In Progress" value="2"/>
-				</Value>
-				<Value type="short" genre="system" instance="1" index="9" label="Acked Frames" units="" read_only="true" write_only="false" verify_changes="false" min="-32768" max="32767" value="0"/>
-	</CommandClass>
   <CommandClass id="112">
     <Value genre="config" index="1" label="status LED" size="1" type="list" value="1">
       <Help>Set LED mode</Help>
