@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ManufacturerSpecificData Revision="110" xmlns="https://github.com/OpenZWave/open-zwave">
+<ManufacturerSpecificData Revision="111" xmlns="https://github.com/OpenZWave/open-zwave">
   <Manufacturer id="0028" name="2B Electronics"></Manufacturer>
   <Manufacturer id="0098" name="2GIG Technologies">
     <Product config="2gig/ct50e.xml" id="015e" name="CT50e Thermostat" type="3200"/>
@@ -1067,7 +1067,7 @@
   <Manufacturer id="0174" name="Kopera Development Inc"></Manufacturer>
   <Manufacturer id="023A" name="KUMHO ELECTRIC INC"></Manufacturer>
   <Manufacturer id="0090" name="Kwikset (Spectrum Brands)">
-    <Product config="kwikset/smartcode.xml" id="0001" name="Touchpad Electronic Deadbolt" type="0001"/>
+    <Product config="kwikset/910.xml" id="0001" name="Touchpad Electronic Deadbolt" type="0001"/>
     <Product config="kwikset/916.xml" id="0642" name="SmartCode 916" type="0001"/>
     <Product config="kwikset/916.xml" id="0642" name="SmartCode 916" type="0003"/>
     <Product config="kwikset/smartcode.xml" id="4006" name="SmartCode 914" type="0003"/>
@@ -1076,7 +1076,7 @@
     <Product config="kwikset/smartcode.xml" id="0339" name="SmartCode 912" type="0003"/>
     <Product config="kwikset/smartcode.xml" id="0236" name="SmartCode 910" type="0001"/>
     <Product config="kwikset/smartcode.xml" id="0238" name="SmartCode 910" type="0003"/>
-    <Product config="kwikset/smartcode.xml" id="0001" name="SmartCode 910" type="0001"/>
+    <Product config="kwikset/910.xml" id="0001" name="SmartCode 910" type="0001"/>
     <Product config="kwikset/smartcode.xml" id="0440" name="SmartCode 10" type="0006"/>
     <Product config="kwikset/smartcode.xml" id="0742" name="Obsidian" type="0003"/>
     <Product config="kwikset/914c.xml" id="0446" name="Convert 914" type="0003"/>
