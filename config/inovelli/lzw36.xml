@@ -1,16 +1,16 @@
-<Product Revision="7" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="8" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/031E:0001:000e</MetaDataItem>
-    <MetaDataItem name="ProductPic">images/inovelli/lzw30.png</MetaDataItem>
-    <MetaDataItem id="0001" name="ZWProductPage" type="000e">TBD</MetaDataItem>
-    <MetaDataItem name="ProductPage">TBD</MetaDataItem>
-    <MetaDataItem name="ProductSupport">TBD</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/inovelli/lzw36.png</MetaDataItem>
+    <MetaDataItem name="ProductPage">https://inovelli.com/red-series-fan-light-switch-z-wave/</MetaDataItem>
+    <MetaDataItem name="ProductSupport">https://support.inovelli.com/portal/en/kb/inovelli/products/switches-fan-light-red-series-lzw36</MetaDataItem>
+    <MetaDataItem id="0001" name="ZWProductPage" type="0001">https://products.z-wavealliance.org/products/3902</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">To Exclude your switch, put your HUB in exclusion mode, hold the light up or down button and press the Light on/off button three (3) times.</MetaDataItem>
     <MetaDataItem id="0001" name="FrequencyName" type="000e">U.S. / Canada / Mexico</MetaDataItem>
-    <MetaDataItem name="ProductManual">TBD</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://support.inovelli.com/portal/api/kbArticles/407409000002102001/attachments/kw8eq50c812f5d3344bc08295860b8b394c7c/content?portalId=edbsn8bb12d5f5a97d693e61ce4ce8a23f8b0e323eac44a6c2794f893e912acf005df&amp;inline=true</MetaDataItem>
     <MetaDataItem name="ResetDescription">You may factory reset the switch by holding down the light up or down button and the light on/off button for twenty (20) or more seconds. The LED Bar will turn Red and blink three (3) times to confirm.
     </MetaDataItem>
-    <MetaDataItem name="Description">TBD</MetaDataItem>
+    <MetaDataItem name="Description">The Inovelli Red Series Fan/Light Switch is a 700 Series Z-Wave in-wall fan + light switch that controls both your fan motor and its attached LED, CFL, &amp; Incandescent bulbs which can be highly customized to your liking at the switch itself with our unique config buttons and advanced firmware. In addition, the Red Series comes with advanced features such as scene support, power monitoring, notifications, local protection, etc. This is the first of its kind that allows homes that only have one wire coming from the fan to the light switch and uses both a light switch and canopy module. Inspired and worked on by our wonderful community.</MetaDataItem>
     <MetaDataItem name="Name">LZW36 Fan/Light Dimmer</MetaDataItem>
     <MetaDataItem id="0001" name="Identifier" type="000e">LZW36</MetaDataItem>
     <MetaDataItem name="InclusionDescription">put your HUB in exclusion mode, hold the light up or down button and press the Light on/off button three (3) times.
@@ -19,7 +19,8 @@ Please Note: If this doesn't work, you can check to see if your switch is within
     </MetaDataItem>
     <ChangeLog>
       <Entry author="Eric Maycock - ericm@inovelli.com" date="05 Jun 2020" revision="6">Adding Metadata</Entry>
-	  <Entry author="Eric Maycock - ericm@inovelli.com" date="23 Jul 2020" revision="7">Fix Config Parameters</Entry>
+      <Entry author="Eric Maycock - ericm@inovelli.com" date="23 Jul 2020" revision="7">Fix Config Parameters</Entry>
+      <Entry author="Eric Maycock - ericm@inovelli.com" date="24 Jul 2020" revision="8">Adding additional metadata</Entry>
     </ChangeLog>
   </MetaData>
  
