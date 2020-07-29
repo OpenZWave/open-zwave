@@ -1,7 +1,7 @@
 <!-- 
 Kwikset smartcode 
 http://s7d5.scene7.com/is/content/BDHHI/z-wave-configuration
---><Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
+--><Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0090:0001:0001</MetaDataItem>
     <MetaDataItem name="ProductPic">images/kwikset/smartcode.png</MetaDataItem>
@@ -22,6 +22,7 @@ SmartKey: Re-key the lock in seconds</MetaDataItem>
     <MetaDataItem name="Name">SmartCode 10 Touchpad Electronic Deadbolt</MetaDataItem>
     <ChangeLog>
       <Entry author="firstof9 - firstof9@gmail.com" date="24 Jul 2020" revision="1">Fixed TriggerRefresh Index to properly update lock status via Alarm Type.</Entry>
+      <Entry author="firstof9 - firstof9@gmail.com" date="28 Jul 2020" revision="2">Add Compatibility flag for battery level updates.</Entry>
     </ChangeLog>
     <MetaDataItem name="WakeupDescription">Even though the lock is sleeping, all buttons are active and can be used to initiate any lock activity.
 For the RF side, it will wake up every 1 second to check if there are any requests from your smart home controller.</MetaDataItem>
@@ -359,6 +360,11 @@ To perform a factory reset, please perform the following:
     <TriggerRefreshValue Genre="user" Index="512" Instance="1">
       <RefreshClassValue CommandClass="98" Index="1" Instance="1" RequestFlags="0"/>
     </TriggerRefreshValue>
+  </CommandClass>
+  <CommandClass id="128" name="COMMAND_CLASS_BATTERY">
+        <Compatibility>
+                <RefreshOnWakeUp>true</RefreshOnWakeUp>
+        </Compatibility>
   </CommandClass>
   <!-- Association Groups -->
   <CommandClass id="133">
