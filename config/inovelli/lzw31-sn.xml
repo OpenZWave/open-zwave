@@ -157,10 +157,10 @@ Please Note: If this doesn't work, you can check to see if your switch is within
     <Item value="9" label="90%"/>
     <Item value="10" label="100%"/>
     </Value>
-	<Value genre="config" type="int" size="4" index="16" label="LED Strip Effect" min="0" max="83823359" value="0">
+	<Value genre="config" type="int" size="4" index="16" label="LED Strip Effect" min="0" max="100600575" value="0">
       <Help>
       Please see website for documentation.
-      Range: 0-83823359
+      Range: 0-100600575
       Default: 0
       </Help>
     </Value>
