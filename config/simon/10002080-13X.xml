@@ -1,0 +1,354 @@
+<!--
+Simon S100 Socket iO
+https://products.z-wavealliance.org/products/2669
+-->
+<Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <MetaDataItem name="ProductPic">images/simon/10002080-13X.png</MetaDataItem>
+    <MetaDataItem id="0000" name="ZWProductPage" type="0004">https://products.z-wavealliance.org/products/2669/</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?filename=MarketCertificationFiles/2669/ROLLERBLIND_991025_990913.pdf</MetaDataItem>
+    <MetaDataItem name="Name">S100 Rocker iO for Roller Blind</MetaDataItem>
+  </MetaData>
+  <!-- Configuration -->
+  <CommandClass id="112">
+    <Value type="list" index="1" genre="config" label="Association LED" min="0" max="255" value="0" size="1">
+      <Help>
+        Used during Association process by Simon Shortcut Switch IO to turn ON the main LED of all devices already associated to this shortcut.
+      </Help>
+      <Item label="Turns the central LED OFF" value="0"/>
+      <Item label="Turns the central LED ON" value="255"/>
+    </Value>
+
+    <Value type="list" index="4" genre="config" label="UP Time" units="seconds" min="0" max="127" value="0" size="1">
+      <Help>
+        This parameter allows to choose the roller blind UP time in seconds.
+        Value 0 - Instantly (default).
+        Values from 1 to 127 - 1 second to 127 seconds in 1 second resolution.
+      </Help>
+      <Item label="Instantly (default)" value="0"/>
+      <Item label="1 second up time" value="1"/>
+      <Item label="2 seconds up time" value="2"/>
+      <Item label="3 seconds up time" value="3"/>
+      <Item label="4 seconds up time" value="4"/>
+      <Item label="5 seconds up time" value="5"/>
+      <Item label="6 seconds up time" value="6"/>
+      <Item label="7 seconds up time" value="7"/>
+      <Item label="8 seconds up time" value="8"/>
+      <Item label="9 seconds up time" value="9"/>
+      <Item label="10 seconds up time" value="10"/>
+      <Item label="11 seconds up time" value="11"/>
+      <Item label="12 seconds up time" value="12"/>
+      <Item label="13 seconds up time" value="13"/>
+      <Item label="14 seconds up time" value="14"/>
+      <Item label="15 seconds up time" value="15"/>
+      <Item label="16 seconds up time" value="16"/>
+      <Item label="17 seconds up time" value="17"/>
+      <Item label="18 seconds up time" value="18"/>
+      <Item label="19 seconds up time" value="19"/>
+      <Item label="20 seconds up time" value="20"/>
+      <Item label="21 seconds up time" value="21"/>
+      <Item label="22 seconds up time" value="22"/>
+      <Item label="23 seconds up time" value="23"/>
+      <Item label="24 seconds up time" value="24"/>
+      <Item label="25 seconds up time" value="25"/>
+      <Item label="26 seconds up time" value="26"/>
+      <Item label="27 seconds up time" value="27"/>
+      <Item label="28 seconds up time" value="28"/>
+      <Item label="29 seconds up time" value="29"/>
+      <Item label="30 seconds up time" value="30"/>
+      <Item label="31 seconds up time" value="31"/>
+      <Item label="32 seconds up time" value="32"/>
+      <Item label="33 seconds up time" value="33"/>
+      <Item label="34 seconds up time" value="34"/>
+      <Item label="35 seconds up time" value="35"/>
+      <Item label="36 seconds up time" value="36"/>
+      <Item label="37 seconds up time" value="37"/>
+      <Item label="38 seconds up time" value="38"/>
+      <Item label="39 seconds up time" value="39"/>
+      <Item label="40 seconds up time" value="40"/>
+      <Item label="41 seconds up time" value="41"/>
+      <Item label="42 seconds up time" value="42"/>
+      <Item label="43 seconds up time" value="43"/>
+      <Item label="44 seconds up time" value="44"/>
+      <Item label="45 seconds up time" value="45"/>
+      <Item label="46 seconds up time" value="46"/>
+      <Item label="47 seconds up time" value="47"/>
+      <Item label="48 seconds up time" value="48"/>
+      <Item label="49 seconds up time" value="49"/>
+      <Item label="50 seconds up time" value="50"/>
+      <Item label="51 seconds up time" value="51"/>
+      <Item label="52 seconds up time" value="52"/>
+      <Item label="53 seconds up time" value="53"/>
+      <Item label="54 seconds up time" value="54"/>
+      <Item label="55 seconds up time" value="55"/>
+      <Item label="56 seconds up time" value="56"/>
+      <Item label="57 seconds up time" value="57"/>
+      <Item label="58 seconds up time" value="58"/>
+      <Item label="59 seconds up time" value="59"/>
+      <Item label="60 seconds up time" value="60"/>
+      <Item label="61 seconds up time" value="61"/>
+      <Item label="62 seconds up time" value="62"/>
+      <Item label="63 seconds up time" value="63"/>
+      <Item label="64 seconds up time" value="64"/>
+      <Item label="65 seconds up time" value="65"/>
+      <Item label="66 seconds up time" value="66"/>
+      <Item label="67 seconds up time" value="67"/>
+      <Item label="68 seconds up time" value="68"/>
+      <Item label="69 seconds up time" value="69"/>
+      <Item label="70 seconds up time" value="70"/>
+      <Item label="71 seconds up time" value="71"/>
+      <Item label="72 seconds up time" value="72"/>
+      <Item label="73 seconds up time" value="73"/>
+      <Item label="74 seconds up time" value="74"/>
+      <Item label="75 seconds up time" value="75"/>
+      <Item label="76 seconds up time" value="76"/>
+      <Item label="77 seconds up time" value="77"/>
+      <Item label="78 seconds up time" value="78"/>
+      <Item label="79 seconds up time" value="79"/>
+      <Item label="80 seconds up time" value="80"/>
+      <Item label="81 seconds up time" value="81"/>
+      <Item label="82 seconds up time" value="82"/>
+      <Item label="83 seconds up time" value="83"/>
+      <Item label="84 seconds up time" value="84"/>
+      <Item label="85 seconds up time" value="85"/>
+      <Item label="86 seconds up time" value="86"/>
+      <Item label="87 seconds up time" value="87"/>
+      <Item label="88 seconds up time" value="88"/>
+      <Item label="89 seconds up time" value="89"/>
+      <Item label="90 seconds up time" value="90"/>
+      <Item label="91 seconds up time" value="91"/>
+      <Item label="92 seconds up time" value="92"/>
+      <Item label="93 seconds up time" value="93"/>
+      <Item label="94 seconds up time" value="94"/>
+      <Item label="95 seconds up time" value="95"/>
+      <Item label="96 seconds up time" value="96"/>
+      <Item label="97 seconds up time" value="97"/>
+      <Item label="98 seconds up time" value="98"/>
+      <Item label="99 seconds up time" value="99"/>
+      <Item label="100 seconds up time" value="100"/>
+      <Item label="101 seconds up time" value="101"/>
+      <Item label="102 seconds up time" value="102"/>
+      <Item label="103 seconds up time" value="103"/>
+      <Item label="104 seconds up time" value="104"/>
+      <Item label="105 seconds up time" value="105"/>
+      <Item label="106 seconds up time" value="106"/>
+      <Item label="107 seconds up time" value="107"/>
+      <Item label="108 seconds up time" value="108"/>
+      <Item label="109 seconds up time" value="109"/>
+      <Item label="110 seconds up time" value="110"/>
+      <Item label="111 seconds up time" value="111"/>
+      <Item label="112 seconds up time" value="112"/>
+      <Item label="113 seconds up time" value="113"/>
+      <Item label="114 seconds up time" value="114"/>
+      <Item label="115 seconds up time" value="115"/>
+      <Item label="116 seconds up time" value="116"/>
+      <Item label="117 seconds up time" value="117"/>
+      <Item label="118 seconds up time" value="118"/>
+      <Item label="119 seconds up time" value="119"/>
+      <Item label="120 seconds up time" value="120"/>
+      <Item label="121 seconds up time" value="121"/>
+      <Item label="122 seconds up time" value="122"/>
+      <Item label="123 seconds up time" value="123"/>
+      <Item label="124 seconds up time" value="124"/>
+      <Item label="125 seconds up time" value="125"/>
+      <Item label="126 seconds up time" value="126"/>
+      <Item label="127 seconds up time" value="127"/>
+    </Value>
+
+    <Value type="list" index="5" genre="config" label="DOWN Time" units="minutes" min="128" max="254" value="128" size="1">
+      <Help>
+        This parameter allows to choose the roller blind DOWN time in minutes.
+        Values from 1 to 127 - 1 minute to 127 minutes in 1 minute resolution.
+      </Help>
+      <Item label="1 minutes down time" value="128"/>
+      <Item label="2 minutes down time" value="129"/>
+      <Item label="3 minutes down time" value="130"/>
+      <Item label="4 minutes down time" value="131"/>
+      <Item label="5 minutes down time" value="132"/>
+      <Item label="6 minutes down time" value="133"/>
+      <Item label="7 minutes down time" value="134"/>
+      <Item label="8 minutes down time" value="135"/>
+      <Item label="9 minutes down time" value="136"/>
+      <Item label="10 minutes down time" value="137"/>
+      <Item label="11 minutes down time" value="138"/>
+      <Item label="12 minutes down time" value="139"/>
+      <Item label="13 minutes down time" value="140"/>
+      <Item label="14 minutes down time" value="141"/>
+      <Item label="15 minutes down time" value="142"/>
+      <Item label="16 minutes down time" value="143"/>
+      <Item label="17 minutes down time" value="144"/>
+      <Item label="18 minutes down time" value="145"/>
+      <Item label="19 minutes down time" value="146"/>
+      <Item label="20 minutes down time" value="147"/>
+      <Item label="21 minutes down time" value="148"/>
+      <Item label="22 minutes down time" value="149"/>
+      <Item label="23 minutes down time" value="150"/>
+      <Item label="24 minutes down time" value="151"/>
+      <Item label="25 minutes down time" value="152"/>
+      <Item label="26 minutes down time" value="153"/>
+      <Item label="27 minutes down time" value="154"/>
+      <Item label="28 minutes down time" value="155"/>
+      <Item label="29 minutes down time" value="156"/>
+      <Item label="30 minutes down time" value="157"/>
+      <Item label="31 minutes down time" value="158"/>
+      <Item label="32 minutes down time" value="159"/>
+      <Item label="33 minutes down time" value="160"/>
+      <Item label="34 minutes down time" value="161"/>
+      <Item label="35 minutes down time" value="162"/>
+      <Item label="36 minutes down time" value="163"/>
+      <Item label="37 minutes down time" value="164"/>
+      <Item label="38 minutes down time" value="165"/>
+      <Item label="39 minutes down time" value="166"/>
+      <Item label="40 minutes down time" value="167"/>
+      <Item label="41 minutes down time" value="168"/>
+      <Item label="42 minutes down time" value="169"/>
+      <Item label="43 minutes down time" value="170"/>
+      <Item label="44 minutes down time" value="171"/>
+      <Item label="45 minutes down time" value="172"/>
+      <Item label="46 minutes down time" value="173"/>
+      <Item label="47 minutes down time" value="174"/>
+      <Item label="48 minutes down time" value="175"/>
+      <Item label="49 minutes down time" value="176"/>
+      <Item label="50 minutes down time" value="177"/>
+      <Item label="51 minutes down time" value="178"/>
+      <Item label="52 minutes down time" value="179"/>
+      <Item label="53 minutes down time" value="180"/>
+      <Item label="54 minutes down time" value="181"/>
+      <Item label="55 minutes down time" value="182"/>
+      <Item label="56 minutes down time" value="183"/>
+      <Item label="57 minutes down time" value="184"/>
+      <Item label="58 minutes down time" value="185"/>
+      <Item label="59 minutes down time" value="186"/>
+      <Item label="60 minutes down time" value="187"/>
+      <Item label="61 minutes down time" value="188"/>
+      <Item label="62 minutes down time" value="189"/>
+      <Item label="63 minutes down time" value="190"/>
+      <Item label="64 minutes down time" value="191"/>
+      <Item label="65 minutes down time" value="192"/>
+      <Item label="66 minutes down time" value="193"/>
+      <Item label="67 minutes down time" value="194"/>
+      <Item label="68 minutes down time" value="195"/>
+      <Item label="69 minutes down time" value="196"/>
+      <Item label="70 minutes down time" value="197"/>
+      <Item label="71 minutes down time" value="198"/>
+      <Item label="72 minutes down time" value="199"/>
+      <Item label="73 minutes down time" value="200"/>
+      <Item label="74 minutes down time" value="201"/>
+      <Item label="75 minutes down time" value="202"/>
+      <Item label="76 minutes down time" value="203"/>
+      <Item label="77 minutes down time" value="204"/>
+      <Item label="78 minutes down time" value="205"/>
+      <Item label="79 minutes down time" value="206"/>
+      <Item label="80 minutes down time" value="207"/>
+      <Item label="81 minutes down time" value="208"/>
+      <Item label="82 minutes down time" value="209"/>
+      <Item label="83 minutes down time" value="210"/>
+      <Item label="84 minutes down time" value="211"/>
+      <Item label="85 minutes down time" value="212"/>
+      <Item label="86 minutes down time" value="213"/>
+      <Item label="87 minutes down time" value="214"/>
+      <Item label="88 minutes down time" value="215"/>
+      <Item label="89 minutes down time" value="216"/>
+      <Item label="90 minutes down time" value="217"/>
+      <Item label="91 minutes down time" value="218"/>
+      <Item label="92 minutes down time" value="219"/>
+      <Item label="93 minutes down time" value="220"/>
+      <Item label="94 minutes down time" value="221"/>
+      <Item label="95 minutes down time" value="222"/>
+      <Item label="96 minutes down time" value="223"/>
+      <Item label="97 minutes down time" value="224"/>
+      <Item label="98 minutes down time" value="225"/>
+      <Item label="99 minutes down time" value="226"/>
+      <Item label="100 minutes down time" value="227"/>
+      <Item label="101 minutes down time" value="228"/>
+      <Item label="102 minutes down time" value="229"/>
+      <Item label="103 minutes down time" value="230"/>
+      <Item label="104 minutes down time" value="231"/>
+      <Item label="105 minutes down time" value="232"/>
+      <Item label="106 minutes down time" value="233"/>
+      <Item label="107 minutes down time" value="234"/>
+      <Item label="108 minutes down time" value="235"/>
+      <Item label="109 minutes down time" value="236"/>
+      <Item label="110 minutes down time" value="237"/>
+      <Item label="111 minutes down time" value="238"/>
+      <Item label="112 minutes down time" value="239"/>
+      <Item label="113 minutes down time" value="240"/>
+      <Item label="114 minutes down time" value="241"/>
+      <Item label="115 minutes down time" value="242"/>
+      <Item label="116 minutes down time" value="243"/>
+      <Item label="117 minutes down time" value="244"/>
+      <Item label="118 minutes down time" value="245"/>
+      <Item label="119 minutes down time" value="246"/>
+      <Item label="120 minutes down time" value="247"/>
+      <Item label="121 minutes down time" value="248"/>
+      <Item label="122 minutes down time" value="249"/>
+      <Item label="123 minutes down time" value="250"/>
+      <Item label="124 minutes down time" value="251"/>
+      <Item label="125 minutes down time" value="252"/>
+      <Item label="126 minutes down time" value="253"/>
+      <Item label="127 minutes down time" value="254"/>
+    </Value>
+
+    <Value genre="config" index="12" label="Behavior of LED in Repose" max="255" min="0" size="1" type="list" value="0">
+      <Help>This parameter allows to choose behaviour of LED in repose</Help>
+      <Item label="LED OFF" value="0"/>
+      <Item label="LED ON at 20% of maximum level" value="255"/>
+    </Value>
+
+    <Value genre="config" index="13" label="Lock Input" max="255" min="0" size="1" type="list" value="0">
+      <Help>This parameter locks the direct control of load.</Help>
+      <Item label="Unlock the direct control of load" value="0"/>
+      <Item label="Lock the direct control of load" value="255"/>
+    </Value>
+
+    <Value genre="config" index="15" label="Reset Default" max="39015" min="39015" size="2" type="list" value="0" write_only="true">
+      <Help>Parameters, Groups, and Z-Wave status are restored to default (Only writable).</Help>
+      <Item label="Device performs a factory default Reset" value="39015"/>
+    </Value>
+
+    <Value genre="config" index="20" label="Identify (Write Only)" max="255" min="255" size="1" type="list" value="0">
+      <Help>Write only value that performs a fast blink on Central LED during 5 seconds in order to identify the device when it is installed in a multiple frame.</Help>
+      <Item label="The central LED flashes for 5 seconds at a frequency of 0,1s." value="255"/>
+    </Value>
+
+    <Value genre="config" index="21" label="Load State (Read Only)" max="65535" min="0" type="byte" size="2" value="0" read_only="true">
+      <Help>
+        Read only Configuration used to report the device state and last value. This value is represented in Hexadecimal.
+        Byte 0 informs about Load State (0 load is OFF and 1 load is ON).
+        Byte 1 informs about Load value (0x00 or 0xFF)
+      </Help>
+    </Value>
+
+    <Value genre="config" index="23" label="Calibration required (Read Only)" max="255" min="0" size="1" type="byte" value="0" read_only="true">
+      <Help>
+        Reports whether the roller blind needs calibration.
+        0x00 Calibration is not required.
+        0xFF It is necessary to calibrate the dimmer to work properly.
+      </Help>
+    </Value>
+
+    <Value genre="config" index="24" label="Operating Mode" max="255" min="0" size="1" type="list" value="255">
+      <Help>This parameter allows to choose the roller blind operating mode (window shutter or sundblinds).</Help>
+      <Item label="Window shutter" value="0"/>
+      <Item label="Sunblinds (default)" value="255"/>
+    </Value>
+
+    <Value genre="config" index="25" label="Lock long press" max="255" min="0" size="1" type="list" value="0">
+      <Help>This parameter allows to choose the long press behaviour.</Help>
+      <Item label="Long press works as described in the product manual." value="0"/>
+      <Item label="Long press between 2s to 10s: do not send the Node Info. Long press of more than 30s: parameters, except Lock long press are restored to default and device sends a Node Info " value="255"/>
+    </Value>
+  </CommandClass>
+  <!-- COMMAND_CLASS_SWITCH_BINARY -->
+  <CommandClass id="37">
+    <Compatibility>
+      <SetAsReport>true</SetAsReport>
+    </Compatibility>
+  </CommandClass>
+  <!-- Association Groups -->
+  <CommandClass id="133">
+    <Associations num_groups="1">
+      <Group index="1" label="Lifeline" max_associations="3"/>
+    </Associations>
+  </CommandClass>
+</Product>
