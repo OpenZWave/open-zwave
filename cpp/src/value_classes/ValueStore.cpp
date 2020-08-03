@@ -170,7 +170,7 @@ namespace OpenZWave
 
 						// Now release and remove the value from the store
 						value->Release();
-						m_values.erase(it++);
+						it = m_values.erase(it);
 					}
 					else
 					{
