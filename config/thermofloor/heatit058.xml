@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- 
+Heatit Z-Wave Thermostat Z-TRM3 TF 058
+https://products.z-wavealliance.org/products/3802
+-->
+<Product xmlns='http://code.google.com/p/open-zwave/'>
+
+	<CommandClass id="64" name="COMMAND_CLASS_THERMOSTAT_MODE">
+		<Value type="list" genre="user" instance="1" index="0" label="Mode" units="" read_only="false" write_only="false" min="0" max="0" value="0">
+			<Item label="Off" value="0"/>
+			<Item label="Heat" value="1"/>
+		</Value>
+		<SupportedModes>
+			<Mode index="0" label="Off"/>
+			<Mode index="1" label="Heat"/>
+		</SupportedModes>
+	</CommandClass>
+
+	<CommandClass id="67" name="COMMAND_CLASS_THERMOSTAT_SETPOINT" version="1" request_flags="4" create_vars="true" base="0">
+	<Instance index="1" />
+		<Value type="decimal" genre="user" instance="1" index="1" label="Heating" units="C" read_only="false" write_only="false" min="0" max="0" value="20" />
+	</CommandClass>	
+
+	<CommandClass id="112" name="COMMAND_CLASS_CONFIGURATION">
+		<Value type="list" genre="config" index="1" label="Operation mode" value="1">
+			<Help>Set operation mode</Help>
+			<Item label="Off" value="0"/>
+			<Item label="Heating mode (Default)" value="1"/>
+		</Value>
+		<Value type="list" genre="config" instance="1" index="2" label="Sensor mode" value="1">
+			<Help>Set sensor mode</Help>
+			<Item label="F - Floor sensor" value="0"/>
+			<Item label="A - Internal room sensor mode (Default)" value="1"/>
+            <Item label="AF - Internal room sensor with floor limitation" value="2"/>
+			<Item label="A2 - External room sensor mode" value="3"/>
+			<Item label="A2F - External sensor with floor limitation" value="4"/>
+		</Value>
+		<Value type="list" genre="config" instance="1" index="3" label="Floor sensor type" value="0">
+			<Help>Floor sensor type (10K NTC Default)</Help>
+			<Item label="10k NTC (Default)" value="0"/>
+			<Item label="12k NTC" value="1"/>
+			<Item label="15k NTC" value="2"/>
+			<Item label="22k NTC" value="3"/>
+			<Item label="33k NTC" value="4"/>
+			<Item label="47k NTC" value="5"/>
+		</Value>
+		<Value type="byte" genre="config" instance="1" index="4" label="Temperature control hysteresis (diF)" min="3" max="30" size="1" value="5">
+			<Help>3-30 (0.3C - 3.0C) Default is 5 (0.5C)</Help>
+		</Value>
+		<Value type="short" genre="config" instance="1" index="5" label="Floor minimum temperature limit (Flo)" min="50" max="400" size="2" value="50">
+			<Help>50-400 (5.0C - 40.0C) Default is 50 (5.0C)</Help>
+		</Value>
+		<Value type="short" genre="config" instance="1" index="6" label="Floor maximum temperature limit (FHi)" min="50" max="400" size="2" value="400">
+			<Help>50-400 (5.0C - 40.0C) Default is 400 (40.0C)</Help>
+		</Value>
+		<Value type="short" genre="config" instance="1" index="7" label="Air (A2) minimum temperature limit (ALo)" min="50" max="400" size="2" value="50">
+			<Help>50-400 (5.0C - 40.0C) Default is 50 (5.0C)</Help>
+		</Value>
+		<Value type="short" genre="config" instance="1" index="8" label="Air (A2) maximum temperature limit (AHi)" min="50" max="400" size="2" value="400">
+			<Help>50-400 (5.0C - 40.0C) Default is 400 (40.0C)</Help>
+		</Value>
+		<Value type="short" genre="config" instance="1" index="9" label="Heating mode setpoint" min="50" max="400" size="2" value="210">
+			<Help>50 - 400 (5.0C - 40.0C) Default is 210 (21.0C)</Help>
+		</Value>
+		<Value type="byte" genre="config" instance="1" index="10" label="Room sensor calibration (A)" size="1" min="0" max="255" value="0">
+			<Help>-60 - 60 (-6.0C - 6.0C) Default is 0 (0.0C) To set a negative value, use 256 and subtract the desired value.</Help>
+		</Value>
+		<Value type="byte" genre="config" instance="1" index="11" label="Floor sensor calibration" size="1" min="0" max="255" value="0">
+			<Help>-60 - 60 (-6.0C - 6.0C) Default is 0 (0.0C) To set a negative value, use 256 and subtract the desired value.</Help>
+		</Value>
+		<Value type="short" genre="config" instance="1" index="12" label="External sensor calibration" size="1" min="0" max="255" value="0">
+			<Help>-60 - 60 (-6.0C - 6.0C) Default is 0 (0.0C) To set a negative value, use 256 and subtract the desired value.</Help>
+		</Value>
+		<Value type="list" genre="config" instance="1" index="13" size="1" label="Temperature display" value="0">
+			<Help>Show setpoint or calculated temperature on display(</Help>
+			<Item label="Display setpoint temperature (Default)" value="0"/>
+			<Item label="Display measured temperature" value="1"/>
+		</Value>
+		<Value type="byte" genre="config" instance="1" index="14" label="Button brightness - Dimmed state" min="0" max="100" size="1" value="50">
+			<Help>0-100 (0 - 100%)</Help>
+		</Value>
+		<Value type="byte" genre="config" instance="1" index="15" label="Button brightness - Active state" min="0" max="100" size="1" value="100">
+			<Help>0-100 (0 - 100%)</Help>
+		</Value>
+		<Value type="byte" genre="config" instance="1" index="16" label="Display brightness - Dimmed state" min="0" max="100" size="1" value="50">
+			<Help>0-100 (0 - 100%)</Help>
+		</Value>
+		<Value type="byte" genre="config" instance="1" index="17" label="Display brightness - Active state" min="0" max="100" size="1" value="100">
+			<Help>0-100 (0 - 100%)</Help>
+		</Value>
+		<Value type="short" genre="config" instance="1" index="18" label="Temperature report interval" min="30" max="32767" size="2" value="60">
+			<Help>30 seconds to 32767 seconds. Default is 60 seconds</Help>
+		</Value>
+		<Value type="byte" genre="config" instance="1" index="19" label="Temperature report hysteresis" min="1" max="100" size="1" value="10">
+			<Help>0-100 (0.1C - 10.0C) Default is 10 (1.0C)</Help>
+		</Value>
+		<Value type="short" genre="config" instance="1" index="20" label="Meter report interval" min="30" max="32767" size="2" value="90">
+			<Help>30 seconds to 32767 seconds. Default is 90 seconds</Help>
+		</Value>
+		<Value type="byte" genre="config" instance="1" index="21" label="Meter report delta value" min="0" max="255" size="1" value="10">
+			<Help>0-255. Delta value in kWh between consecutive meter reports. Default is 10 (1.0 kWh)</Help>
+		</Value>
+	</CommandClass>
+
+	<CommandClass id="133" name="COMMAND_CLASS_ASSOCIATION">
+		<Associations num_groups="5">
+			<Group index="1" max_associations="5" label="Lifeline"/>
+			<Group index="2" max_associations="5" label="State of relay ON/OFF"/>
+			<Group index="3" max_associations="5" label="Internal sensor"/>
+			<Group index="4" max_associations="5" label="External sensor"/>
+			<Group index="5" max_associations="5" label="Floor sensor"/>
+		</Associations>
+	</CommandClass>
+
+	<!-- COMMAND_CLASS_MULTI_CHANNEL_ASSOCIATION_V2-->
+	<CommandClass id="142" ForceInstances="true" />
+
+	<!--COMMAND_CLASS_MULTI_CHANNEL_V2 Map endpoints to instances -->
+	<CommandClass id="96" mapping="endpoints" />
+
+</Product>
