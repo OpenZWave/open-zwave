@@ -3,27 +3,27 @@
 
   <!-- Configuration Parameters -->
   <CommandClass id="112">
-    <Value genre="config" instance="1" index=1" value=1" label=Up/Down Button Swap Enable" units="" size=1" min=0" max=1" type="list">
+    <Value genre="config" instance="1" index="1" value="1" label="Up/Down Button Swap Enable" units="" size="1" min="0" max="1" type="list">
       <Help>Up/Down Button Swap Enable</Help>
       <Item value="0" label="Disabled">
       <Item value="1" label="Enabled">
     </Value>
-    <Value genre="config" instance="1" index=2" value=0" label=Motor Rotation Direction Swap Enable" units="" size=1" min=0" max=1" type="list">
+    <Value genre="config" instance="1" index="2" value="0" label="Motor Rotation Direction Swap Enable" units="" size="1" min="0" max="1" type="list">
       <Help>Motor Rotation Direction Swap Enable</Help>
       <Item value="0" label="Disabled">
       <Item value="1" label="Enabled">
     </Value>
-    <Value genre="config" instance="1" index=3" value=1" label=Backlight Enable" units="" size=1" min=0" max=1" type="list">
+    <Value genre="config" instance="1" index="3" value="1" label="Backlight Enable" units="" size="1" min="0" max="1" type="list">
       <Help>Backlight Enable</Help>
       <Item value="0" label="LED Disabled">
       <Item value="1" label="LED ON when Switch is ON">
     </Value>
-    <Value genre="config" instance="1" index=4" value=1" label=Curtain Moving Indicate Enable" units="" size=1" min=0" max=1" type="list">
+    <Value genre="config" instance="1" index="4" value="1" label="Curtain Moving Indicate Enable" units="" size="1" min="0" max="1" type="list">
       <Help>Curtain Moving Indicate Enable</Help>
       <Item value="0" label="LED Disabled">
       <Item value="1" label="LED Enabled">
     </Value>
-    <Value genre="config" instance="1" index=5" value=1" label=Button Switch" units="" size=1" min=0" max=1" type="list">
+    <Value genre="config" instance="1" index="5" value="1" label="Button Switch" units="" size="1" min="0" max="1" type="list">
       <Help>Button Switch</Help>
       <Item value="0" label="Button Switch Disabled">
       <Item value="1" label="Button Switch Enabled">
