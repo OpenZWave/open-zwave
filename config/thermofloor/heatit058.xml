@@ -25,7 +25,7 @@ Lock mode/child lock
 Calibration
 8 associations
 Supports encryption mode: S0, S2 Authenticated Class, S2 Unauthenticated Class</MetaDataItem>
-    <MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&filename=product_documents/3802/Manual_Heatit_Z-TRM3_FW%204.0%20Ver2020-A_ENG.pdf</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&amp;filename=product_documents/3802/Manual_Heatit_Z-TRM3_FW%204.0%20Ver2020-A_ENG.pdf</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">Removing the device:
 To remove the thermostat to your home automation gateway, press Center (confirm) for 10 seconds. The display will show OFF. Press Right (down) 4 times till you see Con in the display. Now start remove device in your home automation software. Start removing mode by pressing Center (confirm) button for approximately 2 seconds. The icon will appear in the display. Removing Mode is indicated in the display by some “circling” LED segments in the display until the timeout occurs after 20 seconds or the module has been removed in the network. Confirmation will show Inc/EcL in the display. If removing fails, Err (error) will appear.</MetaDataItem>
     <MetaDataItem id="0203" name="FrequencyName" type="0003">CEPT (Europe)</MetaDataItem>
