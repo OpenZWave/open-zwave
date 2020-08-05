@@ -6,7 +6,6 @@
   <MetaDataItem name="ProductPage">https://byjasco.com/products/ge-z-wave-plus-wall-tamper-resistant-smart-outlet</MetaDataItem>
   <MetaDataItem name="ProductSupport">https://byjasco.com/support</MetaDataItem>
   <MetaDataItem name="ProductPic">images/39349-ZW1002</MetaDataItem>
-  <MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&filename=MarketCertificationFiles/2690/39349_HQSG_1.pdf</MetaDataItem>
   <MetaDataItem name="WakeupDescription">...</MetaDataItem>
   <MetaDataItem name="InclusionDescription">1. Follow the instructions for your Z-Wave certified controller to add a device to the Z-Wave network. 2. Once the controller is ready to add your device, press and release the program button to add it in the network.</MetaDataItem>
   <MetaDataItem name="ExclusionDescription">1. Follow the instructions for your Z-Wave certified controller to remove a device from the Z-Wave network. 2. Once the controller is ready to remove your device, press and release the manual/program button to remove it from the network.</MetaDataItem>
