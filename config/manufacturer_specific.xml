@@ -1583,7 +1583,6 @@
     <Product config="shenzen_neo/ls02ch.xml" id="108b" name="Wall Switch (2 channels)" type="0003"/>
     <Product config="shenzen_neo/ls01ch.xml" id="008c" name="Wall Switch (1 channel)" type="0003"/>
     <Product config="shenzen_neo/ls01ch.xml" id="108c" name="Wall Switch (1 channel)" type="0003"/>
-    <Product config="shenzen_neo/nas-sc03ze-t-2-v3.xml" id="102c" name="NEO Coolcam Curtain Switch v3" type="0200"/>
   </Manufacturer>
   <Manufacturer id="032C" name="Shenzhen Saykey Technology"></Manufacturer>
   <Manufacturer id="036C" name="Shenzhen Sen5 Technology"></Manufacturer>
