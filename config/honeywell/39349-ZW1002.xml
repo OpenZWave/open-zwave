@@ -2,7 +2,7 @@
 <Product Revision="1" 
   xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
-    <MetaDataItem name="ProductPic">images/honeywell/39349-ZW1002</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/honeywell/39349-ZW1002.png</MetaDataItem>
     <MetaDataItem id="3133" name="ZWProductPage" type="4952">https://products.z-wavealliance.org/products/2690</MetaDataItem>
     <MetaDataItem id="3133" name="Identifier" type="4952">39349 / ZW1002</MetaDataItem>
     <MetaDataItem name="InclusionDescription">1. Follow the instructions for your Z-Wave certified controller to add a device to the Z-Wave network. 2. Once the controller is ready to add your device, press and release the program button to add it in the network.</MetaDataItem>
