@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ProductExport xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <MetaData>
+    <MetaDataItem name="Name">In-Wall Tamper Resistant Outlet</MetaDataItem>
+    <MetaDataItem name="Description">The Honeywell Z-Wave Tamper Resistant Outlet enables wireless control of on/off functions from the Z-Wave controlled outlet</MetaDataItem>
+    <MetaDataItem name="ProductPage">https://byjasco.com/products/ge-z-wave-plus-wall-tamper-resistant-smart-outlet</MetaDataItem>
+    <MetaDataItem name="ProductSupport">https://byjasco.com/support</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/39349-ZW1002</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&amp;filename=MarketCertificationFiles/2690/39349_HQSG_1.pdf</MetaDataItem>
+    <MetaDataItem name="WakeupDescription">...</MetaDataItem>
+    <MetaDataItem name="InclusionDescription">1. Follow the instructions for your Z-Wave certified controller to add a device to the Z-Wave network. 2. Once the controller is ready to add your device, press and release the program button to add it in the network.</MetaDataItem>
+    <MetaDataItem name="ExclusionDescription">1. Follow the instructions for your Z-Wave certified controller to remove a device from the Z-Wave network. 2. Once the controller is ready to remove your device, press and release the manual/program button to remove it from the network.</MetaDataItem>
+    <MetaDataItem name="ResetDescription">Quickly press the button three (3) times, then press and hold the button for at least three (3) seconds. The LED will blink five (5) times to confirm.</MetaDataItem>
+    <MetaDataItem id="3133" name="ZWProductPage" type="4952">https://products.z-wavealliance.org/products/2690</MetaDataItem>
+    <ChangeLog>
+      <Entry author="Jeff Buss - jeff.buss.3477@gmail.com" date="5 AUG 2020" revision="1">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/Products/2690/XML</Entry>
+    </ChangeLog>
+  </MetaData>
+  <Id>2690</Id>
+  <Name>In-Wall Tamper Resistant Outlet </Name>
+  <Description>Transform any home into a smart home with the Honeywell Z-Wave Tamper Resistant Outlet. The Honeywell Z-Wave Tamper Resistant Outlet enables wireless control of on/off functions from the Z-Wave controlled outlet, and is compatible with incandescent, LED, Xenon, Halogen, fluorescent and compact fluorescent bulbs. The tamper resistant duplex receptacle includes a blue LED indicator light to easily locate the receptacle in a dark room. The receptacle replaces your current electrical outlet, uses your existing wiring and provides a Z-Wave enabled outlet for the lamp or appliance that you would like to control and a standard pass-through AC outlet for other electrical appliances. Take control of your home lighting with Honeywell Z-Wave Smart Controls! 
+  </Description>
+  <Description_Short>Transform any home into a smart home with the Honeywell Z-Wave Tamper Resistant Outlet.</Description_Short>
+  <Brand>Honeywell</Brand>
+  <Identifier>39349 / ZW1002</Identifier>
+  <CertificationNumber>ZC10-17115838</CertificationNumber>
+  <OemVersion>HW: 255 FW: 5.25</OemVersion>
+  <HardwarePlatform>ZM5202</HardwarePlatform>
+  <ZWaveVersion>6.51.09</ZWaveVersion>
+  <LibraryType>Enhanced 232 Slave</LibraryType>
+  <DeviceType>On/Off Power Switch</DeviceType>
+  <RoleType>Always On Slave</RoleType>
+  <ManufacturerId>0x0039</ManufacturerId>
+  <ProductTypeId>0x4952</ProductTypeId>
+  <ProductId>0x3133</ProductId>
+  <Frequencies>
+    <string>U.S. / Canada / Mexico (US)</string>
+  </Frequencies>
+  <UserIcon>0x0700</UserIcon>
+  <InstallerIcon>0x0700</InstallerIcon>
+  <ProductUrl />
+  <SupportUrl />
+  <CertificationApprovedDate>2017-11-09T18:51:16.89411</CertificationApprovedDate>
+  <Categories>
+    <string>All Lighting Devices</string>
+    <string>On/Off Switches/Devices</string>
+  </Categories>
+  <SupportedCommandClasses>
+    <CommandClassExport>
+      <Name>Association Group Info</Name>
+      <Identifier>COMMAND_CLASS_ASSOCIATION_GRP_INFO</Identifier>
+    </CommandClassExport>
+    <CommandClassExport>
+      <Name>Association V2</Name>
+      <Identifier>COMMAND_CLASS_ASSOCIATION_V2</Identifier>
+    </CommandClassExport>
+    <CommandClassExport>
+      <Name>Basic</Name>
+      <Identifier>COMMAND_CLASS_BASIC</Identifier>
+    </CommandClassExport>
+    <CommandClassExport>
+      <Name>Configuration</Name>
+      <Identifier>COMMAND_CLASS_CONFIGURATION</Identifier>
+    </CommandClassExport>
+    <CommandClassExport>
+      <Name>CRC16 Encapsulation</Name>
+      <Identifier>COMMAND_CLASS_CRC_16_ENCAP</Identifier>
+    </CommandClassExport>
+    <CommandClassExport>
+      <Name>Device Reset Locally</Name>
+      <Identifier>COMMAND_CLASS_DEVICE_RESET_LOCALLY</Identifier>
+    </CommandClassExport>
+    <CommandClassExport>
+      <Name>Firmware Update Meta-Data V2</Name>
+      <Identifier>COMMAND_CLASS_FIRMWARE_UPDATE_MD_V2</Identifier>
+    </CommandClassExport>
+    <CommandClassExport>
+      <Name>Manufacturer Specific V2</Name>
+      <Identifier>COMMAND_CLASS_MANUFACTURER_SPECIFIC_V2</Identifier>
+    </CommandClassExport>
+    <CommandClassExport>
+      <Name>Powerlevel</Name>
+      <Identifier>COMMAND_CLASS_POWERLEVEL</Identifier>
+    </CommandClassExport>
+    <CommandClassExport>
+      <Name>Scene Activation</Name>
+      <Identifier>COMMAND_CLASS_SCENE_ACTIVATION</Identifier>
+    </CommandClassExport>
+    <CommandClassExport>
+      <Name>Scene Actuator Conf</Name>
+      <Identifier>COMMAND_CLASS_SCENE_ACTUATOR_CONF</Identifier>
+    </CommandClassExport>
+    <CommandClassExport>
+      <Name>Switch All</Name>
+      <Identifier>COMMAND_CLASS_SWITCH_ALL</Identifier>
+    </CommandClassExport>
+    <CommandClassExport>
+      <Name>Switch Binary</Name>
+      <Identifier>COMMAND_CLASS_SWITCH_BINARY</Identifier>
+    </CommandClassExport>
+    <CommandClassExport>
+      <Name>Version V2</Name>
+      <Identifier>COMMAND_CLASS_VERSION_V2</Identifier>
+    </CommandClassExport>
+    <CommandClassExport>
+      <Name>Z-Wave Plus Info V2</Name>
+      <Identifier>COMMAND_CLASS_ZWAVEPLUS_INFO_V2</Identifier>
+    </CommandClassExport>
+  </SupportedCommandClasses>
+  <ControlledCommandClasses>
+    <CommandClassExport>
+      <Name>Basic</Name>
+      <Identifier>COMMAND_CLASS_BASIC</Identifier>
+    </CommandClassExport>
+  </ControlledCommandClasses>
+  <S2Classes />
+  <AssociationGroups>
+    <AssociationGroupExport>
+      <Description>Z-Wave Plus Lifeline</Description>
+      <GroupNumber>1</GroupNumber>
+      <MaximumNodes>5</MaximumNodes>
+      <endpoint_id>0</endpoint_id>
+      <group_name />
+      <profile />
+    </AssociationGroupExport>
+    <AssociationGroupExport>
+      <Description>Supports Basic Set and is controlled with the local load</Description>
+      <GroupNumber>2</GroupNumber>
+      <MaximumNodes>5</MaximumNodes>
+      <endpoint_id>0</endpoint_id>
+      <group_name />
+      <profile />
+    </AssociationGroupExport>
+    <AssociationGroupExport>
+      <Description>Supports Basic Set and is controlled by pressing the On or Off button</Description>
+      <GroupNumber>3</GroupNumber>
+      <MaximumNodes>5</MaximumNodes>
+      <endpoint_id>0</endpoint_id>
+      <group_name />
+      <profile />
+    </AssociationGroupExport>
+  </AssociationGroups>
+  <ConfigurationParameters>
+    <ConfigurationParameterExport>
+      <Name>LED Light </Name>
+      <Description>Invert LED Light </Description>
+      <ParameterNumber>3</ParameterNumber>
+      <Size>1</Size>
+      <DefaultValue>1</DefaultValue>
+      <pType>0</pType>
+      <flagReadOnly>false</flagReadOnly>
+      <flagReInclude>false</flagReInclude>
+      <flagAdvanced>false</flagAdvanced>
+      <v3plus>false</v3plus>
+      <minValue>0</minValue>
+      <maxValue>0</maxValue>
+      <ConfigurationParameterValues>
+        <ConfigurationParameterValueExport>
+          <From>0</From>
+          <To>0</To>
+          <Description>LED On when load is Off, Led Off when load is On</Description>
+        </ConfigurationParameterValueExport>
+        <ConfigurationParameterValueExport>
+          <From>1</From>
+          <To>1</To>
+          <Description>LED On when load is On, LED Off when laod is Off (Default)</Description>
+        </ConfigurationParameterValueExport>
+        <ConfigurationParameterValueExport>
+          <From>2</From>
+          <To>2</To>
+          <Description>LED always off</Description>
+        </ConfigurationParameterValueExport>
+      </ConfigurationParameterValues>
+    </ConfigurationParameterExport>
+  </ConfigurationParameters>
+  <Features>
+    <FeaturesProductsExport>
+      <feature_Id>10</feature_Id>
+      <product_Id>2690</product_Id>
+      <option_value_bool>false</option_value_bool>
+      <option_value_text />
+      <option_value_selections>
+        <string>White</string>
+      </option_value_selections>
+      <feature_Type>eSelect_One</feature_Type>
+      <featureName>Color</featureName>
+      <featureDescription>If the product is only available in one color, pick the color from the list.</featureDescription>
+      <featurePrompt>Choose one color for the product's main color component. Not for use with products available in multiple colors.</featurePrompt>
+    </FeaturesProductsExport>
+    <FeaturesProductsExport>
+      <feature_Id>22</feature_Id>
+      <product_Id>2690</product_Id>
+      <option_value_bool>false</option_value_bool>
+      <option_value_text />
+      <option_value_selections>
+        <string>Updatable by Consumer by RF</string>
+      </option_value_selections>
+      <feature_Type>eSelect_One</feature_Type>
+      <featureName>Firmware Updatable</featureName>
+      <featureDescription>Indicates whether the firmware can be updated and whether it is done by the consumer or a technician.</featureDescription>
+      <featurePrompt>Choose one.</featurePrompt>
+    </FeaturesProductsExport>
+    <FeaturesProductsExport>
+      <feature_Id>11</feature_Id>
+      <product_Id>2690</product_Id>
+      <option_value_bool>false</option_value_bool>
+      <option_value_text />
+      <option_value_selections>
+        <string>Push Button Illuminated</string>
+      </option_value_selections>
+      <feature_Type>eSelect_One</feature_Type>
+      <featureName>Switch Type</featureName>
+      <featureDescription>Describes the type of operator for a switch.</featureDescription>
+      <featurePrompt>Select one switch type. (Not the inclusion button - the main actuator switch.)</featurePrompt>
+    </FeaturesProductsExport>
+  </Features>
+  <Documents>
+    <ProductsDocuments>
+      <Id>16771</Id>
+      <product_id>2690</product_id>
+      <Type>1</Type>
+      <description>Product or Owner's Manual</description>
+      <value>MarketCertificationFiles/2690/39349_HQSG_1.pdf</value>
+      <not_public>false</not_public>
+    </ProductsDocuments>
+    <ProductsDocuments>
+      <Id>24471</Id>
+      <product_id>2690</product_id>
+      <Type>21</Type>
+      <description>Product Picture</description>
+      <value>product_pictures/ZC10-17115838.jpg</value>
+      <not_public>false</not_public>
+    </ProductsDocuments>
+  </Documents>
+  <Texts>
+    <ProductsTexts>
+      <Id>31319</Id>
+      <product_id>2690</product_id>
+      <Type>2</Type>
+      <description>Exclusion</description>
+      <value>1. Follow the instructions for your Z-Wave certified controller to remove a device from the Z-Wave network. 2. Once the controller is ready to remove your device, press and release the manual/program button to remove it from the network.</value>
+    </ProductsTexts>
+    <ProductsTexts>
+      <Id>31318</Id>
+      <product_id>2690</product_id>
+      <Type>1</Type>
+      <description>Inclusion</description>
+      <value>Follow the instructions for your Z-Wave certified controller to add a device to the Z-Wave network. 2. Once the controller is ready to add your device, press and release the Program Button to add it in the network.</value>
+    </ProductsTexts>
+    <ProductsTexts>
+      <Id>22156</Id>
+      <product_id>2690</product_id>
+      <Type>5</Type>
+      <description>Factory Reset</description>
+      <value>Press the button 3 times, then press and hold the button for at least 3 seconds. The LED will blink 5 times to confirm. NOTE: This should only be used in the event your network’s primary controller is missing or otherwise inoperable</value>
+    </ProductsTexts>
+  </Texts>
+  <SupportedMultilevelSensors />
+  <ControlledMultilevelSensors />
+  <SupportedNotificationTypes />
+  <ControlledNotificationTypes />
+  <SupportedControlledMeterTypes />
+  <Supports_NWI>true</Supports_NWI>
+  <Supports_Explorer>true</Supports_Explorer>
+  <is_FLiRS>false</is_FLiRS>
+  <Supports_SmartStart>false</Supports_SmartStart>
+</ProductExport>
