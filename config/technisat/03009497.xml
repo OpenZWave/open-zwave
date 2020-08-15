@@ -17,7 +17,7 @@
       5. The red status LED is on while the device is added to the Z-Wave network.
       6. The green LED is on for 5 seconds after successfully adding the device.
 </MetaDataItem>
-    <MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&filename=product_documents/3798/Manual_SMD01_Dimmer.pdf</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&amp;filename=product_documents/3798/Manual_SMD01_Dimmer.pdf</MetaDataItem>
     <MetaDataItem id="1000" name="FrequencyName" type="0303">CEPT (Europe)</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">1. Start the Z-Wave device remove mode on your Z-Wave gateway, according to the gateway‘s manual.
       2. Press and hold position T1 for more than 10 seconds.
