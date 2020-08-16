@@ -1,7 +1,5 @@
-<!--
-Saykey Curtain Motor Control with external module
-https://products.z-wavealliance.org/products/2662
---><Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
+<?xml version="1.0" encoding="utf-8"?>
+<Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">https://products.z-wavealliance.org/products/2662:0005:3007</MetaDataItem>
     <MetaDataItem name="ProductPic">images/shenzen_saykey/SK-3007-05.png</MetaDataItem>
