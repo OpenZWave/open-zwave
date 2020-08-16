@@ -1583,7 +1583,9 @@
     <Product config="shenzen_neo/ls01ch.xml" id="008c" name="Wall Switch (1 channel)" type="0003"/>
     <Product config="shenzen_neo/ls01ch.xml" id="108c" name="Wall Switch (1 channel)" type="0003"/>
   </Manufacturer>
-  <Manufacturer id="032C" name="Shenzhen Saykey Technology"></Manufacturer>
+  <Manufacturer id="032C" name="Shenzhen Saykey Technology">
+	<Product config="shenzen_saykey/sk-3007-05.xml" id="0005" name="Curtain Motor Control with external module" type="3007"/>
+  </Manufacturer>
   <Manufacturer id="036C" name="Shenzhen Sen5 Technology"></Manufacturer>
   <Manufacturer id="0381" name="Shenzhen Thingsview Tech"></Manufacturer>
   <Manufacturer id="0250" name="Shenzhen Tripath Digital Audio Equipment"></Manufacturer>
