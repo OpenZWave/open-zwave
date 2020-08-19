@@ -150,7 +150,7 @@ NB! Please use this procedure only when the primary controller/ gateway is missi
     <Compatibility/>
   </CommandClass>
   <CommandClass id="133">
-    <Associations num_groups="4">
+    <Associations num_groups="5">
       <Group index="1" label="Lifeline" max_associations="5"/>
       <Group index="2" label="On/Off switch of internal relay" max_associations="5"/>
       <Group index="3" label="Multilevel sensor reports - Internal sensor" max_associations="5"/>
