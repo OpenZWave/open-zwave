@@ -1,7 +1,5 @@
-<!-- 
-Heatit Z-Wave Thermostat Z-TRM3 TF 058 
-https://products.z-wavealliance.org/products/3802
---><Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
+<?xml version="1.0" encoding="utf-8"?>
+<Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/019B:0203:0003</MetaDataItem>
     <MetaDataItem name="ProductPic">images/thermofloor/heatit058.png</MetaDataItem>
