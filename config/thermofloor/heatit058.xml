@@ -72,7 +72,7 @@ NB! Please use this procedure only when the primary controller/ gateway is missi
       <Help>Set sensor mode</Help>
       <Item label="F - Floor sensor" value="0"/>
       <Item label="A - Internal room sensor" value="1"/>
-      <Item label="AF - Internal room sensor with floor limitation" value="1"/>
+      <Item label="AF - Internal room sensor with floor limitation" value="2"/>
       <Item label="A2 - External room sensor" value="3"/>
       <Item label="A2F - External sensor with floor limitation" value="4"/>
     </Value>
