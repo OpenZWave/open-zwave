@@ -47,16 +47,13 @@ NB! Please use this procedure only when the primary controller/ gateway is missi
     <Compatibility/>
   </CommandClass>
   
- <CommandClass id="49" name="COMMAND_CLASS_SENSOR_MULTILEVEL" version="1" request_flags="4" create_vars="true" base="0">
-  	<Instance index="1" endpoint="2" />
-  	<Instance index="2" endpoint="3" />
-  	<Instance index="3" endpoint="4" />
+ <CommandClass id="49">  
   	<Value type="decimal" genre="user" instance="1" index="1" label="Temperature sensor" units="C" read_only="true" write_only="false" min="0" max="0"/>
   	<Value type="decimal" genre="user" instance="2" index="1" label="Temperature sensor" units="C" read_only="true" write_only="false" min="0" max="0" />
   	<Value type="decimal" genre="user" instance="3" index="1" label="Temperature sensor" units="C" read_only="true" write_only="false" min="0" max="0" />
   </CommandClass>
 	
-    <CommandClass id="67" name="COMMAND_CLASS_THERMOSTAT_SETPOINT" version="3">
+    <CommandClass id="67">
        <Instance index="1"/>
        <Value genre="user" index="1" instance="1" label="Heating setpoint" max="0" min="0" units="C" read_only="false" type="decimal" value="21.0" write_only="false"/>
        <Compatibility>
