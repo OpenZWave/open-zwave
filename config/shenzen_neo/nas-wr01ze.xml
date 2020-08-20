@@ -33,10 +33,10 @@ Reset procedure will delete all information on the Z‐Wave network and Z‐Wave
 
 3.Release the button. </MetaDataItem>
     <MetaDataItem id="1027" name="Identifier" type="0200">NAS-WR01ZE</MetaDataItem>
-    <MetaDataItem id="1027" name="Identifier" type="0100">Power Plug</MetaDataItem>
+    <MetaDataItem id="1027" name="Identifier" type="0100">NAS-WR01ZE</MetaDataItem>
     <MetaDataItem id="1027" name="FrequencyName" type="0100">U.S. / Canada / Mexico</MetaDataItem>
     <ChangeLog>
-      <Entry author="David Burrows - david@burrows.org" date="19 Aug 2020" revision="2">Added US version that is branded "Power Plug" with no model number displayed. There is no matching Z-Wave Alliance database entry.</Entry>
+      <Entry author="David Burrows - david@burrows.org" date="19 Aug 2020" revision="2">Added metadata, and added US version (type 0100) that is branded "Power Plug" with no model number displayed. There is no matching Z-Wave Alliance database entry.</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration Parameters -->
