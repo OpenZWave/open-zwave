@@ -1563,6 +1563,7 @@
     <Product config="shenzen_neo/nas-wr01z.xml" id="0087" name="NAS-WR01Z Power plug 12A" type="0003"/>
     <Product config="shenzen_neo/nas-wr01z.xml" id="1087" name="NAS-WR01Z Power plug 12A" type="0003"/>
     <!-- NAS-WR01ZE and NAS-WR01Z hardware looks identical but are based on different SDK-->
+    <Product config="shenzen_neo/nas-wr01ze.xml" id="1027" name="NAS-WR01ZE Power plug 12A" type="0100"/>
     <Product config="shenzen_neo/nas-wr01ze.xml" id="1027" name="NAS-WR01ZE Power plug 12A" type="0200"/>
     <Product config="shenzen_neo/nas-wr01z.xml" id="2087" name="NAS-WR01Z Power plug 12A" type="0003"/>
     <Product config="shenzen_neo/nas-pd01z.xml" id="0083" name="NAS-PD01Z Battery Powered PIR Sensor" type="0003"/>
