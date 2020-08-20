@@ -12,7 +12,7 @@ press and release the manual/program button on the smart
 dimmer to add it in the network.
 Please reference the controller/gateway’s manual for instructions.</MetaDataItem>
     <MetaDataItem id="3038" name="Identifier" type="5044">39336/ZW3104</MetaDataItem>
-    <MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&filename=MarketCertificationFiles/2681/39336-HQSG_v1.pdf</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/2681/39336-HQSG_v1.pdf</MetaDataItem>
     <MetaDataItem name="ResetDescription">To return your dimmer to factory defaults:
 1. If plugged in, unplug the dimmer from the receptacle.
 2. Press and hold the top button for at least 3 seconds while you
