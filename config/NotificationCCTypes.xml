@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<NotificationTypes xmlns='https://github.com/OpenZWave/open-zwave' Revision="11">
-	<!-- Last Updated with Version 11 - 1/1/20 -->
+<NotificationTypes xmlns='https://github.com/OpenZWave/open-zwave' Revision="12">
+	<!-- Last Updated with Version 12 - 21/8/20 -->
 	<!-- Please keep Localization.xml in sync with NotificationCCTypes.xml -->
 	<!-- If you are adding new Types or Params, Please also consider updating ValueIDIndexesDefines.def -->
 	<!-- Bump Revision number, run "xmllint format" and "make xmltest" before submitting -->
@@ -184,8 +184,10 @@
 		<AlarmEvent id="2" name="Manual Unlock Operation">
 		</AlarmEvent>
 		<AlarmEvent id="3" name="Wireless Lock Operation">
+			<AlarmEventParam id="260" type="usercodereport" name="User Code" />
 		</AlarmEvent>
 		<AlarmEvent id="4" name="Wireless Unlock Operation">
+			<AlarmEventParam id="260" type="usercodereport" name="User Code" />
 		</AlarmEvent>
 		<AlarmEvent id="5" name="Keypad Lock Operation">
 			<AlarmEventParam id="260" type="usercodereport" name="User Code" />
