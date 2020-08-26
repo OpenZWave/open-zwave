@@ -14,7 +14,7 @@
     <MetaDataItem name="ResetDescription">press and hold down group 2 keys for more than 10 seconds use only if controller is unavailable</MetaDataItem>
     <MetaDataItem id="0xa306" name="ZWProductPage" type="0x0300">https://products.z-wavealliance.org/products/3595</MetaDataItem>
     <MetaDataItem id="0xa306" name="FrequencyName" type="0x0300">CEPT</MetaDataItem>
-    <MetaDataItem id="0xa306" name="Identifier" type="0x0300">45 125 81 (white) 45 126 81 (black)</MetaDataItem>
+    <MetaDataItem id="0xa306" name="Identifier" type="0x0300">45 126 82 (white) 45 126 83 (black)</MetaDataItem>
     <ChangeLog>
       <Entry author="Jonas Sauge" date="26 August 2020" revision="1"></Entry>
     </ChangeLog>
