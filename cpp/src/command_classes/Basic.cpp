@@ -148,7 +148,7 @@ namespace OpenZWave
 					if (!m_com.GetFlagBool(COMPAT_FLAG_BASIC_IGNOREREMAPPING) && m_com.GetFlagByte(COMPAT_FLAG_BASIC_MAPPING) != 0)
 					{
 						/* update our Mapped Class with the Target Values */
-						if (GetVersion() >= 2 && _length == 4)
+						if (GetVersion() >= 2 && _length >= 4)
 							UpdateMappedClass(_instance, m_com.GetFlagByte(COMPAT_FLAG_BASIC_MAPPING), _data[2]);
 						else
 							UpdateMappedClass(_instance, m_com.GetFlagByte(COMPAT_FLAG_BASIC_MAPPING), _data[1]);
@@ -158,7 +158,7 @@ namespace OpenZWave
 						if (Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>(GetValue(_instance, ValueID_Index_Basic::Set)))
 						{
 							/* Set the Target Value, if it is present */
-							if (_length == 4)
+							if (_length >= 4)
 								value->SetTargetValue(_data[2], _data[3]);
 							value->OnValueRefreshed(_data[1]);
 							value->Release();
@@ -167,7 +167,7 @@ namespace OpenZWave
 						{
 							Log::Write(LogLevel_Warning, GetNodeId(), "No Valid Mapping for Basic Command Class and No ValueID Exported. Error?");
 						}
-						if (_length == 4)
+						if (_length >= 4)
 						{
 							if (Internal::VC::ValueByte* target = static_cast<Internal::VC::ValueByte*>(GetValue(_instance, ValueID_Index_Basic::Target)))
 							{
@@ -192,7 +192,7 @@ namespace OpenZWave
 						if (!m_com.GetFlagBool(COMPAT_FLAG_BASIC_IGNOREREMAPPING) && m_com.GetFlagByte(COMPAT_FLAG_BASIC_MAPPING) != 0)
 						{
 							/* update our Mapped Class with the Target Values */
-							if (GetVersion() >= 2 && _length == 4)
+							if (GetVersion() >= 2 && _length >= 4)
 								UpdateMappedClass(_instance, m_com.GetFlagByte(COMPAT_FLAG_BASIC_MAPPING), _data[2]);
 							else
 								UpdateMappedClass(_instance, m_com.GetFlagByte(COMPAT_FLAG_BASIC_MAPPING), _data[1]);
@@ -209,7 +209,7 @@ namespace OpenZWave
 								Log::Write(LogLevel_Warning, GetNodeId(), "No Valid Mapping for Basic Command Class and No ValueID Exported. Error?");
 							}
 							
-							if (_length == 4)
+							if (_length >= 4)
 							{
 								if (Internal::VC::ValueByte* target = static_cast<Internal::VC::ValueByte*>(GetValue(_instance, ValueID_Index_Basic::Target)))
 								{
