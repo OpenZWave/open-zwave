@@ -1962,6 +1962,7 @@
     <Product config="zooz/zen23.xml" id="1e1c" name="ZEN23 Toggle Switch" type="1111"/>
     <Product config="zooz/zen24.xml" id="1f1c" name="ZEN24 Dimmer Switch" type="0111"/>
     <Product config="inovelli/nzw97.xml" id="6100" name="NZW97 Inovelli Dual Outdoor Z-Wave Plug" type="6100"/>
+    <Product config="inovelli/nzw31.xml" id="1f01" name="NZW31 Inovelli Dimmer" type="1f01"/>
   </Manufacturer>
   <Manufacturer id="0315" name="zwaveproducts.com">
     <Product type="4447" id="3031" name="PA-100" config="zwp/PA-100.xml"/>
