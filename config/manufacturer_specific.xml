@@ -1732,6 +1732,12 @@
   </Manufacturer>
   <Manufacturer id="0330" name="Sunricher">
     <Product config="sunricher/srzv9001t4dimeu.xml" id="a10d" name="Touch Panel Wall Controller - ZSC-01D" type="0003"/>
+    <Product config="sunricher/srzv9001k12dimz4.xml" id="b302" name="SR-ZV9001 4 Channel Dimmer Remote Control" type="0300"/>
+    <Product config="sunricher/srzv9001k12dimz4.xml" id="b302" name="SR-ZV9001 4 Channel Dimmer Remote Control" type="0301"/>
+    <Product config="sunricher/srzv9001k12dimz4.xml" id="b302" name="SR-ZV9001 4 Channel Dimmer Remote Control" type="0302"/>
+    <Product config="sunricher/srzv9001k12dimz5.xml" id="b301" name="SR-ZV9001 5 Channel Dimmer Remote Control" type="0300"/>
+    <Product config="sunricher/srzv9001k12dimz5.xml" id="b301" name="SR-ZV9001 5 Channel Dimmer Remote Control" type="0301"/>
+    <Product config="sunricher/srzv9001k12dimz5.xml" id="b301" name="SR-ZV9001 5 Channel Dimmer Remote Control" type="0302"/>
     <Product config="sunricher/srzv9001k8.xml" id="a305" name="Wall Controller - SR-ZV9001" type="0300"/>
     <Product config="sunricher/zv9101.xml" id="d005" name="Dimmer ZV-9101" type="0200"/>
     <Product config="sunricher/srzv9101sachpeu.xml" id="d00c" name="Dimmer ZV9040" type="0200"/>
