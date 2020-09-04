@@ -1,7 +1,7 @@
 <Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
     <MetaDataItem name="Name">iblinds</MetaDataItem>
     <MetaDataItem name="Description">An intelligent blind motor, a Z-Wave device designed for tilting Venetian (two inch slatted-style) blinds. Open and close the blinds and use a value slider for precise positioning of the tilt angle.</MetaDataItem>
-    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0287:000d:0003</MetaDataItem>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0287:0071:0004</MetaDataItem>
     <MetaDataItem name="ProductPage">https://myiblinds.com/</MetaDataItem>
     <MetaDataItem name="ProductSupport">https://support.myiblinds.com</MetaDataItem>
     <MetaDataItem name="ProductPic">images/iblinds/iblindsV3.png</MetaDataItem>
