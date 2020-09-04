@@ -11,7 +11,9 @@
     <MetaDataItem name="ExclusionDescription">Follow the directions for your Z-Wave device to place it in the exclusion mode. Press the exclude button three times and wait for the device to be removed from the Z-Wave network.</MetaDataItem>
     <MetaDataItem name="ResetDescription">Charge adapter button can be used to reset the device and perform manual auto calibration: press and hold the Charge Adapter button for 10 seconds.</MetaDataItem>
     <MetaDataItem id="0071" name="ZWProductPage" type="0004">https://products.z-wavealliance.org/products/2486/features</MetaDataItem>
-    <MetaDataItem id="0071" name="FrequencyName" type="0004">All Countries Conforming to FCC or CE Standards</MetaDataItem>
+    <MetaDataItem id="0071" name="FrequencyName" type="0004">U.S. / Canada/ Mexico</MetaDataItem>
+    <MetaDataItem id="0071" name="FrequencyName" type="0004">CEPT</MetaDataItem>
+    <MetaDataItem id="0071" name="FrequencyName" type="0004">Australia / New Zealand</MetaDataItem>
     <MetaDataItem id="0071" name="Identifier" type="0004">iblinds V3</MetaDataItem>
   <!--TODO : Change Frequency to represent Global with new ZWave 700 Series-->
     <ChangeLog>
