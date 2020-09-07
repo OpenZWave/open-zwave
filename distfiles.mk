@@ -381,6 +381,7 @@ DISTFILES =	.gitignore \
 	config/homeseer/hsm100.xml \
 	config/homeseer/hsm200.xml \
 	config/homeseer/ztroller.xml \
+	config/honeywell/2681-plugin-dimmer.xml \
 	config/honeywell/39348-ZW4005.xml \
 	config/honeywell/39348-zw4008.xml \
 	config/honeywell/39351-ZW3005.xml \
@@ -691,6 +692,7 @@ DISTFILES =	.gitignore \
 	config/images/homeseer/hs-ws100plus.png \
 	config/images/homeseer/hs-ws200plus.png \
 	config/images/homeseer/hsm200.png \
+	config/images/honeywell/2681-plugin-dimmer.png \
 	config/images/honeywell/39348-ZW4005.png \
 	config/images/honeywell/39348-ZW4008.png \
 	config/images/honeywell/39351-ZW3005.png \
@@ -719,6 +721,7 @@ DISTFILES =	.gitignore \
 	config/images/inovelli/lzw30.png \
 	config/images/inovelli/lzw31-sn.png \
 	config/images/inovelli/lzw31.png \
+	config/images/inovelli/lzw36.png \
 	config/images/inovelli/lzw40.png \
 	config/images/inovelli/lzw41.png \
 	config/images/inovelli/lzw42.png \
@@ -854,7 +857,9 @@ DISTFILES =	.gitignore \
 	config/images/shenzen_neo/nas-pd01z.png \
 	config/images/shenzen_neo/nas-pd02z.png \
 	config/images/shenzen_neo/nas-wr01z.png \
+	config/images/shenzen_neo/nas-wr01ze.png \
 	config/images/shenzen_neo/nas-ws02z.png \
+	config/images/shenzen_saykey/SK-3007-05.png \
 	config/images/simon/10002034-13X.png \
 	config/images/smartthings/pgc401m.png \
 	config/images/smartthings/sth-eth200.png \
@@ -880,6 +885,7 @@ DISTFILES =	.gitignore \
 	config/images/thermofloor/Heatit-Z-Push-button-8-white.png \
 	config/images/thermofloor/heatit021.png \
 	config/images/thermofloor/heatit056.png \
+	config/images/thermofloor/heatit058.png \
 	config/images/thermofloor/heatit20a.png \
 	config/images/thermofloor/heatit_zdim.png \
 	config/images/trane/TZEMT400AB32MAA.png \
@@ -1000,6 +1006,7 @@ DISTFILES =	.gitignore \
 	config/kaipule/im20.xml \
 	config/kaipule/ix32.xml \
 	config/kwikset/888.xml \
+	config/kwikset/910.xml \
 	config/kwikset/914c.xml \
 	config/kwikset/916.xml \
 	config/kwikset/smartcode.xml \
@@ -1195,6 +1202,7 @@ DISTFILES =	.gitignore \
 	config/shenzen_neo/nas-wr01z.xml \
 	config/shenzen_neo/nas-wr01ze.xml \
 	config/shenzen_neo/nas-ws02z.xml \
+	config/shenzen_saykey/sk-3007-05.xml \
 	config/simon/10002034-13X.xml \
 	config/simon/10002041-13X.xml \
 	config/smartthings/pgc401m.xml \
@@ -1223,6 +1231,7 @@ DISTFILES =	.gitignore \
 	config/thermofloor/heatit-zdim.xml \
 	config/thermofloor/heatit021.xml \
 	config/thermofloor/heatit056.xml \
+	config/thermofloor/heatit058.xml \
 	config/thermofloor/heatit20a.xml \
 	config/thermofloor/heatitz8.xml \
 	config/trane/TZEMT400AB32MAA.xml \
