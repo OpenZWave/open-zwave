@@ -18,7 +18,7 @@
     <MetaDataItem id="0071" name="Identifier" type="0004">iblinds V3</MetaDataItem>
   <!--TODO : Change Frequency to represent Global with new ZWave 700 Series-->
     <ChangeLog>
-      <Entry author="Chance Huddleston chance@habhomeintel.com" date="1 Sept 2020" revision="1">Initial Release</Entry>
+      <Entry author="Chance Huddleston chance@habhomeintel.com" date="8 Sept 2020" revision="1">Initial Release</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration Parameters -->
