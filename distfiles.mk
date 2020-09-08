@@ -266,6 +266,7 @@ DISTFILES =	.gitignore \
 	config/fibaro/fgpb101.xml \
 	config/fibaro/fgr221.xml \
 	config/fibaro/fgr223.xml \
+	config/fibaro/fgrgbw442.xml \
 	config/fibaro/fgrgbwm441.xml \
 	config/fibaro/fgrm222.xml \
 	config/fibaro/fgs211.xml \
@@ -598,6 +599,7 @@ DISTFILES =	.gitignore \
 	config/images/fibaro/fgmszw5.png \
 	config/images/fibaro/fgpb101.png \
 	config/images/fibaro/fgr223.png \
+	config/images/fibaro/fgrgbw442.png \
 	config/images/fibaro/fgrgbwm441.png \
 	config/images/fibaro/fgs213.png \
 	config/images/fibaro/fgs223.png \
