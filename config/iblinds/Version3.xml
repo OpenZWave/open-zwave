@@ -41,7 +41,7 @@
 	   <Item value="1" label="True"/>
     </Value>
     <!--The 3rd Index Configuration Parameter is not used, DO NOT ADD-->
-    <Value genre="config" type="int" size="1" index="4" label="Default ON Value" min="0" max="100" value="50">
+    <Value genre="config" type="byte" size="1" index="4" label="Default ON Value" min="0" max="100" value="50">
       <Help>
 	  Value that iblinds will open to by Default
       Default: 50
@@ -54,7 +54,7 @@
  	   <Item value="0" label="False"/>
 	   <Item value="1" label="True"/>
     </Value>
-    <Value genre="config" type="int" size="1" index="6" label="Speed" min="0" max="100" value="0">
+    <Value genre="config" type="byte" size="1" index="6" label="Speed" min="0" max="100" value="0">
       <Help>
 	  How fast iblinds will close in seconds
       Default:0
