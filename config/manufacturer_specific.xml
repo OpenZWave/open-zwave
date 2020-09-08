@@ -850,8 +850,9 @@
   <Manufacturer id="037B" name="Guardtec Inc">
     <Product type="0002" id="0001" name="GKW-2000D Door Lock" config="guardtec/gkw2000d.xml"/>
   </Manufacturer>
-  <Manufacturer id="0287" name="HAB Home Intelligence LLC"></Manufacturer>
+  <Manufacturer id="0287" name="HAB Home Intelligence LLC">
     <Product type="0004" id="0071" name="iblinds V3" config="iblinds/Version3.xml"/>
+  </Manufacturer>
   <Manufacturer id="030D" name="Hampoo"></Manufacturer>
   <Manufacturer id="040A" name="Hangzhou Hikvision Digital Technology Co. Ltd"></Manufacturer>
   <Manufacturer id="0387" name="HangZhou iMagic Technology Co. Ltd"></Manufacturer>
