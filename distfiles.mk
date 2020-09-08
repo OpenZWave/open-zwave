@@ -382,6 +382,7 @@ DISTFILES =	.gitignore \
 	config/homeseer/hsm200.xml \
 	config/homeseer/ztroller.xml \
 	config/honeywell/2681-plugin-dimmer.xml \
+	config/honeywell/3830-zw3107.xml \
 	config/honeywell/39348-ZW4005.xml \
 	config/honeywell/39348-zw4008.xml \
 	config/honeywell/39351-ZW3005.xml \
@@ -693,6 +694,7 @@ DISTFILES =	.gitignore \
 	config/images/homeseer/hs-ws200plus.png \
 	config/images/homeseer/hsm200.png \
 	config/images/honeywell/2681-plugin-dimmer.png \
+	config/images/honeywell/3830-zw3107.png \
 	config/images/honeywell/39348-ZW4005.png \
 	config/images/honeywell/39348-ZW4008.png \
 	config/images/honeywell/39351-ZW3005.png \
