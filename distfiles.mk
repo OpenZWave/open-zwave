@@ -128,6 +128,7 @@ DISTFILES =	.gitignore \
 	config/assa_abloy/nexTouch.xml \
 	config/august/asl-03.xml \
 	config/buffalo/hw-100v15a-zw.xml \
+	config/building36/b36-t10.xml \
 	config/comfort/ucm.xml \
 	config/config-template.xml \
 	config/connecthome/ch-201.xml \
@@ -382,6 +383,7 @@ DISTFILES =	.gitignore \
 	config/homeseer/hsm200.xml \
 	config/homeseer/ztroller.xml \
 	config/honeywell/2681-plugin-dimmer.xml \
+	config/honeywell/3830-zw3107.xml \
 	config/honeywell/39348-ZW4005.xml \
 	config/honeywell/39348-zw4008.xml \
 	config/honeywell/39351-ZW3005.xml \
@@ -497,6 +499,7 @@ DISTFILES =	.gitignore \
 	config/images/assa_abloy/nexTouch.png \
 	config/images/august/asl-03.png \
 	config/images/buffalo/hw-100v15a-zw.png \
+	config/images/building36/b36-t10.png \
 	config/images/comfort/ucm.png \
 	config/images/connecthome/CH_201.png \
 	config/images/cooper/RF9501.png \
@@ -693,6 +696,7 @@ DISTFILES =	.gitignore \
 	config/images/homeseer/hs-ws200plus.png \
 	config/images/homeseer/hsm200.png \
 	config/images/honeywell/2681-plugin-dimmer.png \
+	config/images/honeywell/3830-zw3107.png \
 	config/images/honeywell/39348-ZW4005.png \
 	config/images/honeywell/39348-ZW4008.png \
 	config/images/honeywell/39351-ZW3005.png \
