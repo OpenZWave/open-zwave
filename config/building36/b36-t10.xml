@@ -4,7 +4,6 @@
         <MetaDataItem name="Name">Building 36 Intelligent Thermostat</MetaDataItem>
         <MetaDataItem name="Description">The Building 36 Intelligent Thermostat gives you remote access and control of your thermostat. Enjoy effortless energy management, climate and ambiance control, custom automation and measurable results. Create custom smart schedules that automate your thermostat. Receive critical temperature alerts to know instantly when your thermostat reaches preset limits. Save energy by using location-based automation to have your thermostat adjust itself while you're out.</MetaDataItem>
         <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0190:0001:0001</MetaDataItem>
-        <MetaDataItem name="ProductPage">https://www.building36.com/wp-content/uploads/2016/01/Intelligent-Thermostat_Product_Manual.pdf</MetaDataItem>
         <MetaDataItem name="ProductPic">images/building36/b36-t10.png</MetaDataItem>
         <MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&amp;filename=MarketCertificationFiles/1161/Product_Manual_11_25_14-spreads_B36.pdf</MetaDataItem>
         <MetaDataItem name="WakeupDescription">Short press any button</MetaDataItem>
