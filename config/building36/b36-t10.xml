@@ -72,8 +72,8 @@
         <Value type="decimal" genre="user" instance="1" index="2" label="Cooling 1" units="F" read_only="false" write_only="false" verify_changes="false">
             <Help>Set the Thermostat Setpoint Cooling 1</Help>
         </Value>
-        <Value type="decimal" genre="user" instance="1" index="3" label="Unused 3" units="C" read_only="false" write_only="false" verify_changes="false">
-            <Help>Set the Thermostat Setpoint Unused 3</Help>
+        <Value type="decimal" genre="user" instance="1" index="3" label="Heating 1" units="F" read_only="false" write_only="false" verify_changes="false">
+            <Help>Set the Thermostat Setpoint Heating 1</Help>
         </Value>
         <Value type="decimal" genre="user" instance="1" index="101" label="Heating 1_minimum" units="C" read_only="false" write_only="false" verify_changes="false">
             <Help></Help>
