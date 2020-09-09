@@ -36,7 +36,7 @@ Please use the reset procedure only when the primary controller is missing or in
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="2">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2583/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="3">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2893/xml</Entry>
-      <Entry author="Kyle Zimmerman" date="09 Sept 2020" revision="3">Thermostat requires 2 bytes for precision, not 1. Sending 1 results in decimal degrees (common in Celcius) setting the temperature to the minimum value.</Entry>
+      <Entry author="Kyle Zimmerman" date="09 Sept 2020" revision="4">Thermostat requires 2 bytes for precision, not 1. Sending 1 results in decimal degrees (common in Celcius) setting the temperature to the minimum value.</Entry>
     </ChangeLog>
   </MetaData>
   <!-- This thermostat's setpoint descriptions are 1 based, not 0 -->
