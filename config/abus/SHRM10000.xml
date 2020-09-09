@@ -3,9 +3,9 @@ Smart Smoke Sensor SHRM10000
 http://products.z-wavealliance.org/products/3089
 --><Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
-    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0260:1000:8002</MetaDataItem>
-    <MetaDataItem name="ProductPic">images/heiman/HS1SA-Z.png</MetaDataItem>
-    <MetaDataItem id="1000" name="ZWProductPage" type="8002">https://products.z-wavealliance.org/products/3089/</MetaDataItem>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0403:0003:0002</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/abus/SHRM10000.jpg</MetaDataItem>
+    <MetaDataItem id="0003" name="ZWProductPage" type="0002">https://products.z-wavealliance.org/products/3089/</MetaDataItem>
     <MetaDataItem name="Description">The Smart Smoke Alarm adopts Z-Wave protocol, when the sensor detects smoke to the set level, it will issue  acoustic-optic alarm to alert the users and also send alarm notifications to gateway immediately.It's suitable to be installed in living room, office,warehouse,and etc.</MetaDataItem>
     <MetaDataItem name="InclusionDescription">-  Click [Add] icon in Z-Wave Controller .
 -  Press the Net_Button 3 times within 1.5s, Green LED is Blinking 3 times within 1 second.
