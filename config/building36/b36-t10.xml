@@ -68,11 +68,11 @@
     <CommandClass id="67">
         <Compatibility />
         <Instance index="1" />
-        <Value type="decimal" genre="user" instance="1" index="1" label="Cooling 1" units="F" read_only="false" write_only="false" verify_changes="false">
-            <Help>Set the Thermostat Setpoint Cooling 1</Help>
+        <Value type="decimal" genre="user" instance="1" index="1" label="Heating 1" units="F" read_only="false" write_only="false" verify_changes="false">
+            <Help>Set the Thermostat target heating temperature</Help>
         </Value>
-        <Value type="decimal" genre="user" instance="1" index="2" label="Heating 1" units="F" read_only="false" write_only="false" verify_changes="false">
-            <Help>Set the Thermostat Setpoint Heating 1</Help>
+        <Value type="decimal" genre="user" instance="1" index="2" label="Cooling 1" units="F" read_only="false" write_only="false" verify_changes="false">
+            <Help>Set the Thermostat target cooling temperature</Help>
         </Value>
         <Value type="decimal" genre="user" instance="1" index="101" label="Heating 1_minimum" units="C" read_only="false" write_only="false" verify_changes="false">
             <Help></Help>
