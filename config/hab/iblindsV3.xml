@@ -5,7 +5,7 @@
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0287:0071:0004</MetaDataItem>
     <MetaDataItem name="ProductPage">https://myiblinds.com/</MetaDataItem>
     <MetaDataItem name="ProductSupport">https://support.myiblinds.com</MetaDataItem>
-    <MetaDataItem name="ProductPic">images/iblinds/iblindsV3.png</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/hab/iblindsV3.png</MetaDataItem>
     <MetaDataItem name="ProductManual">http://support.myiblinds.com/wp-content/uploads/2019/06/User-Guide-v1.0.pdf</MetaDataItem>
     <MetaDataItem name="WakeupDescription">Press Include/Exclude button</MetaDataItem>
     <MetaDataItem name="InclusionDescription">Follow the directions for your Z-Wave hub/controller to place it into inclusion mode. Press the inclusion button three times and wait for the device to be discovered and joined to the Z-Wave network.</MetaDataItem>
