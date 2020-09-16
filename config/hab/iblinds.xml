@@ -17,7 +17,7 @@
     <ChangeLog>
       <Entry author="Daniel Brunt - daniel@brunt.ca" date="05 August 2020" revision="1">Initial release</Entry>
       <Entry author="Daniel Brunt - daniel@brunt.ca" date="28 August 2020" revision="2">Added CC 37 and 38</Entry>
-      <Entry author="Daniel Brunt - daniel@brunt.ca" date="29 August 2020" revision="3">Added NoRefreshAfterSet compatibility to CC 37 & 38</Entry>
+      <Entry author="Daniel Brunt - daniel@brunt.ca" date="29 August 2020" revision="3">Added NoRefreshAfterSet compatibility to CC 37 &amp 38</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration Command Class - All Configuration Parameters should be entered into the section below -->
