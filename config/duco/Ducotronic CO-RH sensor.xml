@@ -40,7 +40,7 @@
 	<CommandClass id="32"> <!-- Basic -->
 	</CommandClass>
   
-	<CommandClass id="96" mapping="endpoints"> <!-- Multi Channel V1 -->
+	<CommandClass id="96"> <!-- Multi Channel V1 -->
 	</CommandClass>
   
 	<CommandClass id="133"> <!-- Association -->
