@@ -51,39 +51,39 @@
     
 	<CommandClass id="112"> <!-- Configuration -->
 
-	<!-- Measure Level -->
-	<Value genre="config" index="1" label="Measure Level" size="1" type="byte" value="60" min="1" max="127" units="sec">
-		<Help>How often the value is measured(example: if value=60, the sensor value is measured every 60 seconds)</Help>
-    	</Value>
+		<!-- Measure Level -->
+		<Value genre="config" index="1" label="Measure Level" size="1" type="byte" value="60" min="1" max="127" units="sec">
+			<Help>How often the value is measured(example: if value=60, the sensor value is measured every 60 seconds)</Help>
+    		</Value>
     
-	<!-- CO² set point -->
-	<Value genre="config" index="2" label="CO² set point" size="2" type="short" value="1000" min="1" max="32767" units="PPM">
-		<Help>Set point CO2: Used in ‘automatic mode’. (button 4) if the device is a CO2 sensor. The CO2 level in a room is a good indication of the air quality in this room. 
+		<!-- CO² set point -->
+		<Value genre="config" index="2" label="CO² set point" size="2" type="short" value="1000" min="1" max="32767" units="PPM">
+			<Help>	Set point CO2: Used in ‘automatic mode’. (button 4) if the device is a CO2 sensor. The CO2 level in a room is a good indication of the air quality in this room. 
 			When the CO2 level is above this set point, the room needs more ventilation. Consequently, the CO2 sensor will open the associated grating unit.</Help>
-    	</Value>
+    		</Value>
 
-	<!-- Humidity set point -->
-	<Value genre="config" index="3" label="CO² set point" size="1" type="byte" value="70" min="1" max="127" units="%">
-		<Help>Set point CO2: Used in ‘automatic mode’. (button 4) if the device is a CO2 sensor. The CO2 level in a room is a good indication of the air quality in this room. 
+		<!-- Humidity set point -->
+		<Value genre="config" index="3" label="CO² set point" size="1" type="byte" value="70" min="1" max="127" units="%">
+			<Help>	Set point CO2: Used in ‘automatic mode’. (button 4) if the device is a CO2 sensor. The CO2 level in a room is a good indication of the air quality in this room. 
 			When the CO2 level is above this set point, the room needs more ventilation. Consequently, the CO2 sensor will open the associated grating unit.</Help>
-    </Value>
+   		</Value>
 	
-	<!-- Button 1 -->
-	<Value genre="config" index="4" label="Button 1" size="1" type="byte" value="15" min="1" max="127" units="%">
-		<Help>	The value when button1 is pressed. Values above 99 will be capped to 99 (maximum) used in association group 1</Help>
-    </Value>
+		<!-- Button 1 -->
+		<Value genre="config" index="4" label="Button 1" size="1" type="byte" value="15" min="1" max="127" units="%">
+			<Help>	The value when button1 is pressed. Values above 99 will be capped to 99 (maximum) used in association group 1</Help>
+    		</Value>
 	
-	<!-- Button 2 -->
-	<Value genre="config" index="5" label="Button 2" size="1" type="byte" value="50" min="1" max="127" units="%">
-		<Help>	The value when button2 is pressed. Values above 99 will be capped to 99 (maximum) used in association group 1</Help>
-    </Value>
+		<!-- Button 2 -->
+		<Value genre="config" index="5" label="Button 2" size="1" type="byte" value="50" min="1" max="127" units="%">
+			<Help>	The value when button2 is pressed. Values above 99 will be capped to 99 (maximum) used in association group 1</Help>
+    		</Value>
 	
-	<!-- Button 3 -->
-	<Value genre="config" index="6" label="Button 3" size="1" type="byte" value="99" min="1" max="127" units="%">
-		<Help>The value when button3 is pressed. Values above 99 will be capped to 99 (maximum) used in association group 1</Help>
-    </Value>
+		<!-- Button 3 -->
+		<Value genre="config" index="6" label="Button 3" size="1" type="byte" value="99" min="1" max="127" units="%">
+			<Help>The value when button3 is pressed. Values above 99 will be capped to 99 (maximum) used in association group 1</Help>
+    		</Value>
 	
-	<!-- Min automatic level -->
+		<!-- Min automatic level -->
 	<Value genre="config" index="7" label="Min automatic level" size="1" type="byte" value="15" min="1" max="127" units="%">
 		<Help>The minimum value that can be send by the CO2 sensor when it is in automatic mode.</Help>
     </Value>
@@ -132,8 +132,7 @@
 	<Value genre="config" index="16" label="CO2 delta setpoint" size="2" type="short" value="500" min="1" max="32767" units="%">
 		<Help>	CO2 delta set point: not available in RH sensor</Help>
     </Value>
-	
-	</CommandClass>
+</CommandClass>
     
     <CommandClass id="49"> <!-- Multilevel Sensor -->
 	</CommandClass>
