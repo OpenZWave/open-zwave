@@ -32,13 +32,13 @@
                   <NoRefreshAfterSet index="0">true</NoRefreshAfterSet>
           </Compatibility>
           <Instance index="1" />
-          <Value type="byte" genre="user" instance="1" index="0" label="Level" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="99" value="0">
+          <Value type="byte" genre="user" instance="1" index="0" label="Level" units="" read_only="false" write_only="false" verify_changes="false" min="0" max="99" value="0">
                   <Help>The Current Tilt Position of the Blind</Help>
           </Value>
   </CommandClass>
   <CommandClass id="112" version="1">
     <Instance index="1" />
-    <Value type="list" genre="config" instance="1" index="1" label="Auto Calibration Torque" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="1" max="5" vindex="0" size="1">
+    <Value type="list" genre="config" instance="1" index="1" label="Auto Calibration Torque" units="" read_only="false" write_only="false" verify_changes="false" min="1" max="5" vindex="0" size="1">
       <Help>Changing the Auto Calibration torque will allow you to change the initial calibration torque.</Help>
       <Item label="Calibrate using default torque " value="1" />
       <Item label="Reduce calibration torque by 1 factor" value="2" />
