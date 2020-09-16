@@ -149,7 +149,7 @@ namespace OpenZWave
 								if (requestedScale) {
 									const Internal::VC::ValueList::Item *item = requestedScale->GetItem();
 									if (item)
-										scale = item->m_value;
+										scale = ((item->m_value & 0x03) << 3);
 									requestedScale->Release();
 								}
 								value->Release();
@@ -177,7 +177,7 @@ namespace OpenZWave
 						if (requestedScale) {
 							const Internal::VC::ValueList::Item *item = requestedScale->GetItem();
 							if (item)
-								scale = item->m_value;
+								scale = ((item->m_value & 0x03) << 3);
 							requestedScale->Release();
 						}
 						value->Release();

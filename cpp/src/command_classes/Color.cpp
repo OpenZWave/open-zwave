@@ -305,7 +305,7 @@ namespace OpenZWave
 						}
 
 						if (GetVersion() > 1)
-							node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_Color::Duration, "Duration", "Sec", false, false, 15300, 0);
+							node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_Color::Duration, "Duration", "Sec", false, false, -1, 0);
 						if (GetVersion() > 2)
 							node->CreateValueString(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_Color::Target, "Target Color", helpstr, true, false, "#000000", 0);
 

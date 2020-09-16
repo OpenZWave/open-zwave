@@ -642,7 +642,8 @@ namespace OpenZWave
 					// values are different, so flag this as a verification refresh and queue it
 					Log::Write(LogLevel_Info, m_id.GetNodeId(), "Changed value (possible)--rechecking");
 					SetCheckingChange(true);
-					Manager::Get()->RefreshValue(GetID());
+					TimerThread::TimerCallback callback = bind(&Value::sendValueRefresh, this, 1);
+					TimerSetEvent(250, callback, 1);
 					return 1;				// value has changed (to be confirmed)
 				}
 				else		// IsCheckingChange is true if this is the second read of a potentially changed value
@@ -708,7 +709,9 @@ namespace OpenZWave
 					SetCheckingChange(true);
 
 					// save a temporary copy of value and re-read value from device
-					Manager::Get()->RefreshValue(GetID());
+					//Manager::Get()->RefreshValue(GetID());
+					TimerThread::TimerCallback callback = bind(&Value::sendValueRefresh, this, 1);
+					TimerSetEvent(250, callback, 1);
 					return 1;
 				}
 			}
@@ -785,7 +788,11 @@ namespace OpenZWave
 				 * - Caveat here is that if the outgoing queue is large, then this will be additionally delayed
 				 */
 				int32 timeout;
-				if (m_duration <= 5) 
+				if (m_duration <= 2) 
+				{
+					timeout = 250;
+				}
+				else if (m_duration <= 5) 
 				{
 					/* for Durations less than 5 seconds, lets refresh every 1/2 seconds
 					 */

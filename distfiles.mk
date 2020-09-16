@@ -173,6 +173,7 @@ DISTFILES =	.gitignore \
 	config/dome/0088.xml \
 	config/dome/0101.xml \
 	config/dome/0201.xml \
+	config/dome/dmex1.xml \
 	config/domitech/zb22uk.xml \
 	config/domitech/ze27eu.xml \
 	config/domux/DX1CA-Z.xml \
@@ -310,6 +311,7 @@ DISTFILES =	.gitignore \
 	config/ge/14292-toggle-switch.xml \
 	config/ge/14294-dimmer.xml \
 	config/ge/14295-dimmer-toggle.xml \
+	config/ge/14298.xml \
 	config/ge/26931-motion-switch.xml \
 	config/ge/26933-motion-dimmer.xml \
 	config/ge/28167-plugin-dimmer.xml \
@@ -317,6 +319,7 @@ DISTFILES =	.gitignore \
 	config/ge/45604.xml \
 	config/ge/46201-switch.xml \
 	config/ge/46203-dimmer.xml \
+	config/ge/46204-dimmer-toggle.xml \
 	config/ge/dimmer.xml \
 	config/ge/dimmer_module.xml \
 	config/ge/hinge-pin.xml \
@@ -332,6 +335,7 @@ DISTFILES =	.gitignore \
 	config/gr/grb3.xml \
 	config/graber/brz1.xml \
 	config/graber/csz1.xml \
+	config/graber/mcz1.xml \
 	config/graber/rsz1.xml \
 	config/graber/vcz1.xml \
 	config/greenwave/gs1110-1-gr-1.xml \
@@ -377,6 +381,7 @@ DISTFILES =	.gitignore \
 	config/homeseer/hsm100.xml \
 	config/homeseer/hsm200.xml \
 	config/homeseer/ztroller.xml \
+	config/honeywell/2681-plugin-dimmer.xml \
 	config/honeywell/39348-ZW4005.xml \
 	config/honeywell/39348-zw4008.xml \
 	config/honeywell/39351-ZW3005.xml \
@@ -523,6 +528,7 @@ DISTFILES =	.gitignore \
 	config/images/dome/0086.png \
 	config/images/dome/0088.png \
 	config/images/dome/0201.png \
+	config/images/dome/dmex1.png \
 	config/images/domitech/zb22uk.png \
 	config/images/domitech/ze27eu.png \
 	config/images/dragontech/wd-100.png \
@@ -628,6 +634,7 @@ DISTFILES =	.gitignore \
 	config/images/ge/14292-toggle-switch.png \
 	config/images/ge/14294-dimmer.png \
 	config/images/ge/14295-dimmer-toggle.png \
+	config/images/ge/14298.png \
 	config/images/ge/26931-motion-switch.png \
 	config/images/ge/26933-motion-dimmer.png \
 	config/images/ge/28167-plugin-dimmer.png \
@@ -635,6 +642,7 @@ DISTFILES =	.gitignore \
 	config/images/ge/45604.png \
 	config/images/ge/46201-switch.png \
 	config/images/ge/46203-dimmer.png \
+	config/images/ge/46204-dimmer-toggle.png \
 	config/images/ge/dimmer.png \
 	config/images/ge/dimmer_module.png \
 	config/images/ge/hinge-pin.png \
@@ -647,6 +655,7 @@ DISTFILES =	.gitignore \
 	config/images/gr/gr105n.png \
 	config/images/graber/brz1.png \
 	config/images/graber/csz1.png \
+	config/images/graber/mcz1.png \
 	config/images/graber/rsz1.png \
 	config/images/graber/vcz1.png \
 	config/images/greenwave/gs1110-1-gr-1.png \
@@ -683,6 +692,7 @@ DISTFILES =	.gitignore \
 	config/images/homeseer/hs-ws100plus.png \
 	config/images/homeseer/hs-ws200plus.png \
 	config/images/homeseer/hsm200.png \
+	config/images/honeywell/2681-plugin-dimmer.png \
 	config/images/honeywell/39348-ZW4005.png \
 	config/images/honeywell/39348-ZW4008.png \
 	config/images/honeywell/39351-ZW3005.png \
@@ -711,6 +721,7 @@ DISTFILES =	.gitignore \
 	config/images/inovelli/lzw30.png \
 	config/images/inovelli/lzw31-sn.png \
 	config/images/inovelli/lzw31.png \
+	config/images/inovelli/lzw36.png \
 	config/images/inovelli/lzw40.png \
 	config/images/inovelli/lzw41.png \
 	config/images/inovelli/lzw42.png \
@@ -722,13 +733,16 @@ DISTFILES =	.gitignore \
 	config/images/kaipule/im20.png \
 	config/images/kwikset/888.png \
 	config/images/kwikset/914c.png \
+	config/images/kwikset/916.jpg \
 	config/images/kwikset/smartcode.png \
 	config/images/leviton/dz15s.png \
 	config/images/leviton/dz6hd.png \
+	config/images/leviton/dzpa1.png \
 	config/images/leviton/dzpd3.png \
 	config/images/leviton/vrcs2.png \
 	config/images/leviton/vrf01.png \
 	config/images/leviton/vri10.png \
+	config/images/leviton/vrpa1.png \
 	config/images/leviton/vrs15.png \
 	config/images/linear/LB60Z-1.png \
 	config/images/linear/WD500Z5-1.png \
@@ -748,6 +762,7 @@ DISTFILES =	.gitignore \
 	config/images/miyakawaelectric/me-d101.png \
 	config/images/namron/1402756.png \
 	config/images/nexia/db100z.png \
+	config/images/nexia/th100nx.png \
 	config/images/nodon/asp3100SmartPlug.png \
 	config/images/nodon/crc3100OctanRemote.png \
 	config/images/nodon/crc360xSofremote.png \
@@ -842,7 +857,9 @@ DISTFILES =	.gitignore \
 	config/images/shenzen_neo/nas-pd01z.png \
 	config/images/shenzen_neo/nas-pd02z.png \
 	config/images/shenzen_neo/nas-wr01z.png \
+	config/images/shenzen_neo/nas-wr01ze.png \
 	config/images/shenzen_neo/nas-ws02z.png \
+	config/images/shenzen_saykey/SK-3007-05.png \
 	config/images/simon/10002034-13X.png \
 	config/images/smartthings/pgc401m.png \
 	config/images/smartthings/sth-eth200.png \
@@ -851,6 +868,8 @@ DISTFILES =	.gitignore \
 	config/images/steinel/rs-led-d2.png \
 	config/images/steinel/xled-home-2.png \
 	config/images/stelpro/stzw402.png \
+	config/images/sunricher/srzv9001k12dimz4.png \
+	config/images/sunricher/srzv9001k12dimz5.png \
 	config/images/sunricher/srzv9001k8.png \
 	config/images/sunricher/srzv9001t4dimeu.png \
 	config/images/sunricher/srzv9003t4rgbweu.png \
@@ -866,6 +885,8 @@ DISTFILES =	.gitignore \
 	config/images/thermofloor/Heatit-Z-Push-button-8-white.png \
 	config/images/thermofloor/heatit021.png \
 	config/images/thermofloor/heatit056.png \
+	config/images/thermofloor/heatit058.png \
+	config/images/thermofloor/heatit20a.png \
 	config/images/thermofloor/heatit_zdim.png \
 	config/images/trane/TZEMT400AB32MAA.png \
 	config/images/trane/TZEMT400BB32MAA.png \
@@ -913,6 +934,7 @@ DISTFILES =	.gitignore \
 	config/images/widom/WSP.png \
 	config/images/widom/WTED.png \
 	config/images/wink/wnk-mot1.png \
+	config/images/wink/wnk-sir1p.png \
 	config/images/zipato/HS1CA-Z.png \
 	config/images/zipato/HS1CG-Z.png \
 	config/images/zipato/HS1SA-Z.png \
@@ -962,6 +984,7 @@ DISTFILES =	.gitignore \
 	config/inovelli/lzw30.xml \
 	config/inovelli/lzw31-sn.xml \
 	config/inovelli/lzw31.xml \
+	config/inovelli/lzw36.xml \
 	config/inovelli/lzw40.xml \
 	config/inovelli/lzw41.xml \
 	config/inovelli/lzw42.xml \
@@ -983,10 +1006,13 @@ DISTFILES =	.gitignore \
 	config/kaipule/im20.xml \
 	config/kaipule/ix32.xml \
 	config/kwikset/888.xml \
+	config/kwikset/910.xml \
 	config/kwikset/914c.xml \
+	config/kwikset/916.xml \
 	config/kwikset/smartcode.xml \
 	config/leviton/dz15s.xml \
 	config/leviton/dz6hd.xml \
+	config/leviton/dzpa1.xml \
 	config/leviton/dzpd3.xml \
 	config/leviton/rzi10.xml \
 	config/leviton/vrcpg.xml \
@@ -996,6 +1022,7 @@ DISTFILES =	.gitignore \
 	config/leviton/vrf01.xml \
 	config/leviton/vri06.xml \
 	config/leviton/vri10.xml \
+	config/leviton/vrpa1.xml \
 	config/leviton/vrs15.xml \
 	config/linear/GC-TBZ48.xml \
 	config/linear/LB60Z-1.xml \
@@ -1039,6 +1066,7 @@ DISTFILES =	.gitignore \
 	config/miyakawaelectric/me-d101.xml \
 	config/namron/1402756.xml \
 	config/nexia/db100z.xml \
+	config/nexia/th100nx.xml \
 	config/nodon/asp3100SmartPlug.xml \
 	config/nodon/crc3100OctanRemote.xml \
 	config/nodon/crc360xSofremote.xml \
@@ -1174,6 +1202,7 @@ DISTFILES =	.gitignore \
 	config/shenzen_neo/nas-wr01z.xml \
 	config/shenzen_neo/nas-wr01ze.xml \
 	config/shenzen_neo/nas-ws02z.xml \
+	config/shenzen_saykey/sk-3007-05.xml \
 	config/simon/10002034-13X.xml \
 	config/simon/10002041-13X.xml \
 	config/smartthings/pgc401m.xml \
@@ -1184,6 +1213,8 @@ DISTFILES =	.gitignore \
 	config/steinel/rs-led-d2.xml \
 	config/steinel/xled-home-2.xml \
 	config/stelpro/stzw402.xml \
+	config/sunricher/srzv9001k12dimz4.xml \
+	config/sunricher/srzv9001k12dimz5.xml \
 	config/sunricher/srzv9001k8.xml \
 	config/sunricher/srzv9001t4dimeu.xml \
 	config/sunricher/srzv9003t4rgbweu.xml \
@@ -1200,6 +1231,8 @@ DISTFILES =	.gitignore \
 	config/thermofloor/heatit-zdim.xml \
 	config/thermofloor/heatit021.xml \
 	config/thermofloor/heatit056.xml \
+	config/thermofloor/heatit058.xml \
+	config/thermofloor/heatit20a.xml \
 	config/thermofloor/heatitz8.xml \
 	config/trane/TZEMT400AB32MAA.xml \
 	config/trane/TZEMT400BB32MAA.xml \
@@ -1262,6 +1295,7 @@ DISTFILES =	.gitignore \
 	config/widom/WSP.xml \
 	config/widom/WTED.xml \
 	config/wink/wnk-mot1.xml \
+	config/wink/wnk-sir1p.xml \
 	config/zipato/MiniKeypad.xml \
 	config/zipato/RGBBulb.xml \
 	config/zipato/RGBBulb2.xml \

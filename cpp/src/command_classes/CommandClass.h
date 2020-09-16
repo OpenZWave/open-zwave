@@ -203,8 +203,8 @@ namespace OpenZWave
 
 					// Helper methods
 					string ExtractValue(uint8 const* _data, uint8* _scale, uint8* _precision, uint8 _valueOffset = 1) const;
-					int32 decodeDuration(uint8 data) const;
-					uint8 encodeDuration(int32 seconds) const;
+					uint32 decodeDuration(uint8 data) const;
+					uint8 encodeDuration(uint32 seconds) const;
 					/**
 					 *  Append a floating-point value to a message.
 					 *  \param _msg The message to which the value should be appended.
