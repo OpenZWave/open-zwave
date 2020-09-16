@@ -3,7 +3,7 @@
     <MetaDataItem name="Name">RGBW Color LED Dimmer</MetaDataItem>
     <MetaDataItem name="Description">Good Way RGBW module is used to control RGB/RGBW strips and LED strips or bulbs to create countless colour options and has 6 special scene effects. Its extremely small size allows for easy installation behind wall sockets and switches. Controlled devices may be powered by 12 or 24 VDC.</MetaDataItem>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0068:000b:0003</MetaDataItem>
-    <MetaDataItem name="ProductPage">http://www.goodway.com.tw/product3.asp?listid=9&ampid=26&ampsubid=102&amppid=1168&amptypeid=</MetaDataItem>
+    <MetaDataItem name="ProductPage">http://www.goodway.com.tw/product3.asp?listid=9&amp;id=26&amp;subid=102&ampp;id=1168&amp;typeid=</MetaDataItem>
     <MetaDataItem name="ProductSupport"></MetaDataItem>
     <MetaDataItem name="ProductPic">images/goodway/td14010.png</MetaDataItem>
     <MetaDataItem name="ProductManual"></MetaDataItem>
