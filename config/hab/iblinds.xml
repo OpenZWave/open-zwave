@@ -50,7 +50,7 @@
   <CommandClass id="133">
     <Instance index="1" />
     <Associations num_groups="1">
-      <Group index="1" max_associations="5" label="LifeLine" auto="true">
+      <Group index="1" max_associations="5" label="LifeLine">
         <Node id="1" />
       </Group>
     </Associations>
