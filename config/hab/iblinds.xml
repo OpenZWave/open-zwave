@@ -47,7 +47,7 @@
       <Item label="Increase calibration torque by 1 factor" value="5" />
     </Value>
   </CommandClass>
-  <CommandClass id="133" name="COMMAND_CLASS_ASSOCIATION" version="1" request_flags="2">
+  <CommandClass id="133">
     <Instance index="1" />
     <Associations num_groups="1">
       <Group index="1" max_associations="5" label="LifeLine" auto="true">
