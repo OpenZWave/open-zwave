@@ -21,13 +21,13 @@
     </ChangeLog>
   </MetaData>
   <!-- Configuration Command Class - All Configuration Parameters should be entered into the section below -->
-  <CommandClass id="37" name="COMMAND_CLASS_SWITCH_BINARY">
+  <CommandClass id="37">
           <Compatibility>
                   <NoRefreshAfterSet index="0">true</NoRefreshAfterSet>
           </Compatibility>
           <Instance index="1" />
   </CommandClass>
-  <CommandClass id="38" name="COMMAND_CLASS_SWITCH_MULTILEVEL">
+  <CommandClass id="38">
           <Compatibility>
                   <NoRefreshAfterSet index="0">true</NoRefreshAfterSet>
           </Compatibility>
@@ -36,7 +36,7 @@
                   <Help>The Current Tilt Position of the Blind</Help>
           </Value>
   </CommandClass>
-  <CommandClass id="112" name="COMMAND_CLASS_CONFIGURATION" version="1">
+  <CommandClass id="112" version="1">
     <Instance index="1" />
     <Value type="list" genre="config" instance="1" index="1" label="Auto Calibration Torque" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="1" max="5" vindex="0" size="1">
       <Help>Changing the Auto Calibration torque will allow you to change the initial calibration torque.</Help>
