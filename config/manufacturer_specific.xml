@@ -1910,7 +1910,7 @@
   <Manufacturer id="0147" name="Z-Wave.Me">
     <Product id="0003" name="RaZberry Controller" type="0002"/>
     <Product id="0001" name="RaZberry Controller ZWave+" type="0400"/>
-    <Product id="0002" name="RaZberry Controller 2016 ZWave+" type="0400"/>
+    <Product config="zwave.me/razberry.xml" id="0002" name="RaZberry Controller 2016 ZWave+" type="0400"/>
   </Manufacturer>
   <Manufacturer id="024D" name="Z-works"></Manufacturer>
   <Manufacturer id="024E" name="zConnect"></Manufacturer>
