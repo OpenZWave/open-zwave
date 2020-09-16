@@ -54,13 +54,13 @@
 	<!-- Measure Level -->
 	<Value genre="config" index="1" label="Measure Level" size="1" type="byte" value="60" min="1" max="127" units="sec">
 		<Help>How often the value is measured(example: if value=60, the sensor value is measured every 60 seconds)</Help>
-    </Value>
+    	</Value>
     
 	<!-- CO² set point -->
-	<Value genre="config" index="2" label="CO² set point" size="2" type="short" value="1000" min="1" max="32767"units="PPM" >
+	<Value genre="config" index="2" label="CO² set point" size="2" type="short" value="1000" min="1" max="32767" units="PPM">
 		<Help>Set point CO2: Used in ‘automatic mode’. (button 4) if the device is a CO2 sensor. The CO2 level in a room is a good indication of the air quality in this room. 
 			When the CO2 level is above this set point, the room needs more ventilation. Consequently, the CO2 sensor will open the associated grating unit.</Help>
-    </Value>
+    	</Value>
 
 	<!-- Humidity set point -->
 	<Value genre="config" index="3" label="CO² set point" size="1" type="byte" value="70" min="1" max="127" units="%">
