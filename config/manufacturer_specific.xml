@@ -498,7 +498,9 @@
     <Product config="ecolink/floodfreeze.xml" id="0010" name="Flood/Freeze Sensor" type="0005"/>
     <Product config="ecolink/firefighter.xml" id="000f" name="FireFighter" type="0005"/>
   </Manufacturer>
-  <Manufacturer id="0157" name="EcoNet Controls"></Manufacturer>
+  <Manufacturer id="015d" name="EcoNet Controls">
+    <Product config="econet/ezw1204.xml" id="c41c" name="EZW1204 Water Leak Sensor" type="2003"/>
+  </Manufacturer>
   <Manufacturer id="039D" name="ECS"></Manufacturer>
   <Manufacturer id="031F" name="Eelectron SpA"></Manufacturer>
   <Manufacturer id="026B" name="Ei Electronics"></Manufacturer>
@@ -757,6 +759,7 @@
     <Product config="fortrezz/wwa02.xml" id="0109" name="WWA-02 Water and Temperature Alarm" type="0023"/>
     <Product id="0216" name="WWA-01AA Wireless Water and Freeze Alarm" type="0053"/>
     <Product config="fortrezz/wv01.xml" id="020c" name="WV-01 Automated Water Shut-Off Valve" type="0213"/>
+    <Product config="fortrezz/wv01.xml" id="aa06" name="WV-01 Automated Water Shut-Off Valve" type="0233"/>
     <Product config="fortrezz/wv01.xml" id="0300" name="WV-01 Automated Water Shut-Off Valve" type="0241"/>
     <Product config="fortrezz/wv01.xml" id="0216" name="WV-01 Automated Water Shut-Off Valve" type="0243"/>
     <Product config="fortrezz/ssa2.xml" id="0109" name="SSA1 / SSA2 - Siren/Strobe Light Alarm" type="0311"/>
