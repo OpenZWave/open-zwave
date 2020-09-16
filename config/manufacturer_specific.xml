@@ -1760,7 +1760,7 @@
   </Manufacturer>
   <Manufacturer id="0080" name="Vero Duco">
     <Product config="duco/DucoBox.xml" id="0001" name="DucoBox Motor" type="0003"/>
-    <Product config="duco/Ducotronic_CO-RH sensor.xml" id="0001" name="DucoBox CO/RH Sensor" type="0004"/> 
+    <Product config="duco/Ducotronic_CO_RH sensor.xml" id="0001" name="DucoBox CO/RH Sensor" type="0004"/> 
   </Manufacturer>
   <Manufacturer id="0237" name="Vestel Elektronik Ticaret ve Sanayi"></Manufacturer>
   <Manufacturer id="0053" name="Viewsonic"></Manufacturer>
