@@ -133,11 +133,10 @@
 		<Help>	CO2 delta set point: not available in RH sensor</Help>
     </Value>
 	
-</CommandClass>
+	</CommandClass>
     
     <CommandClass id="49"> <!-- Multilevel Sensor -->
-	
-    </CommandClass>
+	</CommandClass>
   
     <CommandClass id="114"> <!-- Manufacturer Specific -->
     </CommandClass>
