@@ -31,7 +31,7 @@
 	<CommandClass id="32"> <!-- Basic -->
 	</CommandClass>
   
-	<CommandClass id="96" mapping="endpoints"> <!-- Multi Channel -->
+	<CommandClass id="96"> <!-- Multi Channel -->
 	</CommandClass>
   
 	<CommandClass id="133"> <!-- Association -->
