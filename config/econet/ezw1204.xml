@@ -5,8 +5,8 @@
 Z-Wave Plus technology allows this sensor to communicate with any Z-Wave enabled network and controller so notifications can be sent to your smartphone or other enabled smart devices. Its compatible with most popular Smart Home systems including Samsung’s SmartThings, Wink, Vera and Homeseer. It has a wireless range of 30 meters in a clear line of sight.
 </MetaDataItem>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/015D:C41C:2003</MetaDataItem>
-    <MetaDataItem name="ProductPage"><https://www.econetshop.com/products.html></MetaDataItem>
-    <MetaDataItem name="ProductSupport"><https://www.econetshop.com/support></MetaDataItem>
+    <MetaDataItem name="ProductPage">https://www.econetshop.com/products.html</MetaDataItem>
+    <MetaDataItem name="ProductSupport">https://www.econetshop.com/support</MetaDataItem>
     <MetaDataItem name="ProductPic">images/econet/ezw1204.png</MetaDataItem>
     <MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&filename=MarketCertificationFiles/2748/EZW1204-Manual-Guide%C2%A0171220.pdf</MetaDataItem>
     <MetaDataItem name="WakeupDescription">Open the shell, wake up immediately</MetaDataItem>
@@ -25,59 +25,13 @@ Note: this should only be used in the event your network's primary controller is
   </MetaData>
   <!-- Configuration Command Class - All Configuration Parameters should be entered into the section below -->
   <CommandClass id="112">
-    <Value genre="config" index="1" label="Total Alarm Duration" max="255" min="0" size="1" type="byte" units="Minutes" value="120">
-      <Help>
-        This parameter sets the total amount of time the Leak Sensor will beep and light its LED in the event of a leak.
-        0 Leak Sensor beeps until water is removed.
-        1 to 255 in Minutes.
-      </Help>
-    </Value>
-    <Value genre="config" index="2" label="Mute Time" max="255" min="1" size="1" type="byte" units="Minutes" value="1">
-      <Help>
-        This parameter defines the amount of time the Leak Sensor remains quiet between each Reminder Alarm.
-      </Help>
-    </Value>
-    <Value genre="config" index="3" label="Initial Alarm" max="255" min="10" size="1" type="byte" units="Seconds" value="60">
-      <Help>
-        This parameter sets the amount of time the Leak Sensor beeps before it is muted.
-      </Help>
-    </Value>
-    <Value genre="config" index="4" label="Reminder Alarm" max="255" min="5" size="1" type="byte" units="Seconds" value="5">
-      <Help>
-        This parameter sets the length of each beep after the Initial Alarm.
-      </Help>
-    </Value>
-    <Value genre="config" index="5" label="Audible Alarm" max="1" min="0" size="1" type="list" value="1">
-      <Help>
-        This parameter enables or disables the audible alarm (beeping) functionality of the Leak Sensor.
-      </Help>
-      <Item label="Disable" value="0"/>
-      <Item label="Enable" value="1"/>
-    </Value>
-    <Value genre="config" index="6" label="Water Detection" max="1" min="0" size="1" type="list" value="1">
-      <Help>
-        This parameter enables or disables the Leak Sensor.
-        If disabled, the device will not respond in any way to detected leaks.
-      </Help>
-      <Item label="Disable" value="0"/>
-      <Item label="Enable" value="1"/>
-    </Value>
-    <Value genre="config" index="7" label="Basic Set Level" max="255" min="0" size="1" type="byte" value="255">
-      <Help>
-        This parameter defines the value sent by the BASIC_SET command to Association Group 2.
-        0 Turn Off Device.
-        1 to 99 Set Device to Value.
-        255 Turn On Device.
-      </Help>
-    </Value>
   </CommandClass>
   <!-- Association Groups -->
   <CommandClass id="133">
     <Associations num_groups="4">
       <Group index="1" label="Lifeline" max_associations="5"/>
-      <Group index="2" label="Basic Set" max_associations="5"/>
-      <Group index="3" label="Notification Report" max_associations="5"/>
-      <Group index="4" label="Sensor Binary Report" max_associations="5"/>
+      <Group index="2" label="Water leak send basic Set" max_associations="5"/>
+      <Group index="3" label="Cover plate open send basic Set" max_associations="5"/>
     </Associations>
   </CommandClass>
 </Product>
