@@ -8,7 +8,7 @@ Z-Wave Plus technology allows this sensor to communicate with any Z-Wave enabled
     <MetaDataItem name="ProductPage">https://www.econetshop.com/products.html</MetaDataItem>
     <MetaDataItem name="ProductSupport">https://www.econetshop.com/support</MetaDataItem>
     <MetaDataItem name="ProductPic">images/econet/ezw1204.png</MetaDataItem>
-    <MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&filename=MarketCertificationFiles/2748/EZW1204-Manual-Guide%C2%A0171220.pdf</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&amp;filename=MarketCertificationFiles/2748/EZW1204-Manual-Guide%C2%A0171220.pdf</MetaDataItem>
     <MetaDataItem name="WakeupDescription">Open the shell, wake up immediately</MetaDataItem>
     <MetaDataItem name="InclusionDescription">Press the inclusion switch 3 or more times rapidly (within 0.5s).  It is recommended to keep the EZW1204 within 1M/3ft of the controller.
 (Set controller to inclusion mode first)</MetaDataItem>
