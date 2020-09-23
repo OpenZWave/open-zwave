@@ -1,4 +1,4 @@
-<Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
     <!-- Please refer to https://github.com/OpenZWave/open-zwave/wiki/Adding-Devices for instructions -->
     <MetaData>
         <MetaDataItem name="Name">Building 36 Intelligent Thermostat</MetaDataItem>
@@ -14,6 +14,7 @@
         <MetaDataItem id="0001" name="Identifier" type="0001">B36-T10</MetaDataItem>
         <ChangeLog>
             <Entry author="bachya1208@gmail.com" date="08 September 2020" revision="1">Added device</Entry>
+            <Entry author="nechry@gmail.com" date="23 September 2020" revision="2">Bump revision</Entry>
         </ChangeLog>
     </MetaData>
     <CommandClass id="32">
