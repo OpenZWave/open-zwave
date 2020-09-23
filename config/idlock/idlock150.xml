@@ -55,7 +55,7 @@ FACTORY RESET DOOR LOCK FIRMWARE:
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="2">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2780/xml</Entry>
       <Entry author="Eirik Hodne" date="25 Aug 2019" revision="3">Update as per the 1.4.9/1.6 firmware specification</Entry>
-      <Entry date="09 Sep 2020" revision="4">Update as per the 1.5.6/1.6 firmware specification</Entry>
+      <Entry author="into-void" date="09 Sep 2020" revision="4">Update as per the 1.5.6/1.6 firmware specification</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration Parameters -->
