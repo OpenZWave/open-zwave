@@ -880,7 +880,9 @@ DISTFILES =	.gitignore \
 	config/images/sunricher/srzv9001k12dimz5.png \
 	config/images/sunricher/srzv9001k8.png \
 	config/images/sunricher/srzv9001t4dimeu.png \
+	config/images/sunricher/srzv9001tccteu.png \
 	config/images/sunricher/srzv9003t4rgbweu.png \
+	config/images/sunricher/srzv9101facct.png \
 	config/images/sunricher/srzv9101sachpeu.png \
 	config/images/sunricher/zv9101.png \
 	config/images/swiid/swiidinter.png \
@@ -1225,9 +1227,11 @@ DISTFILES =	.gitignore \
 	config/sunricher/srzv9001k12dimz5.xml \
 	config/sunricher/srzv9001k8.xml \
 	config/sunricher/srzv9001t4dimeu.xml \
+	config/sunricher/srzv9001tccteu.xml \
 	config/sunricher/srzv9003t4rgbweu.xml \
 	config/sunricher/srzv9101sachpeu.xml \
 	config/sunricher/zv9101.xml \
+	config/sunricher/zv9101fa.xml \
 	config/swiid/swiidinter.xml \
 	config/swiid/swiidplug.xml \
 	config/technisat/03009496.xml \
