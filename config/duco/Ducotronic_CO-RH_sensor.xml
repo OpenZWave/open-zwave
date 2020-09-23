@@ -3,8 +3,17 @@
 	xmlns="https://github.com/OpenZWave/open-zwave">
 	<!-- Please refer to https://github.com/OpenZWave/open-zwave/wiki/Adding-Devices for instructions -->
 	<MetaData>
-		<MetaDataItem name="Name">DucoBox</MetaDataItem>
-		<MetaDataItem name="Description">The ducBox is a Z-wave controlled mechenical ventilation unit</MetaDataItem>
+		<MetaDataItem name="Name">Duco CO2/RH sensor</MetaDataItem>
+		<MetaDataItem name="Description">The DUCO CO2 sensor measures the indoor CO2 levels and temperature. This is a good indication for the indoor air quality.Duco Tronic System 
+		The Duco Tronic System is a demand-driven natural ventilation system that always provides a balance between controlled natural ventilation and a central mechanical extraction. 
+		The demand for ventilation is determined based on air quality (CO 2 ) in the living spaces, the relative humidity (RH) in the 'wet' rooms and outdoor temperature readings. 
+		These values ​​are measured by means of various sensors in different rooms. The sensors communicate wirelessly via the Z-wave protocol with the electronically controlled by the air supply 
+		grilles and DucoBox the mechanical removal of the polluted and humid air controls. This electronic control ensures that only where a ventilation when needed, so the energy loss is limited. 
+		Moreover, the Duco Tronic System takes into account the temperature and adjusts to the weather conditions. If it gets colder outside, it will automatically schedule a higher CO 2 target gain. T
+		his opens it progresses less rapidly and less far. When the weather warms up, the opposite is true. In extreme heat is ventilated only by those grids where the lowest temperature measured, for example, 
+		on the shady side of the building. The measurement of the outside temperature is done by means of a sensor located in the control unit of the air vents situated. Thanks to the electronically controlled grids 
+		within the 'Duco Tronic System requires the user to do anything. The system ventilates automatically . Still, the resident boss and he may, if necessary or desired, the air supply and exhaust manually. 
+		Over time, the system automatically switches back to the most optimal position. All components, sensors, DucoBox and grills are aesthetically designed, fast and easy to install, use and maintenance.</MetaDataItem>
 		<MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/XXXX:XXXX:XXXX</MetaDataItem>
 		<MetaDataItem name="ProductPage">https://www.duco.eu/nl-nl-gearchiveerde-systemen</MetaDataItem>
 		<MetaDataItem name="ProductSupport">https://www.duco.eu/nl-nl-gearchiveerde-systemen</MetaDataItem>
@@ -14,9 +23,9 @@
 		<MetaDataItem name="InclusionDescription">Press all 4 buttons to enter installer mode. Next pres button 1 to add the device to a z-wave network.</MetaDataItem>
 		<MetaDataItem name="ExclusionDescription">			<!-- Short Description on how to exclude the device --></MetaDataItem>
 		<MetaDataItem name="ResetDescription">Press all 4 buttons to enter installer mode. Next press and hold button 1 and 2 to remove the device from a z-wave network.</MetaDataItem>
-		<MetaDataItem id="0001" name="ZWProductPage" type="0003">https://products.z-wavealliance.org/products/49</MetaDataItem>
-		<MetaDataItem id="0001" name="FrequencyName" type="0003">CEPT (Europe)</MetaDataItem>
-		<MetaDataItem id="0001" name="Identifier" type="0003">00001801/G12809</MetaDataItem>
+		<MetaDataItem id="0001" name="ZWProductPage" type="0004">https://products.z-wavealliance.org/products/49</MetaDataItem>
+		<MetaDataItem id="0001" name="FrequencyName" type="0004">CEPT (Europe)</MetaDataItem>
+		<MetaDataItem id="0001" name="Identifier" type="0004">00001801/G12809</MetaDataItem>
 		<ChangeLog>
 			<Entry author="Mark van Kemenade - mark@kemdo.nl" date="29 Januari 2020" revision="1">Created the config file from scratch based on information from https://products.z-wavealliance.org/products/49 and http://devel.pepper1.net/zwavedb/device/156</Entry>
 			<Entry author="Jean-Francois Auger" date="23 Sept 2020" revision="2">Remove auto on group 1, cleanup MetaDataItem</Entry>
@@ -41,21 +50,24 @@
 			<!-- This is the RH DELTA group. When the RH has changed more than the Delta RH value, then the sensor will send a MULTI SENSOR REPORT with the RH value to all the nodes in the group. -->
 		</Associations>
 	</CommandClass>
+
 	<CommandClass id="112">		<!-- Configuration -->
+
 		<!-- Measure Level -->
 		<Value genre="config" index="1" label="Measure Level" size="1" type="byte" value="60" min="1" max="127" units="sec">
 			<Help>How often the value is measured(example: if value=60, the sensor value is measured every 60 seconds)</Help>
 		</Value>
+
 		<!-- CO² set point -->
 		<Value genre="config" index="2" label="CO² set point" size="2" type="short" value="1000" min="1" max="32767" units="PPM">
-			<Help>	Set point CO2: Used in ‘automatic mode’. (button 4) if the device is a CO2 sensor. The CO2 level in a room is a good indication of the air quality in this room. 
+			<Help>Set point CO2: Used in ‘automatic mode’. (button 4) if the device is a CO2 sensor. The CO2 level in a room is a good indication of the air quality in this room. 
 			When the CO2 level is above this set point, the room needs more ventilation. Consequently, the CO2 sensor will open the associated grating unit.</Help>
 		</Value>
 
 		<!-- Humidity set point -->
 		<Value genre="config" index="3" label="CO² set point" size="1" type="byte" value="70" min="1" max="127" units="%">
-			<Help>	Set point CO2: Used in ‘automatic mode’. (button 4) if the device is a CO2 sensor. The CO2 level in a room is a good indication of the air quality in this room. 
-			When the CO2 level is above this set point, the room needs more ventilation. Consequently, the CO2 sensor will open the associated grating unit.</Help>
+			<Help>Set point RH: Used in ‘automatic mode’. (button 4) if the device is a humidity sensor. The humidity level in a room is a good indication of the air quality in this room. 
+			When the RH level is above this set point, the room needs more ventilation. Consequently, the RH sensor will open the associated grating unit.</Help>
 		</Value>
 
 		<!-- Button 1 -->
@@ -109,19 +121,20 @@
 		</Value>
 
 		<!-- CO2 high setpoint -->
-		<Value genre="config" index="14" label="CO2 high setpoint" size="2" type="short" value="0" min="1" max="32767" units="%">
+		<Value genre="config" index="14" label="CO2 high setpoint" size="2" type="short" value="0" min="1" max="32767" units="PPM">
 			<Help>CO2 high set point: not available in RH sensor</Help>
 		</Value>
 
 		<!-- CO2 low setpoint -->
-		<Value genre="config" index="15" label="CO2 low setpoint" size="2" type="short" value="0" min="1" max="32767" units="%">
+		<Value genre="config" index="15" label="CO2 low setpoint" size="2" type="short" value="0" min="1" max="32767" units="PPM">
 			<Help>CO2 low set point: not available in RH sensor</Help>
 		</Value>
 
 		<!-- CO2 delta setpoint -->
-		<Value genre="config" index="16" label="CO2 delta setpoint" size="2" type="short" value="500" min="1" max="32767" units="%">
+		<Value genre="config" index="16" label="CO2 delta setpoint" size="2" type="short" value="500" min="1" max="32767" units="PPM">
 			<Help>	CO2 delta set point: not available in RH sensor</Help>
 		</Value>
+
 	</CommandClass>
 
 </Product>
