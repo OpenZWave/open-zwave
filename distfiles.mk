@@ -128,6 +128,7 @@ DISTFILES =	.gitignore \
 	config/assa_abloy/nexTouch.xml \
 	config/august/asl-03.xml \
 	config/buffalo/hw-100v15a-zw.xml \
+	config/building36/b36-t10.xml \
 	config/comfort/ucm.xml \
 	config/config-template.xml \
 	config/connecthome/ch-201.xml \
@@ -266,6 +267,7 @@ DISTFILES =	.gitignore \
 	config/fibaro/fgpb101.xml \
 	config/fibaro/fgr221.xml \
 	config/fibaro/fgr223.xml \
+	config/fibaro/fgrgbw442.xml \
 	config/fibaro/fgrgbwm441.xml \
 	config/fibaro/fgrm222.xml \
 	config/fibaro/fgs211.xml \
@@ -318,6 +320,7 @@ DISTFILES =	.gitignore \
 	config/ge/28169-plugin-switch.xml \
 	config/ge/45604.xml \
 	config/ge/46201-switch.xml \
+	config/ge/46202-switch.xml \
 	config/ge/46203-dimmer.xml \
 	config/ge/46204-dimmer-toggle.xml \
 	config/ge/dimmer.xml \
@@ -381,6 +384,8 @@ DISTFILES =	.gitignore \
 	config/homeseer/hsm100.xml \
 	config/homeseer/hsm200.xml \
 	config/homeseer/ztroller.xml \
+	config/honeywell/2681-plugin-dimmer.xml \
+	config/honeywell/3830-zw3107.xml \
 	config/honeywell/39348-ZW4005.xml \
 	config/honeywell/39348-zw4008.xml \
 	config/honeywell/39351-ZW3005.xml \
@@ -496,6 +501,7 @@ DISTFILES =	.gitignore \
 	config/images/assa_abloy/nexTouch.png \
 	config/images/august/asl-03.png \
 	config/images/buffalo/hw-100v15a-zw.png \
+	config/images/building36/b36-t10.png \
 	config/images/comfort/ucm.png \
 	config/images/connecthome/CH_201.png \
 	config/images/cooper/RF9501.png \
@@ -596,6 +602,7 @@ DISTFILES =	.gitignore \
 	config/images/fibaro/fgmszw5.png \
 	config/images/fibaro/fgpb101.png \
 	config/images/fibaro/fgr223.png \
+	config/images/fibaro/fgrgbw442.png \
 	config/images/fibaro/fgrgbwm441.png \
 	config/images/fibaro/fgs213.png \
 	config/images/fibaro/fgs223.png \
@@ -640,6 +647,7 @@ DISTFILES =	.gitignore \
 	config/images/ge/28169-plugin-switch.png \
 	config/images/ge/45604.png \
 	config/images/ge/46201-switch.png \
+	config/images/ge/46202-switch.png \
 	config/images/ge/46203-dimmer.png \
 	config/images/ge/46204-dimmer-toggle.png \
 	config/images/ge/dimmer.png \
@@ -691,6 +699,8 @@ DISTFILES =	.gitignore \
 	config/images/homeseer/hs-ws100plus.png \
 	config/images/homeseer/hs-ws200plus.png \
 	config/images/homeseer/hsm200.png \
+	config/images/honeywell/2681-plugin-dimmer.png \
+	config/images/honeywell/3830-zw3107.png \
 	config/images/honeywell/39348-ZW4005.png \
 	config/images/honeywell/39348-ZW4008.png \
 	config/images/honeywell/39351-ZW3005.png \
@@ -719,6 +729,7 @@ DISTFILES =	.gitignore \
 	config/images/inovelli/lzw30.png \
 	config/images/inovelli/lzw31-sn.png \
 	config/images/inovelli/lzw31.png \
+	config/images/inovelli/lzw36.png \
 	config/images/inovelli/lzw40.png \
 	config/images/inovelli/lzw41.png \
 	config/images/inovelli/lzw42.png \
@@ -854,7 +865,9 @@ DISTFILES =	.gitignore \
 	config/images/shenzen_neo/nas-pd01z.png \
 	config/images/shenzen_neo/nas-pd02z.png \
 	config/images/shenzen_neo/nas-wr01z.png \
+	config/images/shenzen_neo/nas-wr01ze.png \
 	config/images/shenzen_neo/nas-ws02z.png \
+	config/images/shenzen_saykey/SK-3007-05.png \
 	config/images/simon/10002034-13X.png \
 	config/images/smartthings/pgc401m.png \
 	config/images/smartthings/sth-eth200.png \
@@ -863,6 +876,8 @@ DISTFILES =	.gitignore \
 	config/images/steinel/rs-led-d2.png \
 	config/images/steinel/xled-home-2.png \
 	config/images/stelpro/stzw402.png \
+	config/images/sunricher/srzv9001k12dimz4.png \
+	config/images/sunricher/srzv9001k12dimz5.png \
 	config/images/sunricher/srzv9001k8.png \
 	config/images/sunricher/srzv9001t4dimeu.png \
 	config/images/sunricher/srzv9003t4rgbweu.png \
@@ -878,6 +893,7 @@ DISTFILES =	.gitignore \
 	config/images/thermofloor/Heatit-Z-Push-button-8-white.png \
 	config/images/thermofloor/heatit021.png \
 	config/images/thermofloor/heatit056.png \
+	config/images/thermofloor/heatit058.png \
 	config/images/thermofloor/heatit20a.png \
 	config/images/thermofloor/heatit_zdim.png \
 	config/images/trane/TZEMT400AB32MAA.png \
@@ -998,6 +1014,7 @@ DISTFILES =	.gitignore \
 	config/kaipule/im20.xml \
 	config/kaipule/ix32.xml \
 	config/kwikset/888.xml \
+	config/kwikset/910.xml \
 	config/kwikset/914c.xml \
 	config/kwikset/916.xml \
 	config/kwikset/smartcode.xml \
@@ -1193,6 +1210,7 @@ DISTFILES =	.gitignore \
 	config/shenzen_neo/nas-wr01z.xml \
 	config/shenzen_neo/nas-wr01ze.xml \
 	config/shenzen_neo/nas-ws02z.xml \
+	config/shenzen_saykey/sk-3007-05.xml \
 	config/simon/10002034-13X.xml \
 	config/simon/10002041-13X.xml \
 	config/smartthings/pgc401m.xml \
@@ -1203,6 +1221,8 @@ DISTFILES =	.gitignore \
 	config/steinel/rs-led-d2.xml \
 	config/steinel/xled-home-2.xml \
 	config/stelpro/stzw402.xml \
+	config/sunricher/srzv9001k12dimz4.xml \
+	config/sunricher/srzv9001k12dimz5.xml \
 	config/sunricher/srzv9001k8.xml \
 	config/sunricher/srzv9001t4dimeu.xml \
 	config/sunricher/srzv9003t4rgbweu.xml \
@@ -1219,6 +1239,7 @@ DISTFILES =	.gitignore \
 	config/thermofloor/heatit-zdim.xml \
 	config/thermofloor/heatit021.xml \
 	config/thermofloor/heatit056.xml \
+	config/thermofloor/heatit058.xml \
 	config/thermofloor/heatit20a.xml \
 	config/thermofloor/heatitz8.xml \
 	config/trane/TZEMT400AB32MAA.xml \
