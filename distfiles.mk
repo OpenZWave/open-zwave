@@ -128,6 +128,7 @@ DISTFILES =	.gitignore \
 	config/assa_abloy/nexTouch.xml \
 	config/august/asl-03.xml \
 	config/buffalo/hw-100v15a-zw.xml \
+	config/building36/b36-t10.xml \
 	config/comfort/ucm.xml \
 	config/config-template.xml \
 	config/connecthome/ch-201.xml \
@@ -500,6 +501,7 @@ DISTFILES =	.gitignore \
 	config/images/assa_abloy/nexTouch.png \
 	config/images/august/asl-03.png \
 	config/images/buffalo/hw-100v15a-zw.png \
+	config/images/building36/b36-t10.png \
 	config/images/comfort/ucm.png \
 	config/images/connecthome/CH_201.png \
 	config/images/cooper/RF9501.png \

@@ -348,7 +348,9 @@
   <Manufacturer id="0145" name="Buffalo">
     <Product config="buffalo/hw-100v15a-zw.xml" id="0004" name="HW-100V15A-ZW Measure Power Monitor" type="0001"/>
   </Manufacturer>
-  <Manufacturer id="0190" name="Building 36 Technologies"></Manufacturer>
+  <Manufacturer id="0190" name="Building 36 Technologies">
+    <Product config="building36/b36-t10.xml" id="0001" name="B36-T10" type="0001"/>
+  </Manufacturer>
   <Manufacturer id="0396" name="Bulcraft Control"></Manufacturer>
   <Manufacturer id="0026" name="BuLogics"></Manufacturer>
   <Manufacturer id="0398" name="Calix"></Manufacturer>
