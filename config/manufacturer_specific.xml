@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ManufacturerSpecificData Revision="115" xmlns="https://github.com/OpenZWave/open-zwave">
+<ManufacturerSpecificData Revision="116" xmlns="https://github.com/OpenZWave/open-zwave">
   <Manufacturer id="0028" name="2B Electronics"></Manufacturer>
   <Manufacturer id="0098" name="2GIG Technologies">
     <Product config="2gig/ct50e.xml" id="015e" name="CT50e Thermostat" type="3200"/>
@@ -858,6 +858,7 @@
   </Manufacturer>
   <Manufacturer id="0287" name="HAB Home Intelligence LLC">
     <Product type="0003" id="000D" name="iblinds V2" config="hab/iblindsV2.xml"/>
+    <Product type="0004" id="0071" name="iblinds V3" config="hab/iblindsV3.xml"/>
   </Manufacturer>
   <Manufacturer id="030D" name="Hampoo"></Manufacturer>
   <Manufacturer id="040A" name="Hangzhou Hikvision Digital Technology Co. Ltd"></Manufacturer>
