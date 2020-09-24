@@ -271,14 +271,12 @@
     <Product config="assa_abloy/TouchDeadbolt.xml" id="0209" name="Yale Key Free Touchscreen Deadbolt (YRD240)" type="0002"/>
     <Product config="assa_abloy/TouchDeadbolt.xml" id="0600" name="Yale Key Free Touchscreen Deadbolt (YRD446)" type="8002"/>
     <Product config="assa_abloy/TouchDeadbolt.xml" id="1000" name="Yale Key Free Touchscreen Deadbolt (YRD446)" type="8002"/>
-    <Product config="assa_abloy/TouchDeadbolt.xml" id="0800" name="Yale Touchscreen Deadbolt (YRD120)" type="0002"/>
     <Product config="assa_abloy/PushButtonLever.xml" id="0409" name="Yale Push Button Lever Lock (YRL210)" type="0003"/>
     <Product config="assa_abloy/PushButtonLever.xml" id="0800" name="Yale Push Button Lever Lock (YRL210)" type="0003"/>
     <Product config="assa_abloy/PushButtonDeadbolt.xml" id="0000" name="Yale Push Button Deadbolt (YRD210)" type="0004"/>
     <Product config="assa_abloy/PushButtonDeadbolt.xml" id="0209" name="Yale Push Button Deadbolt (YRD210)" type="0004"/>
     <Product config="assa_abloy/PushButtonDeadbolt.xml" id="aa00" name="Yale Push Button Deadbolt (YRD210)" type="0004"/>
     <Product config="assa_abloy/PushButtonDeadbolt.xml" id="0600" name="Yale Push Button Deadbolt (YRD216)" type="8004"/>
-    <Product config="assa_abloy/PushButtonDeadbolt.xml" id="0800" name="Yale Push Button Deadbolt (YRD110)" type="0004"/>
     <Product config="assa_abloy/TouchDeadbolt.xml" id="0000" name="Yale Key Free Touchscreen Deadbolt (YRD240)" type="0006"/>
     <Product config="assa_abloy/KeyfreeConnected.xml" id="0000" name="Yale Keyless Connected Smart Lock (YSL)" type="0007"/>
     <Product config="assa_abloy/KeyfreeConnected.xml" id="9230" name="Yale Keyless Connected Smart Lock (YSL)" type="1bef"/>
@@ -288,6 +286,8 @@
     <Product config="assa_abloy/KeyfreeConnected-plus.xml" id="0000" name="Yale Keyfree Connected Smart Lock (YKFCON)" type="0600"/>
     <Product config="assa_abloy/nexTouch.xml" id="0b00" name="Yale nexTouch Wireless Push Button (NTB610)" type="8001"/>
     <Product config="assa_abloy/nexTouch.xml" id="0b00" name="Yale nexTouch Wireless Push Button (NTB620)" type="8003"/>
+    <Product config="assa_abloy/yrd1x0.xml" id="0800" name="YRD110 Push Button Deadbolt" type="0004"/>
+    <Product config="assa_abloy/yrd1x0.xml" id="0800" name="YRD120 Touchscreen Deadbolt" type="0002"/>
   </Manufacturer>
   <Manufacturer id="013B" name="AstraLink"></Manufacturer>
   <Manufacturer id="0134" name="AT&amp;T"></Manufacturer>
