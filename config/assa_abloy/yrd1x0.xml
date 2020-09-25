@@ -71,7 +71,7 @@ Please use this procedure only when the network primary controller is missing or
     <Value genre="config" index="7" instance="1" label="Shutdown Time" max="255" min="1" size="1" type="byte" units="seconds" value="60">
       <Help>number of seconds unit will be inoperable after number of wrong code entries is exceeded (60 = default)</Help>
     </Value>
-    <Value genre="config" index="8" instance="1" label="Operating Mode" max="2" min="0" size="1" type="list" value="1">
+    <Value genre="config" index="8" instance="1" label="Operating Mode" max="2" min="0" size="1" type="list" value="0">
       <Help>Normal Mode: Master code and all user codes enabled (default).
 Vacation Mode: Master code enabled, all user codes disabled.
 Privacy Mode: Master code and all user codes disabled.</Help>
