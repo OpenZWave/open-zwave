@@ -43,17 +43,17 @@ Please use this procedure only when the network primary controller is missing or
   <!-- Configuration Command Class - All Configuration Parameters should be entered into the section below -->
   <CommandClass id="112">
     <Value genre="config" index="1" instance="1" label="Audio Mode" size="1" type="list" value="3">
-      <Help>Disable the door sensor alarm function.</Help>
+      <Help>(On = default)</Help>
       <Item label="Off" value="1"/>
       <Item label="On" value="3"/>
     </Value>
     <Value genre="config" index="2" instance="1" label="Auto Relock" size="1" type="list" value="0">
-      <Help></Help>
+      <Help>(Off = default)</Help>
       <Item label="Off" value="0"/>
       <Item label="On" value="255"/>
     </Value>
     <Value genre="config" index="3" instance="1" label="Re-lock Time" max="180" min="5" size="1" type="byte" units="seconds" value="30">
-      <Help>seconds; after successful code entry and unit unlocks, it will automatically re-lock after specified time (30 = default value)</Help>
+      <Help>after successful code entry and unit unlocks, it will automatically re-lock after specified number of seconds (30 = default)</Help>
     </Value>
     <Value genre="config" index="4" instance="1" label="Wrong Code Entry Limit" max="7" min="1" size="1" type="list" value="5">
       <Help>
@@ -72,27 +72,25 @@ Please use this procedure only when the network primary controller is missing or
       <Help>number of seconds unit will be inoperable after number of wrong code entries is exceeded (60 = default)</Help>
     </Value>
     <Value genre="config" index="8" instance="1" label="Operating Mode" max="2" min="0" size="1" type="list" value="1">
-      <Help>
-			Normal Mode: Master code and all user codes enabled (default)
-			Vacation Mode: Master code enabled, all user codes disabled
-			Privacy Mode: Master code and all user codes disabled
-			</Help>
+      <Help>Normal Mode: Master code and all user codes enabled (default).
+Vacation Mode: Master code enabled, all user codes disabled.
+Privacy Mode: Master code and all user codes disabled.</Help>
       <Item label="Normal" value="0"/>
       <Item label="Vacation" value="1"/>
       <Item label="Privacy" value="2"/>
     </Value>
     <Value genre="config" index="11" instance="1" label="One Touch Locking" size="1" type="list" value="255">
-      <Help></Help>
+      <Help>(On = default)</Help>
       <Item label="Off" value="0"/>
       <Item label="On" value="255"/>
     </Value>
     <Value genre="config" index="12" instance="1" label="Privacy Button" size="1" type="list" value="0">
-      <Help></Help>
+      <Help>(Off = default)</Help>
       <Item label="Off" value="0"/>
       <Item label="On" value="255"/>
     </Value>
     <Value genre="config" index="13" instance="1" label="Lock Status LED" size="1" type="list" value="0">
-      <Help></Help>
+      <Help>(Off = default)</Help>
       <Item label="Off" value="0"/>
       <Item label="On" value="255"/>
     </Value>
