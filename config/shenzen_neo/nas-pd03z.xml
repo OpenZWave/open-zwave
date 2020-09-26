@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="3">
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
   <MetaData>
     <!--
   Neo (Coolcam) NAS-PD03Z Motion Sensor (PIR) Version 2
-  No official manual or website available
-  Parameters probably changed on firmware 3.80 of this device.
+  No official manual available
   Does not figure on https://products.z-wavealliance.org
   -->
     <MetaDataItem name="Name">Neo (Coolcam) NAS-PD03Z Motion Sensor (PIR) Version 2</MetaDataItem>
