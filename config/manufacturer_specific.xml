@@ -1573,6 +1573,7 @@
     <!-- NAS-PD02Z exist with and without temp sensor and different params but same IDs https://github.com/OpenZWave/open-zwave/issues/1866 -->
     <Product config="shenzen_neo/nas-pd02z.xml" id="108d" name="NAS-PD02Z Battery Powered PIR Sensor V2" type="0003"/>
     <Product config="shenzen_neo/nas-pd02z.xml" id="008d" name="NAS-PD02Z Battery Powered PIR Sensor V2" type="0003"/>
+    <Product config="shenzen_neo/nas-pd03z.xml" id="1031" name="NAS-PD03Z Battery Powered PIR Sensor V2" type="0200"/>
     <Product config="shenzen_neo/nas-ws02z.xml" id="0085" name="Water Leakage Detector" type="0003"/>
     <Product config="shenzen_neo/nas-ws02z.xml" id="1085" name="Water Leakage Detector" type="0003"/>
     <Product config="shenzen_neo/nas-ws02z.xml" id="6085" name="Water Leakage Detector" type="0003"/>
