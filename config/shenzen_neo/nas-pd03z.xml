@@ -8,6 +8,7 @@
   Does not figure on https://products.z-wavealliance.org
   -->
     <MetaDataItem name="Name">Neo (Coolcam) NAS-PD03Z Motion Sensor (PIR) Version 2</MetaDataItem>
+    <MetaDataItem name="ProductPage">https://www.szneo.com/en/products/show.php?id=197</MetaDataItem>
     <MetaDataItem name="ProductPic">images/shenzen_neo/nas-pd02z.png</MetaDataItem>
     <MetaDataItem name="WakeupDescription">Press button in sensor once. If successfull, LED will blink one time.</MetaDataItem>
     <MetaDataItem name="InclusionDescription">Set gateway in inclusion mode. Press button in sensor three times. LED will flash red five times and then on and off alternately.</MetaDataItem>
