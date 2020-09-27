@@ -32,9 +32,13 @@
 #include "Node.h"
 #include "Driver.h"
 #include "platform/Log.h"
-#include "value_classes/ValueInt.h"
+#include "value_classes/ValueBitSet.h"
+#include "value_classes/ValueBool.h"
 #include "value_classes/ValueButton.h"
 #include "value_classes/ValueByte.h"
+#include "value_classes/ValueInt.h"
+#include "value_classes/ValueList.h"
+#include "value_classes/ValueShort.h"
 
 #include "tinyxml.h"
 
@@ -165,10 +169,53 @@ namespace OpenZWave
 					uint8 sceneID = _data[3];
 					Log::Write(LogLevel_Info, GetNodeId(), "Received Central Scene set from node %d: scene id=%d with key Attribute %d. Sending event notification.", GetNodeId(), sceneID, keyAttribute);
 
-					if (Internal::VC::ValueList* value = static_cast<Internal::VC::ValueList*>(GetValue(_instance, sceneID)))
+					if (Internal::VC::Value* value = GetValue(_instance, sceneID))
 					{
 						/* plus one, as we have our own "inactive" entry at index 0 */
-						value->OnValueRefreshed(keyAttribute + 1);
+						uint8 paramValue = keyAttribute + 1;
+                        switch (value->GetID().GetType())
+                        {
+                            case ValueID::ValueType_BitSet:
+                            {
+                                Internal::VC::ValueBitSet* vbs = static_cast<Internal::VC::ValueBitSet*>(value);
+                                vbs->OnValueRefreshed(paramValue);
+                                break;
+                            }
+                            case ValueID::ValueType_Bool:
+                            {
+                                Internal::VC::ValueBool* valueBool = static_cast<Internal::VC::ValueBool*>(value);
+                                valueBool->OnValueRefreshed(paramValue != 0);
+                                break;
+                            }
+                            case ValueID::ValueType_Byte:
+                            {
+                                Internal::VC::ValueByte* valueByte = static_cast<Internal::VC::ValueByte*>(value);
+                                valueByte->OnValueRefreshed((uint8) paramValue);
+                                break;
+                            }
+                            case ValueID::ValueType_Short:
+                            {
+                                Internal::VC::ValueShort* valueShort = static_cast<Internal::VC::ValueShort*>(value);
+                                valueShort->OnValueRefreshed((int16) paramValue);
+                                break;
+                            }
+                            case ValueID::ValueType_Int:
+                            {
+                                Internal::VC::ValueInt* valueInt = static_cast<Internal::VC::ValueInt*>(value);
+                                valueInt->OnValueRefreshed(paramValue);
+                                break;
+                            }
+                            case ValueID::ValueType_List:
+                            {
+                                Internal::VC::ValueList* valueList = static_cast<Internal::VC::ValueList*>(value);
+                                valueList->OnValueRefreshed(paramValue);
+                                break;
+                            }
+                            default:
+                            {
+                                Log::Write(LogLevel_Info, GetNodeId(), "Invalid type (%d) for key attribute %d", value->GetID().GetType(), keyAttribute);
+                            }
+                        }
 						value->Release();
 						/* Start up a Timer to set this back to Inactive */
 						Log::Write(LogLevel_Info, GetNodeId(), "Automatically Clearing Scene %d in %dms", sceneID, m_dom.GetFlagInt(STATE_FLAG_CS_CLEARTIMEOUT));
@@ -358,10 +405,53 @@ namespace OpenZWave
 					return;
 				}
 
-				if (Internal::VC::ValueList* value = static_cast<Internal::VC::ValueList*>(GetValue(_instance, sceneID)))
-				{
-					/* plus one, as we have our own "inactive" entry at index 0 */
-					value->OnValueRefreshed(0);
+                if (Internal::VC::Value* value = GetValue(_instance, sceneID))
+                {
+                    /* plus one, as we have our own "inactive" entry at index 0 */
+                    uint8 paramValue = 0;
+                    switch (value->GetID().GetType())
+                    {
+                        case ValueID::ValueType_BitSet:
+                        {
+                            Internal::VC::ValueBitSet* vbs = static_cast<Internal::VC::ValueBitSet*>(value);
+                            vbs->OnValueRefreshed(paramValue);
+                            break;
+                        }
+                        case ValueID::ValueType_Bool:
+                        {
+                            Internal::VC::ValueBool* valueBool = static_cast<Internal::VC::ValueBool*>(value);
+                            valueBool->OnValueRefreshed(paramValue != 0);
+                            break;
+                        }
+                        case ValueID::ValueType_Byte:
+                        {
+                            Internal::VC::ValueByte* valueByte = static_cast<Internal::VC::ValueByte*>(value);
+                            valueByte->OnValueRefreshed((uint8) paramValue);
+                            break;
+                        }
+                        case ValueID::ValueType_Short:
+                        {
+                            Internal::VC::ValueShort* valueShort = static_cast<Internal::VC::ValueShort*>(value);
+                            valueShort->OnValueRefreshed((int16) paramValue);
+                            break;
+                        }
+                        case ValueID::ValueType_Int:
+                        {
+                            Internal::VC::ValueInt* valueInt = static_cast<Internal::VC::ValueInt*>(value);
+                            valueInt->OnValueRefreshed(paramValue);
+                            break;
+                        }
+                        case ValueID::ValueType_List:
+                        {
+                            Internal::VC::ValueList* valueList = static_cast<Internal::VC::ValueList*>(value);
+                            valueList->OnValueRefreshed(paramValue);
+                            break;
+                        }
+                        default:
+                        {
+                            Log::Write(LogLevel_Info, GetNodeId(), "Invalid type (%d) for key attribute %d", value->GetID().GetType(), 0);
+                        }
+                    }
 					value->Release();
 				}
 				m_TimersSet.erase(sceneID);
