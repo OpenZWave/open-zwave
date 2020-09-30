@@ -848,7 +848,7 @@
   <Manufacturer id="018A" name="Globalchina-Tech"></Manufacturer>
   <Manufacturer id="0076" name="Goggin Research"></Manufacturer>
   <Manufacturer id="0068" name="Good Way Technology Co. Ltd">
-    <Product config="goodway/td14010.xml" id="000b" name="RGBW Color LED Dimmer" type="0003"/
+    <Product config="goodway/td14010.xml" id="000b" name="RGBW Color LED Dimmer" type="0003"/>
   </Manufacturer>
   <Manufacturer id="0099" name="GreenWave Reality Inc">
     <Product config="greenwave/gs1110-1-gr-1.xml" id="0002" name="One Gateway" type="0001"/>
