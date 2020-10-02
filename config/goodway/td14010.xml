@@ -1,4 +1,4 @@
-<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="Name">RGBW Color LED Dimmer</MetaDataItem>
     <MetaDataItem name="Description">Good Way RGBW module is used to control RGB/RGBW strips and LED strips or bulbs to create countless colour options and has 6 special scene effects. Its extremely small size allows for easy installation behind wall sockets and switches. Controlled devices may be powered by 12 or 24 VDC.</MetaDataItem>
@@ -16,6 +16,7 @@
     <ChangeLog>
       <Entry author="Daniel Brunt - daniel@brunt.ca" date="31 July 2020" revision="1">Initial release</Entry>
       <Entry author="Daniel Brunt - daniel@brunt.ca" date="2 Oct 2020" revision="2">Added indexes 8 and 9 to CC 112</Entry>
+      <Entry author="Daniel Brunt - daniel@brunt.ca" date="2 Oct 2020" revision="3">Removed indexes 8 and 9 to CC 112</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration Command Class - All Configuration Parameters should be entered into the section below -->
@@ -88,20 +89,6 @@
       <Help>Device will be set to status memorized before power cut.</Help>
       <Item label="Disabled" value="0"/>
       <Item label="Enabled" value="1"/>
-    </Value>
-    <Value genre="config" index="8" instance="1" label="Automatic off after set time" max="32536" min="0" type="short" units="seconds" value="0">
-      <Help>
-        Output is turned automatically off after the time, set in this parameter.
-        0 – Auto OFF disabled.
-        1 – 32536 = 1 second – 32536 seconds Auto OFF.
-      </Help>
-    </Value>
-    <Value genre="config" index="9" instance="1" label="Automatic on after set time" max="32536" min="0" type="short" units="seconds" value="0">
-      <Help>
-        Output is turned automatically on after the time, set in this parameter.
-        0 – Auto ON disabled.
-        1 – 32536 = 1 second – 32536 seconds Auto ON.
-      </Help>
     </Value>
     <Value genre="config" index="10" instance="1" label="MAX dimming value" max="99" min="2" size="1" type="byte" units="%" value="99">
       <Help></Help>
