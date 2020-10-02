@@ -72,7 +72,7 @@ Product Type ID: EU=0x00, US=0x01, AU=0x02 CN=0x1D
     </Value>
     <Value genre="config" index="37" label="User confirmation for calibration" size="1" type="list" units="" value="0" write_only="true">
       <Help>Set user confirmation for calibration</Help>
-      <Item label="Do not confirm calibration" value="0" />
+      <Item label="Default" value="0" />
       <Item label="Confirm calibration" value="1" />
     </Value>
     <Value genre="config" index="38" label="Calibration mode status report" size="1" type="list" units="" value="0" read_only="true">
@@ -91,7 +91,7 @@ Product Type ID: EU=0x00, US=0x01, AU=0x02 CN=0x1D
     </Value>
     <Value genre="config" index="40" label="Repositioning" size="1" type="list" units="" value="1" write_only="true">
       <Help>Set to begin repositioning</Help>
-      <Item label="Not in repositioning" value="0" />
+      <Item label="Default" value="0" />
       <Item label="In repositioning" value="1" />
     </Value>		
     <Value genre="config" index="41" label="Repositioning status report" size="1" type="list" units="" value="0" read_only="true">
