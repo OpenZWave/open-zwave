@@ -41,6 +41,7 @@ Product Type ID: EU=0x00, US=0x01, AU=0x02 CN=0x1D
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2953/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 Jun 2019" revision="5">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/3075/xml</Entry>
       <Entry author="Duy Nguyen - dooz127@gmail.com" date="16 Feb 2020" revision="6">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/Products/3693/XML</Entry>	    
+      <Entry author="Matej Drobnič - matejdro@gmail.com" date="02 Oct 2020" revision="7">Fixed timing types, Fixed button list types</Entry>	    
     </ChangeLog>
     <MetaDataItem id="008D" name="FrequencyName" type="0103">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem id="008D" name="Identifier" type="0103">ZW141-A</MetaDataItem>
