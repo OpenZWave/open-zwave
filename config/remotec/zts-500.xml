@@ -1,7 +1,7 @@
 <Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/5254:8170:0200</MetaDataItem>
-    <MetaDataItem name="ProductPic">images/remotec/ZTS-500.png</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/remotec/zts-500.png</MetaDataItem>
     <MetaDataItem id="8170" name="ZWProductPage" type="0200">https://products.z-wavealliance.org/products/1767/</MetaDataItem>
     <MetaDataItem name="ResetDescription">Press and keep holding > or &lt; for 3 seconds to navigate to the System Main (SYS) screen.
 Press > to navigate to the Reset (RST) screen.
