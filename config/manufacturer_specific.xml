@@ -1493,6 +1493,7 @@
     <Product config="remotec/zts-110.xml" id="8031" name="ZTS-110" type="0200"/>
     <Product config="remotec/zts-110.xml" id="8031" name="ZTS-110" type="0202"/>
     <Product config="remotec/zts-500.xml" id="8170" name="ZTS-500US" type="0200"/>
+    <Product config="remotec/zts-500.xml" id="8170" name="ZTS-500 AU/NZ" type="0202"/>
   </Manufacturer>
   <Manufacturer id="039B" name="Reply S.p.A."></Manufacturer>
   <Manufacturer id="0010" name="Residential Control Systems">
