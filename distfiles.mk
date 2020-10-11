@@ -36,6 +36,7 @@ DISTFILES =	.gitignore \
 	config/NotificationCCTypes.xsd \
 	config/SensorMultiLevelCCTypes.xml \
 	config/SensorMultiLevelCCTypes.xsd \
+	config/abus/SHRM10000.xml \
 	config/act/lfm20.xml \
 	config/act/zdm230.xml \
 	config/act/zdp100.xml \
@@ -186,6 +187,8 @@ DISTFILES =	.gitignore \
 	config/domux/DX1WL-Z.xml \
 	config/domux/DX2SK-Z.xml \
 	config/dragontech/wd-100.xml \
+	config/duco/DucoBox.xml \
+	config/duco/Ducotronic_CO-RH_sensor.xml \
 	config/duwi/05458.xml \
 	config/duwi/ZWES1000.xml \
 	config/duwi/ZWESJ300.xml \
@@ -199,6 +202,7 @@ DISTFILES =	.gitignore \
 	config/ecolink/motion.xml \
 	config/ecolink/sensor.xml \
 	config/ecolink/tiltsensor.xml \
+	config/econet/ezw1204.xml \
 	config/electronicsolutions/dbmz.xml \
 	config/enblink/ss201-us-w_1308.xml \
 	config/enerwave/zw15rmplus.xml \
@@ -345,6 +349,8 @@ DISTFILES =	.gitignore \
 	config/greenwave/powernode1.xml \
 	config/greenwave/powernode6.xml \
 	config/guardtec/gkw2000d.xml \
+	config/hab/iblindsV2.xml \
+	config/hab/iblindsV3.xml \
 	config/hank/hkzw-dws01.xml \
 	config/hank/hkzw-fld01.xml \
 	config/hank/hkzw-ms01.xml \
@@ -420,6 +426,8 @@ DISTFILES =	.gitignore \
 	config/images/BeNext/TagReader500.png \
 	config/images/BeNext/mydisplay.png \
 	config/images/BeNext/mygate.png \
+	config/images/DefaultProductImage.png \
+	config/images/abus/SHRM10000.jpg \
 	config/images/act/lfm20.png \
 	config/images/act/zdm230.png \
 	config/images/act/zdp100.png \
@@ -547,6 +555,7 @@ DISTFILES =	.gitignore \
 	config/images/ecolink/motion.png \
 	config/images/ecolink/sensor.png \
 	config/images/ecolink/tiltsensor.png \
+	config/images/econet/ezw1204.png \
 	config/images/electronicsolutions/dbmz.png \
 	config/images/enblink/ss201-us-w_1308.png \
 	config/images/enerwave/zw15rmplus.png \
@@ -669,6 +678,8 @@ DISTFILES =	.gitignore \
 	config/images/greenwave/powernode1.png \
 	config/images/greenwave/powernode6.png \
 	config/images/guardtec/gkw2000d.png \
+	config/images/hab/iblinds.png \
+	config/images/hab/iblindsV3.png \
 	config/images/hank/hkzw-dws01.png \
 	config/images/hank/hkzw-fld01.png \
 	config/images/hank/hkzw-ms01.png \
@@ -1208,6 +1219,7 @@ DISTFILES =	.gitignore \
 	config/shenzen_neo/nas-ds01z.xml \
 	config/shenzen_neo/nas-pd01z.xml \
 	config/shenzen_neo/nas-pd02z.xml \
+	config/shenzen_neo/nas-pd03z.xml \
 	config/shenzen_neo/nas-rc01z.xml \
 	config/shenzen_neo/nas-wr01z.xml \
 	config/shenzen_neo/nas-wr01ze.xml \

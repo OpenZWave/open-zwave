@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ManufacturerSpecificData Revision="122" xmlns="https://github.com/OpenZWave/open-zwave">
+<ManufacturerSpecificData Revision="122"
+  xmlns="https://github.com/OpenZWave/open-zwave">
   <Manufacturer id="0028" name="2B Electronics"></Manufacturer>
   <Manufacturer id="0098" name="2GIG Technologies">
     <Product config="2gig/ct50e.xml" id="015e" name="CT50e Thermostat" type="3200"/>
@@ -25,7 +26,7 @@
   <Manufacturer id="0400" name="Abode"></Manufacturer>
   <Manufacturer id="0409" name="ABUS August Bremicker Sohne KG"></Manufacturer>
   <Manufacturer id="0403" name="ABUS Security-Center GmbH Co. KG">
-     <Product config="abus/SHRM10000.xml" id="0003" name="Smart Smoke Sensor SHRM10000" type="0002"/>
+    <Product config="abus/SHRM10000.xml" id="0003" name="Smart Smoke Sensor SHRM10000" type="0002"/>
   </Manufacturer>
   <Manufacturer id="034A" name="AcroComm Corp"></Manufacturer>
   <Manufacturer id="0001" name="ACT">
@@ -652,7 +653,7 @@
     <Product config="fibaro/fgk10x.xml" id="2001" name="FGK10x Door Opening Sensor" type="0701"/>
     <Product config="fibaro/fgk10x.xml" id="3001" name="FGK10x Door Opening Sensor" type="0701"/>
     <Product config="fibaro/fgdw2.xml" id="1000" name="FGDW002 Door Opening Sensor 2" type="0702"/>
-	<Product config="fibaro/fgdw2.xml" id="2000" name="FGDW002 Door Opening Sensor 2" type="0702"/>
+    <Product config="fibaro/fgdw2.xml" id="2000" name="FGDW002 Door Opening Sensor 2" type="0702"/>
     <Product config="fibaro/fgr221.xml" id="0104" name="FGR221 Roller Shutter Controller" type="0300"/>
     <Product config="fibaro/fgr221.xml" id="100a" name="FGR221 Roller Shutter Controller" type="0300"/>
     <Product config="fibaro/fgr221.xml" id="0106" name="FGR221 Roller Shutter Controller" type="0300"/>
@@ -748,6 +749,7 @@
   <Manufacturer id="0295" name="fifthplay nv"></Manufacturer>
   <Manufacturer id="0138" name="First Alert (BRK Brands Inc)">
     <Product config="firstalert/zcombo.xml" id="0002" name="ZCombo Smoke and Carbon Monoxide Detector" type="0001"/>
+    <Product config="firstalert/zcombo-g.xml" id="0003" name="ZCombo-G Battery Smoke/CO Combo Alarm" type="0001"/>
   </Manufacturer>
   <Manufacturer id="002c" name="Flex Automation"></Manufacturer>
   <Manufacturer id="004F" name="Flex Automation"></Manufacturer>
@@ -1603,7 +1605,7 @@
     <Product config="shenzen_neo/ls01ch.xml" id="108c" name="Wall Switch (1 channel)" type="0003"/>
   </Manufacturer>
   <Manufacturer id="032C" name="Shenzhen Saykey Technology">
-	<Product config="shenzen_saykey/sk-3007-05.xml" id="0005" name="Curtain Motor Control with external module" type="3007"/>
+    <Product config="shenzen_saykey/sk-3007-05.xml" id="0005" name="Curtain Motor Control with external module" type="3007"/>
   </Manufacturer>
   <Manufacturer id="036C" name="Shenzhen Sen5 Technology"></Manufacturer>
   <Manufacturer id="0381" name="Shenzhen Thingsview Tech"></Manufacturer>
@@ -1785,7 +1787,7 @@
   </Manufacturer>
   <Manufacturer id="0080" name="Vero Duco">
     <Product config="duco/DucoBox.xml" id="0001" name="DucoBox Motor" type="0003"/>
-    <Product config="duco/Ducotronic_CO-RH_sensor.xml" id="0001" name="DucoBox CO/RH Sensor" type="0004"/> 
+    <Product config="duco/Ducotronic_CO-RH_sensor.xml" id="0001" name="DucoBox CO/RH Sensor" type="0004"/>
   </Manufacturer>
   <Manufacturer id="0237" name="Vestel Elektronik Ticaret ve Sanayi"></Manufacturer>
   <Manufacturer id="0053" name="Viewsonic"></Manufacturer>
@@ -1882,8 +1884,8 @@
   </Manufacturer>
   <Manufacturer id="012D" name="Wilshine Holding"></Manufacturer>
   <Manufacturer id="017F" name="Wink">
-    <Product config="wink/wnk-mot1.xml"  id="0001" name="WNK-MOT1 Motion Sensor" type="0101" />
-    <Product config="wink/wnk-sir1p.xml"  id="0001" name="WNK-SIR1P Siren" type="0200" />
+    <Product config="wink/wnk-mot1.xml" id="0001" name="WNK-MOT1 Motion Sensor" type="0101" />
+    <Product config="wink/wnk-sir1p.xml" id="0001" name="WNK-SIR1P Siren" type="0200" />
   </Manufacturer>
   <Manufacturer id="004c" name="Woodward Labs"></Manufacturer>
   <Manufacturer id="0242" name="Winytechnology"></Manufacturer>
