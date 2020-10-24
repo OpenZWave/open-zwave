@@ -653,6 +653,7 @@
     <Product config="fibaro/fgk10x.xml" id="3001" name="FGK10x Door Opening Sensor" type="0701"/>
     <Product config="fibaro/fgdw2.xml" id="1000" name="FGDW002 Door Opening Sensor 2" type="0702"/>
 	<Product config="fibaro/fgdw2.xml" id="2000" name="FGDW002 Door Opening Sensor 2" type="0702"/>
+	<Product config="fibaro/fgdw2.xml" id="3000" name="FGDW002 Door Opening Sensor 2" type="0702"/>
     <Product config="fibaro/fgr221.xml" id="0104" name="FGR221 Roller Shutter Controller" type="0300"/>
     <Product config="fibaro/fgr221.xml" id="100a" name="FGR221 Roller Shutter Controller" type="0300"/>
     <Product config="fibaro/fgr221.xml" id="0106" name="FGR221 Roller Shutter Controller" type="0300"/>
