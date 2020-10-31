@@ -34,6 +34,7 @@
 #include "platform/Log.h"
 
 #include "value_classes/ValueDecimal.h"
+#include "value_classes/ValueByte.h"
 
 #include "tinyxml.h"
 
@@ -241,14 +242,15 @@ namespace OpenZWave
 						string minValue = ExtractValue(&_data[2], &scale, &precision);
 						string maxValue = ExtractValue(&_data[2 + size + 1], &scale, &precision);
 
-						Log::Write(LogLevel_Info, GetNodeId(), "Received capabilities of thermostat setpoint type %d, min %s max %s", (int) _data[1], minValue.c_str(), maxValue.c_str());
+						Log::Write(LogLevel_Info, GetNodeId(), "Received capabilities of thermostat setpoint type %d, min %s (field size: %i) max %s", (int) _data[1], minValue.c_str(), size, maxValue.c_str());
 
 						uint8 index = _data[1];
 						// Add supported setpoint
 						if (index < ThermostatSetpoint_Count)
 						{
 							string setpointName = c_setpointName[index];
-
+							// Retain the size of the minimum temperature as the minimum field size for the temperature
+							node->CreateValueByte(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_ThermostatSetpoint::SetPointMinSize, setpointName + "_setpointminsize", "B", true, false, 0, 0);
 							node->CreateValueDecimal(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_ThermostatSetpoint::Unused_0_Minimum + index, setpointName + "_minimum", "C", false, false, minValue, 0);
 							node->CreateValueDecimal(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_ThermostatSetpoint::Unused_0_Maximum + index, setpointName + "_maximum", "C", false, false, maxValue, 0);
 							Log::Write(LogLevel_Info, GetNodeId(), "    Added setpoint: %s", setpointName.c_str());
@@ -270,6 +272,14 @@ namespace OpenZWave
 				{
 					Internal::VC::ValueDecimal const* value = static_cast<Internal::VC::ValueDecimal const*>(&_value);
 					uint8 scale = strcmp("C", value->GetUnits().c_str()) ? 1 : 0;
+					int8 setpointminsize = 0;
+					uint8 _instance = 1; // FIXME where is the instance ID supposed to come from?
+
+					if (Node* node = GetNodeUnsafe()) {
+						Internal::VC::Value const* _minsizeValue = node->GetValue(GetCommandClassId(), _instance, ValueID_Index_ThermostatSetpoint::SetPointMinSize);
+						Internal::VC::ValueByte const* minsizeValue = static_cast<Internal::VC::ValueByte const*>(_minsizeValue);
+						setpointminsize = minsizeValue->GetValue();
+					}
 
 					Msg* msg = new Msg("ThermostatSetpointCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
 					msg->SetInstance(this, _value.GetID().GetInstance());
@@ -278,7 +288,7 @@ namespace OpenZWave
 					msg->Append(GetCommandClassId());
 					msg->Append(ThermostatSetpointCmd_Set);
 					msg->Append((uint8_t) (value->GetID().GetIndex() & 0xFF));
-					AppendValue(msg, value->GetValue(), scale);
+					AppendValue(msg, value->GetValue(), scale, setpointminsize);
 					msg->Append(GetDriver()->GetTransmitOptions());
 					GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
 					return true;

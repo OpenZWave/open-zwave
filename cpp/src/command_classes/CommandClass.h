@@ -210,9 +210,10 @@ namespace OpenZWave
 					 *  \param _msg The message to which the value should be appended.
 					 *  \param _value A string containing a decimal number to be appended.
 					 *  \param _scale A byte indicating the scale corresponding to this value (e.g., 1=F and 0=C for temperatures).
+					 *  \param _minsize Indicating the minimum size in bytes to pass the field value (default 0 to use the smallest size possible)
 					 *  \see Msg
 					 */
-					void AppendValue(Msg* _msg, string const& _value, uint8 const _scale) const;
+					void AppendValue(Msg* _msg, string const& _value, uint8 const _scale, uint8 const _minsize = 0) const;
 					uint8 const GetAppendValueSize(string const& _value) const;
 					int32 ValueToInteger(string const& _value, uint8* o_precision, uint8* o_size) const;
 
