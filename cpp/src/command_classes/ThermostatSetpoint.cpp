@@ -237,20 +237,22 @@ namespace OpenZWave
 					{
 						// We have received the capabilities for supported setpoint Type
 						uint8 scale;
-						uint8 precision = 0;
+						uint8 min_precision = 0;
+						uint8 max_precision = 0;
 						uint8 size = _data[2] & 0x07;
-						string minValue = ExtractValue(&_data[2], &scale, &precision);
-						string maxValue = ExtractValue(&_data[2 + size + 1], &scale, &precision);
+						string minValue = ExtractValue(&_data[2], &scale, &min_precision);
+						string maxValue = ExtractValue(&_data[2 + size + 1], &scale, &max_precision);
 
-						Log::Write(LogLevel_Info, GetNodeId(), "Received capabilities of thermostat setpoint type %d, min %s (field size: %i) max %s", (int) _data[1], minValue.c_str(), size, maxValue.c_str());
+						Log::Write(LogLevel_Info, GetNodeId(), "Received capabilities of thermostat setpoint type %d, min %s (field size: %i bytes, precision: %i decimals) max %s", (int) _data[1], minValue.c_str(), size, min_precision, maxValue.c_str());
 
 						uint8 index = _data[1];
 						// Add supported setpoint
 						if (index < ThermostatSetpoint_Count)
 						{
 							string setpointName = c_setpointName[index];
-							// Retain the size of the minimum temperature as the minimum field size for the temperature
-							node->CreateValueByte(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_ThermostatSetpoint::SetPointMinSize, setpointName + "_setpointminsize", "B", true, false, size, 0);
+							// Retain the size of the minimum temperature as the minimum field size for the temperature and the minimum precision as the base precision for future communication
+							node->CreateValueByte(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_ThermostatSetpoint::SetPointMinSize, setpointName + "_setpointminsize", "B", false, false, size, 0);
+							node->CreateValueByte(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_ThermostatSetpoint::SetPointPrecision, setpointName + "_setpointprecision", "D", false, false, min_precision, 0);
 							node->CreateValueDecimal(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_ThermostatSetpoint::Unused_0_Minimum + index, setpointName + "_minimum", "C", false, false, minValue, 0);
 							node->CreateValueDecimal(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_ThermostatSetpoint::Unused_0_Maximum + index, setpointName + "_maximum", "C", false, false, maxValue, 0);
 							Log::Write(LogLevel_Info, GetNodeId(), "    Added setpoint: %s", setpointName.c_str());
@@ -272,13 +274,17 @@ namespace OpenZWave
 				{
 					Internal::VC::ValueDecimal const* value = static_cast<Internal::VC::ValueDecimal const*>(&_value);
 					uint8 scale = strcmp("C", value->GetUnits().c_str()) ? 1 : 0;
-					int8 setpointminsize = 0;
+					int8 setpointminsize = 0;   // Minimum number of bytes to express the setpoint value, cached from the capabilities report
+					int8 setpointprecision = 0; // Minimum precision express the setpoint value, cached from the capabilities report
 					uint8 _instance = 1; // FIXME where is the instance ID supposed to come from?
 
 					if (Node* node = GetNodeUnsafe()) {
 						Internal::VC::Value const* _minsizeValue = node->GetValue(GetCommandClassId(), _instance, ValueID_Index_ThermostatSetpoint::SetPointMinSize);
+						Internal::VC::Value const* _precisionValue = node->GetValue(GetCommandClassId(), _instance, ValueID_Index_ThermostatSetpoint::SetPointPrecision);
 						Internal::VC::ValueByte const* minsizeValue = static_cast<Internal::VC::ValueByte const*>(_minsizeValue);
+						Internal::VC::ValueByte const* precisionValue = static_cast<Internal::VC::ValueByte const*>(_precisionValue);
 						setpointminsize = minsizeValue->GetValue();
+						setpointprecision = precisionValue->GetValue();
 					}
 
 					Msg* msg = new Msg("ThermostatSetpointCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
@@ -288,7 +294,7 @@ namespace OpenZWave
 					msg->Append(GetCommandClassId());
 					msg->Append(ThermostatSetpointCmd_Set);
 					msg->Append((uint8_t) (value->GetID().GetIndex() & 0xFF));
-					AppendValue(msg, value->GetValue(), scale, setpointminsize);
+					AppendValue(msg, value->GetValue(), scale, setpointminsize, setpointprecision);
 					msg->Append(GetDriver()->GetTransmitOptions());
 					GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
 					return true;
