@@ -597,12 +597,20 @@ namespace OpenZWave
 // <CommandClass::AppendValue>
 // Add a value to a message as a sequence of bytes
 //-----------------------------------------------------------------------------
-			void CommandClass::AppendValue(Msg* _msg, std::string const& _value, uint8 const _scale, uint8 const _minsize) const
+			void CommandClass::AppendValue(Msg* _msg, std::string const& _value, uint8 const _scale, uint8 const _minsize, uint8 const _minprecision) const
 			{
 				uint8 precision;
 				uint8 size;
 				int32 val = ValueToInteger(_value, &precision, &size);
 				if(size < _minsize) size = _minsize;
+				if(precision < _minprecision)
+				{
+					Log::Write(LogLevel_Info, GetNodeId(), "Increasing precision on integer value %i, obtained from %s, from %i decimals to %i decimals", val, _value, precision, _minprecision);
+					int8 const delta = _minprecision - precision;
+					for(uint8 i=0; i<delta; i++) val = val * 10; // increase precision
+					precision = _minprecision;
+					Log::Write(LogLevel_Info, GetNodeId(), "Increased precision result: %i raw with %i decimals", val, precision);
+				}
 
 				_msg->Append((precision << c_precisionShift) | (_scale << c_scaleShift) | size);
 
