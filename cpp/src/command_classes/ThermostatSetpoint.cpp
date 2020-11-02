@@ -250,7 +250,7 @@ namespace OpenZWave
 						{
 							string setpointName = c_setpointName[index];
 							// Retain the size of the minimum temperature as the minimum field size for the temperature
-							node->CreateValueByte(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_ThermostatSetpoint::SetPointMinSize, setpointName + "_setpointminsize", "B", true, false, 0, 0);
+							node->CreateValueByte(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_ThermostatSetpoint::SetPointMinSize, setpointName + "_setpointminsize", "B", true, false, size, 0);
 							node->CreateValueDecimal(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_ThermostatSetpoint::Unused_0_Minimum + index, setpointName + "_minimum", "C", false, false, minValue, 0);
 							node->CreateValueDecimal(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_ThermostatSetpoint::Unused_0_Maximum + index, setpointName + "_maximum", "C", false, false, maxValue, 0);
 							Log::Write(LogLevel_Info, GetNodeId(), "    Added setpoint: %s", setpointName.c_str());
