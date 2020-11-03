@@ -810,6 +810,7 @@
     <Product config="ge/14295-dimmer-toggle.xml" id="3130" name="14295 In-Wall Smart Toggle Dimmer" type="4944"/>
     <Product config="ge/14298.xml" id="3034" name="14298 Plug-in Outdoor Smart Switch" type="4F50"/>
     <Product config="ge/26931-motion-switch.xml" id="3032" name="26931 Smart Motion Switch" type="494d"/>
+    <Product config="ge/26932-motion-dimmer.xml" id="3033" name="26932 Smart Motion Dimmer" type="494d"/>
     <Product config="ge/26933-motion-dimmer.xml" id="3034" name="26933 Smart Motion Dimmer" type="494d"/>
     <Product config="ge/14291-switch.xml" id="3036" name="14291 In-Wall Smart Switch" type="4952"/>
     <Product config="ge/46201-switch.xml" id="3135" name="46201 In-Wall Smart Switch" type="4952"/>
