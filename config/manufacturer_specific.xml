@@ -1606,6 +1606,7 @@
     <Product config="shenzen_neo/nas-ws02z.xml" id="2085" name="Water Leakage Detector" type="0003"/>
     <Product config="shenzen_neo/nas-ab01z.xml" id="0088" name="Siren Alarm" type="0003"/>
     <Product config="shenzen_neo/nas-ab01z.xml" id="1088" name="Siren Alarm" type="0003"/>
+    <Product config="shenzen_neo/nas-ab01z.xml" id="6088" name="Siren Alarm" type="0003"/>
     <Product config="shenzen_neo/nas-rc01z.xml" id="008a" name="SOS/Remote Control" type="0003"/>
     <Product config="shenzen_neo/nas-rc01z.xml" id="108a" name="SOS/Remote Control" type="0003"/>
     <Product config="shenzen_neo/ls03ch.xml" id="102b" name="Wall Switch (3 channels)" type="0200"/>
