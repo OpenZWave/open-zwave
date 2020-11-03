@@ -127,6 +127,7 @@ DISTFILES =	.gitignore \
 	config/assa_abloy/TouchDeadbolt.xml \
 	config/assa_abloy/TouchLever.xml \
 	config/assa_abloy/nexTouch.xml \
+	config/assa_abloy/yrd1x0.xml \
 	config/august/asl-03.xml \
 	config/buffalo/hw-100v15a-zw.xml \
 	config/building36/b36-t10.xml \
@@ -196,6 +197,7 @@ DISTFILES =	.gitignore \
 	config/duwi/zw-zdan-300.xml \
 	config/duwi/zwfb.xml \
 	config/duwi/zwws.xml \
+	config/ecodim/0.7.xml \
 	config/ecolink/doorwindow.xml \
 	config/ecolink/firefighter.xml \
 	config/ecolink/floodfreeze.xml \
@@ -280,6 +282,7 @@ DISTFILES =	.gitignore \
 	config/fibaro/fgs221.xml \
 	config/fibaro/fgs222.xml \
 	config/fibaro/fgs223.xml \
+	config/fibaro/fgs224.xml \
 	config/fibaro/fgsd002.xml \
 	config/fibaro/fgss101.xml \
 	config/fibaro/fgt001.xml \
@@ -290,7 +293,9 @@ DISTFILES =	.gitignore \
 	config/fibaro/fgwpfzw5.xml \
 	config/fibaro/fgwpg111.xml \
 	config/fibaro/fgwr111.xml \
+	config/firstalert/zcombo-g.xml \
 	config/firstalert/zcombo.xml \
+	config/firstalert/zsmoke.xml \
 	config/followgood/swz-1002.xml \
 	config/forest/fs2z5232000002.xml \
 	config/fortrezz/fmi.xml \
@@ -319,6 +324,7 @@ DISTFILES =	.gitignore \
 	config/ge/14295-dimmer-toggle.xml \
 	config/ge/14298.xml \
 	config/ge/26931-motion-switch.xml \
+	config/ge/26932-motion-dimmer.xml \
 	config/ge/26933-motion-dimmer.xml \
 	config/ge/28167-plugin-dimmer.xml \
 	config/ge/28169-plugin-switch.xml \
@@ -394,6 +400,7 @@ DISTFILES =	.gitignore \
 	config/honeywell/3830-zw3107.xml \
 	config/honeywell/39348-ZW4005.xml \
 	config/honeywell/39348-zw4008.xml \
+	config/honeywell/39349-ZW1002.xml \
 	config/honeywell/39351-ZW3005.xml \
 	config/honeywell/39351-ZW3010.xml \
 	config/honeywell/39357-ZW3004.xml \
@@ -507,6 +514,7 @@ DISTFILES =	.gitignore \
 	config/images/assa_abloy/TouchDeadbolt.png \
 	config/images/assa_abloy/TouchLever.png \
 	config/images/assa_abloy/nexTouch.png \
+	config/images/assa_abloy/yrd1x0.png \
 	config/images/august/asl-03.png \
 	config/images/buffalo/hw-100v15a-zw.png \
 	config/images/building36/b36-t10.png \
@@ -549,6 +557,7 @@ DISTFILES =	.gitignore \
 	config/images/duwi/zw-edan-300.png \
 	config/images/duwi/zw-zdan-300.png \
 	config/images/duwi/zwws.png \
+	config/images/ecodim/0.7.jpg \
 	config/images/ecolink/doorwindow.png \
 	config/images/ecolink/firefighter.png \
 	config/images/ecolink/floodfreeze.png \
@@ -615,6 +624,7 @@ DISTFILES =	.gitignore \
 	config/images/fibaro/fgrgbwm441.png \
 	config/images/fibaro/fgs213.png \
 	config/images/fibaro/fgs223.png \
+	config/images/fibaro/fgs224.png \
 	config/images/fibaro/fgsd002.png \
 	config/images/fibaro/fgt001.png \
 	config/images/fibaro/fgwd111.png \
@@ -624,7 +634,9 @@ DISTFILES =	.gitignore \
 	config/images/fibaro/fgwpfzw5.png \
 	config/images/fibaro/fgwpg111.png \
 	config/images/fibaro/fgwr111.png \
+	config/images/firstalert/zcombo-g.png \
 	config/images/firstalert/zcombo.png \
+	config/images/firstalert/zsmoke.png \
 	config/images/followgood/swz-1002.png \
 	config/images/forest/fs2z5232000002.png \
 	config/images/fortrezz/fmi.png \
@@ -714,6 +726,7 @@ DISTFILES =	.gitignore \
 	config/images/honeywell/3830-zw3107.png \
 	config/images/honeywell/39348-ZW4005.png \
 	config/images/honeywell/39348-ZW4008.png \
+	config/images/honeywell/39349-ZW1002.png \
 	config/images/honeywell/39351-ZW3005.png \
 	config/images/honeywell/39357-ZW3004.png \
 	config/images/honeywell/39358-ZW4002.png \
@@ -762,6 +775,7 @@ DISTFILES =	.gitignore \
 	config/images/leviton/vrf01.png \
 	config/images/leviton/vri10.png \
 	config/images/leviton/vrpa1.png \
+	config/images/leviton/vrpd3.png \
 	config/images/leviton/vrs15.png \
 	config/images/linear/LB60Z-1.png \
 	config/images/linear/WD500Z5-1.png \
@@ -871,6 +885,7 @@ DISTFILES =	.gitignore \
 	config/images/sensative/strips.png \
 	config/images/sensative/stripscomfort.png \
 	config/images/sercomm/sw-clp01-eu.png \
+	config/images/shenzen_neo/ls03ch.jpg \
 	config/images/shenzen_neo/nas-ab01z.png \
 	config/images/shenzen_neo/nas-ds01z.png \
 	config/images/shenzen_neo/nas-pd01z.png \
@@ -880,6 +895,7 @@ DISTFILES =	.gitignore \
 	config/images/shenzen_neo/nas-ws02z.png \
 	config/images/shenzen_saykey/SK-3007-05.png \
 	config/images/simon/10002034-13X.png \
+	config/images/simon/10002080-13X.png \
 	config/images/smartthings/pgc401m.png \
 	config/images/smartthings/sth-eth200.png \
 	config/images/steinel/is140-2.png \
@@ -895,11 +911,12 @@ DISTFILES =	.gitignore \
 	config/images/sunricher/srzv9003t4rgbweu.png \
 	config/images/sunricher/srzv9101facct.png \
 	config/images/sunricher/srzv9101sachpeu.png \
+	config/images/sunricher/zv2835rac.png \
 	config/images/sunricher/zv9101.png \
 	config/images/swiid/swiidinter.png \
 	config/images/technisat/03009496.png \
-	config/images/technisat/03009499.png \
 	config/images/technisat/03009497.png \
+	config/images/technisat/03009499.png \
 	config/images/telldus/tzdw100.png \
 	config/images/telldus/tzwp100.png \
 	config/images/telldus/tzwp102.png \
@@ -1045,6 +1062,7 @@ DISTFILES =	.gitignore \
 	config/leviton/vri06.xml \
 	config/leviton/vri10.xml \
 	config/leviton/vrpa1.xml \
+	config/leviton/vrpd3.xml \
 	config/leviton/vrs15.xml \
 	config/linear/GC-TBZ48.xml \
 	config/linear/LB60Z-1.xml \
@@ -1216,6 +1234,7 @@ DISTFILES =	.gitignore \
 	config/sercomm/sw-clp01-eu.xml \
 	config/shenzen_neo/ls01ch.xml \
 	config/shenzen_neo/ls02ch.xml \
+	config/shenzen_neo/ls03ch.xml \
 	config/shenzen_neo/nas-ab01z.xml \
 	config/shenzen_neo/nas-ds01z.xml \
 	config/shenzen_neo/nas-pd01z.xml \
@@ -1228,6 +1247,7 @@ DISTFILES =	.gitignore \
 	config/shenzen_saykey/sk-3007-05.xml \
 	config/simon/10002034-13X.xml \
 	config/simon/10002041-13X.xml \
+	config/simon/10002080-13X.xml \
 	config/smartthings/pgc401m.xml \
 	config/smartthings/sth-eth200.xml \
 	config/somfy/1811265_ZRTSI.xml \
@@ -1243,13 +1263,14 @@ DISTFILES =	.gitignore \
 	config/sunricher/srzv9001tccteu.xml \
 	config/sunricher/srzv9003t4rgbweu.xml \
 	config/sunricher/srzv9101sachpeu.xml \
+	config/sunricher/zv2835rac.xml \
 	config/sunricher/zv9101.xml \
 	config/sunricher/zv9101fa.xml \
 	config/swiid/swiidinter.xml \
 	config/swiid/swiidplug.xml \
 	config/technisat/03009496.xml \
-	config/technisat/03009499.xml \
 	config/technisat/03009497.xml \
+	config/technisat/03009499.xml \
 	config/telldus/tzdw100.xml \
 	config/telldus/tzwp100.xml \
 	config/telldus/tzwp102.xml \
