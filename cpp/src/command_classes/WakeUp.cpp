@@ -382,7 +382,7 @@ namespace OpenZWave
 						{
 							delete item.m_cci;
 						}
-						m_pendingQueue.erase(it++);
+						it = m_pendingQueue.erase(it);
 					}
 					else
 					{
