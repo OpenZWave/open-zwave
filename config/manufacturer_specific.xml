@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ManufacturerSpecificData Revision="127"
-  xmlns="https://github.com/OpenZWave/open-zwave">
+<ManufacturerSpecificData Revision="128" xmlns="https://github.com/OpenZWave/open-zwave">
   <Manufacturer id="0028" name="2B Electronics"></Manufacturer>
   <Manufacturer id="0098" name="2GIG Technologies">
     <Product config="2gig/ct50e.xml" id="015e" name="CT50e Thermostat" type="3200"/>
@@ -26,7 +25,11 @@
   <Manufacturer id="0400" name="Abode"></Manufacturer>
   <Manufacturer id="0409" name="ABUS August Bremicker Sohne KG"></Manufacturer>
   <Manufacturer id="0403" name="ABUS Security-Center GmbH Co. KG">
+<<<<<<< HEAD
     <Product config="abus/SHRM10000.xml" id="0003" name="Smart Smoke Sensor SHRM10000" type="0002"/>
+=======
+     <Product config="abus/SHRM10000.xml" id="0003" name="Smart Smoke Sensor SHRM10000" type="0002"/>
+>>>>>>> f9812dfcf98e060aa218f9b2a663637efba50446
   </Manufacturer>
   <Manufacturer id="034A" name="AcroComm Corp"></Manufacturer>
   <Manufacturer id="0001" name="ACT">
@@ -857,7 +860,9 @@
   <Manufacturer id="022B" name="GKB Security Corporation"></Manufacturer>
   <Manufacturer id="018A" name="Globalchina-Tech"></Manufacturer>
   <Manufacturer id="0076" name="Goggin Research"></Manufacturer>
-  <Manufacturer id="0068" name="Good Way Technology Co. Ltd"></Manufacturer>
+  <Manufacturer id="0068" name="Good Way Technology Co. Ltd">
+    <Product config="goodway/td14010.xml" id="000b" name="RGBW Color LED Dimmer" type="0003"/>
+  </Manufacturer>
   <Manufacturer id="0099" name="GreenWave Reality Inc">
     <Product config="greenwave/gs1110-1-gr-1.xml" id="0002" name="One Gateway" type="0001"/>
     <Product config="greenwave/powernode1.xml" id="0002" name="PowerNode 1 port" type="0002"/>
@@ -1778,7 +1783,10 @@
     <Product config="sunricher/zv9101.xml" id="d005" name="Dimmer ZV-9101" type="0200"/>
     <Product config="sunricher/srzv9101sachpeu.xml" id="d00c" name="Dimmer ZV9040" type="0200"/>
     <Product config="sunricher/srzv9003t4rgbweu.xml" id="a107" name="Z-Wave Wall Controller - SR-ZV9003T4-RGBW-EU" type="0300"/>
+<<<<<<< HEAD
     <Product config="sunricher/zv2835rac.xml" id="d017" name="ZV2835RAC Smart Knob Dimmer" type="0200"/>
+=======
+>>>>>>> f9812dfcf98e060aa218f9b2a663637efba50446
     <Product config="sunricher/srzv9001tccteu.xml" id="a104" name="Z-Wave Wall Controller - SR-ZV9001T-CCT-EU" type="0300"/>
     <Product config="sunricher/zv9101fa.xml" id="d002" name="Dimmer ZV-9101FA" type="0200"/>
   </Manufacturer>
@@ -1805,7 +1813,11 @@
   </Manufacturer>
   <Manufacturer id="0080" name="Vero Duco">
     <Product config="duco/DucoBox.xml" id="0001" name="DucoBox Motor" type="0003"/>
+<<<<<<< HEAD
     <Product config="duco/Ducotronic_CO-RH_sensor.xml" id="0001" name="DucoBox CO/RH Sensor" type="0004"/>
+=======
+    <Product config="duco/Ducotronic_CO-RH_sensor.xml" id="0001" name="DucoBox CO/RH Sensor" type="0004"/> 
+>>>>>>> f9812dfcf98e060aa218f9b2a663637efba50446
   </Manufacturer>
   <Manufacturer id="0237" name="Vestel Elektronik Ticaret ve Sanayi"></Manufacturer>
   <Manufacturer id="0053" name="Viewsonic"></Manufacturer>
@@ -1951,7 +1963,7 @@
   <Manufacturer id="0147" name="Z-Wave.Me">
     <Product id="0003" name="RaZberry Controller" type="0002"/>
     <Product id="0001" name="RaZberry Controller ZWave+" type="0400"/>
-    <Product id="0002" name="RaZberry Controller 2016 ZWave+" type="0400"/>
+    <Product id="0002" name="RaZberry Controller 2016 ZWave+" config="zwave.me/razberry.xml" type="0400"/>
   </Manufacturer>
   <Manufacturer id="024D" name="Z-works"></Manufacturer>
   <Manufacturer id="024E" name="zConnect"></Manufacturer>
