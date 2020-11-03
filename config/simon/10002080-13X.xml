@@ -59,7 +59,7 @@ https://products.z-wavealliance.org/products/2669
       <Item label="The central LED flashes for 5 seconds at a frequency of 0,1s." value="255"/>
     </Value>
 
-    <Value genre="config" index="21" label="Load State (Read Only)" max="65535" min="0" type="byte" size="2" value="0" read_only="true">
+    <Value genre="config" index="21" label="Load State (Read Only)" max="65535" min="0" type="byte" size="1" value="0" read_only="true">
       <Help>
         Read only Configuration used to report the device state and last value. This value is represented in Hexadecimal.
         Byte 0 informs about Load State (0 load is OFF and 1 load is ON).
