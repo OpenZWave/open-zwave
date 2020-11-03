@@ -22,7 +22,7 @@ https://products.z-wavealliance.org/products/3089
 Please use this procedure only when the network primary controller is missing or otherwise inoperable.
 </MetaDataItem>
     <MetaDataItem id="0003" name="Identifier" type="0002">SHRM10000</MetaDataItem>
-    <MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&filename=MarketCertificationFiles/3089/Anleitung%20SHRM10000%20EN.pdf</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&ampfilename=MarketCertificationFiles/3089/Anleitung%20SHRM10000%20EN.pdf</MetaDataItem>
     <MetaDataItem name="Name">ABUS Z-Wave Smoke detector
 </MetaDataItem>
     <MetaDataItem id="0003" name="FrequencyName" type="0002">CEPT (Europe)</MetaDataItem>
