@@ -491,6 +491,9 @@
   <Manufacturer id="017C" name="EbV"></Manufacturer>
   <Manufacturer id="016B" name="Echostar"></Manufacturer>
   <Manufacturer id="028F" name="Eco Automation"></Manufacturer>
+  <Manufacturer id="0431" name="EcoDim">
+    <Product config="ecodim/0.7.xml" id="0002" name="ECO-DIM.07 Z-Wave LED dimmer" type="0202"/>
+  </Manufacturer>
   <Manufacturer id="037C" name="Eco Life Engineering Co. Ltd."></Manufacturer>
   <Manufacturer id="014a" name="Ecolink">
     <Product config="ecolink/sensor.xml" id="0001" name="Motion Sensor" type="0001"/>
