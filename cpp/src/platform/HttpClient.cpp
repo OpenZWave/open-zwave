@@ -1368,7 +1368,7 @@ namespace OpenZWave
 					{
 						traceprint("Delete socket\n");
 						delete sock;
-						_store.erase(it++);
+						it = _store.erase(it);
 					}
 					else
 						++it;
