@@ -750,6 +750,7 @@
   </Manufacturer>
   <Manufacturer id="0295" name="fifthplay nv"></Manufacturer>
   <Manufacturer id="0138" name="First Alert (BRK Brands Inc)">
+    <Product config="firstalert/zsmoke.xml" id="0001" name="ZSmoke Smoke Detector" type="0001"/>
     <Product config="firstalert/zcombo.xml" id="0002" name="ZCombo Smoke and Carbon Monoxide Detector" type="0001"/>
   </Manufacturer>
   <Manufacturer id="002c" name="Flex Automation"></Manufacturer>
