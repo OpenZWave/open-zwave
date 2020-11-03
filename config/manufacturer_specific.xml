@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ManufacturerSpecificData Revision="124"
+<ManufacturerSpecificData Revision="125"
   xmlns="https://github.com/OpenZWave/open-zwave">
   <Manufacturer id="0028" name="2B Electronics"></Manufacturer>
   <Manufacturer id="0098" name="2GIG Technologies">
@@ -1146,6 +1146,7 @@
     <Product config="leviton/vrpa1.xml" id="0334" name="Leviton VRPA1 Plug-In Outlet" type="1805" />
     <Product config="leviton/dzpa1.xml" id="0001" name="Leviton DZPA1 Plug-In Outlet" type="3601"/>
     <Product config="leviton/vrpd3.xml" id="0334" name="Leviton VRPD3-1LW 300W Plug-In Lamp Dimming Module" type="1706"/>
+    <Product id="0002" name="ZW4SF-1BW Decora Smart 4-Speed Fan Controller" type="0038"/>
   </Manufacturer>
   <Manufacturer id="0015" name="Lexel"></Manufacturer>
   <Manufacturer id="015B" name="LG Electronics"></Manufacturer>
