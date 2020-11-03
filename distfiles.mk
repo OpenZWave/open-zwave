@@ -314,6 +314,7 @@ DISTFILES =	.gitignore \
 	config/ge/12720.xml \
 	config/ge/12724-dimmer.xml \
 	config/ge/12727.xml \
+	config/ge/14280-plugin-dimmer.xml \
 	config/ge/14282-plugin-switch.xml \
 	config/ge/14284.xml \
 	config/ge/14285.xml \
@@ -342,6 +343,7 @@ DISTFILES =	.gitignore \
 	config/ge/zw4001-switch.xml \
 	config/ge/zw6302.xml \
 	config/gocontrol/GC-TBZ48L.xml \
+	config/goodway/td14010.xml \
 	config/gr/gr-302n.xml \
 	config/gr/gr105.xml \
 	config/gr/gr105n.xml \
@@ -653,6 +655,7 @@ DISTFILES =	.gitignore \
 	config/images/ge/12719-plugin-switch.png \
 	config/images/ge/12724-dimmer.png \
 	config/images/ge/12727.png \
+	config/images/ge/14280-plugin-dimmer.png \
 	config/images/ge/14282-plugin-switch.png \
 	config/images/ge/14284.png \
 	config/images/ge/14285.png \
@@ -678,6 +681,7 @@ DISTFILES =	.gitignore \
 	config/images/ge/relay.png \
 	config/images/ge/ze26i.png \
 	config/images/ge/zw6302.png \
+	config/images/goodway/td14010.png \
 	config/images/gr/gr-302n.png \
 	config/images/gr/gr105.png \
 	config/images/gr/gr105n.png \
@@ -758,6 +762,7 @@ DISTFILES =	.gitignore \
 	config/images/inovelli/lzw41.png \
 	config/images/inovelli/lzw42.png \
 	config/images/inovelli/lzw60.png \
+	config/images/inovelli/nzw30.png \
 	config/images/inovelli/simple_module.png \
 	config/images/iwatsu/ne-4ct-2p.png \
 	config/images/iwatsu/ne-4ct.png \
@@ -777,6 +782,7 @@ DISTFILES =	.gitignore \
 	config/images/leviton/vrpa1.png \
 	config/images/leviton/vrpd3.png \
 	config/images/leviton/vrs15.png \
+	config/images/leviton/zw4sf.png \
 	config/images/linear/LB60Z-1.png \
 	config/images/linear/WD500Z5-1.png \
 	config/images/linear/WT00Z5-1.png \
@@ -944,6 +950,7 @@ DISTFILES =	.gitignore \
 	config/images/vision/zm1601eu.png \
 	config/images/vision/zm1601eu5.png \
 	config/images/vision/zm1602eu5.png \
+	config/images/vision/zm1701.png \
 	config/images/vision/zp3102.png \
 	config/images/vision/zp3111.png \
 	config/images/vision/zr1202us.png \
@@ -1014,6 +1021,7 @@ DISTFILES =	.gitignore \
 	config/images/zwave.me/ZUno.png \
 	config/images/zwave.me/kfob.png \
 	config/images/zwave.me/popp_kfob-c.png \
+	config/images/zwave.me/razberry.png \
 	config/images/zwave.me/zme_raz5.png \
 	config/images/zwave.me/zweather.png \
 	config/images/zwp/PA-100.png \
@@ -1064,6 +1072,7 @@ DISTFILES =	.gitignore \
 	config/leviton/vrpa1.xml \
 	config/leviton/vrpd3.xml \
 	config/leviton/vrs15.xml \
+	config/leviton/zw4sf.xml \
 	config/linear/GC-TBZ48.xml \
 	config/linear/LB60Z-1.xml \
 	config/linear/PD300Z-2.xml \
@@ -1392,6 +1401,7 @@ DISTFILES =	.gitignore \
 	config/zwave.me/iTemp.xml \
 	config/zwave.me/kfob.xml \
 	config/zwave.me/popp_kfob-c.xml \
+	config/zwave.me/razberry.xml \
 	config/zwave.me/zme_raz5.xml \
 	config/zwave.me/zweather.xml \
 	config/zwcfg.xsd \
