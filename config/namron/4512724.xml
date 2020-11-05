@@ -24,7 +24,7 @@
     <MetaDataItem name="InclusionDescription">Triple click on the reset button or repower the device</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">Triple click on the reset button</MetaDataItem>
     <MetaDataItem name="ResetDescription">Press and hold reset button for 10 seconds</MetaDataItem>
-    <MetaDataItem id="d005" name="Identifier" type="0200">4512724</MetaDataItem>
+    <MetaDataItem id="d00c" name="Identifier" type="0200">4512724</MetaDataItem>
      <ChangeLog>
       <Entry author="Nikhil André Luthra - nikhil.a.luthra@gmail.com" date="01 Nov 2020" revision="1">Handcrafted based on namron/1402756.xml and Vendors product manual</Entry>
     </ChangeLog>
