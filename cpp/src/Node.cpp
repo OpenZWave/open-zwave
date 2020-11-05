@@ -1818,26 +1818,6 @@ void Node::SetSecuredClasses(uint8 const* _data, uint8 const _length, uint32 con
 					pCommandClass->SetInstance(_instance);
 				else
 					pCommandClass->SetInstance(1);
-
-				/* set our Static Request Flags */
-				uint8 request = 0;
-
-				if (GetCommandClass(Internal::CC::MultiInstance::StaticGetCommandClassId()))
-				{
-					// Request instances
-					request |= (uint8) Internal::CC::CommandClass::StaticRequest_Instances;
-				}
-
-				if (GetCommandClass(Internal::CC::Version::StaticGetCommandClassId()))
-				{
-					// Request versions
-					request |= (uint8) Internal::CC::CommandClass::StaticRequest_Version;
-				}
-
-				if (request)
-				{
-					pCommandClass->SetStaticRequest(request);
-				}
 			}
 		}
 		else
@@ -1852,6 +1832,7 @@ void Node::SetSecuredClasses(uint8 const* _data, uint8 const _length, uint32 con
 			Log::Write(LogLevel_Info, m_nodeId, "    %s (Unsecured) - %s", it->second->GetCommandClassName().c_str(), it->second->IsInNIF() ? "InNIF" : "NotInNIF");
 	}
 
+	SetStaticRequests();
 }
 //-----------------------------------------------------------------------------
 // <Node::UpdateNodeInfo>
