@@ -325,14 +325,15 @@ namespace OpenZWave
 //-----------------------------------------------------------------------------
 		void Scene::RemoveValues(uint32 const _homeId)
 		{
-			again: for (vector<SceneStorage*>::iterator it = m_values.begin(); it != m_values.end(); ++it)
+			for (auto it = m_values.begin(); it != m_values.end();)
 			{
 				if ((*it)->m_id.GetHomeId() == _homeId)
 				{
 					delete *it;
-					m_values.erase(it);
-					goto again;
+					it = m_values.erase(it);
 				}
+				else
+					it++;
 			}
 			// If the scene is now empty, delete it.
 			if (m_values.empty())
@@ -352,14 +353,15 @@ namespace OpenZWave
 				Scene *scene = Scene::Get(i);
 				if (scene != NULL)
 				{
-					again: for (vector<SceneStorage*>::iterator it = scene->m_values.begin(); it != scene->m_values.end(); ++it)
+					for (auto it = scene->m_values.begin(); it != scene->m_values.end();)
 					{
 						if ((*it)->m_id.GetHomeId() == _homeId && (*it)->m_id.GetNodeId() == _nodeId)
 						{
 							delete *it;
-							scene->m_values.erase(it);
-							goto again;
+							it = scene->m_values.erase(it);
 						}
+						else
+							it++;
 					}
 					// If the scene is now empty, delete it.
 					if (scene->m_values.empty())
