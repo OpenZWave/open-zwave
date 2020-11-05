@@ -72,7 +72,7 @@
         <Item label="Trailing edge" value="0"/>
         <Item label="Leading edge" value="1"/>
     </Value>
-    <Value type="list" genre="config" instance="1" index="8" label="External switch type" value="0">
+    <Value type="list" genre="config" instance="1" index="8" label="External switch type" value="0" size="1">
         <Help>
            External switch type
         </Help>
@@ -114,7 +114,7 @@
         <Item label="Disable" value="0"/>
         <Item label="Enable" value="1"/>
     </Value>
-    <Value type="byte" genre="config" instance="1" index="14" label="Power automatic report absolute threshold" size="2" value="10">
+    <Value type="byte" genre="config" instance="1" index="14" label="Power automatic report absolute threshold" value="10">
         <Help>
           Power automatic report absolute threshold, unit is W.
           When power changes above the absolute threshold, immediately report current power value
@@ -126,25 +126,25 @@
           When power changes above the percentage threshold, immediately report current power value
         </Help>
     </Value>
-    <Value type="byte" genre="config" instance="1" index="21" label="Power metering automatic report time cycle" size="4" value="600">
+    <Value type="byte" genre="config" instance="1" index="21" label="Power metering automatic report time cycle" value="600">
         <Help>
           Power metering automatic report time cycle, unit is second.
           Valid time cycle value: 5~2678400, when set as 0, report function disabled
         </Help>
     </Value>
-    <Value type="byte" genre="config" instance="1" index="22" label="Energy metering automatic report time cycle" size="4" value="1800">
+    <Value type="byte" genre="config" instance="1" index="22" label="Energy metering automatic report time cycle" value="1800">
         <Help>
           Energy metering automatic report time cycle, unit is second
           Valid time cycle value: 5~2678400, when set as 0, report function disabled
         </Help>
     </Value>
-    <Value type="byte" genre="config" instance="1" index="23" label="Voltage metering automatic report time cycle" size="4" value="3600">
+    <Value type="byte" genre="config" instance="1" index="23" label="Voltage metering automatic report time cycle" value="3600">
         <Help>
           Voltage metering automatic report time cycle, unit is second
           Valid time cycle value: 5~2678400, when set as 0, report function disabled
         </Help>
     </Value>
-    <Value type="byte" genre="config" instance="1" index="24" label="Current metering automatic report time cycle, unit is second" size="4" value="3600">
+    <Value type="byte" genre="config" instance="1" index="24" label="Current metering automatic report time cycle, unit is second" value="3600">
         <Help>
           Current metering automatic report time cycle, unit is second
           Valid time cycle value: 5~2678400, when set as 0, report function disabled
