@@ -113,6 +113,14 @@ Set point mode.
     </Value>
   </CommandClass>
 
+  <!-- This thermostat's setpoint descriptions are 0 based, not 1 -->
+  <CommandClass id="67">
+    <Compatibility>
+      <OverridePrecision>2</OverridePrecision>
+      <Base>0</Base>
+    </Compatibility>
+  </CommandClass>
+
   <!-- Association Groups -->
   <CommandClass id="133">
     <Associations num_groups="2">
