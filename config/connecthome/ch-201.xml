@@ -15,6 +15,7 @@ Please note that after excluding the device from the Z-Wave network, all setting
     <MetaDataItem name="ResetDescription">To perform factory reset exclude the device form Z-Wave network and include it again.</MetaDataItem>
     <ChangeLog>
       <Entry author="Kostiantyn Khodykin - kostiantyn.khodykin@outlook.com" date="28 June 2020" revision="1">Initial configuration definition of CH-201</Entry>
+      <Entry author="Bogdan Pankiv - bogdan.pankiv@gmail.com" date="08 November 2020" revision="2">Setpoint feature fixed for CH-201</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration Parameters -->
