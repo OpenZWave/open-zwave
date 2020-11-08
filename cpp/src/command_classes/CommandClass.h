@@ -215,8 +215,8 @@ namespace OpenZWave
 					 *  \see Msg
 					 */
 					void AppendValue(Msg* _msg, string const& _value, uint8 const _scale, uint8 const _minsize = 0, uint8 const _minprecision = 0) const;
-					uint8 const GetAppendValueSize(string const& _value) const;
-					int32 ValueToInteger(string const& _value, uint8* o_precision, uint8* o_size) const;
+					uint8 const GetAppendValueSize(string const& _value, uint8 const _minsize = 0, uint8 const _minprecision = 0) const;
+					int32 ValueToInteger(string const& _value, uint8* o_precision, uint8* o_size, uint8 const _minsize = 0, uint8 const _minprecision = 0) const;
 
 					void UpdateMappedClass(uint8 const _instance, uint8 const _classId, uint8 const _value);		// Update mapped class's value from BASIC class
 

@@ -243,7 +243,7 @@ namespace OpenZWave
 						string minValue = ExtractValue(&_data[2], &scale, &min_precision);
 						string maxValue = ExtractValue(&_data[2 + size + 1], &scale, &max_precision);
 
-						Log::Write(LogLevel_Info, GetNodeId(), "Received capabilities of thermostat setpoint type %d, min %s (field size: %i bytes, precision: %i decimals) max %s", (int) _data[1], minValue.c_str(), size, min_precision, maxValue.c_str());
+						Log::Write(LogLevel_Info, GetNodeId(), "Received capabilities of thermostat setpoint type %d, min %s (field size: %i bytes, precision: %i decimals) max %s (precision: %i decimals)", (int) _data[1], minValue.c_str(), size, min_precision, maxValue.c_str(), max_precision);
 
 						uint8 index = _data[1];
 						// Add supported setpoint
@@ -290,7 +290,7 @@ namespace OpenZWave
 					Msg* msg = new Msg("ThermostatSetpointCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
 					msg->SetInstance(this, _value.GetID().GetInstance());
 					msg->Append(GetNodeId());
-					msg->Append(4 + GetAppendValueSize(value->GetValue()));
+					msg->Append(4 + GetAppendValueSize(value->GetValue(), setpointminsize, setpointprecision));
 					msg->Append(GetCommandClassId());
 					msg->Append(ThermostatSetpointCmd_Set);
 					msg->Append((uint8_t) (value->GetID().GetIndex() & 0xFF));
