@@ -70,6 +70,7 @@ namespace OpenZWave
 			{
 				m_com.EnableFlag(COMPAT_FLAG_TSSP_BASE, 1);
 				m_com.EnableFlag(COMPAT_FLAG_TSSP_ALTTYPEINTERPRETATION, true);
+				m_com.EnableFlag(COMPAT_FLAG_ENFORCE_MINSIZEPRECISION, false);
 				SetStaticRequest(StaticRequest_Values);
 			}
 
@@ -250,9 +251,13 @@ namespace OpenZWave
 						if (index < ThermostatSetpoint_Count)
 						{
 							string setpointName = c_setpointName[index];
-							// Retain the size of the minimum temperature as the minimum field size for the temperature and the minimum precision as the base precision for future communication
-							node->CreateValueByte(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_ThermostatSetpoint::SetPointMinSize, setpointName + "_setpointminsize", "B", false, false, size, 0);
-							node->CreateValueByte(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_ThermostatSetpoint::SetPointPrecision, setpointName + "_setpointprecision", "D", false, false, min_precision, 0);
+
+                                                        if (m_com.GetFlagBool(COMPAT_FLAG_ENFORCE_MINSIZEPRECISION)) {
+								// Retain the size of the minimum temperature as the minimum field size for the temperature and the minimum precision as the base precision for future communication
+								node->CreateValueByte(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_ThermostatSetpoint::SetPointMinSize, setpointName + "_setpointminsize", "B", false, false, size, 0);
+								node->CreateValueByte(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_ThermostatSetpoint::SetPointPrecision, setpointName + "_setpointprecision", "D", false, false, min_precision, 0);
+								Log::Write(LogLevel_Info, GetNodeId(), "EnforceMinSizePrecision enabled, retained min size and min precision from capability report for setpoint command");
+							}
 							node->CreateValueDecimal(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_ThermostatSetpoint::Unused_0_Minimum + index, setpointName + "_minimum", "C", false, false, minValue, 0);
 							node->CreateValueDecimal(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_ThermostatSetpoint::Unused_0_Maximum + index, setpointName + "_maximum", "C", false, false, maxValue, 0);
 							Log::Write(LogLevel_Info, GetNodeId(), "    Added setpoint: %s", setpointName.c_str());

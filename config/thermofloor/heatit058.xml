@@ -57,6 +57,7 @@ NB! Please use this procedure only when the primary controller/ gateway is missi
        <Instance index="1"/>
        <Value genre="user" index="1" instance="1" label="Heating setpoint" max="0" min="0" units="C" read_only="false" type="decimal" value="21.0" write_only="false"/>
        <Compatibility>
+	 <EnforceMinSizePrecision>true</EnforceMinSizePrecision>
          <Base>0</Base>
          <CreateVars>true</CreateVars>
        </Compatibility>
