@@ -16,7 +16,7 @@
     <MetaDataItem id="0xa306" name="FrequencyName" type="0x0300">CEPT</MetaDataItem>
     <MetaDataItem id="0xa306" name="Identifier" type="0x0300">45 126 82 (white) 45 126 83 (black)</MetaDataItem>
     <ChangeLog>
-      <Entry author="Jonas Sauge" date="26 August 2020" revision="1"></Entry>
+      <Entry author="Jonas Sauge" date="26 August 2020" revision="1">add Heatit Z-Push Button 4</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration Command Class - All Configuration Parameters should be entered into the section below -->
