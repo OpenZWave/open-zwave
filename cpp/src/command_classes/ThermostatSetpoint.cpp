@@ -252,7 +252,7 @@ namespace OpenZWave
 						{
 							string setpointName = c_setpointName[index];
 
-                                                        if (m_com.GetFlagBool(COMPAT_FLAG_ENFORCE_MINSIZEPRECISION)) {
+							if (m_com.GetFlagBool(COMPAT_FLAG_ENFORCE_MINSIZEPRECISION)) {
 								// Retain the size of the minimum temperature as the minimum field size for the temperature and the minimum precision as the base precision for future communication
 								node->CreateValueByte(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_ThermostatSetpoint::SetPointMinSize, setpointName + "_setpointminsize", "B", false, false, size, 0);
 								node->CreateValueByte(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_ThermostatSetpoint::SetPointPrecision, setpointName + "_setpointprecision", "D", false, false, min_precision, 0);
@@ -279,16 +279,15 @@ namespace OpenZWave
 				{
 					Internal::VC::ValueDecimal const* value = static_cast<Internal::VC::ValueDecimal const*>(&_value);
 					uint8 scale = strcmp("C", value->GetUnits().c_str()) ? 1 : 0;
-					int8 setpointminsize = 0;   // Minimum number of bytes to express the setpoint value, cached from the capabilities report
-					int8 setpointprecision = 0; // Minimum precision express the setpoint value, cached from the capabilities report
-					uint8 _instance = 1; // FIXME where is the instance ID supposed to come from?
+					int8 setpointminsize = 0;   // Minimum number of bytes to express the setpoint value, optionally cached from the capabilities report
+					int8 setpointprecision = 0; // Minimum precision express the setpoint value, optionally cached from the capabilities report
 
-					if (Node* node = GetNodeUnsafe()) {
-						Internal::VC::Value const* _minsizeValue = node->GetValue(GetCommandClassId(), _instance, ValueID_Index_ThermostatSetpoint::SetPointMinSize);
-						Internal::VC::Value const* _precisionValue = node->GetValue(GetCommandClassId(), _instance, ValueID_Index_ThermostatSetpoint::SetPointPrecision);
-						Internal::VC::ValueByte const* minsizeValue = static_cast<Internal::VC::ValueByte const*>(_minsizeValue);
-						Internal::VC::ValueByte const* precisionValue = static_cast<Internal::VC::ValueByte const*>(_precisionValue);
+					if (Internal::VC::ValueByte const *minsizeValue = static_cast<Internal::VC::ValueByte const*>(GetValue(_value.GetID().GetInstance(),  ValueID_Index_ThermostatSetpoint::SetPointMinSize)))
+					{
 						setpointminsize = minsizeValue->GetValue();
+					}
+					if (Internal::VC::ValueByte const *precisionValue = static_cast<Internal::VC::ValueByte const*>(GetValue(_value.GetID().GetInstance(),  ValueID_Index_ThermostatSetpoint::SetPointPrecision)))
+					{
 						setpointprecision = precisionValue->GetValue();
 					}
 
