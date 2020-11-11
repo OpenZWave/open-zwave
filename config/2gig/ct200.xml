@@ -110,7 +110,7 @@
   <CommandClass id="67">
     <Compatibility>
       <Base>0</Base>
-      <AltTypeInterpretation>false</AltTypeInterpretation>
+      <AltTypeInterpretation>true</AltTypeInterpretation>
     </Compatibility>
   </CommandClass>  
 
