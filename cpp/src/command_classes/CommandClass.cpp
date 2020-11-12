@@ -602,16 +602,6 @@ namespace OpenZWave
 				uint8 precision;
 				uint8 size;
 				int32 val = ValueToInteger(_value, &precision, &size, _minsize, _minprecision);
-				// FIXME remove - logic moved into ValueToInteger to be shared from within there
-				//if(size < _minsize) size = _minsize;
-				//if(precision < _minprecision)
-				//{
-				//	Log::Write(LogLevel_Info, GetNodeId(), "Increasing precision on integer value %i, obtained from %s, from %i decimals to %i decimals", val, _value, precision, _minprecision);
-				//	int8 const delta = _minprecision - precision;
-				//	for(uint8 i=0; i<delta; i++) val = val * 10; // increase precision
-				//	precision = _minprecision;
-				//	Log::Write(LogLevel_Info, GetNodeId(), "Increased precision result: %i raw with %i decimals", val, precision);
-				//}
 
 				_msg->Append((precision << c_precisionShift) | (_scale << c_scaleShift) | size);
 
