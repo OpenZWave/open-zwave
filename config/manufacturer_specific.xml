@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ManufacturerSpecificData Revision="132" xmlns="https://github.com/OpenZWave/open-zwave">
+<ManufacturerSpecificData Revision="133" xmlns="https://github.com/OpenZWave/open-zwave">
   <Manufacturer id="0028" name="2B Electronics"></Manufacturer>
   <Manufacturer id="0098" name="2GIG Technologies">
     <Product config="2gig/ct50e.xml" id="015e" name="CT50e Thermostat" type="3200"/>
@@ -1724,6 +1724,7 @@
   </Manufacturer>
   <Manufacturer id="019b" name="ThermoFloor AS">
     <Product config="thermofloor/heatit021.xml" id="0001" name="Heatit Thermostat TF 021" type="0001"/>
+    <Product config="thermofloor/heatit021.xml" id="0201" name="Heatit Thermostat TF 016" type="0003"/>
     <Product config="thermofloor/heatit056.xml" id="0202" name="Heatit Thermostat TF 056" type="0003"/>
     <Product config="thermofloor/heatit058.xml" id="0203" name="Heatit Thermostat TF 058" type="0003"/>
     <Product config="thermofloor/heatit-zdim.xml" id="2200" name="Heatit ZDim" type="0003"/>
