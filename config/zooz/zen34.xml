@@ -20,6 +20,8 @@ SPECIFICATIONS:
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/027a:F001:0004</MetaDataItem>
     <MetaDataItem name="ProductPage">http://www.getzooz.com/</MetaDataItem>
     <MetaDataItem name="ProductSupport">http://www.support.getzooz.com/kb/section/185</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/zooz/zen27.png</MetaDataItem>
+<!--	  need to add product pic, current references zen27 -->
     <MetaDataItem name="ProductManual">https://opensmarthouse.org/zwavedatabase/1310/reference/zooz-zen34-manual-curves.pdf</MetaDataItem>
     <MetaDataItem name="InclusionDescription">Put the primary controller into inclusion mode and click the upper paddle 6 times quickly. The LED indicator will blink blue during the process and light up green once added successfully. It will light up red if failed.</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">Put the primary controller into exclusion mode and click the lower paddle 6 times quickly.</MetaDataItem>
