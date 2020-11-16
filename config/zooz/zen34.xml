@@ -37,25 +37,24 @@ SPECIFICATIONS:
   <!-- https://products.z-wavealliance.org/products/xxxx -->
 
   <!-- Configuration Parameters -->
-  <CommandClass id="112">
-	
+  <CommandClass id="112">	
     <Value genre="config" index="1" value="1" label="LED Indicator Mode" size="1" min="0" max="3" type="list">
       <Help>Choose the LED indicator mode for your Remote Switch</Help>
       <Item value="0" label="LED always off"/>
       <Item value="1" label="LED on when button is pressed"/>
       <Item value="2" label="LED always on in color specified in parameter 2"/>
       <Item value="3" label="LED always on in color specified in parameter 3"/>    
-	</Value>
+    </Value>
     <Value genre="config" index="2" value="1" label="LED color for UPPER paddle" size="1" min="0" max="6" type="list">
       <Help>Choose the LED indicator color for the UPPER paddle remote control triggers</Help>
       <Item value="0" label="white"/>
       <Item value="1" label="blue"/>
       <Item value="2" label="green"/>
-      <Item value="3" label="red">
+      <Item value="3" label="red"/>
       <Item value="4" label="magenta"/>
       <Item value="5" label="yellow"/>
-	    <Item value="6" label="cyan"/>
-	</Value>
+      <Item value="6" label="cyan"/>
+    </Value>
     <Value genre="config" index="3" value="1" label="LED color for LOWER paddle" size="1" min="0" max="6" type="list">
       <Help>Choose the LED indicator color for the LOWER paddle remote control triggers</Help>
       <Item value="0" label="white"/>
@@ -64,8 +63,8 @@ SPECIFICATIONS:
       <Item value="3" label="red"/>
       <Item value="4" label="magenta"/>
       <Item value="5" label="yellow"/>
-	    <Item value="6" label="cyan"/>
-	</Value>
+      <Item value="6" label="cyan"/>
+    </Value>
   </CommandClass>
 
   <!-- Association Groups -->
