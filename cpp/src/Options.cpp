@@ -122,6 +122,7 @@ Options* Options::Create(string const& _configPath, string const& _userPath, str
 		s_instance->AddOptionString("NetworkKey", string(""), false);
 		s_instance->AddOptionBool("RefreshAllUserCodes", false); 					// if true, during startup, we refresh all the UserCodes the device reports it supports. If False, we stop after we get the first "Available" slot (Some devices have 250+ usercode slots! - That makes our Session Stage Very Long )
 		s_instance->AddOptionInt("RetryTimeout", RETRY_TIMEOUT);				// How long do we wait to timeout messages sent
+		s_instance->AddOptionInt("MaxTries", MAX_TRIES);				// How many time do we retry a message before giving up
 		s_instance->AddOptionBool("EnableSIS", true);						// Automatically become a SUC if there is no SUC on the network.
 		s_instance->AddOptionBool("AssumeAwake", true);						// Assume Devices that Support the Wakeup CC are awake when we first query them....
 		s_instance->AddOptionBool("NotifyOnDriverUnload", false);						// Should we send the Node/Value Notifications on Driver Unloading - Read comments in Driver::~Driver() method about possible race conditions

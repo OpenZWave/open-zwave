@@ -35,6 +35,7 @@
 #include "command_classes/MultiInstance.h"
 #include "command_classes/Security.h"
 #include "aes/aescpp.h"
+#include "Options.h"
 
 namespace OpenZWave
 {
@@ -67,6 +68,12 @@ namespace OpenZWave
 			m_buffer[1] = 0;					// Length of the following data, filled in during Finalize.
 			m_buffer[2] = _msgType;
 			m_buffer[3] = _function;
+
+			int maxTries = MAX_TRIES;
+			if (Options::Get()->GetOptionAsInt("MaxTries", &maxTries)) 
+			{
+				m_maxSendAttempts = maxTries;
+			}
 		}
 
 //-----------------------------------------------------------------------------
