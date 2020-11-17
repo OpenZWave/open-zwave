@@ -27,6 +27,7 @@ SPECIFICATIONS:
 	<MetaDataItem name="WakeupDescription">Click the upper paddle 7 times quickly. The LED indicator will stay siolid blue during wakeup and will turn off when the device turns the Z-Wave radio off again.</MetaDataItem>
     <MetaDataItem name="ResetDescription">When your network's primary controller is missing or otherwise inoperable, you may need to reset the device to factory settings manually. In order to complete the process, make sure the device is powered, then taptap- tap'and'hold the upper paddle. The LED indicator will blink red 5 times to indicate successful reset.</MetaDataItem>
     <MetaDataItem id="F001" name="ZWProductPage" type="0004">https://products.z-wavealliance.org/products/xxxx</MetaDataItem>
+	  <!--product page not available as of 11/17/20 -->
     <MetaDataItem id="F001" name="FrequencyName" type="0004">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem id="F001" name="Identifier" type="0004">ZEN-34</MetaDataItem>
     <ChangeLog>
@@ -34,7 +35,7 @@ SPECIFICATIONS:
     </ChangeLog>
   </MetaData>
 
-  <!-- https://products.z-wavealliance.org/products/xxxx -->
+  <!-- https://products.z-wavealliance.org/products/xxxx not yet available-->
 
   <!-- Configuration Parameters -->
   <CommandClass id="112">
