@@ -94,4 +94,11 @@ and release the top or bottom of the wireless smart dimmer
       <Group index="3" label="Basic - Double Tap" max_associations="5"/>
     </Associations>
   </CommandClass>
+  <!-- COMMAND_CLASS_BASIC -->
+  <CommandClass id="32">
+    <Compatibility>
+      <IgnoreMapping>true</IgnoreMapping>
+      <SetAsReport>true</SetAsReport>
+    </Compatibility>
+  </CommandClass>
 </Product>

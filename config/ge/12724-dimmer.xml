@@ -77,4 +77,11 @@ Note: This should only be used in the event your network’s primary controller 
       <VerifyChanged index="0">true</VerifyChanged>
     </Compatibility>
   </CommandClass>
+  <!-- COMMAND_CLASS_BASIC -->
+  <CommandClass id="32">
+    <Compatibility>
+      <IgnoreMapping>true</IgnoreMapping>
+      <SetAsReport>true</SetAsReport>
+    </Compatibility>
+  </CommandClass>
 </Product>
