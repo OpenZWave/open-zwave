@@ -1,4 +1,4 @@
-<!-- GE(Jasco) 12724 3-Way Dimmer Switch --><Product Revision="10" xmlns="https://github.com/OpenZWave/open-zwave">
+<!-- GE(Jasco) 12724 3-Way Dimmer Switch --><Product Revision="11" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0063:3031:4944</MetaDataItem>
     <MetaDataItem name="ProductPic">images/ge/12724-dimmer.png</MetaDataItem>
@@ -20,6 +20,7 @@
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="8">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2506/xml</Entry>
       <Entry author="Shaun Feakes" date="04 Sep 2019" revision="9">Update for 3032</Entry>
       <Entry author="Justin Hammond" date="26 June 2020" revision="10">Add Verifed Change Flag</Entry>
+      <Entry author="Brian France" date="19 Nov 2020" revision="11">Added COMMAND_CLASS_BASIC block to set Value type instead of Node Event for Basic Set</Entry>
     </ChangeLog>
     <MetaDataItem id="3033" name="ZWProductPage" type="4944">https://products.z-wavealliance.org/products/1201/</MetaDataItem>
     <MetaDataItem id="3033" name="FrequencyName" type="4944">U.S. / Canada / Mexico</MetaDataItem>
