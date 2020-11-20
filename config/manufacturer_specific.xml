@@ -273,6 +273,7 @@
     <Product config="assa_abloy/TouchDeadbolt.xml" id="1000" name="Yale Key Free Touchscreen Deadbolt (YRD446)" type="8002"/>
     <Product config="assa_abloy/PushButtonLever.xml" id="0409" name="Yale Push Button Lever Lock (YRL210)" type="0003"/>
     <Product config="assa_abloy/PushButtonLever.xml" id="0800" name="Yale Push Button Lever Lock (YRL210)" type="0003"/>
+    <Product config="assa_abloy/PushButtonLever.xml" id="0f00" name="Yale Push Button Lever Lock (YRL226)" type="800c"/>
     <Product config="assa_abloy/PushButtonDeadbolt.xml" id="0000" name="Yale Push Button Deadbolt (YRD210)" type="0004"/>
     <Product config="assa_abloy/PushButtonDeadbolt.xml" id="0209" name="Yale Push Button Deadbolt (YRD210)" type="0004"/>
     <Product config="assa_abloy/PushButtonDeadbolt.xml" id="aa00" name="Yale Push Button Deadbolt (YRD210)" type="0004"/>
