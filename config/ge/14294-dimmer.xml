@@ -33,7 +33,7 @@ and release the top or bottom of the wireless smart dimmer
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="5">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2168/xml</Entry>
       <Entry author="Justin Hammond" date="26 Jun 2020" revision="6">Add Verified Change Flag </Entry>
       <Entry author="Keith Pine" date="14 Sep 2020" revision="7">Fixed metadata, added undocumented configuration parameters</Entry>
-      <Entry author="Brian France" date="19 Nov 2020" revision="8">Added COMMAND_CLASS_BASIC block to set Value type instead of Node Event for Basic Set</Entry>
+      <Entry author="Brian France" date="23 Nov 2020" revision="8">Added COMMAND_CLASS_BASIC block to set Value type instead of Node Event for Basic Set, default double tap association auto=true</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration -->

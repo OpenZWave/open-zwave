@@ -18,7 +18,7 @@
       <Entry author="Justin Hammond - Justin@dynam.ac" date="24 May 2019" revision="2">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1856/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="3">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2055/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2502/xml</Entry>
-      <Entry author="Brian France" date="19 Nov 2020" revision="5">Added COMMAND_CLASS_BASIC block to set Value type instead of Node Event for Basic Set</Entry>
+      <Entry author="Brian France" date="23 Nov 2020" revision="5">Added COMMAND_CLASS_BASIC block to set Value type instead of Node Event for Basic Set, default double tap association auto=true</Entry>
     </ChangeLog>
     <MetaDataItem id="3038" name="ZWProductPage" type="4952">https://products.z-wavealliance.org/products/2055/</MetaDataItem>
     <MetaDataItem id="3038" name="FrequencyName" type="4952">U.S. / Canada / Mexico</MetaDataItem>
