@@ -17,7 +17,7 @@
 3. Once your controller has confirmed that the device has been included, refresh the Z-Wave network to optimize performance.</MetaDataItem>
     <ChangeLog>
       <Entry author="Caleb Mingle - caleb@mingle.cm" date="07 Sept 2019" revision="1">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/3317/xml</Entry>
-      <Entry author="Brian France" date="23 Nov 2020" revision="3">Added COMMAND_CLASS_BASIC block to set Value type instead of Node Event for Basic Set, Added COMMAND_CLASS_ASSOCIATION block for double tap with double tap defauled to auto</Entry>
+      <Entry author="Brian France" date="23 Nov 2020" revision="2">Added COMMAND_CLASS_BASIC block to set Value type instead of Node Event for Basic Set, Added COMMAND_CLASS_ASSOCIATION block for double tap with double tap defauled to auto</Entry>
     </ChangeLog>
   </MetaData>
   <CommandClass id="112">
