@@ -40,7 +40,7 @@
     <Associations num_groups="3">
       <Group index="1" label="Lifeline" max_associations="5"/>
       <Group index="2" label="Basic - Local Load" max_associations="5"/>
-      <Group index="3" label="Basic - Double Tap" max_associations="5"/>
+      <Group index="3" label="Basic - Double Tap" max_associations="5" auto="true" />
     </Associations>
   </CommandClass>
   <!-- COMMAND_CLASS_BASIC -->
