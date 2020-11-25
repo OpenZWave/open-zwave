@@ -41,11 +41,8 @@
 		</Value>
 	</CommandClass>
 	<CommandClass id="133">
-		<Associations num_groups="2">
-			<Group index="1" max_associations="5" label="Group 1" auto="true" multiInstance="true">
-				<Node id="1" />
-			</Group>
-			<Group index="2" max_associations="5" label="Group 2" auto="false" multiInstance="true" />
+		<Associations num_groups="1">
+			<Group index="1" max_associations="5" label="Lifeline"/>
 		</Associations>
 	</CommandClass>
 </Product>
