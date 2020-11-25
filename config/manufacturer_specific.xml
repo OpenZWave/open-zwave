@@ -1627,6 +1627,8 @@
     <Product config="shenzen_neo/ls02ch.xml" id="108b" name="Wall Switch (2 channels)" type="0003"/>
     <Product config="shenzen_neo/ls01ch.xml" id="008c" name="Wall Switch (1 channel)" type="0003"/>
     <Product config="shenzen_neo/ls01ch.xml" id="108c" name="Wall Switch (1 channel)" type="0003"/>
+	<!-- NAS-CS01Z Curtain Switch -->
+	<Product config="shenzen_neo/nas-cs01z.xml" id="102c" name="NAS-CS01Z Curtain Switch" type="0200"/>
   </Manufacturer>
   <Manufacturer id="032C" name="Shenzhen Saykey Technology">
     <Product config="shenzen_saykey/sk-3007-05.xml" id="0005" name="Curtain Motor Control with external module" type="3007"/>
