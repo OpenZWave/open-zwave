@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ManufacturerSpecificData Revision="132" xmlns="https://github.com/OpenZWave/open-zwave">
+<ManufacturerSpecificData Revision="133" xmlns="https://github.com/OpenZWave/open-zwave">
   <Manufacturer id="0028" name="2B Electronics"></Manufacturer>
   <Manufacturer id="0098" name="2GIG Technologies">
     <Product config="2gig/ct50e.xml" id="015e" name="CT50e Thermostat" type="3200"/>
@@ -1285,7 +1285,7 @@
     <Product config="namron/4512710.xml" id="d005" type="0200" name="Z-Wave Dimmer 400W"/>
     <Product config="namron/4512715.xml" id="d006" type="0200" name="Z-Wave Switch 400W"/>
     <Product config="namron/4512724.xml" id="d00c" type="0200" name="Z-Wave Dimmer 2 400W"/>
-    
+    <Product config="namron/4512720.xml" id="a306" type="0300" name="Z-wave 2 Kanaler Bryter" />
   </Manufacturer>
   <Manufacturer id="016E" name="Nanjing Easthouse Electrical Co"></Manufacturer>
   <Manufacturer id="0121" name="Napco Security Technologies, Inc.">
