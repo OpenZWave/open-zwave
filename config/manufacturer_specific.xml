@@ -1283,7 +1283,7 @@
   <Manufacturer id="0438" name="Namron">
     <Product config="namron/1402756.xml" id="0002" type="0202" name="LED Dimmer Z-Wave 200W"/>
     <Product config="namron/4512710.xml" id="d005" type="0200" name="Z-Wave Dimmer 400W"/>
-    <Product config="namron/4512712.xml" id="a306" type="0300" name="Z-wave 1 Kanal Bryter" />
+    <Product config="namron/4512712.xml" id="a30f" type="0300" name="Z-wave 1 Kanal Bryter" />
     <Product config="namron/4512715.xml" id="d006" type="0200" name="Z-Wave Switch 400W"/>
     <Product config="namron/4512724.xml" id="d00c" type="0200" name="Z-Wave Dimmer 2 400W"/>
     <Product config="namron/4512720.xml" id="a306" type="0300" name="Z-wave 2 Kanaler Bryter" />
