@@ -252,6 +252,8 @@ DISTFILES =	.gitignore \
 	config/evolve/lsm-15.xml \
 	config/evolve/ltm-5.xml \
 	config/fakro/arz.xml \
+	config/fakro/arzsolar.xml \
+	config/fakro/zrh12.xml \
 	config/fakro/zwp10.xml \
 	config/fakro/zwrs.xml \
 	config/fakro/zws12.xml \
@@ -800,6 +802,9 @@ DISTFILES =	.gitignore \
 	config/images/merten/508244.png \
 	config/images/miyakawaelectric/me-d101.png \
 	config/images/namron/1402756.png \
+	config/images/namron/4512710.png \
+	config/images/namron/4512715.png \
+	config/images/namron/4512724.png \
 	config/images/nexia/db100z.png \
 	config/images/nexia/th100nx.png \
 	config/images/nodon/asp3100SmartPlug.png \
@@ -853,6 +858,7 @@ DISTFILES =	.gitignore \
 	config/images/q-light/q-light_zerodim_2pol.png \
 	config/images/qees/reto-dimmer-plus.png \
 	config/images/qees/reto-plugin-switch.png \
+	config/images/qolsys/qz2140-840.png \
 	config/images/qubino/ZMNHADx.png \
 	config/images/qubino/ZMNHBDx.png \
 	config/images/qubino/ZMNHCDx.png \
@@ -1114,6 +1120,9 @@ DISTFILES =	.gitignore \
 	config/merten/50x5xx.xml \
 	config/miyakawaelectric/me-d101.xml \
 	config/namron/1402756.xml \
+	config/namron/4512710.xml \
+	config/namron/4512715.xml \
+	config/namron/4512724.xml \
 	config/nexia/db100z.xml \
 	config/nexia/th100nx.xml \
 	config/nodon/asp3100SmartPlug.xml \
@@ -1182,6 +1191,7 @@ DISTFILES =	.gitignore \
 	config/q-light/q-light_zerodim_2pol.xml \
 	config/qees/reto-dimmer-plus.xml \
 	config/qees/reto-plugin-switch.xml \
+	config/qolsys/qz2140-840.xml \
 	config/qubino/ZMNHAA2.xml \
 	config/qubino/ZMNHADx.xml \
 	config/qubino/ZMNHBA2.xml \
@@ -1289,6 +1299,7 @@ DISTFILES =	.gitignore \
 	config/thermofloor/heatit056.xml \
 	config/thermofloor/heatit058.xml \
 	config/thermofloor/heatit20a.xml \
+	config/thermofloor/heatitz4.xml \
 	config/thermofloor/heatitz8.xml \
 	config/trane/TZEMT400AB32MAA.xml \
 	config/trane/TZEMT400BB32MAA.xml \
