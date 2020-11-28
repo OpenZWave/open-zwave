@@ -1,4 +1,4 @@
-<Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
   <!-- Please refer to https://github.com/OpenZWave/open-zwave/wiki/Adding-Devices for instructions -->
   <MetaData>
     <MetaDataItem name="Name">Namron Z-Wave 1 kanal bryter K2</MetaDataItem>
@@ -12,10 +12,11 @@
     <MetaDataItem name="InclusionDescription">Set controller in inclusion mode press and hold down group 2 keys for 3 seconds</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">Set controller in exclusion mode press and hold down group 2 keys for 3 seconds</MetaDataItem>
     <MetaDataItem name="ResetDescription">Press and hold down group 2 keys for more than 10 seconds use only if controller is unavailable</MetaDataItem>
-    <MetaDataItem id="0xa306" name="ZWProductPage" type="0x0300">https://products.z-wavealliance.org/products/3910</MetaDataItem>
-    <MetaDataItem id="0xa306" name="FrequencyName" type="0x0300">CEPT</MetaDataItem>
-    <MetaDataItem id="0xa306" name="Identifier" type="0x0300">4512712</MetaDataItem>
+    <MetaDataItem id="0xa30f" name="ZWProductPage" type="0x0300">https://products.z-wavealliance.org/products/3910</MetaDataItem>
+    <MetaDataItem id="0xa30f" name="FrequencyName" type="0x0300">CEPT</MetaDataItem>
+    <MetaDataItem id="0xa30f" name="Identifier" type="0x0300">4512712</MetaDataItem>
     <ChangeLog>
+      <Entry author="Joachim M. Giæver" date="28 November 2020" revision="2">Fix id. </Entry>
       <Entry author="Joachim M. Giæver" date="28 November 2020" revision="1">Initial release. </Entry>
     </ChangeLog>
   </MetaData>
