@@ -1233,6 +1233,8 @@
   </Manufacturer>
   <Manufacturer id="0238" name="Milanity Inc"></Manufacturer>
   <Manufacturer id="0112" name="MITSUMI"></Manufacturer>
+  <Manufacturer id="0312" name="Minoston"></Manufacturer>
+    <Product config="minoston/mp22z.xml" id="FF07" name="MP22Z Z-Wave Outdoor Smart Plug" type="FF00"/>
   <Manufacturer id="019D" name="MOBILUS MOTOR z o.o."></Manufacturer>
   <Manufacturer id="0232" name="MODACOM CO. LTD"></Manufacturer>
   <Manufacturer id="008D" name="Modstrom"></Manufacturer>
