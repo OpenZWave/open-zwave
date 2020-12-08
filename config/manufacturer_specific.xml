@@ -1266,11 +1266,10 @@
   <Manufacturer id="0248" name="neusta next GmbH Co. KG"></Manufacturer>
   <Manufacturer id="0203" name="Newland Communication Science Technology Co. Ltd"></Manufacturer>
   <Manufacturer id="0268" name="Nexa Trading AB"></Manufacturer>
-  <Manufacturer id="0178" name="Nexia">
+  <Manufacturer id="0178" name="Nexia"></Manufacturer>
     <!-- full name in Z-wave database: Ingersoll Rand - Nexia Home Intelligence -->
     <Product config="nexia/db100z.xml" id="3130" name="DB100Z Doorbell Sensor" type="4442"/>
     <Product config="nexia/th100nx.xml" id="3130" name="TH100NX Temperature &amp; Humidity Sensor" type="5448"/>
-  </Manufacturer>
   <Manufacturer id="0075" name="NextEnergy"></Manufacturer>
   <Manufacturer id="0361" name="NHN Entertainment"></Manufacturer>
   <Manufacturer id="0185" name="Ningbo Sentek Electronics Co Ltd"></Manufacturer>
