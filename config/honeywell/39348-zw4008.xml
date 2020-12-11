@@ -1,5 +1,5 @@
 <!-- Honeywell(Jasco) 39348 / ZW4008 In-Wall Smart Switch-->
-<Product Revision="1" 
+<Product Revision="2" 
   xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <!--<MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/</MetaDataItem>-->
