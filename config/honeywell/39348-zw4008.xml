@@ -20,7 +20,7 @@ Note: This should only be used in the event your network’s primary controller 
     <MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&amp;filename=MarketCertificationFiles/3599/39348%20Binder.pdf</MetaDataItem>
     <ChangeLog>
       <Entry author="Jeff Sanicola - jeff.sanicola@outlook.com" date="01 Jan 2020" revision="1">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/Products/3599/xml</Entry>
-      <Entry author="Brian France" date="11 Dec 2020" revision="11">Added COMMAND_CLASS_BASIC block to set Value type instead of Node Event for Basic Set, Added COMMAND_CLASS_ASSOCIATION block for double tap with double tap defauled to auto</Entry>
+      <Entry author="Brian France" date="11 Dec 2020" revision="2">Added COMMAND_CLASS_BASIC block to set Value type instead of Node Event for Basic Set, Added COMMAND_CLASS_ASSOCIATION block for double tap with double tap defauled to auto</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration Parameters - per https://products.z-wavealliance.org/products/3599 -->
