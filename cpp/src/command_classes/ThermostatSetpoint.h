@@ -31,6 +31,7 @@
 #include <vector>
 #include <string>
 #include "command_classes/CommandClass.h"
+#include "value_classes/ValueDecimal.h"
 
 namespace OpenZWave
 {
@@ -79,12 +80,16 @@ namespace OpenZWave
 					{
 						return 3;
 					}
+					virtual void SessionSuccess(uint8 _session_id, uint32 const _instance);
 
 				protected:
 					virtual void CreateVars(uint8 const _instance) override;
 
 				private:
 					ThermostatSetpoint(uint32 const _homeId, uint8 const _nodeId);
+
+                    uint m_supervision_session_id;
+					Internal::VC::ValueDecimal const* m_value;
 			};
 		} // namespace CC
 	} // namespace Internal

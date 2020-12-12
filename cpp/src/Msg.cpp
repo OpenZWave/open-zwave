@@ -33,6 +33,7 @@
 #include "ZWSecurity.h"
 #include "platform/Log.h"
 #include "command_classes/MultiInstance.h"
+#include "command_classes/Supervision.h"
 #include "command_classes/Security.h"
 #include "aes/aescpp.h"
 
@@ -229,6 +230,33 @@ namespace OpenZWave
 
 			return str;
 		}
+
+//-----------------------------------------------------------------------------
+// <Msg::SupervisionEncap>
+// Encapsulate the data inside a Supervision message
+//-----------------------------------------------------------------------------
+		void Msg::SupervisionEncap(uint8 session_id)
+        {
+			char str[256];
+			if (m_buffer[3] != FUNC_ID_ZW_SEND_DATA)
+			{
+				return;
+			}
+
+            for (uint32 i = m_length - 1; i >= 6; --i)
+            {
+                m_buffer[i + 4] = m_buffer[i];
+            }
+            m_buffer[6] = Internal::CC::Supervision::StaticGetCommandClassId();
+            m_buffer[7] = Internal::CC::Supervision::SupervisionCmd_Get;
+            m_buffer[8] = Internal::CC::Supervision::SupervisionMoreStatusUpdates_MoreReports | session_id;
+            m_buffer[9] = m_buffer[5];
+            m_buffer[5] += 4;
+            m_length += 4;
+
+            snprintf(str, sizeof(str), "Supervisioned: %s", m_logText.c_str());
+            m_logText = str;
+        }
 
 //-----------------------------------------------------------------------------
 // <Msg::MultiEncap>
