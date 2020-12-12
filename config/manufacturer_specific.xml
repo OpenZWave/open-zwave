@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ManufacturerSpecificData Revision="132" xmlns="https://github.com/OpenZWave/open-zwave">
+<ManufacturerSpecificData Revision="133" xmlns="https://github.com/OpenZWave/open-zwave">
   <Manufacturer id="0028" name="2B Electronics"></Manufacturer>
   <Manufacturer id="0098" name="2GIG Technologies">
     <Product config="2gig/ct50e.xml" id="015e" name="CT50e Thermostat" type="3200"/>
@@ -1527,6 +1527,7 @@
     <Product id="000a" name="TZ4Z-IHD RCS Thermostat" type="0001"/>
     <Product config="rcs/em52-zw.xml" id="3532" name="EM52-ZW Z-Wave Home Energy Meter" type="454d"/>
     <Product config="rcs/pm12-zw.xml" id="3132" name="PM12-ZW Z-Wave Power Monitoring Module" type="504d"/>
+    <Product type="5442" id="5432" name="TBZ48 Thermostat" config="linear/GC-TBZ48.xml" />
   </Manufacturer>
   <Manufacturer id="0216" name="RET Nanjing Intelligence System"></Manufacturer>
   <Manufacturer id="0153" name="Revolv"></Manufacturer>
