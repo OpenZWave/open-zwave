@@ -65,6 +65,7 @@ namespace OpenZWave
 
 				void Append(uint8 const _data);
 				void AppendArray(const uint8* const _data, const uint8 _length);
+				void SupervisionEncap(uint8 session_id);
 				void Finalize();
 				void UpdateCallbackId();
 
@@ -215,7 +216,7 @@ namespace OpenZWave
 				{
 					m_homeId = homeId;
 				}
-				void setResendDuetoCANorNAK() 
+				void setResendDuetoCANorNAK()
 				{
 					m_resendDuetoCANorNAK = true;
 				}

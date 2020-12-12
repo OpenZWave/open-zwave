@@ -36,6 +36,7 @@
 #include "value_classes/Value.h"
 #include "platform/Log.h"
 #include "command_classes/CommandClass.h"
+#include "command_classes/Supervision.h"
 #include <ctime>
 #include "Options.h"
 
@@ -312,9 +313,13 @@ namespace OpenZWave
 							{
 								if (!IsWriteOnly())
 								{
-									// queue a "RequestValue" message to update the value
-									if (m_refreshAfterSet) {
-										cc->RequestValue( 0, m_id.GetIndex(), m_id.GetInstance(), Driver::MsgQueue_Send );
+									if (m_refreshAfterSet)
+									{
+									    if (!node->GetCommandClass(Internal::CC::Supervision::StaticGetCommandClassId()))
+									    {
+        									// queue a "RequestValue" message to update the value
+									    	cc->RequestValue( 0, m_id.GetIndex(), m_id.GetInstance(), Driver::MsgQueue_Send );
+									    }
 									}
 								}
 								else
@@ -483,11 +488,11 @@ namespace OpenZWave
 // Check a refreshed value
 //-----------------------------------------------------------------------------
 			int Value::VerifyRefreshedValue(
-					void* _originalValue, 
-					void* _checkValue, 
-					void* _newValue, 
+					void* _originalValue,
+					void* _checkValue,
+					void* _newValue,
 					void* _targetValue,
-					ValueID::ValueType _type, 
+					ValueID::ValueType _type,
 					int _originalValueLength, // = 0,
 					int _checkValueLength, // = 0,
 					int _newValueLength, // = 0,
@@ -788,19 +793,19 @@ namespace OpenZWave
 				 * - Caveat here is that if the outgoing queue is large, then this will be additionally delayed
 				 */
 				int32 timeout;
-				if (m_duration <= 2) 
+				if (m_duration <= 2)
 				{
 					timeout = 250;
 				}
-				else if (m_duration <= 5) 
+				else if (m_duration <= 5)
 				{
 					/* for Durations less than 5 seconds, lets refresh every 1/2 seconds
 					 */
 					timeout = 500;
-				} 
-				else 
+				}
+				else
 				{
-					/* Everything else is 1 second 
+					/* Everything else is 1 second
 					 */
 					timeout = 1000;
 				}
@@ -813,7 +818,7 @@ namespace OpenZWave
 
 //-----------------------------------------------------------------------------
 // <Value::sendValueRefresh>
-// Callback from the Timer to send a Get value to refresh a value from the 
+// Callback from the Timer to send a Get value to refresh a value from the
 // CheckTargetValue function
 //-----------------------------------------------------------------------------
 			void Value::sendValueRefresh(uint32 _unused)

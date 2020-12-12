@@ -149,6 +149,11 @@ namespace OpenZWave
 					virtual bool supportsMultiInstance() {
 						return true;
 					}
+					virtual uint8 GetSession(uint8 _command_class_id) {
+						return 0;
+					}
+					virtual void SessionSuccess(uint8 _session_id, uint32 const _instance) {
+					}
 
 					void SetInstances(uint8 const _instances);
 					void SetInstance(uint8 const _endPoint);

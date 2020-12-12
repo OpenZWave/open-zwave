@@ -26,6 +26,7 @@
 //-----------------------------------------------------------------------------
 
 #include "command_classes/CommandClasses.h"
+#include "command_classes/Supervision.h"
 #include "command_classes/ThermostatSetpoint.h"
 #include "Defs.h"
 #include "Msg.h"
@@ -67,6 +68,7 @@ namespace OpenZWave
 			ThermostatSetpoint::ThermostatSetpoint(uint32 const _homeId, uint8 const _nodeId) :
 					CommandClass(_homeId, _nodeId)
 			{
+				m_supervision_session_id = Supervision::StaticNoSessionId();
 				m_com.EnableFlag(COMPAT_FLAG_TSSP_BASE, 1);
 				m_com.EnableFlag(COMPAT_FLAG_TSSP_ALTTYPEINTERPRETATION, true);
 				SetStaticRequest(StaticRequest_Values);
@@ -260,6 +262,27 @@ namespace OpenZWave
 				return false;
 			}
 
+			void ThermostatSetpoint::SessionSuccess(uint8 _session_id, uint32 const _instance)
+			{
+			    if ( m_supervision_session_id == _session_id )
+			    {
+                    uint16 const _index = m_value->GetID().GetIndex();
+					if (Internal::VC::ValueDecimal* value = static_cast<Internal::VC::ValueDecimal*>(GetValue(_instance, _index)))
+					{
+                        value->SetPrecision(m_value->GetPrecision());   // TODO Do we actually need this?
+                        value->SetUnits(m_value->GetUnits());           // TODO Idem
+						value->OnValueRefreshed(m_value->GetValue());
+
+                        Log::Write(LogLevel_Info, GetNodeId(), "Confirmed thermostat setpoint %s to %s%s",
+                            value->GetLabel().c_str(), value->GetValue().c_str(), value->GetUnits().c_str());
+                    }
+                }
+                else
+                {
+                    Log::Write(LogLevel_Info, GetNodeId(), "Ignore unknown supervision session %d", _session_id);
+                }
+			}
+
 //-----------------------------------------------------------------------------
 // <ThermostatSetpoint::SetValue>
 // Set a thermostat setpoint temperature
@@ -268,17 +291,29 @@ namespace OpenZWave
 			{
 				if (ValueID::ValueType_Decimal == _value.GetID().GetType())
 				{
-					Internal::VC::ValueDecimal const* value = static_cast<Internal::VC::ValueDecimal const*>(&_value);
-					uint8 scale = strcmp("C", value->GetUnits().c_str()) ? 1 : 0;
+				    // TODO Is it safe to address _value outside this call?
+					m_value = static_cast<Internal::VC::ValueDecimal const*>(&_value);
+
+					uint8 scale = strcmp("C", m_value->GetUnits().c_str()) ? 1 : 0;
 
 					Msg* msg = new Msg("ThermostatSetpointCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
 					msg->SetInstance(this, _value.GetID().GetInstance());
 					msg->Append(GetNodeId());
-					msg->Append(4 + GetAppendValueSize(value->GetValue()));
+					msg->Append(4 + GetAppendValueSize(m_value->GetValue()));
 					msg->Append(GetCommandClassId());
 					msg->Append(ThermostatSetpointCmd_Set);
-					msg->Append((uint8_t) (value->GetID().GetIndex() & 0xFF));
-					AppendValue(msg, value->GetValue(), scale);
+					msg->Append((uint8_t) (m_value->GetID().GetIndex() & 0xFF));
+					AppendValue(msg, m_value->GetValue(), scale);
+
+    				if (Node* node = GetNodeUnsafe())
+                    {
+                        if (CommandClass* pCommandClass = node->GetCommandClass(Internal::CC::Supervision::StaticGetCommandClassId()))
+                        {
+                            m_supervision_session_id = pCommandClass->GetSession(StaticGetCommandClassId());
+                            msg->SupervisionEncap(m_supervision_session_id);
+                        }
+                    }
+
 					msg->Append(GetDriver()->GetTransmitOptions());
 					GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
 					return true;
