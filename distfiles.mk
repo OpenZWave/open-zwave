@@ -911,12 +911,16 @@ DISTFILES =	.gitignore \
 	config/images/stelpro/stzw402.png \
 	config/images/sunricher/srzv9001k12dimz4.png \
 	config/images/sunricher/srzv9001k12dimz5.png \
+	config/images/sunricher/srzv9001k2dim.png \
+	config/images/sunricher/srzv9001k4dim.png \
+	config/images/sunricher/srzv9001k4dimg2.png \
 	config/images/sunricher/srzv9001k8.png \
 	config/images/sunricher/srzv9001t4dimeu.png \
 	config/images/sunricher/srzv9001tccteu.png \
 	config/images/sunricher/srzv9003t4rgbweu.png \
 	config/images/sunricher/srzv9101facct.png \
 	config/images/sunricher/srzv9101sachpeu.png \
+	config/images/sunricher/srzv9101sachpswitch.png \
 	config/images/sunricher/zv2835rac.png \
 	config/images/sunricher/zv9101.png \
 	config/images/swiid/swiidinter.png \
@@ -1267,11 +1271,15 @@ DISTFILES =	.gitignore \
 	config/stelpro/stzw402.xml \
 	config/sunricher/srzv9001k12dimz4.xml \
 	config/sunricher/srzv9001k12dimz5.xml \
+	config/sunricher/srzv9001k2dim.xml \
+	config/sunricher/srzv9001k4dim.xml \
+	config/sunricher/srzv9001k4dimg2.xml \
 	config/sunricher/srzv9001k8.xml \
 	config/sunricher/srzv9001t4dimeu.xml \
 	config/sunricher/srzv9001tccteu.xml \
 	config/sunricher/srzv9003t4rgbweu.xml \
 	config/sunricher/srzv9101sachpeu.xml \
+	config/sunricher/srzv9101sachpswitch.xml \
 	config/sunricher/zv2835rac.xml \
 	config/sunricher/zv9101.xml \
 	config/sunricher/zv9101fa.xml \
