@@ -25,8 +25,8 @@
       <Item label="No local operation of the dimmer" value="0"/>
       <Item label="Pushbutton 1 controls the dimmer" value="1"/>
       <Item label="Pushbutton 2 controls the dimmer" value="2"/>
-      <Item label="Pushbutton 3 controls the dimmer" value="3"/>
-      <Item label="Pushbutton 4 controls the dimmer" value="4"/>
+      <Item label="Pushbutton 3 controls the dimmer" value="4"/>
+      <Item label="Pushbutton 4 controls the dimmer" value="8"/>
     </Value>
     <Value genre="config" index="2" instance="1" label="Duration of dimming" max="255" min="0" type="byte" value="5">
       <Help>
