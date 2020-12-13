@@ -58,7 +58,7 @@ Note: Factory reset is not recommended for exclusion, please use this procedure 
   </CommandClass>
   <!-- Association Groups -->
   <CommandClass id="133">
-    <Associations num_groups="3">
+    <Associations num_groups="1">
       <Group index="1" label="Lifeline" max_associations="1"/>
     </Associations>
   </CommandClass>
