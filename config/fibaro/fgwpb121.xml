@@ -48,7 +48,6 @@ which is signaled with the red frame color.
     </ChangeLog>
     <MetaDataItem name="WakeupDescription">The FIBARO Wall Plug is powered with the mains voltage so it is always awake.</MetaDataItem>
   </MetaData>
-    <CommandClass id="32" action="add" request_flags="5"/>
     <CommandClass id="112">
         <Value type="list" genre="config" instance="1" index="2" label="Remember device status after a power failure" value="1" size="1">
             <Help>This parameter determines how the Wall Plug will react in the event of power supply failure (e.g. taking out from the electrical outlet).
