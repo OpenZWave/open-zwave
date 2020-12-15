@@ -289,6 +289,7 @@ DISTFILES =	.gitignore \
 	config/fibaro/fgwd111.xml \
 	config/fibaro/fgwds221.xml \
 	config/fibaro/fgwoe.xml \
+	config/fibaro/fgwpb121.xml \
 	config/fibaro/fgwpe.xml \
 	config/fibaro/fgwpfzw5.xml \
 	config/fibaro/fgwpg111.xml \

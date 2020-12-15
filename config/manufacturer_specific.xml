@@ -702,6 +702,7 @@
     <Product config="fibaro/fgwpe.xml" id="1000" name="FGWPE/F Wall Plug" type="0600"/>
     <Product config="fibaro/fgwpe.xml" id="1000" name="FGWPE/F Wall Plug" type="0200"/>
     <Product config="fibaro/fgwoe.xml" id="1000" name="FGWOE/F Walli Outlet" type="1f01"/>
+    <Product config="fibaro/fgwpb121.xml" id="2000" name="FGWPB-121 Wall Plug" type="1401"/>
     <Product config="fibaro/fgwpfzw5.xml" id="1001" name="FGWPE/F Wall Plug Gen5" type="0602"/>
     <Product config="fibaro/fgwpfzw5.xml" id="1003" name="FGWPE/F Wall Plug Gen5" type="0602"/>
     <Product config="fibaro/fgms.xml" id="1001" name="FGMS001 Motion Sensor" type="0800"/>
