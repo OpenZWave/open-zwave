@@ -1,7 +1,7 @@
 <Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/010f:2000:1401</MetaDataItem>
-    <MetaDataItem name="ProductPic">images/fibaro/fgwpb121.jpg</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/fibaro/fgwpb121.png</MetaDataItem>
     <MetaDataItem id="2000" name="ZWProductPage" type="1401">https://products.z-wavealliance.org/products/2622/</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">To remove the device from the Z-Wave network:
 1. Plug the device into a socket nearby the main Z-Wave controller.
