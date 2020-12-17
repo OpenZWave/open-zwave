@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ManufacturerSpecificData Revision="132" xmlns="https://github.com/OpenZWave/open-zwave">
+<ManufacturerSpecificData Revision="133" xmlns="https://github.com/OpenZWave/open-zwave">
   <Manufacturer id="0028" name="2B Electronics"></Manufacturer>
   <Manufacturer id="0098" name="2GIG Technologies">
     <Product config="2gig/ct50e.xml" id="015e" name="CT50e Thermostat" type="3200"/>
@@ -18,6 +18,8 @@
     <Product config="2gig/ct101.xml" id="000b" name="CT101 Thermostat (Iris)" type="6501"/>
     <Product config="2gig/ct101.xml" id="000c" name="CT101 Thermostat (Iris)" type="6501"/>
     <Product config="2gig/ct101.xml" id="000d" name="CT101 Thermostat" type="6501"/>
+    <Product config="2gig/ct200.xml" id="0022" name="Vivint Element Thermostat" type="c801"/>
+    <Product config="2gig/ct200.xml" id="001d" name="Vivint Element Thermostat" type="c801"/>
   </Manufacturer>
   <Manufacturer id="002a" name="3e Technologies"></Manufacturer>
   <Manufacturer id="0022" name="A-1 Components"></Manufacturer>
