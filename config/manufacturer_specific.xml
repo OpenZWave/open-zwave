@@ -685,6 +685,7 @@
     <Product config="fibaro/fgs213.xml" id="2000" name="FGS213 Switch" type="0403"/>
     <Product config="fibaro/fgs213.xml" id="3000" name="FGS213 Switch" type="0403"/>
     <Product config="fibaro/fgs213.xml" id="4000" name="FGS213 Switch" type="0403"/>
+    <Product config="fibaro/fgs214.xml" id="4000" name="FGS214 Single Relay Switch" type="0404"/>
     <Product config="fibaro/fgs221.xml" id="0104" name="FGS221 Double Relay Switch 2x1.5kW" type="0200"/>
     <Product config="fibaro/fgs221.xml" id="0105" name="FGS221 Double Relay Switch 2x1.5kW" type="0200"/>
     <Product config="fibaro/fgs221.xml" id="0106" name="FGS221 Double Relay Switch 2x1.5kW" type="0200"/>
