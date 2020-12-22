@@ -53,10 +53,9 @@ namespace OpenZWave
                 return Supervision::m_session_id;
             }
 
-
 //-----------------------------------------------------------------------------
 // <Supervision::HandleSupervisionReport>
-// Handle a message from the Z-Wave network
+// Handle a supervision report message from the Z-Wave network
 //-----------------------------------------------------------------------------
 			void Supervision::HandleSupervisionReport(uint8 const* _data, uint32 const _length, uint32 const _instance)
 			{
@@ -77,7 +76,7 @@ namespace OpenZWave
                             {
                                 if (CommandClass* pCommandClass = node->GetCommandClass(Supervision::m_command_class_id))
                                 {
-                                    pCommandClass->SessionSuccess(session_id, _instance);
+                                    pCommandClass->SupervisionSessionSuccess(session_id, _instance);
                                 }
                             }
                         }
@@ -90,10 +89,8 @@ namespace OpenZWave
 				}
 			}
 
-
 			bool Supervision::HandleIncomingMsg(uint8 const* _data, uint32 const _length, uint32 const _instance)
 			{
-
 				return HandleMsg(_data, _length, _instance);
 			}
 

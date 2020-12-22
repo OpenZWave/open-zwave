@@ -58,6 +58,7 @@
 #include "command_classes/NodeNaming.h"
 #include "command_classes/NoOperation.h"
 #include "command_classes/Version.h"
+#include "command_classes/Supervision.h"
 #include "command_classes/SwitchAll.h"
 #include "command_classes/ZWavePlusInfo.h"
 #include "command_classes/DeviceResetLocally.h"
@@ -4048,4 +4049,20 @@ void Node::WriteMetaDataXML(TiXmlElement *mdElement)
 		}
 		mdElement->LinkEndChild(cl);
 	}
+}
+
+//-----------------------------------------------------------------------------
+// <Node::GetSupervisionSessionId>
+// Generate a new session id for Supervision encapsulation, if supported
+//-----------------------------------------------------------------------------
+uint Node::GetSupervisionSessionId(uint8 _command_class_id)
+{
+    if (Internal::CC::CommandClass* cc = GetCommandClass(Internal::CC::Supervision::StaticGetCommandClassId()))
+    {
+        return cc->GetSession(_command_class_id);
+    }
+    else
+    {
+        return Internal::CC::Supervision::StaticNoSessionId();
+    }
 }
