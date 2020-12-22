@@ -262,7 +262,7 @@ namespace OpenZWave
 				return false;
 			}
 
-			void ThermostatSetpoint::SessionSuccess(uint8 _session_id, uint32 const _instance)
+			void ThermostatSetpoint::SupervisionSessionSuccess(uint8 _session_id, uint32 const _instance)
 			{
 			    if ( m_supervision_session_id == _session_id )
 			    {
@@ -289,35 +289,31 @@ namespace OpenZWave
 //-----------------------------------------------------------------------------
 			bool ThermostatSetpoint::SetValue(Internal::VC::Value const& _value)
 			{
-				if (ValueID::ValueType_Decimal == _value.GetID().GetType())
-				{
-				    // TODO Is it safe to address _value outside this call?
-					m_value = static_cast<Internal::VC::ValueDecimal const*>(&_value);
-
-					uint8 scale = strcmp("C", m_value->GetUnits().c_str()) ? 1 : 0;
-
-					Msg* msg = new Msg("ThermostatSetpointCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
-					msg->SetInstance(this, _value.GetID().GetInstance());
-					msg->Append(GetNodeId());
-					msg->Append(4 + GetAppendValueSize(m_value->GetValue()));
-					msg->Append(GetCommandClassId());
-					msg->Append(ThermostatSetpointCmd_Set);
-					msg->Append((uint8_t) (m_value->GetID().GetIndex() & 0xFF));
-					AppendValue(msg, m_value->GetValue(), scale);
-
-    				if (Node* node = GetNodeUnsafe())
+                if (Node* node = GetNodeUnsafe())
+                {
+                    if (ValueID::ValueType_Decimal == _value.GetID().GetType())
                     {
-                        if (CommandClass* pCommandClass = node->GetCommandClass(Internal::CC::Supervision::StaticGetCommandClassId()))
-                        {
-                            m_supervision_session_id = pCommandClass->GetSession(StaticGetCommandClassId());
-                            msg->SupervisionEncap(m_supervision_session_id);
-                        }
-                    }
+                        // TODO Is it safe to address _value outside this call?
+                        m_value = static_cast<Internal::VC::ValueDecimal const*>(&_value);
+                        m_supervision_session_id = node->GetSupervisionSessionId(StaticGetCommandClassId());
 
-					msg->Append(GetDriver()->GetTransmitOptions());
-					GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
-					return true;
-				}
+                        uint8 scale = strcmp("C", m_value->GetUnits().c_str()) ? 1 : 0;
+
+                        Msg* msg = new Msg("ThermostatSetpointCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
+                        msg->SetInstance(this, _value.GetID().GetInstance());
+                        msg->SetSupervision(m_supervision_session_id);
+                        msg->Append(GetNodeId());
+                        msg->Append(4 + GetAppendValueSize(m_value->GetValue()));
+                        msg->Append(GetCommandClassId());
+                        msg->Append(ThermostatSetpointCmd_Set);
+                        msg->Append((uint8_t) (m_value->GetID().GetIndex() & 0xFF));
+                        AppendValue(msg, m_value->GetValue(), scale);
+
+                        msg->Append(GetDriver()->GetTransmitOptions());
+                        GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
+                        return true;
+                    }
+                }
 
 				return false;
 			}
