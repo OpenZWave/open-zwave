@@ -600,6 +600,7 @@
     <Product config="evolve/lfm-20.xml" id="3133" name="LFM-20 Fixture Module" type="5246"/>
     <Product config="evolve/lsm-15.xml" id="3533" name="LSM-15 Wall Switch" type="5257"/>
     <Product config="evolve/ltm-5.xml" id="3033" name="LTM-5 Wall Switch Transmitter" type="5457"/>
+    <Product config="evolve/t-100.xml" id="5434" name="T-100 Thermostat" type="4556" />
   </Manufacturer>
   <Manufacturer id="036F" name="Evolvere SpA"></Manufacturer>
   <Manufacturer id="0036" name="Exceptional Innovations"></Manufacturer>
