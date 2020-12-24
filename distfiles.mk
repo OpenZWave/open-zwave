@@ -198,6 +198,7 @@ DISTFILES =	.gitignore \
 	config/duwi/zw-zdan-300.xml \
 	config/duwi/zwfb.xml \
 	config/duwi/zwws.xml \
+	config/eaton/RF9640-N.xml \
 	config/ecodim/0.7.xml \
 	config/ecolink/doorwindow.xml \
 	config/ecolink/firefighter.xml \
@@ -563,6 +564,7 @@ DISTFILES =	.gitignore \
 	config/images/duwi/zw-edan-300.png \
 	config/images/duwi/zw-zdan-300.png \
 	config/images/duwi/zwws.png \
+	config/images/eaton/RF9640-N.png \
 	config/images/ecodim/0.7.jpg \
 	config/images/ecolink/doorwindow.png \
 	config/images/ecolink/firefighter.png \

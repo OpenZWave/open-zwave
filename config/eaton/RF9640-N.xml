@@ -1,0 +1,93 @@
+<Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <MetaDataItem name="Name">Eaton RF9640-N</MetaDataItem>
+    <MetaDataItem name="Description">Eaton’s Z-Wave Plus Universal Dimmer</MetaDataItem>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/001A:0501:4449</MetaDataItem>
+    <MetaDataItem name="ProductPage">https://www.eaton.com/us/en-us/catalog/wiring-devices-and-connectivity/z-wave-plus-wireless-collection.html</MetaDataItem>
+    <MetaDataItem name="ProductSupport">https://www.eaton.com/us/en-us/catalog/wiring-devices-and-connectivity/z-wave-plus-wireless-collection.resources.html</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/eaton/RF9640-N.png</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?filename=MarketCertificationFiles/3152/RF9640-N%20and%20RF9642-Z%20Instruction%20Sheet.pdf</MetaDataItem>
+    <MetaDataItem name="WakeupDescription">Press On/Off Button</MetaDataItem>
+    <MetaDataItem name="InclusionDescription">Press On/Off Button Once</MetaDataItem>
+    <MetaDataItem name="ExclusionDescription">Press On/Off Button Once</MetaDataItem>
+    <MetaDataItem name="ResetDescription">While On, hold the On/Off button for 20 seconds. Release after 3rd LED flash. LED should flash rapidly until reset is</MetaDataItem>
+    <MetaDataItem id="0501" name="ZWProductPage" type="4449">https://products.z-wavealliance.org/products/3152/</MetaDataItem>
+    <MetaDataItem id="0501" name="FrequencyName" type="4449">U.S. / Canada / Mexico</MetaDataItem>
+    <MetaDataItem id="0501" name="Identifier" type="4449">RF9640-N</MetaDataItem>
+    <ChangeLog>
+      <Entry author="sharmav39" date="15 September 2020" revision="1">Initial Support Added</Entry>
+    </ChangeLog>
+  </MetaData>
+  
+  <!-- Configuration Parameters -->
+  <CommandClass id="112">
+    <Value genre="config" index="1" label="Delayed OFF time" max="127" min="0" type="byte" units="seconds" value="0">
+      <Help>
+      The amount of time in seconds to wait to turn off when using the delayed off mode.
+      </Help>
+    </Value>
+    <Value genre="config" index="2" label="Panic ON time" max="127" min="0" type="byte" units="seconds" value="0">
+      <Help>
+      The amount of time in seconds the switch will turn on for when panic mode is trigered.
+      </Help>
+    </Value>
+    <Value genre="config" index="3" label="Panic OFF time" max="127" min="0" type="byte" units="seconds" value="0">
+      <Help>
+      The amount of time in seconds the switch will turn off for when panic mode is triggered.
+      </Help>
+    </Value>
+    <Value genre="config" index="5" label="Power Up State" max="3" min="1" size="1" type="list" units="" value="3">
+      <Help>
+        Power up state of the device
+      </Help>
+      <Item label="OFF" value="1"/>
+      <Item label="ON" value="2"/>
+      <Item label="Last state" value="3"/>
+    </Value>
+    <Value genre="config" index="6" label="Panic mode enable" max="2" min="1" size="1" type="list" units="" value="1">
+      <Help>
+        Enables this switch to participate in panic mode
+      </Help>
+      <Item label="OFF" value="0"/>
+      <Item label="ON" value="1"/>
+    </Value>
+    <Value genre="config" index="7" label="Dimmer Ramp Time" max="127" min="0" type="byte" units="seconds" value="0">
+      <Help>
+      The amount of time in seconds the switch will take to reach the desired dim level.
+      </Help>
+    </Value>
+    <Value genre="config" index="8" label="Kickstart / Rapid Start" max="1" min="0" size="1" type="list" units="" value="0">
+      <Help>
+        Ensures that LED / CFL bulbs turn on when the preset dim level is low.  Enabling this feature may cause the lights brightness to momentarily be bright when the switch is turned on before reducing in brightness to desired level
+      </Help>
+      <Item label="disable" value="0"/>
+      <Item label="enable" value="1"/>
+    </Value>
+    <Value genre="config" index="11" label="Minimum Dimmer Level" max="99" min="1" type="byte" units="" value="1">
+      <Help>
+      The minimum dim level the switch will allow.  The minimum level must always be at least 13 below the maximum level.
+      </Help>
+    </Value>
+    <Value genre="config" index="12" label="Maximum Dimmer Level" max="99" min="1" type="byte" units="" value="99">
+      <Help>
+      The maximum dim level the switch will allow.  The maximum level must always be at least 13 above the minimum level.
+      </Help>
+    </Value>
+    <Value genre="config" index="13" label="Blue LED Brightness Level while the dimmer is ON" max="4" min="0" type="byte" units="" value="2">
+    </Value>
+    <Value genre="config" index="14" label="Blue LED Brightness Level while the dimmer is OFF" max="4" min="0" type="byte" units="" value="2">
+    </Value>
+    <Value genre="config" index="15" label="Amber LED Brightness Level while the dimmer is ON" max="4" min="0" type="byte" units="" value="2">
+    </Value>
+    <Value genre="config" index="16" label="Amber LED Brightness Level while the dimmer is OFF" max="4" min="0" type="byte" units="" value="2">
+    </Value>
+  </CommandClass>
+  <!-- Association Groups -->
+  <CommandClass id="133">
+    <Associations num_groups="3">
+      <Group index="1" label="lifeline" max_associations="5"/>
+      <Group index="2" label="ON/OFF" max_associations="5"/>
+      <Group index="3" label="DIM Up / DIM Down" max_associations="5"/>
+    </Associations>
+  </CommandClass>
+</Product>
