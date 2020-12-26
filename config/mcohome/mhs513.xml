@@ -14,7 +14,7 @@
     <MetaDataItem id="0103" name="Identifier" type="5102">MH-S513-US</MetaDataItem>
     <MetaDataItem id="5131" name="Identifier" type="5103">MH-S513-AU</MetaDataItem>
     <ChangeLog>
-      <Entry author="StuartW - swish@email4me.com" date="29 June 2019" revision="4">Add AU frequency and update Configuration</Entry>
+      <Entry author="StuartW - swish@email4me.com" date="27 December 2020" revision="4">Add AU frequency and update Configuration</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration -->
