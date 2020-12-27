@@ -1758,6 +1758,7 @@
     <Product config="wenzhou/tz79.xml" id="0305" name="TZ79 Power meter Relay Switch" type="0311"/>
     <Product config="wenzhou/tz74.xml" id="0304" name="TZ74 Dual Switch" type="0311"/>
     <Product config="wenzhou/tz78.xml" id="0005" name="TZ78 In-Wall Single Relay Switch" type="0003"/>
+    <Product config="wenzhou/tze96.xml" id="0506" name="TZE96 Color Touch Weekly Programming Heating Thermostat" type="0311"/>
   </Manufacturer>
   <Manufacturer id="011C" name="TKH Group / Eminent"></Manufacturer>
   <Manufacturer id="0327" name="TMC Technology"></Manufacturer>
