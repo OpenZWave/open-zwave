@@ -3,16 +3,17 @@
   <MetaData>
     <MetaDataItem name="Name">MH-S513 Touch Panel Switch</MetaDataItem>
     <MetaDataItem name="Description">MCOHome Touch Panel Switch is a wall panel built-in with Z-Wave Plus module. It supports basic command class, association command class, which can control all associated devices synchronously. This product can be included and operated in any Z-Wave network with other Z-Wave certified devices from any other manufacturers.</MetaDataItem>
-    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/015f:0103:5103</MetaDataItem>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/015f:5102:0103</MetaDataItem>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/015f:5103:5131</MetaDataItem>
     <MetaDataItem name="ProductPage">http://www.mcohome.com/ProductDetail/3894278.html</MetaDataItem>
     <MetaDataItem name="ProductPic">images/mcohome/mhs513.png</MetaDataItem>
     <MetaDataItem name="InclusionDescription">Press and hold any key on the panel for 8 seconds or 3 clicks in quick succession. Note: If inclusion is successful, all INDICATION LEDs on the panel will flash 4 times.</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">Press and hold any key on the panel for 8 seconds or 3 clicks in quick succession. Note: If the exclusion is successful, all INDICATION LEDs on the panel will flash 4 times. The exclusion will delete all association data.</MetaDataItem>
     <MetaDataItem name="ResetDescription">Write 0x55 to Configuration Parameter Index 255, or Press 20 times of any button or exclude the device from Z-Wave network, the factory setting will be restored.</MetaDataItem>
-    <MetaDataItem id="0103" name="FrequencyName" type="5102">US / Canada / Mexico</MetaDataItem>
-    <MetaDataItem id="5131" name="FrequencyName" type="5103">Australia / New Zealand</MetaDataItem>
-    <MetaDataItem id="0103" name="Identifier" type="5102">MH-S513-US</MetaDataItem>
-    <MetaDataItem id="5131" name="Identifier" type="5103">MH-S513-AU</MetaDataItem>
+    <MetaDataItem id="5102" name="FrequencyName" type="0103">US / Canada / Mexico</MetaDataItem>
+    <MetaDataItem id="5103" name="FrequencyName" type="5131">Australia / New Zealand</MetaDataItem>
+    <MetaDataItem id="5102" name="Identifier" type="0103">MH-S513-US</MetaDataItem>
+    <MetaDataItem id="5103" name="Identifier" type="5131">MH-S513-AU</MetaDataItem>
     <ChangeLog>
       <Entry author="StuartW - swish@email4me.com" date="27 December 2020" revision="4">Add AU frequency and update Configuration</Entry>
     </ChangeLog>
