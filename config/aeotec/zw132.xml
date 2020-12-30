@@ -356,7 +356,8 @@ The Dual Nano Switch is also a security Z-Wave device and supports Over The Air 
       <Group index="4" label="Control Key2" max_associations="5"/>
     </Associations>
   </CommandClass>
-  <CommandClass id="32" name="COMMAND_CLASS_BASIC">
+  <!-- Basic command class --> 
+  <CommandClass id="32">
     <Compatibility>
       <IgnoreMapping>true</IgnoreMapping>
       <SetAsReport>true</SetAsReport>
