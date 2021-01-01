@@ -9,6 +9,7 @@ DISTFILES =	.gitignore \
 	README.md \
 	config/2gig/ct100.xml \
 	config/2gig/ct101.xml \
+	config/2gig/ct200.xml \
 	config/2gig/ct30.xml \
 	config/2gig/ct32.xml \
 	config/2gig/ct50e.xml \
@@ -251,6 +252,7 @@ DISTFILES =	.gitignore \
 	config/evolve/lrm-as.xml \
 	config/evolve/lsm-15.xml \
 	config/evolve/ltm-5.xml \
+	config/evolve/t-100.xml \
 	config/fakro/arz.xml \
 	config/fakro/arzsolar.xml \
 	config/fakro/zrh12.xml \
@@ -428,6 +430,7 @@ DISTFILES =	.gitignore \
 	config/idlock/idlock101.xml \
 	config/idlock/idlock150.xml \
 	config/images/2gig/ct100.png \
+	config/images/2gig/ct200.png \
 	config/images/2gig/ct32.png \
 	config/images/BeNext/AlarmSound.png \
 	config/images/BeNext/DoorSensor.png \
@@ -609,6 +612,7 @@ DISTFILES =	.gitignore \
 	config/images/everspring/tse03.png \
 	config/images/evolve/lfm-20.png \
 	config/images/evolve/ltm-5.png \
+	config/images/evolve/t-100.png \
 	config/images/fakro/arz.png \
 	config/images/fakro/zws12.png \
 	config/images/fibaro/fgbs222.png \
@@ -721,6 +725,7 @@ DISTFILES =	.gitignore \
 	config/images/homeseer/hs-ds100plus.png \
 	config/images/homeseer/hs-fc200plus.png \
 	config/images/homeseer/hs-fls100plus.png \
+	config/images/homeseer/hs-fs100plus.png \
 	config/images/homeseer/hs-ls100plus.png \
 	config/images/homeseer/hs-ms100plus.png \
 	config/images/homeseer/hs-wd100plus.png \
@@ -796,6 +801,7 @@ DISTFILES =	.gitignore \
 	config/images/mcohome/mh8fceu0803.png \
 	config/images/mcohome/mhp220.png \
 	config/images/mcohome/mhp511.png \
+	config/images/mcohome/mhs513.png \
 	config/images/merten/5044xx.png \
 	config/images/merten/5046xx.png \
 	config/images/merten/506004.png \
@@ -1014,6 +1020,7 @@ DISTFILES =	.gitignore \
 	config/images/zooz/zen27.png \
 	config/images/zooz/zen30.png \
 	config/images/zooz/zen31.png \
+	config/images/zooz/zen34.png \
 	config/images/zooz/zse09.png \
 	config/images/zooz/zse19.png \
 	config/images/zooz/zse29.png \
@@ -1389,6 +1396,7 @@ DISTFILES =	.gitignore \
 	config/zooz/zen27.xml \
 	config/zooz/zen30.xml \
 	config/zooz/zen31.xml \
+	config/zooz/zen34.xml \
 	config/zooz/zse08.xml \
 	config/zooz/zse09.xml \
 	config/zooz/zse18.xml \
