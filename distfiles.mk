@@ -252,6 +252,7 @@ DISTFILES =	.gitignore \
 	config/evolve/lrm-as.xml \
 	config/evolve/lsm-15.xml \
 	config/evolve/ltm-5.xml \
+	config/evolve/t-100.xml \
 	config/fakro/arz.xml \
 	config/fakro/arzsolar.xml \
 	config/fakro/zrh12.xml \
@@ -611,6 +612,7 @@ DISTFILES =	.gitignore \
 	config/images/everspring/tse03.png \
 	config/images/evolve/lfm-20.png \
 	config/images/evolve/ltm-5.png \
+	config/images/evolve/t-100.png \
 	config/images/fakro/arz.png \
 	config/images/fakro/zws12.png \
 	config/images/fibaro/fgbs222.png \
