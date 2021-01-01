@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ManufacturerSpecificData Revision="134" xmlns="https://github.com/OpenZWave/open-zwave">
+<ManufacturerSpecificData Revision="138" xmlns="https://github.com/OpenZWave/open-zwave">
   <Manufacturer id="0028" name="2B Electronics"></Manufacturer>
   <Manufacturer id="0098" name="2GIG Technologies">
     <Product config="2gig/ct50e.xml" id="015e" name="CT50e Thermostat" type="3200"/>
@@ -600,6 +600,7 @@
     <Product config="evolve/lfm-20.xml" id="3133" name="LFM-20 Fixture Module" type="5246"/>
     <Product config="evolve/lsm-15.xml" id="3533" name="LSM-15 Wall Switch" type="5257"/>
     <Product config="evolve/ltm-5.xml" id="3033" name="LTM-5 Wall Switch Transmitter" type="5457"/>
+    <Product config="evolve/t-100.xml" id="5434" name="T-100 Thermostat" type="4556" />
   </Manufacturer>
   <Manufacturer id="036F" name="Evolvere SpA"></Manufacturer>
   <Manufacturer id="0036" name="Exceptional Innovations"></Manufacturer>
@@ -685,6 +686,7 @@
     <Product config="fibaro/fgs213.xml" id="2000" name="FGS213 Switch" type="0403"/>
     <Product config="fibaro/fgs213.xml" id="3000" name="FGS213 Switch" type="0403"/>
     <Product config="fibaro/fgs213.xml" id="4000" name="FGS213 Switch" type="0403"/>
+    <Product config="fibaro/fgs214.xml" id="4000" name="FGS214 Single Relay Switch" type="0404"/>
     <Product config="fibaro/fgs221.xml" id="0104" name="FGS221 Double Relay Switch 2x1.5kW" type="0200"/>
     <Product config="fibaro/fgs221.xml" id="0105" name="FGS221 Double Relay Switch 2x1.5kW" type="0200"/>
     <Product config="fibaro/fgs221.xml" id="0106" name="FGS221 Double Relay Switch 2x1.5kW" type="0200"/>
@@ -957,6 +959,7 @@
     <Product config="homeseer/hs-ls100plus.xml" id="000a" name="HS-LS100+ Leak Sensor" type="0201"/>
     <Product config="homeseer/hs-fls100plus.xml" id="000b" name="HS-FLS100+ Floodlight Sensor" type="0201"/>
     <Product config="homeseer/hs-fc200plus.xml" id="0001" name="HS-FC200+ Z-Wave Plus Fan Controller" type="0203"/>
+    <Product config="homeseer/hs-fs100plus.xml" id="0001" name="HS-FS100+ Flex Sensor" type="0202"/>
   </Manufacturer>
   <Manufacturer id="0275" name="Honest Technology"></Manufacturer>
   <Manufacturer id="023D" name="Honest Technology Co. Ltd"></Manufacturer>
@@ -1246,9 +1249,10 @@
     <Product config="mcohome/mh7h.xml" id="5102" name="MH7H Water/Electrical Heating Thermostat" type="0712"/>
     <Product config="mcohome/mh7h.xml" id="5102" name="MH7H Water/Electrical Heating Thermostat" type="0732"/>
     <!--US-->
-    <Product config="mcohome/mhs513.xml" id="0103" name="Touch Panel Switch MH-S513" type="5102"/>
+    <Product config="mcohome/mhs513.xml" id="5102" name="MH-S513 Touch Panel Switch" type="0103"/>
     <!--AU-->
-    <Product config="mcohome/mhp511.xml" id="1453" name="Dimmer Touch Panel Switch MH-P511" type="511a"/>
+    <Product config="mcohome/mhp511.xml" id="1453" name="MH-P511 Dimmer Touch Panel Switch" type="511a"/>
+    <Product config="mcohome/mhs513.xml" id="5103" name="MH-S513 Touch Panel Switch" type="5131"/>
   </Manufacturer>
   <Manufacturer id="0222" name="MCT CO. LTD"></Manufacturer>
   <Manufacturer id="0027" name="Meedio LLC"></Manufacturer>

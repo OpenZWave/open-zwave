@@ -252,6 +252,7 @@ DISTFILES =	.gitignore \
 	config/evolve/lrm-as.xml \
 	config/evolve/lsm-15.xml \
 	config/evolve/ltm-5.xml \
+	config/evolve/t-100.xml \
 	config/fakro/arz.xml \
 	config/fakro/arzsolar.xml \
 	config/fakro/zrh12.xml \
@@ -611,6 +612,7 @@ DISTFILES =	.gitignore \
 	config/images/everspring/tse03.png \
 	config/images/evolve/lfm-20.png \
 	config/images/evolve/ltm-5.png \
+	config/images/evolve/t-100.png \
 	config/images/fakro/arz.png \
 	config/images/fakro/zws12.png \
 	config/images/fibaro/fgbs222.png \
@@ -723,6 +725,7 @@ DISTFILES =	.gitignore \
 	config/images/homeseer/hs-ds100plus.png \
 	config/images/homeseer/hs-fc200plus.png \
 	config/images/homeseer/hs-fls100plus.png \
+	config/images/homeseer/hs-fs100plus.png \
 	config/images/homeseer/hs-ls100plus.png \
 	config/images/homeseer/hs-ms100plus.png \
 	config/images/homeseer/hs-wd100plus.png \
@@ -798,6 +801,7 @@ DISTFILES =	.gitignore \
 	config/images/mcohome/mh8fceu0803.png \
 	config/images/mcohome/mhp220.png \
 	config/images/mcohome/mhp511.png \
+	config/images/mcohome/mhs513.png \
 	config/images/merten/5044xx.png \
 	config/images/merten/5046xx.png \
 	config/images/merten/506004.png \
