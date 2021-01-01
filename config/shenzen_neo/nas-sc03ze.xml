@@ -5,7 +5,7 @@
 	<MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0258:102c:0200</MetaDataItem>
 	<MetaDataItem name="ProductPage">https://szneo.com/en/products/show.php?id=234</MetaDataItem>
 	<MetaDataItem name="ProductSupport">https://szneo.com/en/service/index.php</MetaDataItem>
-	<MetaDataItem name="ProductPic">https://szneo.com/userfiles/2019-08-21/201908210316211.jpg</MetaDataItem>
+	<MetaDataItem name="ProductPic">images/shenzen_neo/nas-sc03ze.jpg</MetaDataItem>
 	<MetaDataItem name="ProductManual">https://doc.eedomus.com/files/Curtain%20Switch%20NeoCoolcam.pdf</MetaDataItem>
 	<MetaDataItem name="WakeupDescription">Power on the device</MetaDataItem>
 	<MetaDataItem name="InclusionDescription">1. Set Zwave controller intro inclusion mode
