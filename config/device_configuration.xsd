@@ -88,6 +88,7 @@
 		   <xs:element name="ClassGetVersionSupported" type="xs:boolean" minOccurs='0'/>
 		   <xs:element name="ForceUniqueEndpoints" type="xs:boolean" minOccurs='0'/>
 		   <xs:element name="ForceUniqueEndpoints" type="xs:boolean" minOccurs='0'/>
+		   <xs:element name="EnforceMinSizePrecision" type="xs:boolean" minOccurs='0'/>
 		   <xs:element name="Base" type="xs:integer" minOccurs='0'/>
 		   <xs:element name="OverridePrecision" type="xs:integer" minOccurs='0'/>
 		   <xs:element name="ForceVersion" type="xs:integer" minOccurs='0'/>

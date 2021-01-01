@@ -597,11 +597,11 @@ namespace OpenZWave
 // <CommandClass::AppendValue>
 // Add a value to a message as a sequence of bytes
 //-----------------------------------------------------------------------------
-			void CommandClass::AppendValue(Msg* _msg, std::string const& _value, uint8 const _scale) const
+			void CommandClass::AppendValue(Msg* _msg, std::string const& _value, uint8 const _scale, uint8 const _minsize, uint8 const _minprecision) const
 			{
 				uint8 precision;
 				uint8 size;
-				int32 val = ValueToInteger(_value, &precision, &size);
+				int32 val = ValueToInteger(_value, &precision, &size, _minsize, _minprecision);
 
 				_msg->Append((precision << c_precisionShift) | (_scale << c_scaleShift) | size);
 
@@ -616,10 +616,10 @@ namespace OpenZWave
 // <CommandClass::GetAppendValueSize>
 // Get the number of bytes that would be added by a call to AppendValue
 //-----------------------------------------------------------------------------
-			uint8 const CommandClass::GetAppendValueSize(std::string const& _value) const
+			uint8 const CommandClass::GetAppendValueSize(std::string const& _value, uint8 const _minsize, uint8 const _minprecision ) const
 			{
 				uint8 size;
-				ValueToInteger(_value, NULL, &size);
+				ValueToInteger(_value, NULL, &size, _minsize, _minprecision);
 				return size;
 			}
 
@@ -627,8 +627,9 @@ namespace OpenZWave
 // <CommandClass::ValueToInteger>
 // Convert a decimal string to an integer and report the precision and
 // number of bytes required to store the value.
+// If a minimum byte size or precisions is given, ensure the returned integer is using at least that precision and the reported o_size is at least _minsize
 //-----------------------------------------------------------------------------
-			int32 CommandClass::ValueToInteger(std::string const& _value, uint8* o_precision, uint8* o_size) const
+			int32 CommandClass::ValueToInteger(std::string const& _value, uint8* o_precision, uint8* o_size, uint8 const _minsize, uint8 const _minprecision) const
 			{
 				int32 val;
 				uint8 precision;
@@ -656,6 +657,7 @@ namespace OpenZWave
 				}
 
 				uint8_t orp = m_com.GetFlagByte(COMPAT_FLAG_OVERRIDEPRECISION);
+				if (orp == 0 && _minprecision > 0) orp = _minprecision; // Only if no override is given and a valid _minprecision is used, force the precision to _minprecision
 				if (orp > 0)
 				{
 					while (precision < orp)
@@ -694,7 +696,11 @@ namespace OpenZWave
 							*o_size = 2;
 						}
 					}
+
+					if(*o_size < _minsize && (_minsize == 1 || _minsize == 2 || _minsize == 4))
+					  *o_size = _minsize;
 				}
+
 
 				return val;
 			}

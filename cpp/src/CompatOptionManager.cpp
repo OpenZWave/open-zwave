@@ -38,6 +38,7 @@ namespace OpenZWave
 		{
 		{ "GetSupported", COMPAT_FLAG_GETSUPPORTED, COMPAT_FLAG_TYPE_BOOL },
 		{ "OverridePrecision", COMPAT_FLAG_OVERRIDEPRECISION, COMPAT_FLAG_TYPE_BYTE },
+		{ "EnforceMinSizePrecision", COMPAT_FLAG_ENFORCE_MINSIZEPRECISION, COMPAT_FLAG_TYPE_BOOL }, // HeatIt thermostats rely on setting the minimum byte size and minimum precision of the setpoint command via the capability report, set this to adopt this behavior
 		{ "ForceVersion", COMPAT_FLAG_FORCEVERSION, COMPAT_FLAG_TYPE_BYTE },
 		{ "CreateVars", COMPAT_FLAG_CREATEVARS, COMPAT_FLAG_TYPE_BOOL },
 		{ "RefreshOnWakeup", COMPAT_FLAG_REFRESHONWAKEUP, COMPAT_FLAG_TYPE_BOOL },
