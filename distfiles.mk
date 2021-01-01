@@ -723,6 +723,7 @@ DISTFILES =	.gitignore \
 	config/images/homeseer/hs-ds100plus.png \
 	config/images/homeseer/hs-fc200plus.png \
 	config/images/homeseer/hs-fls100plus.png \
+	config/images/homeseer/hs-fs100plus.png \
 	config/images/homeseer/hs-ls100plus.png \
 	config/images/homeseer/hs-ms100plus.png \
 	config/images/homeseer/hs-wd100plus.png \
