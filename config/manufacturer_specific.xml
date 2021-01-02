@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ManufacturerSpecificData Revision="142" xmlns="https://github.com/OpenZWave/open-zwave">
+<ManufacturerSpecificData Revision="143" xmlns="https://github.com/OpenZWave/open-zwave">
   <Manufacturer id="0028" name="2B Electronics"></Manufacturer>
   <Manufacturer id="0098" name="2GIG Technologies">
     <Product config="2gig/ct50e.xml" id="015e" name="CT50e Thermostat" type="3200"/>
@@ -951,6 +951,7 @@
     <Product config="homeseer/hsm200.xml" id="0001" name="HSM200 Wireless Multi-Sensor" type="0004"/>
   </Manufacturer>
   <Manufacturer id="000c" name="HomeSeer Technologies">
+    <Product config="homeseer/hsm200.xml" id="0001" name="HSM200 Wireless Multi-Sensor" type="0004"/>
     <Product config="homeseer/hs-ws100plus.xml" id="3033" name="HS-WS100+ Wall Switch" type="4447"/>
     <Product config="homeseer/hs-wd100plus.xml" id="3034" name="HS-WD100+ Wall Dimmer" type="4447"/>
     <Product config="homeseer/hs-ws200plus.xml" id="3035" name="HS-WS200+ Wall Switch" type="4447"/>
