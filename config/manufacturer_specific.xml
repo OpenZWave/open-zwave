@@ -1161,6 +1161,7 @@
     <Product config="leviton/dzpa1.xml" id="0001" name="Leviton DZPA1 Plug-In Outlet" type="3601"/>
     <Product config="leviton/vrpd3.xml" id="0334" name="Leviton VRPD3-1LW 300W Plug-In Lamp Dimming Module" type="1706"/>
     <Product config="leviton/zw4sf.xml" id="0002" name="ZW4SF-1BW Decora Smart 4 Speed Fan Controller" type="0038"/>
+    <Product config="leviton/zw15r.xml" id="0002" name="ZW15R Decora Smart Tamper-Resistant Outlet with Z-Wave Technology" type="0037"/>
   </Manufacturer>
   <Manufacturer id="0015" name="Lexel"></Manufacturer>
   <Manufacturer id="015B" name="LG Electronics"></Manufacturer>
@@ -1834,7 +1835,7 @@
   </Manufacturer>
   <Manufacturer id="0080" name="Vero Duco">
     <Product config="duco/DucoBox.xml" id="0001" name="DucoBox Motor" type="0003"/>
-    <Product config="duco/Ducotronic_CO-RH_sensor.xml" id="0001" name="DucoBox CO/RH Sensor" type="0004"/> 
+    <Product config="duco/Ducotronic_CO-RH_sensor.xml" id="0001" name="DucoBox CO/RH Sensor" type="0004"/>
   </Manufacturer>
   <Manufacturer id="0237" name="Vestel Elektronik Ticaret ve Sanayi"></Manufacturer>
   <Manufacturer id="0053" name="Viewsonic"></Manufacturer>
