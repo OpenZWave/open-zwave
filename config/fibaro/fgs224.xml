@@ -45,6 +45,7 @@ Use reset procedure only if the primary controller is missing or inoperable.
     <MetaDataItem name="WakeupDescription">The FIBARO Double Smart Module is powered with the mains voltage so it is always awake.</MetaDataItem>
     <ChangeLog>
       <Entry author="Raffaele Fanizzi - vifani@gmail.com" date="15 Oct 2020" revision="1">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/Products/3980/XML</Entry>
+      <Entry author="Romke10" date="2 January 2021" revision="2">Added parameter 151</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration -->
