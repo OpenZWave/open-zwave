@@ -951,6 +951,7 @@
     <Product config="homeseer/hsm200.xml" id="0001" name="HSM200 Wireless Multi-Sensor" type="0004"/>
   </Manufacturer>
   <Manufacturer id="000c" name="HomeSeer Technologies">
+    <Product config="homeseer/hsm200.xml" id="0001" name="HSM200 Wireless Multi-Sensor" type="0004"/>
     <Product config="homeseer/hs-ws100plus.xml" id="3033" name="HS-WS100+ Wall Switch" type="4447"/>
     <Product config="homeseer/hs-wd100plus.xml" id="3034" name="HS-WD100+ Wall Dimmer" type="4447"/>
     <Product config="homeseer/hs-ws200plus.xml" id="3035" name="HS-WS200+ Wall Switch" type="4447"/>
