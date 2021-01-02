@@ -1,4 +1,4 @@
-<Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/010F:1000:0204</MetaDataItem>
     <MetaDataItem name="ProductPic">images/fibaro/fgs224.png</MetaDataItem>
@@ -62,6 +62,13 @@ Use reset procedure only if the primary controller is missing or inoperable.
       <Item label="Auto Off" value="2"/>
       <Item label="Flashing" value="3"/>
     </Value>
+    <Value genre="config" index="151" instance="1" label="Second channel - operating mode" max="3" min="0" size="1" type="list" value="0">
+      <Help>This parameter allows to choose operating for channel controlled with Q/Q2 output. timed modes (value 1, 2 or 3), time is set parameter 155 and reaction to input is set with parameter 153.</Help>
+      <Item label="Standard operation" value="0"/>
+      <Item label="Delay Off" value="1"/>
+      <Item label="Auto Off" value="2"/>
+      <Item label="Flashing" value="3"/>
+    </Value>    
     <Value genre="config" index="152" instance="1" label="First channel - reaction to input change in delayed/auto OFF modes" max="2" min="0" size="1" type="list" value="0">
       <Help>This parameter determines how the device when changing state of S1 input in timed for first channel.</Help>
       <Item label="Cancel mode and set default state" value="0"/>
