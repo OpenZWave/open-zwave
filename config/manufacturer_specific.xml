@@ -1295,7 +1295,7 @@
     <Product config="namron/4512710.xml" id="d005" type="0200" name="Z-Wave Dimmer 400W"/>
     <Product config="namron/4512715.xml" id="d006" type="0200" name="Z-Wave Switch 400W"/>
     <Product config="namron/4512724.xml" id="d00c" type="0200" name="Z-Wave Dimmer 2 400W"/>
-    
+    <Product config="namron/4512714.xml" id="a305" type="0300" name="Z-wave 4 Channel Remote" />
   </Manufacturer>
   <Manufacturer id="016E" name="Nanjing Easthouse Electrical Co"></Manufacturer>
   <Manufacturer id="0121" name="Napco Security Technologies, Inc.">
