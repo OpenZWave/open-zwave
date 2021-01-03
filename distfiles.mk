@@ -252,6 +252,7 @@ DISTFILES =	.gitignore \
 	config/evolve/lrm-as.xml \
 	config/evolve/lsm-15.xml \
 	config/evolve/ltm-5.xml \
+	config/evolve/t-100.xml \
 	config/fakro/arz.xml \
 	config/fakro/arzsolar.xml \
 	config/fakro/zrh12.xml \
@@ -292,6 +293,7 @@ DISTFILES =	.gitignore \
 	config/fibaro/fgwd111.xml \
 	config/fibaro/fgwds221.xml \
 	config/fibaro/fgwoe.xml \
+	config/fibaro/fgwpb121.xml \
 	config/fibaro/fgwpe.xml \
 	config/fibaro/fgwpfzw5.xml \
 	config/fibaro/fgwpg111.xml \
@@ -611,6 +613,7 @@ DISTFILES =	.gitignore \
 	config/images/everspring/tse03.png \
 	config/images/evolve/lfm-20.png \
 	config/images/evolve/ltm-5.png \
+	config/images/evolve/t-100.png \
 	config/images/fakro/arz.png \
 	config/images/fakro/zws12.png \
 	config/images/fibaro/fgbs222.png \
@@ -723,6 +726,7 @@ DISTFILES =	.gitignore \
 	config/images/homeseer/hs-ds100plus.png \
 	config/images/homeseer/hs-fc200plus.png \
 	config/images/homeseer/hs-fls100plus.png \
+	config/images/homeseer/hs-fs100plus.png \
 	config/images/homeseer/hs-ls100plus.png \
 	config/images/homeseer/hs-ms100plus.png \
 	config/images/homeseer/hs-wd100plus.png \
@@ -798,6 +802,7 @@ DISTFILES =	.gitignore \
 	config/images/mcohome/mh8fceu0803.png \
 	config/images/mcohome/mhp220.png \
 	config/images/mcohome/mhp511.png \
+	config/images/mcohome/mhs513.png \
 	config/images/merten/5044xx.png \
 	config/images/merten/5046xx.png \
 	config/images/merten/506004.png \
@@ -919,12 +924,16 @@ DISTFILES =	.gitignore \
 	config/images/stelpro/stzw402.png \
 	config/images/sunricher/srzv9001k12dimz4.png \
 	config/images/sunricher/srzv9001k12dimz5.png \
+	config/images/sunricher/srzv9001k2dim.png \
+	config/images/sunricher/srzv9001k4dim.png \
+	config/images/sunricher/srzv9001k4dimg2.png \
 	config/images/sunricher/srzv9001k8.png \
 	config/images/sunricher/srzv9001t4dimeu.png \
 	config/images/sunricher/srzv9001tccteu.png \
 	config/images/sunricher/srzv9003t4rgbweu.png \
 	config/images/sunricher/srzv9101facct.png \
 	config/images/sunricher/srzv9101sachpeu.png \
+	config/images/sunricher/srzv9101sachpswitch.png \
 	config/images/sunricher/zv2835rac.png \
 	config/images/sunricher/zv9101.png \
 	config/images/swiid/swiidinter.png \
@@ -1280,11 +1289,15 @@ DISTFILES =	.gitignore \
 	config/stelpro/stzw402.xml \
 	config/sunricher/srzv9001k12dimz4.xml \
 	config/sunricher/srzv9001k12dimz5.xml \
+	config/sunricher/srzv9001k2dim.xml \
+	config/sunricher/srzv9001k4dim.xml \
+	config/sunricher/srzv9001k4dimg2.xml \
 	config/sunricher/srzv9001k8.xml \
 	config/sunricher/srzv9001t4dimeu.xml \
 	config/sunricher/srzv9001tccteu.xml \
 	config/sunricher/srzv9003t4rgbweu.xml \
 	config/sunricher/srzv9101sachpeu.xml \
+	config/sunricher/srzv9101sachpswitch.xml \
 	config/sunricher/zv2835rac.xml \
 	config/sunricher/zv9101.xml \
 	config/sunricher/zv9101fa.xml \
