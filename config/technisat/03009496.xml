@@ -28,7 +28,7 @@
 </MetaDataItem>
     <ChangeLog>
       <Entry author="Mathis Klooss - ozw@gunah.eu" date="13 Jun 2020" revision="1">Initial file based on z-wavealliance.org</Entry>
-      <Entry author="Scooty66" date="15 Nov 2020" revision="2">Value type should be short for Parameter 2 and 3"</Entry>
+      <Entry author="Andreas Krueger - ankrueg@gmx.de" date="15 Nov 2020" revision="2">Value type for "Parameter 2" and "Parameter 3" changed to "short" as parameter size is 2 bytes.</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration -->
