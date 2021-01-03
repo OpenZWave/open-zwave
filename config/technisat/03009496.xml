@@ -28,6 +28,7 @@
 </MetaDataItem>
     <ChangeLog>
       <Entry author="Mathis Klooss - ozw@gunah.eu" date="13 Jun 2020" revision="1">Initial file based on z-wavealliance.org</Entry>
+      <Entry author="Scooty66" date="15 Nov 2020" revision="2">Value type should be short for Parameter 2 and 3"</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration -->
