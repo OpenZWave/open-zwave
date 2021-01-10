@@ -400,98 +400,98 @@ namespace OpenZWave
 				 * to the lights in a group.  In this case, we want to receive the signals so that we can act on
 				 * them.
 				 */
-                if (ColorCmd_Set == (ColorCmd) _data[0])
-                {
-                    // Get our current color capabilities -- we'll be updating if we see a new color channel set.
-                    uint16_t f_capabilities = m_dom.GetFlagShort(STATE_FLAG_COLOR_CHANNELS);
-                    uint16_t f_save_capabilities = f_capabilities;
+				if (ColorCmd_Set == (ColorCmd) _data[0])
+				{
+					// Get our current color capabilities -- we'll be updating if we see a new color channel set.
+					uint16_t f_capabilities = m_dom.GetFlagShort(STATE_FLAG_COLOR_CHANNELS);
+					uint16_t f_save_capabilities = f_capabilities;
 
-                    uint8 nComponents = _data[1] & 0x1F;
-                    for ( uint8_t idx = 0; idx < nComponents; idx++ )
-                    {
-                        uint8 coloridx = _data[ 2 + idx*2 ];
-                        m_colorvalues[coloridx] = _data[ 3 + idx*2 ];
-                        Log::Write(LogLevel_Detail, GetNodeId(), "Setting index %u to value %u", coloridx, m_colorvalues[ coloridx ]);
+					uint8 nComponents = _data[1] & 0x1F;
+					for ( uint8_t idx = 0; idx < nComponents; idx++ )
+					{
+						uint8 coloridx = _data[ 2 + idx*2 ];
+						m_colorvalues[coloridx] = _data[ 3 + idx*2 ];
+						Log::Write(LogLevel_Detail, GetNodeId(), "Setting index %u to value %u", coloridx, m_colorvalues[ coloridx ]);
 
-                        // If we're being asked to set a color, be sure it's set in our capabilities (i.e., force it)!
-                        // Each bit stands for one of the color indices.
-                        f_capabilities |= (1 << coloridx);
-                    }
-                    if ( f_capabilities != f_save_capabilities ) // then we updated it along the way . . .
-                    {
-                        m_dom.SetFlagShort(STATE_FLAG_COLOR_CHANNELS, f_capabilities);
-                    }
-                    string colorStr = decodeColor(m_colorvalues);
-                    Log::Write(LogLevel_Info, GetNodeId(), "Received COLOR_SET from Device: %s for instance %d", colorStr.c_str(), _instance);
+						// If we're being asked to set a color, be sure it's set in our capabilities (i.e., force it)!
+						// Each bit stands for one of the color indices.
+						f_capabilities |= (1 << coloridx);
+					}
+					if ( f_capabilities != f_save_capabilities ) // then we updated it along the way . . .
+					{
+						m_dom.SetFlagShort(STATE_FLAG_COLOR_CHANNELS, f_capabilities);
+					}
+					string colorStr = decodeColor(m_colorvalues);
+					Log::Write(LogLevel_Info, GetNodeId(), "Received COLOR_SET from Device: %s for instance %d", colorStr.c_str(), _instance);
 
-                    Internal::VC::ValueString* color = static_cast<Internal::VC::ValueString*>(GetValue(_instance, ValueID_Index_Color::Color));
+					Internal::VC::ValueString* color = static_cast<Internal::VC::ValueString*>(GetValue(_instance, ValueID_Index_Color::Color));
 
-                    if ( ! color )
-                    {
-                        if (Node* node = GetNodeUnsafe())
-                        {
-                            // Create it read-only ...
-                            node->CreateValueString(ValueID::ValueGenre_User, GetCommandClassId(), _instance,
-                                                    ValueID_Index_Color::Color, "Color", "", true, false, "#000000", 0);
-                            color = static_cast<Internal::VC::ValueString*>(GetValue(_instance, ValueID_Index_Color::Color));
-                        }
-                        else
-                        {
-                            Log::Write(LogLevel_Error, GetNodeId(), "Couldn't get node (!?).");
-                        }
-                    }
+					if ( ! color )
+					{
+						if (Node* node = GetNodeUnsafe())
+						{
+							// Create it read-only ...
+							node->CreateValueString(ValueID::ValueGenre_User, GetCommandClassId(), _instance,
+													ValueID_Index_Color::Color, "Color", "", true, false, "#000000", 0);
+							color = static_cast<Internal::VC::ValueString*>(GetValue(_instance, ValueID_Index_Color::Color));
+						}
+						else
+						{
+							Log::Write(LogLevel_Error, GetNodeId(), "Couldn't get node (!?).");
+						}
+					}
 
-                    color->OnValueRefreshed(colorStr);
-                    color->Release();
+					color->OnValueRefreshed(colorStr);
+					color->Release();
 
-                    /* if we got a updated Color Index Value - Update our ValueID */
-                    if (Internal::VC::ValueList* coloridx = static_cast<Internal::VC::ValueList*>(GetValue(_instance, ValueID_Index_Color::Index)))
-                    {
-                        if ((m_dom.GetFlagShort(STATE_FLAG_COLOR_CHANNELS)) & (1 << (COLORIDX_INDEXCOLOR)))
-                        {
-                            coloridx->OnValueRefreshed(m_colorvalues[COLORIDX_INDEXCOLOR]);
-                        }
-                        else
-                        {
-                            coloridx->OnValueRefreshed(decodeColorList(colorStr));
-                        }
-                        coloridx->Release();
-                    }
+					/* if we got a updated Color Index Value - Update our ValueID */
+					if (Internal::VC::ValueList* coloridx = static_cast<Internal::VC::ValueList*>(GetValue(_instance, ValueID_Index_Color::Index)))
+					{
+						if ((m_dom.GetFlagShort(STATE_FLAG_COLOR_CHANNELS)) & (1 << (COLORIDX_INDEXCOLOR)))
+						{
+							coloridx->OnValueRefreshed(m_colorvalues[COLORIDX_INDEXCOLOR]);
+						}
+						else
+						{
+							coloridx->OnValueRefreshed(decodeColorList(colorStr));
+						}
+						coloridx->Release();
+					}
 
-                    return true;
-                }
-                if (ColorCmd_StartCapabilityLevelChange == (ColorCmd) _data[0])
-                {
-                    uint8 ignoreStartLevel   = ( _data[1] >> 5 ) & 0x01;
-                    uint8 directionRaw       = ( _data[1] >> 6 ) & 0x01;
-                    uint8 colorComponentId   = _data[2];
-                    uint8 startLevel         = _data[3];
-                    uint16 durationSeconds   = 4; // TODO:  should do something else here.  Overall, this seems like a good duration, but ...
-                    string colorStr          = decodeColorIndexAndAddColor(colorComponentId);
+					return true;
+				}
+				if (ColorCmd_StartCapabilityLevelChange == (ColorCmd) _data[0])
+				{
+					uint8 ignoreStartLevel   = ( _data[1] >> 5 ) & 0x01;
+					uint8 directionRaw       = ( _data[1] >> 6 ) & 0x01;
+					uint8 colorComponentId   = _data[2];
+					uint8 startLevel         = _data[3];
+					uint16 durationSeconds   = 4; // TODO:  should do something else here.  Overall, this seems like a good duration, but ...
+					string colorStr          = decodeColorIndexAndAddColor(colorComponentId);
 
-                    Notification::LevelChangeDirection direction = ( directionRaw == 0) ? Notification::LevelChangeDirection_Up : Notification::LevelChangeDirection_Down;
+					Notification::LevelChangeDirection direction = ( directionRaw == 0) ? Notification::LevelChangeDirection_Up : Notification::LevelChangeDirection_Down;
 
-                    Log::Write(LogLevel_Info, GetNodeId(), "Received ColorCmd_StartStateChange from node %d - instance %d.  Color index %d - %s. Sending event notification.", GetNodeId(), _instance, colorComponentId, colorStr.c_str());
-                    Notification* notification = new Notification(Notification::Type_LevelChangeStart);
-                    notification->SetHomeNodeIdAndInstance(GetHomeId(), GetNodeId(), _instance);
-                    notification->SetLevelChangeStartParameters( Notification::LevelChange_Color, direction, Notification::LevelChangeDirection_None, ignoreStartLevel, startLevel, durationSeconds, 0, colorStr );
-                    GetDriver()->QueueNotification(notification);
+					Log::Write(LogLevel_Info, GetNodeId(), "Received ColorCmd_StartStateChange from node %d - instance %d.  Color index %d - %s. Sending event notification.", GetNodeId(), _instance, colorComponentId, colorStr.c_str());
+					Notification* notification = new Notification(Notification::Type_LevelChangeStart);
+					notification->SetHomeNodeIdAndInstance(GetHomeId(), GetNodeId(), _instance);
+					notification->SetLevelChangeStartParameters( Notification::LevelChange_Color, direction, Notification::LevelChangeDirection_None, ignoreStartLevel, startLevel, durationSeconds, 0, colorStr );
+					GetDriver()->QueueNotification(notification);
 
-                    return true;
-                }
-                if (ColorCmd_StopStateChange == (ColorCmd) _data[0])
-                {
-                    uint colorComponentId = _data[1];
-                    string colorStr = decodeColorIndexAndAddColor(colorComponentId);
-                    Log::Write(LogLevel_Info, GetNodeId(), "Received ColorCmd_StopStateChange from node %d - instance %d.  Color index %d - %s. Sending event notification.", GetNodeId(), _instance, colorComponentId, colorStr.c_str());
-                    Notification* notification = new Notification(Notification::Type_LevelChangeStop);
-                    notification->SetHomeNodeIdAndInstance(GetHomeId(), GetNodeId(), _instance);
-                    notification->SetLevelChangeType( Notification::LevelChange_Color );
-                    notification->SetColorTarget( colorStr );
-                    GetDriver()->QueueNotification(notification);
+					return true;
+				}
+				if (ColorCmd_StopStateChange == (ColorCmd) _data[0])
+				{
+					uint colorComponentId = _data[1];
+					string colorStr = decodeColorIndexAndAddColor(colorComponentId);
+					Log::Write(LogLevel_Info, GetNodeId(), "Received ColorCmd_StopStateChange from node %d - instance %d.  Color index %d - %s. Sending event notification.", GetNodeId(), _instance, colorComponentId, colorStr.c_str());
+					Notification* notification = new Notification(Notification::Type_LevelChangeStop);
+					notification->SetHomeNodeIdAndInstance(GetHomeId(), GetNodeId(), _instance);
+					notification->SetLevelChangeType( Notification::LevelChange_Color );
+					notification->SetColorTarget( colorStr );
+					GetDriver()->QueueNotification(notification);
 
-                    return true;
-                }
+					return true;
+				}
 
 				return false;
 			}
@@ -740,21 +740,21 @@ namespace OpenZWave
 //-----------------------------------------------------------------------------
 
 			string Color::decodeColorIndexAndAddColor ( uint8 const colorIndex )
-            {
-                // Get our current color capabilities -- we'll be updating if we see a new color channel set.
-                uint16_t f_capabilities = m_dom.GetFlagShort(STATE_FLAG_COLOR_CHANNELS);
-                uint8 colorvalues[9];
-                for (uint8 i = 0; i < 9; i++)
-                    colorvalues[i] = 0;
+			{
+				// Get our current color capabilities -- we'll be updating if we see a new color channel set.
+				uint16_t f_capabilities = m_dom.GetFlagShort(STATE_FLAG_COLOR_CHANNELS);
+				uint8 colorvalues[9];
+				for (uint8 i = 0; i < 9; i++)
+					colorvalues[i] = 0;
 
-                colorvalues[colorIndex] = 0xFF;
-                // If we're being asked to set a color, be sure it's set in our capabilities (i.e., force it)!
-                // Each bit stands for one of the color indices.
-                if ( ! ( f_capabilities & (1 << colorIndex)) ) { // ... then it's a new color index
-                    m_dom.SetFlagShort(STATE_FLAG_COLOR_CHANNELS, f_capabilities | (1 << colorIndex));
-                }
-                return decodeColor(colorvalues);
-            }
+				colorvalues[colorIndex] = 0xFF;
+				// If we're being asked to set a color, be sure it's set in our capabilities (i.e., force it)!
+				// Each bit stands for one of the color indices.
+				if ( ! ( f_capabilities & (1 << colorIndex)) ) { // ... then it's a new color index
+					m_dom.SetFlagShort(STATE_FLAG_COLOR_CHANNELS, f_capabilities | (1 << colorIndex));
+				}
+				return decodeColor(colorvalues);
+			}
 
 //-----------------------------------------------------------------------------
 // <Color::SetValue>

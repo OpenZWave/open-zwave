@@ -187,14 +187,14 @@ Manager::Manager() :
 	string logFilePath = "";
 	Options::Get()->GetOptionAsString("LogFilePath", &logFilePath);
 	if ( logFilePath.size() < 1 )
-    {
-	    // Default behavior - LogFilePath not specified, and defaults to the userpath
-	    logFilePath = userPath;
-    }
+	{
+		// Default behavior - LogFilePath not specified, and defaults to the userpath
+		logFilePath = userPath;
+	}
 	else if ( logFilePath[ logFilePath.size() -1] != '/')
-    {
-        logFilePath += "/";
-    }
+	{
+		logFilePath += "/";
+	}
 	string logFilename = logFilePath + logFileNameBase;
 	Log::Create(logFilename, bAppend, bConsoleOutput, (LogLevel) nSaveLogLevel, (LogLevel) nQueueLogLevel, (LogLevel) nDumpTrigger);
 	Log::SetLoggingState(logging);
@@ -2563,10 +2563,12 @@ bool Manager::GetValueFloatPrecision(ValueID const& _id, uint8* o_value)
 		}
 		else
 		{
-		    // GCT
+			// GCT:  I'm not sure the exact source, but occasional bad values being passed
+			//       here.  Swallowing the error produces no bad effects, and prevents bad
+			//       initialization.
 			// OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "ValueID passed to GetValueFloatPrecision is not a Decimal Value");
-            Log::Write(LogLevel_Error, "Exception swallowed in Manager::GetValueFloatPrecision (!). Invalid GetValueFloatPrecision() on value %u of type %s", *o_value, Internal::VC::Value::GetTypeNameFromEnum(_id.GetType()));
-        }
+			Log::Write(LogLevel_Error, "Exception swallowed in Manager::GetValueFloatPrecision (!). Invalid GetValueFloatPrecision() on value %u of type %s", *o_value, Internal::VC::Value::GetTypeNameFromEnum(_id.GetType()));
+		}
 	}
 
 	return res;

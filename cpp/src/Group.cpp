@@ -244,20 +244,20 @@ void Group::AddAssociation(uint8 const _nodeId, uint8 const _endPoint)
 			Internal::CC::MultiInstance *mc = static_cast<Internal::CC::MultiInstance*>(node->GetCommandClass(Internal::CC::MultiInstance::StaticGetCommandClassId()));
 			if (cc && IsMultiInstance())
 			{
-			    // Check the compatibility flag.  Known instance is RGBGenie, which supports MultiChannelAssociation, but not MultiChannel
-                if ( mc || (cc->m_com.GetFlagBool(Internal::COMPAT_FLAG_MULTICHANNEL_SENDER_ONLY) == true))
-                {
-                    // Set up an instance for the values, along with an endpoint mapped to that instance.
-                    cc->SetInstance( _endPoint );
-                    cc->SetEndPoint( _endPoint, _endPoint );
-                    cc->SetInstanceLabel( _endPoint, (char *)m_label.c_str() );
+				// Check the compatibility flag.  Known instance is RGBGenie, which supports MultiChannelAssociation, but not MultiChannel
+				if ( mc || (cc->m_com.GetFlagBool(Internal::COMPAT_FLAG_MULTICHANNEL_SENDER_ONLY) == true))
+				{
+					// Set up an instance for the values, along with an endpoint mapped to that instance.
+					cc->SetInstance( _endPoint );
+					cc->SetEndPoint( _endPoint, _endPoint );
+					cc->SetInstanceLabel( _endPoint, (char *)m_label.c_str() );
 
 					cc->Set(m_groupIdx, _nodeId, _endPoint);
 					cc->QueryGroup(m_groupIdx, 0);
 					return;
 				}
-                else
-    		    {
+				else
+				{
 					Log::Write(LogLevel_Warning, m_nodeId, "MultiChannelAssociation is Present, but MultiChannel CC is not. Trying Plain Association...");
 				}
 			}
@@ -284,7 +284,7 @@ void Group::RemoveAssociation(uint8 const _nodeId, uint8 const _endPoint)
 	{
 		if (Node* node = driver->GetNodeUnsafe(m_nodeId))
 		{
-            Internal::CC::MultiChannelAssociation* cc = static_cast<Internal::CC::MultiChannelAssociation*>(node->GetCommandClass(Internal::CC::MultiChannelAssociation::StaticGetCommandClassId()));
+			Internal::CC::MultiChannelAssociation* cc = static_cast<Internal::CC::MultiChannelAssociation*>(node->GetCommandClass(Internal::CC::MultiChannelAssociation::StaticGetCommandClassId()));
 			if (cc && IsMultiInstance())
 			{
 				cc->Remove(m_groupIdx, _nodeId, _endPoint);
@@ -330,7 +330,7 @@ void Group::OnGroupChanged(vector<InstanceAssociation> const& _associations)
 {
 	bool notify = false;
 
-    // If the number of associations is different, we'll save
+	// If the number of associations is different, we'll save
 	// ourselves some work and clear the old set now.
 	if (_associations.size() != m_associations.size())
 	{
@@ -352,7 +352,7 @@ void Group::OnGroupChanged(vector<InstanceAssociation> const& _associations)
 	uint8 i;
 	for (i = 0; i < _associations.size(); ++i)
 	{
-        m_associations[_associations[i]] = AssociationCommandVec();
+        	m_associations[_associations[i]] = AssociationCommandVec();
 	}
 
 	if ((!notify) && (oldSize != m_associations.size()))
@@ -371,7 +371,7 @@ void Group::OnGroupChanged(vector<InstanceAssociation> const& _associations)
 
 	if (notify)
 	{
-        // If the node supports COMMAND_CLASS_ASSOCIATION_COMMAND_CONFIGURATION, we need to request the command data.
+		// If the node supports COMMAND_CLASS_ASSOCIATION_COMMAND_CONFIGURATION, we need to request the command data.
 		if (Driver* driver = Manager::Get()->GetDriver(m_homeId))
 		{
 			if (Node* node = driver->GetNodeUnsafe(m_nodeId))

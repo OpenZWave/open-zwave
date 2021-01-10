@@ -59,8 +59,8 @@ namespace OpenZWave
 					CommandClass(_homeId, _nodeId), m_queryAll(false), m_numGroups(0)
 			{
 				m_com.EnableFlag(COMPAT_FLAG_MCA_FORCEINSTANCES, true);
-                m_com.EnableFlag(COMPAT_FLAG_MULTICHANNEL_SENDER_ONLY, false);
-                SetStaticRequest(StaticRequest_Values);
+				m_com.EnableFlag(COMPAT_FLAG_MULTICHANNEL_SENDER_ONLY, false);
+				SetStaticRequest(StaticRequest_Values);
 			}
 
 //-----------------------------------------------------------------------------

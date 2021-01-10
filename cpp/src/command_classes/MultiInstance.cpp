@@ -79,8 +79,8 @@ namespace OpenZWave
 				m_com.EnableFlag(COMPAT_FLAG_MI_IGNMCCAPREPORTS, false);
 				m_com.EnableFlag(COMPAT_FLAG_MI_ENDPOINTHINT, 0);
 				m_com.EnableFlag(COMPAT_FLAG_MI_REMOVECC, false);
-                m_com.EnableFlag(COMPAT_FLAG_MULTICHANNEL_SENDER_ONLY, false);
-            }
+				m_com.EnableFlag(COMPAT_FLAG_MULTICHANNEL_SENDER_ONLY, false);
+			}
 
 //-----------------------------------------------------------------------------
 // <MultiInstance::RequestInstances>
@@ -610,52 +610,52 @@ namespace OpenZWave
 						 */
 						if (endPoint == 0)
 						{
-						    /*
-						     *  If this flag is set, then we have a device that we can make an end-point association
-						     *  with for *our* (simulated) end-point, and it will return commands to that end point.
-						     *  Example here is the RGBGenie wall panel, which can associate color commands to groups.
-						     *  If we want to pick those up (segregated by group), we need to catch the group (endpoint)
-						     *  indicated in the return.  COMPAT_FLAG_MULTICHANNEL_SENDER_ONLY indicates this case.
-						     */
-                            if ( m_com.GetFlagBool(Internal::COMPAT_FLAG_MULTICHANNEL_SENDER_ONLY) == true )
-                            {
-                                endPoint = _data[2] & 0x7f;
-                                Log::Write(LogLevel_Info, GetNodeId(), "MultiChannelEncap with (s)endpoint set to %d.", endPoint );
+							/*
+							 *  If this flag is set, then we have a device that we can make an end-point association
+							 *  with for *our* (simulated) end-point, and it will return commands to that end point.
+							 *  Example here is the RGBGenie wall panel, which can associate color commands to groups.
+							 *  If we want to pick those up (segregated by group), we need to catch the group (endpoint)
+							 *  indicated in the return.  COMPAT_FLAG_MULTICHANNEL_SENDER_ONLY indicates this case.
+							 */
+							if ( m_com.GetFlagBool(Internal::COMPAT_FLAG_MULTICHANNEL_SENDER_ONLY) == true )
+							{
+								endPoint = _data[2] & 0x7f;
+								Log::Write(LogLevel_Info, GetNodeId(), "MultiChannelEncap with (s)endpoint set to %d.", endPoint );
 
-                                uint8 testInstance = pCommandClass->GetInstance(endPoint);
+								uint8 testInstance = pCommandClass->GetInstance(endPoint);
 
-                                if ( testInstance != endPoint )
-                                {
-                                    Log::Write(LogLevel_Info, GetNodeId(), "MultiChannelEncap fixing instance %d for endpoint %d.", testInstance, endPoint );
+								if ( testInstance != endPoint )
+								{
+									Log::Write(LogLevel_Info, GetNodeId(), "MultiChannelEncap fixing instance %d for endpoint %d.", testInstance, endPoint );
 
-                                    pCommandClass->SetInstance( endPoint );
-                                    pCommandClass->SetEndPoint( endPoint, endPoint );
-                                    // Should probably also set an instance label here (?) -- pCommandClass-SetInstanceLabel( endPoint, ??)
+									pCommandClass->SetInstance( endPoint );
+									pCommandClass->SetEndPoint( endPoint, endPoint );
+									// Should probably also set an instance label here (?) -- pCommandClass-SetInstanceLabel( endPoint, ??)
 
-                                    /*
-                                     * TODO:  solve incorrect value label for first discovered instance if IncludeInstanceLabel set to true
-                                     * The way we're doing this, which is to add the instances at the point we receive a message,
-                                     * introduces a defect.  See Manager::GetValueLabel().  It checks the IncludeInstanceLabel
-                                     * configuration option, and if set, then it also checks to see if the CC has multiple instances.
-                                     * In our case, for the very first added instance, we will not have multiple instances,
-                                     * so the label will *not* include the Instance # prefix.  It's not immediately clear to me
-                                     * how to solve this in a clean way, as for the device I'm adding (RGBGenie), you don't necessarily
-                                     * know what endpoints you're going to get back until you get a message on them.  The messy way
-                                     * (brute force) to solve this would be to add an "isMultiInstance" flag in the CommandClass, and
-                                     * set that to true here when we detect this, and then check it in Manager::GetValueLabel().  But
-                                     * for that flag to be meaningful everywhere (i.e., to have clean semantics, as opposed to just
-                                     * brute-forcing this one case) would require a more thorough implementation.
-                                     * The temporary workaround is just to always handle both cases in your client (instance label in value
-                                     * label, or none).
-                                     */
-                                }
-                            }
-                            else
-                            {
-                                Log::Write(LogLevel_Info, GetNodeId(), "MultiChannelEncap with endpoint set to 0 - Send to Root Device");
-                                pCommandClass->HandleMsg(&_data[4], _length - 4);
-                                return;
-                            }
+									/*
+									 * TODO:  solve incorrect value label for first discovered instance if IncludeInstanceLabel set to true
+									 * The way we're doing this, which is to add the instances at the point we receive a message,
+									 * introduces a defect.  See Manager::GetValueLabel().  It checks the IncludeInstanceLabel
+									 * configuration option, and if set, then it also checks to see if the CC has multiple instances.
+									 * In our case, for the very first added instance, we will not have multiple instances,
+									 * so the label will *not* include the Instance # prefix.  It's not immediately clear to me
+									 * how to solve this in a clean way, as for the device I'm adding (RGBGenie), you don't necessarily
+									 * know what endpoints you're going to get back until you get a message on them.  The messy way
+									 * (brute force) to solve this would be to add an "isMultiInstance" flag in the CommandClass, and
+									 * set that to true here when we detect this, and then check it in Manager::GetValueLabel().  But
+									 * for that flag to be meaningful everywhere (i.e., to have clean semantics, as opposed to just
+									 * brute-forcing this one case) would require a more thorough implementation.
+									 * The temporary workaround is just to always handle both cases in your client (instance label in value
+									 * label, or none).
+									 */
+								}
+							}
+							else
+							{
+								Log::Write(LogLevel_Info, GetNodeId(), "MultiChannelEncap with endpoint set to 0 - Send to Root Device");
+								pCommandClass->HandleMsg(&_data[4], _length - 4);
+								return;
+							}
 						}
 
 						uint8 instance = pCommandClass->GetInstance(endPoint);

@@ -336,12 +336,12 @@ string Notification::GetAsString() const
 		case Type_ManufacturerSpecificDBReady:
 			str = "ManufacturerSpecificDB Ready";
 			break;
-        case Type_LevelChangeStart:
-            str = "Level Change Start";
-            break;
-	    case Type_LevelChangeStop:
-	        str = "Level Change Stop";
-	        break;
+		case Type_LevelChangeStart:
+			str = "Level Change Start";
+			break;
+		case Type_LevelChangeStop:
+			str = "Level Change Stop";
+			break;
 
 	}
 	return str;
