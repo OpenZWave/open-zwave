@@ -352,7 +352,7 @@ void Group::OnGroupChanged(vector<InstanceAssociation> const& _associations)
 	uint8 i;
 	for (i = 0; i < _associations.size(); ++i)
 	{
-        	m_associations[_associations[i]] = AssociationCommandVec();
+		m_associations[_associations[i]] = AssociationCommandVec();
 	}
 
 	if ((!notify) && (oldSize != m_associations.size()))
@@ -409,7 +409,7 @@ void Group::OnGroupChanged(vector<InstanceAssociation> const& _associations)
 //-----------------------------------------------------------------------------
 uint32 Group::GetAssociations(uint8** o_associations)
 {
-    size_t numNodes = m_associations.size();
+	size_t numNodes = m_associations.size();
 	if (!numNodes)
 	{
 		*o_associations = NULL;
