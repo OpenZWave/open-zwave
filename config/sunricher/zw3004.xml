@@ -1,0 +1,96 @@
+<Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <MetaDataItem name="Name">RGBGenie ZW-3004 Wall-mounted Lighting Control Remote</MetaDataItem>
+    <MetaDataItem name="Description">Wall-mounted remote controller for controlling other Z-Wave devices, specifically
+      designed around light control (RGBWC controls, dimming, pre-sets, speed). This model supports three groups,
+      and three scenes.</MetaDataItem>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0330:0301:a105</MetaDataItem>
+    <MetaDataItem name="ProductPage">https://rgbgenie.com/?product=rgbgenie-color-touch-panel-and-dimmer-white-z-wave-2</MetaDataItem>
+    <MetaDataItem name="ProductSupport">http://rgbgenie.com/</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/sunricher/ZW-3004-RGBW-wall-controller-3-zone-white.png</MetaDataItem>
+    <!-- MetaDataItem name="ProductManual"></MetaDataItem -->
+    <MetaDataItem name="InclusionDescription">Short press the “inclusion/exclusion” button (on back of device),
+      or press and hold down “ALL ON/OFF” button for over 3 seconds, the wall controller will be set to inclusion mode,
+      and waiting to be included, then LED indicator turns on and blinks 6 times quickly to indicate successful inclusion.</MetaDataItem>
+    <MetaDataItem name="ExclusionDescription">Short press the “inclusion/exclusion” button (on back of device),
+      or press and hold down “ALL ON/OFF” button for over 3 seconds, the wall controller will be set to exclusion mode,
+      and waiting to be excluded, then LED indicator turns on and shows 3 short blinks and 1 long blink to indicate
+      successful exclusion.</MetaDataItem>
+    <MetaDataItem name="ResetDescription">Press and hold down “inclusion/exclusion” button (on back of device)
+      for over 8 seconds, LED indicator blinks slowly to indicate successful factory reset, release
+      “inclusion/exclusion” button,the wall controller will restart automatically.</MetaDataItem>
+    <!-- <MetaDataItem id="a105" name="ZWProductPage" type="0301">https://products.z-wavealliance.org/products/????</MetaDataItem -->
+    <!-- MetaDataItem id="a105" name="FrequencyName" type="0301">U.S. / Canada / Mexico</MetaDataItem -->
+    <!-- MetaDataItem id="a105" name="Identifier" type="0301">????</MetaDataItem -->
+    <ChangeLog>
+      <Entry author="Greg Tatham" date="10 Jan 2021" revision="1">Initial entry after extensive testing.</Entry>
+    </ChangeLog>
+  </MetaData>
+  <!-- Configuration -->
+  <CommandClass id="112">
+    <Value genre="config" index="5" instance="1" label="DynamicMode" type="byte" max="255" min="0" value="1">
+      <Help>
+        Dynamic mode switching.  Switch 1 - 0 - 2 - 0 - 3 - 0 etc. up to 20.  Resets after hitting another
+        button and restarts from 1.  Note:  you don't SET this, this is a message you'll receive from the switch.
+      </Help>
+    </Value>
+    <Value genre="config" index="6" instance="1" label="DynamicSpeed" type="byte" max="255" min="0" value="1">
+      <Help>
+        Dynamic mode speed (for effects).  A value 0..255 to indicate speed.  Note:  you don't SET this, this is
+        a message that you'll receive from the switch.
+      </Help>
+    </Value>
+    <Value genre="config" index="3" instance="1" label="Choose working mode of the remote control" size="1" type="list" value="1">
+      <Help>
+        Choose working mode of the remote control.  This may or may not work.
+      </Help>
+      <Item label="Choose activation of scenes in gateway mode" value="0"/>
+      <Item label="Choose direct control of associated devices mode" value="1"/>
+    </Value>
+  </CommandClass>
+  <!-- Basic:  This device has no real or virtual outputs so cannot be controlled or polled, basic class is 'controlling' only -->
+  <CommandClass id="32">
+    <Compatibility>
+      <GetSupported>false</GetSupported>
+    </Compatibility>
+  </CommandClass>
+  <!-- PowerLevel:  disable polling for power level.  This generates a lot of unnecessary traffic for no use. -->
+  <CommandClass id="115">
+    <Compatibility>
+      <GetSupported>false</GetSupported>
+    </Compatibility>
+  </CommandClass>
+  <!-- General Command Classes -->
+  <!-- Multilevel Switch -->
+  <CommandClass id="38"></CommandClass>
+  <!-- Central Scene -->
+  <CommandClass id="91"></CommandClass>
+  <!-- Color -->
+  <CommandClass id="51"></CommandClass>
+  <!-- Association Groups -->
+  <CommandClass id="133">
+    <Associations num_groups="4">
+      <Group index="1" label="Lifeline" max_associations="1"/>
+      <Group index="2" label="Group 1" max_associations="12"/>
+      <Group index="3" label="Group 2" max_associations="12"/>
+      <Group index="4" label="Group 3" max_associations="12"/>
+    </Associations>
+  </CommandClass>
+  <!-- MultiAssociation - see use of flag in group.cpp -->
+  <CommandClass id="96">
+    <Compatibility>
+	    <MultiChannelSenderOnly>true</MultiChannelSenderOnly>
+    </Compatibility>
+  </CommandClass>
+  <CommandClass id="142">
+    <Compatibility>
+	    <MultiChannelSenderOnly>true</MultiChannelSenderOnly>
+    </Compatibility>
+    <Associations num_groups="3">
+      <Group index="1" label="Lifeline" max_associations="1"/>
+      <Group index="2" label="Group 1" max_associations="12"/>
+      <Group index="3" label="Group 2" max_associations="12"/>
+      <Group index="4" label="Group 3" max_associations="12"/>
+    </Associations>
+  </CommandClass>
+</Product>

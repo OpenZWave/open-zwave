@@ -59,6 +59,8 @@ namespace OpenZWave
 			class NodeNaming;
 			class Security;
 			class SceneActivation;
+			class SwitchMultilevel;
+			class Color;
 		}
 		namespace VC
 		{
@@ -100,6 +102,8 @@ namespace OpenZWave
 			friend class Internal::CC::WakeUp;
 			friend class Internal::CC::ApplicationStatus; /* for Notification messages */
 			friend class Internal::CC::Security;
+			friend class Internal::CC::SwitchMultilevel; /* for Notification messages */
+			friend class Internal::CC::Color; /* for Notification messages */
 			friend class Internal::Msg;
 			friend class Internal::ManufacturerSpecificDB;
 			friend class TimerThread;

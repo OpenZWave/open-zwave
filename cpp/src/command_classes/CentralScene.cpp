@@ -87,7 +87,7 @@ namespace OpenZWave
 // Constructor
 //-----------------------------------------------------------------------------
 			CentralScene::CentralScene(uint32 const _homeId, uint8 const _nodeId) :
-					CommandClass(_homeId, _nodeId), m_slowrefresh(false), m_sequence(0)
+					CommandClass(_homeId, _nodeId), m_slowrefresh(false), m_sequence(0xFE) // init to this to pick up initial set to scene 0
 			{
 				m_dom.EnableFlag(STATE_FLAG_CS_SCENECOUNT, 0);
 				m_dom.EnableFlag(STATE_FLAG_CS_CLEARTIMEOUT, 1000);

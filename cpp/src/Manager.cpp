@@ -184,7 +184,18 @@ Manager::Manager() :
 	int nDumpTrigger = (int) LogLevel_Warning;
 	Options::Get()->GetOptionAsInt("DumpTriggerLevel", &nDumpTrigger);
 
-	string logFilename = userPath + logFileNameBase;
+	string logFilePath = "";
+	Options::Get()->GetOptionAsString("LogFilePath", &logFilePath);
+	if ( logFilePath.size() < 1 )
+    {
+	    // Default behavior - LogFilePath not specified, and defaults to the userpath
+	    logFilePath = userPath;
+    }
+	else if ( logFilePath[ logFilePath.size() -1] != '/')
+    {
+        logFilePath += "/";
+    }
+	string logFilename = logFilePath + logFileNameBase;
 	Log::Create(logFilename, bAppend, bConsoleOutput, (LogLevel) nSaveLogLevel, (LogLevel) nQueueLogLevel, (LogLevel) nDumpTrigger);
 	Log::SetLoggingState(logging);
 
@@ -2552,8 +2563,10 @@ bool Manager::GetValueFloatPrecision(ValueID const& _id, uint8* o_value)
 		}
 		else
 		{
-			OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "ValueID passed to GetValueFloatPrecision is not a Decimal Value");
-		}
+		    // GCT
+			// OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "ValueID passed to GetValueFloatPrecision is not a Decimal Value");
+            Log::Write(LogLevel_Error, "Exception swallowed in Manager::GetValueFloatPrecision (!). Invalid GetValueFloatPrecision() on value %u of type %s", *o_value, Internal::VC::Value::GetTypeNameFromEnum(_id.GetType()));
+        }
 	}
 
 	return res;

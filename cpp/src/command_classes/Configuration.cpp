@@ -61,7 +61,8 @@ namespace OpenZWave
 			bool Configuration::HandleMsg(uint8 const* _data, uint32 const _length, uint32 const _instance	// = 1
 					)
 			{
-				if (ConfigurationCmd_Report == (ConfigurationCmd) _data[0])
+				if ((ConfigurationCmd_Report == (ConfigurationCmd) _data[0])
+				 || (ConfigurationCmd_Set    == (ConfigurationCmd) _data[0]))
 				{
 					// Extract the parameter index and value
 					uint8 parameter = _data[1];
@@ -73,7 +74,10 @@ namespace OpenZWave
 						paramValue |= (int32) _data[i + 3];
 					}
 
-					if (Internal::VC::Value* value = GetValue(1, parameter))
+                    Log::Write(LogLevel_Info, GetNodeId(), "Configuration Set: Parameter %d - Size %d - Value %d", parameter, size, paramValue);
+
+					// This had previously been forced to be GetValue(1, ...), ignoring the _instance.
+                    if (Internal::VC::Value* value = GetValue(_instance, parameter))
 					{
 						switch (value->GetID().GetType())
 						{
@@ -155,6 +159,9 @@ namespace OpenZWave
 
 					Log::Write(LogLevel_Info, GetNodeId(), "Received Configuration report: Parameter=%d, Value=%d", parameter, paramValue);
 					return true;
+				}
+				else {
+                    Log::Write(LogLevel_Info, GetNodeId(), "Configuration Set: Unhandled command %d", _data[0]);
 				}
 
 				return false;

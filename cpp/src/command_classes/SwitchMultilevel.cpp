@@ -33,6 +33,7 @@
 #include "Driver.h"
 #include "Node.h"
 #include "platform/Log.h"
+#include "Notification.h"
 
 #include "value_classes/ValueBool.h"
 #include "value_classes/ValueButton.h"
@@ -222,7 +223,55 @@ namespace OpenZWave
 					}
 					return true;
 				}
-				Log::Write(LogLevel_Warning, GetNodeId(), "Recieved a Unhandled SwitchMultiLevel Command: %d", _data[0]);
+
+                if ( SwitchMultilevelCmd_StartLevelChange == (SwitchMultilevelCmd)_data[0])
+                {
+                    uint8 secondaryDirectionRaw  = ( _data[1] >> 3 ) & 0x03;
+                    uint8 ignoreStartLevel       = ( _data[1] >> 5 ) & 0x01;
+                    uint8 primaryDirectionRaw    = ( _data[1] >> 6 ) & 0x03;
+                    uint8 primaryStartLevel = _data[2];
+                    uint8 codedDuration     = _data[3];
+                    uint8 secondaryStepSize = ( _length > 4 ) ? _data[4] : 0;  // > Version 2 only
+                    uint16 durationSeconds  = codedDuration;
+
+                    Notification::LevelChangeDirection primaryDirection = ( primaryDirectionRaw == 0) ? Notification::LevelChangeDirection_Up
+                            : ( ( primaryDirectionRaw == 1) ? Notification::LevelChangeDirection_Down : Notification::LevelChangeDirection_None);
+                    Notification::LevelChangeDirection secondaryDirection = ( secondaryDirectionRaw == 0) ? Notification::LevelChangeDirection_Up
+                            : ( ( secondaryDirectionRaw == 1) ? Notification::LevelChangeDirection_Down : Notification::LevelChangeDirection_None);
+
+                    if ( codedDuration > 0x7F ) {
+                        if ( codedDuration == 0xFF ) {
+                            // Uh, it's supposed to be factory duration.  Call it 10 seconds for grins.
+                            // TODO:  figure something else out, here?
+                            durationSeconds = 10;
+                        }
+                        else {
+                            // It's in minutes, starting from 0x80 == 1 minute.
+                            durationSeconds = ( codedDuration - 0x7F ) * 60;
+                        }
+                    }
+
+                    Log::Write(LogLevel_Info, GetNodeId(), "Received MultilevelSwitchStart from node %d. Sending event notification.", GetNodeId());
+                    Notification* notification = new Notification(Notification::Type_LevelChangeStart);
+                    notification->SetHomeNodeIdAndInstance(GetHomeId(), GetNodeId(), _instance);
+                    notification->SetLevelChangeStartParameters( Notification::LevelChange_Switch, primaryDirection, secondaryDirection, ignoreStartLevel, primaryStartLevel, durationSeconds, secondaryStepSize, "" );
+                    GetDriver()->QueueNotification(notification);
+
+                    return true;
+                }
+
+                if ( SwitchMultilevelCmd_StopLevelChange == (SwitchMultilevelCmd)_data[0])
+                {
+                    Log::Write(LogLevel_Info, GetNodeId(), "Received MultilevelSwitchStop from node %d. Sending event notification.", GetNodeId());
+                    Notification* notification = new Notification(Notification::Type_LevelChangeStop);
+                    notification->SetHomeNodeIdAndInstance(GetHomeId(), GetNodeId(), _instance);
+                    notification->SetLevelChangeType( Notification::LevelChange_Switch );
+                    GetDriver()->QueueNotification(notification);
+
+                    return true;
+                }
+
+                Log::Write(LogLevel_Warning, GetNodeId(), "Recieved a Unhandled SwitchMultiLevel Command: %d", _data[0]);
 				return false;
 			}
 

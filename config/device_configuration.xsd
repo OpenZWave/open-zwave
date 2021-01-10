@@ -94,6 +94,7 @@
 		   <xs:element name="Mapping" type="xs:integer" minOccurs='0'/>
 		   <xs:element name="EndpointHint" type="xs:integer" minOccurs='0'/>
 		   <xs:element name="DelayNoMoreInfo" type="xs:integer" minOccurs='0'/>
+           <xs:element name="MultiChannelSenderOnly" type="xs:boolean" minOccurs='0'/>
 		   <xs:element name="RemoveCC" minOccurs='0'>
 		   	<xs:complexType mixed="true">
 			   <xs:attribute name='index' type='xs:string' use='required'/>
