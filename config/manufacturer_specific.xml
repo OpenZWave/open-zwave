@@ -1821,7 +1821,6 @@
     <Product config="sunricher/zw3004.xml" id="a105" name="RGBGenie ZW-3004" type="0301"/>
     <Product config="sunricher/srzv9101sachpswitch.xml" id="d006" name="AC Switch ZV-9101SAC-HP-Switch" type="0200"/>
     <Product config="sunricher/srzv9100aa.xml" id="d00f" name="SR-ZV9100A-A In-Wall Smart Switch" type="0200"/>
->>>>>>> upstream/master
   </Manufacturer>
   <Manufacturer id="0049" name="Twisthink"></Manufacturer>
   <Manufacturer id="0270" name="Ubitech"></Manufacturer>
