@@ -60,7 +60,7 @@ namespace OpenZWave
 		{ "EnableNotificationClear", COMPAT_FLAG_NOT_ENABLECLEAR, COMPAT_FLAG_TYPE_BOOL },
 		{ "EnableV1AlarmTypes", COMPAT_FLAG_NOT_V1ALARMTYPES_ENABLED, COMPAT_FLAG_TYPE_BOOL },
 		{ "NoRefreshAfterSet", COMPAT_FLAG_NO_REFRESH_AFTER_SET, COMPAT_FLAG_TYPE_BOOL_ARRAY },
-        { "MultiChannelSenderOnly", COMPAT_FLAG_MULTICHANNEL_SENDER_ONLY, COMPAT_FLAG_TYPE_BOOL }  // RGBGenie (Sunricher rebadge) supports MultiChannelAssociate, but not MultiChannel
+		{ "MultiChannelSenderOnly", COMPAT_FLAG_MULTICHANNEL_SENDER_ONLY, COMPAT_FLAG_TYPE_BOOL }  // RGBGenie (Sunricher rebadge) supports MultiChannelAssociate, but not MultiChannel
 		};
 
 		uint16_t availableCompatFlagsCount = sizeof(availableCompatFlags) / sizeof(availableCompatFlags[0]);
