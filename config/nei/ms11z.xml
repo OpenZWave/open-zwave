@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Product xmlns="http://code.google.com/p/open-zwave/">
+    
+  <MetaData>
+    <MetaDataItem name="Name">MS11Z</MetaDataItem> 
+    <MetaDataItem name="Description">Minoston Smart Dimmer Switch</MetaDataItem>
+    <MetaDataItem name="OzwInfoPage">https://products.z-wavealliance.org/products/3610?selectedFrequencyId=2</MetaDataItem>
+    <MetaDataItem name="ProductPage">https://minoston.com/product/z-wave-plus-smart-dimmer-switch-%EF%BC%88ms11z%EF%BC%89/</MetaDataItem>
+    <MetaDataItem name="InclusionDescription">Add  the MS13Z from the existing Z-Wave home control network with your primary controller.
 
+ Refer to your primary controller instructions to process the inclusion / exclusion setup procedure.
+ When prompted by your primary controller, click the Up or Down button three times in one second.
+Include MS13Z to/from a Z-Wave Gateway with supporting Security.The MS13Z can support the Primary Controller that implemented the security S2.</MetaDataItem>
+    <MetaDataItem name="ExclusionDescription">Remove the MS13Z from the existing Z-Wave home control network with your primary controller.
+
+ Refer to your primary controller instructions to process the inclusion / exclusion setup procedure.
+ When prompted by your primary controller, click the Up or Down button three times in one second.</MetaDataItem>
+     
+  </MetaData>    
   <!-- Configuration Parameters -->
   <CommandClass id="112">
     <Value genre="config" instance="1" index="1" value="0" label="Locally button function" units="" size="1" min="0" max="2" type="list">
@@ -44,4 +60,5 @@
       <Value type="int" genre="user" instance="1" index="1" label="Bottom Button Scene" units="" read_only="false" write_only="false" verify_changes="false" min="-2147483648" max="2147483647" value="0" />
       <Value type="int" genre="user" instance="1" index="3" label="Config Button Scene" units="" read_only="false" write_only="false" verify_changes="false" min="-2147483648" max="2147483647" value="0" />
   </CommandClass>
-                                                                                                                                                                                                                                                                                                                             </Product>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+
+</Product>
