@@ -109,9 +109,9 @@ Leave programming mode by choosing ESC in menu. Your thermostat is ready for use
 		</Value>
 	</CommandClass>
 	<CommandClass id="64">
-		<Value type="list" genre="user" instance="1" index="0" version="3" label="Mode" units="" read_only="false" write_only="false" min="0" max="0" value="0">
+		<Value type="list" genre="user" instance="1" index="0" label="Mode" units="" read_only="false" write_only="false" min="0" max="0" value="0">
 			<Item label="Off" value="0"/>
-			<Item label="Heat (Default)" value="1"/>
+			<Item label="Heat" value="1"/>
 			<Item label="Cool" value="2"/>
 			<Item label="Energy Heat" value="11"/>
 		</Value>
