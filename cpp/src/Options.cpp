@@ -100,6 +100,7 @@ Options* Options::Create(string const& _configPath, string const& _userPath, str
 
 		s_instance->AddOptionBool("Logging", true);						// Enable logging of library activity.
 		s_instance->AddOptionString("LogFileName", "OZW_Log.txt", false);	// Name of the log file (can be changed via Log::SetLogFileName)
+		s_instance->AddOptionString("LogFilePath", string(""), false);  // Alternate path (rather than using userpath) for the logfile - e.g., to keep in RAM
 		s_instance->AddOptionBool("AppendLogFile", false);					// Append new session logs to existing log file (false = overwrite)
 		s_instance->AddOptionBool("ConsoleOutput", true);						// Display log information on console (as well as save to disk)
 		s_instance->AddOptionInt("SaveLogLevel", LogLevel_Detail);			// Save (to file) log messages equal to or above LogLevel_Detail

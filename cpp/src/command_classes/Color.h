@@ -84,6 +84,7 @@ namespace OpenZWave
 					virtual void CreateVars(uint8 const _instance) override;
 					string decodeColor(uint8 valueArray[9]);
 					uint8 decodeColorList(string color);
+					string decodeColorIndexAndAddColor ( uint8 const colorIndex );
 
 				private:
 					Color(uint32 const _homeId, uint8 const _nodeId);
