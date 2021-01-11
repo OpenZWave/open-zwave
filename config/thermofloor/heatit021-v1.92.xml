@@ -89,13 +89,13 @@ Leave programming mode by choosing ESC in menu. Your thermostat is ready for use
 		</Compatibility>
 	</CommandClass>
 	<CommandClass id="49">
-		<Value type="decimal" genre="user" instance="1" index="1" label="External Floor Temperature Sensor" units="C" read_only="true" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="0" value="26.5">
+		<Value type="decimal" genre="user" instance="1" index="1" label="External Floor Temperature Sensor" units="C" read_only="true" write_only="false">
 			<Help>Floor Temperature Sensor Value</Help>
 		</Value>
-		<Value type="decimal" genre="user" instance="2" index="1" label="External Air Temperature Sensor" units="C" read_only="true" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="0" value="0.0">
+		<Value type="decimal" genre="user" instance="2" index="1" label="External Air Temperature Sensor" units="C" read_only="true" write_only="false" >
 			<Help>Air Temperature Sensor Value</Help>
 		</Value>
-		<Value type="decimal" genre="user" instance="3" index="1" label="Internal Air Temperature Sensor" units="C" read_only="true" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="0" value="27.1">
+		<Value type="decimal" genre="user" instance="3" index="1" label="Internal Air Temperature Sensor" units="C" read_only="true" write_only="false">
 			<Help>Internal Air Temperature Sensor Value</Help>
 		</Value>
 	</CommandClass>
