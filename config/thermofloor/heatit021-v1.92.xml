@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!--
-Heatit Z-Wave Thermostat TF 021 with firmware >= 1.92
-https://products.z-wavealliance.org/products/1234
--->
-<Product Revision="10" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/019B:0201:0003</MetaDataItem>
     <MetaDataItem name="ProductPic">images/thermofloor/heatit021.png</MetaDataItem>
@@ -82,7 +78,7 @@ fails, Err (error) will appear.
 Leave programming mode by choosing ESC in menu. Your thermostat is ready for use with default settings.</MetaDataItem>
     <MetaDataItem name="WakeupDescription">If Er2 appears in the display, touch any button to restart the display.</MetaDataItem>
     <ChangeLog>
-		<Entry author="Pål Kristensen - paalkr77@gmail.com" date="10 January 2020" revision="10">Initial release</Entry>
+		<Entry author="Pål Kristensen - paalkr77@gmail.com" date="11 January 2021" revision="1">Initial release</Entry>
     </ChangeLog>
   </MetaData>
 
@@ -93,8 +89,6 @@ Leave programming mode by choosing ESC in menu. Your thermostat is ready for use
 		</Compatibility>
 	</CommandClass>
 	<CommandClass id="49">
-		<Compatibility />
-		<State />
 		<Instance index="1" endpoint="2" />
 		<Instance index="2" endpoint="3" />
 		<Instance index="3" endpoint="4" />
