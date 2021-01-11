@@ -3,28 +3,28 @@
 
   <!-- Configuration Parameters -->
   <CommandClass id="112">
-    <Value genre="config" instance="1" index=1" value=0" label=Locally button function" units="" size=1" min=0" max=2" type="list">
+    <Value genre="config" instance="1" index="1" value="0" label="Locally button function" units="" size="1" min="0" max="2" type="list">
       <Help>Locally button function</Help>
-      <Item value="0" label="Up Button:On Down Button: Off">
-      <Item value="1" label="Up Button:Off Down Button: On">
-      <Item value="2" label="Up Button:On/Off Down Button: On/Off">
+      <Item value="0" label="Up Button:On Down Button: Off" />
+      <Item value="1" label="Up Button:Off Down Button: On" />
+      <Item value="2" label="Up Button:On/Off Down Button: On/Off" />
     </Value>
-    <Value genre="config" instance="1" index=2" value=0" label=LED indicator" units="" size=1" min=0" max=3" type="list">
+    <Value genre="config" instance="1" index="2" value="0" label="LED indicator" units="" size="1" min="0" max="3" type="list">
       <Help>LED indicator</Help>
-      <Item value="0" label="On when Off and Off when On ">
-      <Item value="1" label="On when On and Off when Off">
-      <Item value="2" label="Always Off ">
-      <Item value="3" label="Always On">
+      <Item value="0" label="On when Off and Off when On "/>
+      <Item value="1" label="On when On and Off when Off" />
+      <Item value="2" label="Always Off " />
+      <Item value="3" label="Always On" />
     </Value>
-    <Value genre="config" instance="1" index=3" value=0" label=Enable Auto Turn-Off Timer" units="" size=1" min=0" max=1" type="list">
+    <Value genre="config" instance="1" index="3" value="0" label="Enable Auto Turn-Off Timer" units="" size="1" min="0" max="1" type="list">
       <Help>Enable Auto Turn-Off Timer</Help>
-      <Item value="0" label="Disabled">
-      <Item value="1" label="Enabled">
+      <Item value="0" label="Disabled" />
+      <Item value="1" label="Enabled" />
     </Value>
-    <Value genre="config" instance="1" index=4" value=0" label=Auto turn off timer" units="" size=4" min=0" max=65535" type="int">
+    <Value genre="config" instance="1" index="4" value="0" label="Auto turn off timer" units="" size="4" min="0" max="65535" type="int">
       <Help>Auto turn off timer</Help>
     </Value>
-    <Value genre="config" instance="1" index=6" value=2" label=Restore state after power failure" units="" size=1" min=0" max=2" type="byte">
+    <Value genre="config" instance="1" index="6" value="2" label="Restore state after power failure" units="" size="1" min="0" max="2" type="byte">
       <Help>Restore state after power failure</Help>
     </Value>
   </CommandClass>
@@ -45,9 +45,3 @@
       <Value type="int" genre="user" instance="1" index="3" label="Config Button Scene" units="" read_only="false" write_only="false" verify_changes="false" min="-2147483648" max="2147483647" value="0" />
   </CommandClass>
                                                                                                                                                                                                                                                                                                                              </Product>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
-
-
-
-
-
-
