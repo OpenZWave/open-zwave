@@ -86,13 +86,12 @@ Leave programming mode by choosing ESC in menu. Your thermostat is ready for use
 	<CommandClass id="32">
 		<Compatibility>
 			<Mapping>37</Mapping>
-			<!-- <Mapping>64</Mapping> -->
 		</Compatibility>
 	</CommandClass>
 	<CommandClass id="49">
-		<Value type="decimal" genre="user" instance="1" index="1" label="External Floor Temperature Sensor" units="C" read_only="true" write_only="false"/>
+		<Value type="decimal" genre="user" instance="1" index="1" label="Internal Air Temperature Sensor" units="C" read_only="true" write_only="false"/>
 		<Value type="decimal" genre="user" instance="2" index="1" label="External Air Temperature Sensor" units="C" read_only="true" write_only="false"/>
-		<Value type="decimal" genre="user" instance="3" index="1" label="Internal Air Temperature Sensor" units="C" read_only="true" write_only="false"/>
+		<Value type="decimal" genre="user" instance="3" index="1" label="External Floor Temperature Sensor" units="C" read_only="true" write_only="false"/>
 		<Compatibility>
 			<Base>0</Base>
 			<CreateVars>true</CreateVars>
@@ -200,9 +199,9 @@ Leave programming mode by choosing ESC in menu. Your thermostat is ready for use
 		<Associations num_groups="5">
 			<Group index="1" max_associations="2" label="Lifeline"/>
 			<Group index="2" max_associations="2" label="On/Off control"/>
-			<Group index="3" max_associations="2" label="Multilevel sensor reports - Internal sensor" auto="false" />
+			<Group index="3" max_associations="2" label="Multilevel sensor reports - Internal sensor" auto="true" />
 			<Group index="4" max_associations="2" label="Multilevel sensor reports - External sensor" auto="false" />
-			<Group index="5" max_associations="2" label="Multilevel sensor reports - Floor sensor" auto="false" />
+			<Group index="5" max_associations="2" label="Multilevel sensor reports - Floor sensor" auto="true" />
 		</Associations>
 	</CommandClass>
 
