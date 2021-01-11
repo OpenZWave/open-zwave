@@ -16,7 +16,7 @@ Include MS13Z to/from a Z-Wave Gateway with supporting Security.The MS13Z can su
  When prompted by your primary controller, click the Up or Down button three times in one second.</MetaDataItem>
     
     <ChangeLog>
-      <Entry author="Ryan McFadden - rjmcfadd@gmail.com" date="11 Jan 2021" revision="10">Adding Device</Entry>
+      <Entry author="Ryan McFadden - rjmcfadd@gmail.com" date="11 Jan 2021" revision="1">Adding Device</Entry>
     </ChangeLog> 
   </MetaData> 
   <!-- Configuration Parameters -->
