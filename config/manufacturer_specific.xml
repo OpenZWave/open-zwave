@@ -1309,6 +1309,9 @@
   <Manufacturer id="036B" name="NEC Platforms Ltd"></Manufacturer>
   <Manufacturer id="0241" name="NEEO AG"></Manufacturer>
   <Manufacturer id="006D" name="Nefit"></Manufacturer>
+  <Manufacturer id="0312" name="NEI Technology">
+    <Product config="nei/ms11z.xml" id="ff04" name="MS11Z" type="ff00"/>  
+  </Manufacturer>
   <Manufacturer id="0351" name="NEOCONTROL US LLC"></Manufacturer>
   <Manufacturer id="0189" name="Ness Corporation Pty Ltd"></Manufacturer>
   <Manufacturer id="0133" name="Netgear"></Manufacturer>
