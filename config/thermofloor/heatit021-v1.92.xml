@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
-  <MetaData>
-    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/019B:0201:0003</MetaDataItem>
-    <MetaDataItem name="ProductPic">images/thermofloor/heatit021.png</MetaDataItem>
-    <MetaDataItem id="0201" name="ZWProductPage" type="0003">https://products.z-wavealliance.org/products/1234/</MetaDataItem>
-    <MetaDataItem name="Description">Heatit Z-Wave is an electronic thermostat for mounting in a standard wall box. The thermostat has a built-in Z-Wave chip that 
+<Product Revision="1"
+	xmlns="https://github.com/OpenZWave/open-zwave">
+	<MetaData>
+		<MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/019B:0201:0003</MetaDataItem>
+		<MetaDataItem name="ProductPic">images/thermofloor/heatit021.png</MetaDataItem>
+		<MetaDataItem id="0201" name="ZWProductPage" type="0003">https://products.z-wavealliance.org/products/1234/</MetaDataItem>
+		<MetaDataItem name="Description">Heatit Z-Wave is an electronic thermostat for mounting in a standard wall box. The thermostat has a built-in Z-Wave chip that 
 can be connected to Home Automation systems like Fibaro, Sensio, Vera, Zipato and others.
 The display will show the actual room temperature. By pressing the buttons, the display will show the set value.
 Heatit Z-Wave is equipped with a single-pole switch.
@@ -54,33 +55,33 @@ Sensor values: 0°C 29,1 kOhm
 Switch: Single-pole
 Standard Color White RAL 9003 – Black RAL 9011
 Approvals CE – FIMKO - Z-Wave Plus
-	</MetaDataItem>
-    <MetaDataItem name="ExclusionDescription">INCLUSION/EXCLUSION
+		</MetaDataItem>
+		<MetaDataItem name="ExclusionDescription">INCLUSION/EXCLUSION
 To include the thermostat to your home automation gateway, press Center (confirm) for 10 seconds.
 The display will show OFF. Press Right (down) 4 times till you see Con in the display.
 Now start add device in your home automation software. Start inclusion mode by pressing Center (confirm) for approximately
 2 seconds. The inclusion/exclusion icon will appear in the display. Confirmation will show Inc/EcL in the display. If inclusion
 fails, Err (error) will appear.
 Leave programming mode by choosing ESC in menu. Your thermostat is ready for use with default settings.</MetaDataItem>
-    <MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&amp;filename=MarketCertificationFiles/1182/Manual_Multireg%20Z-Wave_Ver2015-A.pdf</MetaDataItem>
-    <MetaDataItem id="0001" name="FrequencyName" type="0001">CEPT (Europe)</MetaDataItem>
-    <MetaDataItem name="Name">Heatit Z-Wave</MetaDataItem>
-    <MetaDataItem id="0001" name="Identifier" type="0001">TF021</MetaDataItem>
-    <MetaDataItem name="ResetDescription">FACTORY RESET - RES
+		<MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&amp;filename=MarketCertificationFiles/1182/Manual_Multireg%20Z-Wave_Ver2015-A.pdf</MetaDataItem>
+		<MetaDataItem id="0001" name="FrequencyName" type="0001">CEPT (Europe)</MetaDataItem>
+		<MetaDataItem name="Name">Heatit Z-Wave</MetaDataItem>
+		<MetaDataItem id="0001" name="Identifier" type="0001">TF021</MetaDataItem>
+		<MetaDataItem name="ResetDescription">FACTORY RESET - RES
 By pressing buttons Left and Center (up and confirm) for 20 seconds, the thermostat will perform a complete factory reset.
 NB! Please use this procedure only when the primary controller is missing or otherwise inoperable.</MetaDataItem>
-    <MetaDataItem name="InclusionDescription">INCLUSION/EXCLUSION
+		<MetaDataItem name="InclusionDescription">INCLUSION/EXCLUSION
 To include the thermostat to your home automation gateway, press Center (confirm) for 10 seconds.
 The display will show OFF. Press Right (down) 4 times till you see Con in the display.
 Now start add device in your home automation software. Start inclusion mode by pressing Center (confirm) for approximately
 2 seconds. The inclusion/exclusion icon will appear in the display. Confirmation will show Inc/EcL in the display. If inclusion
 fails, Err (error) will appear.
 Leave programming mode by choosing ESC in menu. Your thermostat is ready for use with default settings.</MetaDataItem>
-    <MetaDataItem name="WakeupDescription">If Er2 appears in the display, touch any button to restart the display.</MetaDataItem>
-    <ChangeLog>
-		<Entry author="Pål Kristensen - paalkr77@gmail.com" date="11 January 2021" revision="1">Initial release</Entry>
-    </ChangeLog>
-  </MetaData>
+		<MetaDataItem name="WakeupDescription">If Er2 appears in the display, touch any button to restart the display.</MetaDataItem>
+		<ChangeLog>
+			<Entry author="Pål Kristensen - paalkr77@gmail.com" date="11 January 2021" revision="1">Initial release</Entry>
+		</ChangeLog>
+	</MetaData>
 
 	<CommandClass id="32">
 		<Compatibility>
@@ -89,18 +90,16 @@ Leave programming mode by choosing ESC in menu. Your thermostat is ready for use
 		</Compatibility>
 	</CommandClass>
 	<CommandClass id="49">
-		<Value type="decimal" genre="user" instance="1" index="1" label="External Floor Temperature Sensor" units="C" read_only="true" write_only="false">
-			<Help>Floor Temperature Sensor Value</Help>
-		</Value>
-		<Value type="decimal" genre="user" instance="2" index="1" label="External Air Temperature Sensor" units="C" read_only="true" write_only="false" >
-			<Help>Air Temperature Sensor Value</Help>
-		</Value>
-		<Value type="decimal" genre="user" instance="3" index="1" label="Internal Air Temperature Sensor" units="C" read_only="true" write_only="false">
-			<Help>Internal Air Temperature Sensor Value</Help>
-		</Value>
+		<Value type="decimal" genre="user" instance="1" index="1" label="External Floor Temperature Sensor" units="C" read_only="true" write_only="false"/>
+		<Value type="decimal" genre="user" instance="2" index="1" label="External Air Temperature Sensor" units="C" read_only="true" write_only="false"/>
+		<Value type="decimal" genre="user" instance="3" index="1" label="Internal Air Temperature Sensor" units="C" read_only="true" write_only="false"/>
+		<Compatibility>
+			<Base>0</Base>
+			<CreateVars>true</CreateVars>
+		</Compatibility>
 	</CommandClass>
 	<CommandClass id="64">
-		<Value type="list" genre="user" instance="1" index="0" label="Mode" units="" read_only="false" write_only="false" min="0" max="0" value="0">
+		<Value genre="user" index="0" instance="1" label="Mode" max="0" min="0" read_only="false" size="1" type="list" units="" value="0" write_only="false">
 			<Item label="Off" value="0"/>
 			<Item label="Heat" value="1"/>
 			<Item label="Cool" value="2"/>
@@ -124,7 +123,7 @@ Leave programming mode by choosing ESC in menu. Your thermostat is ready for use
 			<CreateVars>true</CreateVars>
 		</Compatibility>
 	</CommandClass>
-	
+
 	<CommandClass id="112">
 		<Value type="list" genre="config" index="1" label="Operation mode" value="1">
 			<Help>Set operation mode</Help>
@@ -199,8 +198,8 @@ Leave programming mode by choosing ESC in menu. Your thermostat is ready for use
 	</CommandClass>
 	<CommandClass id="133">
 		<Associations num_groups="5">
-			<Group index="1" max_associations="2" label="Lifeline" auto="true" multiInstance="true" />
-			<Group index="2" max_associations="2" label="On/Off control" auto="false" />
+			<Group index="1" max_associations="2" label="Lifeline"/>
+			<Group index="2" max_associations="2" label="On/Off control"/>
 			<Group index="3" max_associations="2" label="Multilevel sensor reports - Internal sensor" auto="false" />
 			<Group index="4" max_associations="2" label="Multilevel sensor reports - External sensor" auto="false" />
 			<Group index="5" max_associations="2" label="Multilevel sensor reports - Floor sensor" auto="false" />
@@ -215,5 +214,9 @@ Leave programming mode by choosing ESC in menu. Your thermostat is ready for use
 	</CommandClass>
 
 	<!--COMMAND_CLASS_MULTI_CHANNEL_V2 Map endpoints to instances -->
-	<!-- <CommandClass id="96" mapping="endpoints" /> -->
+	<CommandClass id="96">
+		<Compatibility>
+			<MapRootToEndpoint>true</MapRootToEndpoint>
+		</Compatibility>
+	</CommandClass>
 </Product>
