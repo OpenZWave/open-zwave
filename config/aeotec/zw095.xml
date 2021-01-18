@@ -250,5 +250,10 @@ Products that are Z-Wave certified can be used and communicate with other Z-Wave
     <Associations num_groups="1">
       <Group index="1" label="Lifeline" max_associations="5"/>
     </Associations>
+  </CommandClass>  
+  <CommandClass id="142">
+    <Compatibility>
+      <ForceInstances>false</ForceInstances>
+    </Compatibility>
   </CommandClass>
 </Product>
