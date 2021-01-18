@@ -26,8 +26,8 @@
     <MetaDataItem id="0301" name="Identifier" type="0201">Contact Sensor v2</MetaDataItem>
     <MetaDataItem id="0301" name="FrequencyName" type="0201">U.S. / Canada / Mexico</MetaDataItem>
     <ChangeLog>
-	<Entry author="gongtao0607@gmail.com" date="17 Jan 2021" revision="2">Minor correction</Entry>
 	<Entry author="gongtao0607@gmail.com" date="13 Jan 2021" revision="1">Initial Metadata Creation</Entry>
+	<Entry author="gongtao0607@gmail.com" date="17 Jan 2021" revision="2">Minor correction</Entry>
     </ChangeLog>
   </MetaData>
   <CommandClass id="112">
