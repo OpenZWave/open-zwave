@@ -811,7 +811,9 @@
     <Product config="frostdale/fdn2311.xml" id="0001" name="Nanogrid: FDN2nxx light switch - where n is 1, 2, 3 or 4 buttons" type="2411"/>
     <Product config="frostdale/fdn2nxx.xml" id="0031" name="Nanogrid: FDN2nxx light switch - where n is 1, 2, 3 or 4 buttons" type="7333"/>
   </Manufacturer>
-  <Manufacturer id="0305" name="Future Home AS"></Manufacturer>
+  <Manufacturer id="0305" name="Future Home AS">
+    <Product config="thermofloor/heatitz8.xml" id="a305" name="Future Home AS (Heatit) Z-Push Button 8" type="0300"/>
+  </Manufacturer>
   <Manufacturer id="033E" name="GE"></Manufacturer>
   <Manufacturer id="0063" name="GE (Jasco Products)">
     <Product config="ge/dimmer_module.xml" id="3030" name="45602 Lamp Dimmer Module" type="4450"/>
