@@ -280,6 +280,7 @@
     <Product config="assa_abloy/PushButtonDeadbolt.xml" id="0209" name="Yale Push Button Deadbolt (YRD210)" type="0004"/>
     <Product config="assa_abloy/PushButtonDeadbolt.xml" id="aa00" name="Yale Push Button Deadbolt (YRD210)" type="0004"/>
     <Product config="assa_abloy/PushButtonDeadbolt.xml" id="0600" name="Yale Push Button Deadbolt (YRD216)" type="8004"/>
+    <Product config="assa_abloy/PushButtonDeadbolt.xml" id="0508" name="Yale ProSL Push Button Deadbolt (YRD136)" type="803b"/>
     <Product config="assa_abloy/TouchDeadbolt.xml" id="0000" name="Yale Key Free Touchscreen Deadbolt (YRD240)" type="0006"/>
     <Product config="assa_abloy/KeyfreeConnected.xml" id="0000" name="Yale Keyless Connected Smart Lock (YSL)" type="0007"/>
     <Product config="assa_abloy/KeyfreeConnected.xml" id="9230" name="Yale Keyless Connected Smart Lock (YSL)" type="1bef"/>
