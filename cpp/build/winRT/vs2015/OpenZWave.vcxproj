@@ -332,6 +332,7 @@ exit 0</Command>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\src\platform\winRT\HidControllerWinRT.h" />
     <ClInclude Include="..\..\..\src\aes\aes.h" />
     <ClInclude Include="..\..\..\src\aes\aesopt.h" />
     <ClInclude Include="..\..\..\src\aes\aestab.h" />
@@ -357,12 +358,13 @@ exit 0</Command>
     <ClInclude Include="..\..\..\src\Defs.h" />
     <ClInclude Include="..\..\..\src\Driver.h" />
     <ClInclude Include="..\..\..\src\DNSThread.h" />
-    <ClInclude Include="..\..\..\src\platform\winRT\FileOpsImpl.h" />
+    <ClInclude Include="..\..\..\src\SensorMultiLevelCCTypes.h" />
     <ClInclude Include="..\..\..\src\TimerThread.h" />
     <ClInclude Include="..\..\..\src\Http.h" />
     <ClInclude Include="..\..\..\src\Group.h" />
     <ClInclude Include="..\..\..\src\Localization.h" />
     <CIInclude Include="..\..\..\src\NotificationCCTypes.h" />
+    <CIInclude Include="..\..\..\src\SensorMultiLevelCCTypes.h" />
     <ClInclude Include="..\..\..\src\Manager.h" />
     <ClInclude Include="..\..\..\src\ManufacturerSpecificDB.h" />
     <ClInclude Include="..\..\..\src\Msg.h" />
@@ -370,6 +372,7 @@ exit 0</Command>
     <ClInclude Include="..\..\..\src\Notification.h" />
     <ClInclude Include="..\..\..\src\Options.h" />
     <ClInclude Include="..\..\..\src\platform\FileOps.h" />
+    <ClInclude Include="..\..\..\src\platform\winRT\FileOpsImpl.h" />
     <ClInclude Include="..\..\..\src\ZWSecurity.h" />
     <ClInclude Include="..\..\..\src\platform\Controller.h" />
     <ClInclude Include="..\..\..\src\platform\DNS.h" />
@@ -384,9 +387,15 @@ exit 0</Command>
     <ClInclude Include="..\..\..\src\platform\Thread.h" />
     <ClInclude Include="..\..\..\src\platform\TimeStamp.h" />
     <ClInclude Include="..\..\..\src\platform\Wait.h" />
-    <ClInclude Include="..\..\..\src\platform\winRT\HidControllerWinRT.h" />
+    <ClInclude Include="..\..\..\src\platform\winRT\DNSImpl.h" />
+    <ClInclude Include="..\..\..\src\platform\winRT\EventImpl.h" />
+    <ClInclude Include="..\..\..\src\platform\winRT\LogImpl.h" />
+    <ClInclude Include="..\..\..\src\platform\winRT\MutexImpl.h" />
+    <ClInclude Include="..\..\..\src\platform\winRT\SerialControllerImpl.h" />
+    <ClInclude Include="..\..\..\src\platform\winRT\ThreadImpl.h" />
+    <ClInclude Include="..\..\..\src\platform\winRT\TimeStampImpl.h" />
+    <ClInclude Include="..\..\..\src\platform\winRT\WaitImpl.h" />
     <ClInclude Include="..\..\..\src\Scene.h" />
-    <ClInclude Include="..\..\..\src\SensorMultiLevelCCTypes.h" />
     <ClInclude Include="..\..\..\src\Utils.h" />
     <ClInclude Include="..\..\..\src\value_classes\ValueButton.h" />
     <ClInclude Include="..\..\..\src\value_classes\ValueRaw.h" />
@@ -451,6 +460,7 @@ exit 0</Command>
     <ClInclude Include="..\..\..\src\command_classes\WakeUp.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\src\platform\winRT\HidControllerWinRT.cpp" />
     <ClCompile Include="..\..\..\src\aes\aescrypt.c">
 	  <CompileAsWinRT>false</CompileAsWinRT>
 	</ClCompile>
@@ -482,21 +492,12 @@ exit 0</Command>
     <ClCompile Include="..\..\..\src\CompatOptionManager.cpp" />
     <ClCompile Include="..\..\..\src\Driver.cpp" />
     <ClCompile Include="..\..\..\src\DNSThread.cpp" />
-    <ClCompile Include="..\..\..\src\platform\winRT\DNSImpl.cpp" />
-    <ClCompile Include="..\..\..\src\platform\winRT\EventImpl.cpp" />
-    <ClCompile Include="..\..\..\src\platform\winRT\FileOpsImpl.cpp" />
-    <ClCompile Include="..\..\..\src\platform\winRT\HidControllerWinRT.cpp" />
-    <ClCompile Include="..\..\..\src\platform\winRT\LogImpl.cpp" />
-    <ClCompile Include="..\..\..\src\platform\winRT\MutexImpl.cpp" />
-    <ClCompile Include="..\..\..\src\platform\winRT\SerialControllerImpl.cpp" />
-    <ClCompile Include="..\..\..\src\platform\winRT\ThreadImpl.cpp" />
-    <ClCompile Include="..\..\..\src\platform\winRT\TimeStampImpl.cpp" />
-    <ClCompile Include="..\..\..\src\platform\winRT\WaitImpl.cpp" />
     <ClCompile Include="..\..\..\src\TimerThread.cpp" />
     <ClCompile Include="..\..\..\src\Http.cpp" />
     <ClCompile Include="..\..\..\src\Group.cpp" />
     <ClCompile Include="..\..\..\src\Localization.cpp" />
     <ClCompile Include="..\..\..\src\NotificationCCTypes.cpp" />
+    <ClCompile Include="..\..\..\src\SensorMultiLevelCCTypes.cpp" />
     <ClCompile Include="..\..\..\src\Manager.cpp" />
     <ClCompile Include="..\..\..\src\ManufacturerSpecificDB.cpp" />
     <ClCompile Include="..\..\..\src\Msg.cpp" />
@@ -517,8 +518,16 @@ exit 0</Command>
     <ClCompile Include="..\..\..\src\platform\Thread.cpp" />
     <ClCompile Include="..\..\..\src\platform\TimeStamp.cpp" />
     <ClCompile Include="..\..\..\src\platform\Wait.cpp" />
+    <ClCompile Include="..\..\..\src\platform\winRT\DNSImpl.cpp" />
+    <ClCompile Include="..\..\..\src\platform\winRT\EventImpl.cpp" />
+    <ClCompile Include="..\..\..\src\platform\winRT\FileOpsImpl.cpp" />
+    <ClCompile Include="..\..\..\src\platform\winRT\LogImpl.cpp" />
+    <ClCompile Include="..\..\..\src\platform\winRT\MutexImpl.cpp" />
+    <ClCompile Include="..\..\..\src\platform\winRT\SerialControllerImpl.cpp" />
+    <ClCompile Include="..\..\..\src\platform\winRT\ThreadImpl.cpp" />
+    <ClCompile Include="..\..\..\src\platform\winRT\TimeStampImpl.cpp" />
+    <ClCompile Include="..\..\..\src\platform\winRT\WaitImpl.cpp" />
     <ClCompile Include="..\..\..\src\Scene.cpp" />
-    <ClInclude Include="..\..\..\src\SensorMultiLevelCCTypes.cpp" />
     <ClCompile Include="..\..\..\src\Utils.cpp" />
     <ClCompile Include="..\..\..\src\value_classes\ValueButton.cpp" />
     <ClCompile Include="..\..\..\src\value_classes\ValueRaw.cpp" />
