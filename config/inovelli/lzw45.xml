@@ -20,7 +20,7 @@
       <Entry author="Jtronicus" date="24 Oct 2020" revision="4">Updates to work with firmware 1.17</Entry>
       <Entry author="Jtronicus" date="27 Oct 2020" revision="5">Updates to work with firmware 1.18</Entry>
       <Entry author="Jtronicus" date="27 Oct 2020" revision="6">Updates parameter 30 to 4 bytes</Entry>
-      <Entry author="nathanfiscus" date="20 Jan 2021" revision="6">Updates parameter 30 value max</Entry>
+      <Entry author="nathanfiscus" date="20 Jan 2021" revision="7">Updates parameter 30 value max</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration Parameters -->
