@@ -1,30 +1,35 @@
-<Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
+<?xml version="1.0" encoding="utf-8"?>
+<Product Revision="2"
+  xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="Name">Yale Pro SL Key-Free Deadbolt (YRD136 or YRD156)</MetaDataItem>
     <MetaDataItem name="Description">Never worry about the hassle of carrying around or losing your keys again. Lock and unlock your home with ease from the back-lit keypad. Create unique entry codes for friends, family, service providers, and renters. The YRD136 has Z-Wave Plus built in so you can easily integrate it into a compatible smart home or alarm system with one-touch enrollment. </MetaDataItem>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0129:803b:0508</MetaDataItem>
     <MetaDataItem name="ProductPage">https://us.yalehome.com/en/yalehome-products/yale-pro-sl-yrd156yrd136/yale-pro-sl-yrd156yrd136/prosl/</MetaDataItem>
     <MetaDataItem name="ProductPic">images/assa_abloy/ProSLKey-FreeDeadbolt.png</MetaDataItem>
-	<MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&filename=MarketCertificationFiles/3446/YRD136%20FINAL-compressed%20(1).pdf</MetaDataItem>
+	<MetaDataItem name="ProductManual">https://products.z-wavealliance.org/ProductManual/File?folder=&amp;filename=MarketCertificationFiles/3446/YRD136%20FINAL-compressed%20(1).pdf</MetaDataItem>
     <MetaDataItem name="InclusionDescription">
 	1. Remove the battery cover.
 	2. Press button and hold until unit beeps two (2) times.
 	3. Release button and network joining automatically begins.
-	4. Replace battery cover.</MetaDataItem>
+	4. Replace battery cover.
+	</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">
 	1. Remove the battery cover.
 	2. Press button and hold until unit beeps five (5) times.
 	3. Release button and network removal automatically begins.
 	4. Replace battery cover.
+	</MetaDataItem>
     <MetaDataItem id="0508" name="ZWProductPage" type="803b">https://products.z-wavealliance.org/products/3446/</MetaDataItem>
     <MetaDataItem id="0508" name="FrequencyName" type="803b">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem id="0508" name="Identifier" type="803b">YRD136</MetaDataItem>
-	</MetaDataItem>
-  </MetaData>
-  <ChangeLog>
+	<ChangeLog>
       <Entry author="Matthew Grimes - https://github.com/cybergrimes" date="18 January 2021" revision="1">Initial product configuration</Entry>
-  </ChangeLog>
--->
+	  <Entry author="Jean-François Auger - nechry@gmail.com" date="22 January 2021" revision="2">Fix metadata</Entry>	 
+  	</ChangeLog>
+  </MetaData>
+ 
+
     <!-- Configuration -->
     <CommandClass id="112">
 		<Value type="list" size="1" genre="config" instance="1" index="1" label="Audio Mode" value="3">
