@@ -1641,6 +1641,7 @@
     <Product config="shenzen_neo/nas-pd02z.xml" id="008d" name="NAS-PD02Z Battery Powered PIR Sensor V2" type="0003"/>
     <Product config="shenzen_neo/nas-pd03z.xml" id="1031" name="NAS-PD03Z Battery Powered PIR Sensor V2" type="0200"/>
     <Product config="shenzen_neo/nas-ws02z.xml" id="0085" name="Water Leakage Detector" type="0003"/>
+    <Product config="shenzen_neo/nas-ws02z.xml" id="1025" name="Water Leakage Detector" type="0100"/>
     <Product config="shenzen_neo/nas-ws02z.xml" id="1085" name="Water Leakage Detector" type="0003"/>
     <Product config="shenzen_neo/nas-ws02z.xml" id="6085" name="Water Leakage Detector" type="0003"/>
     <Product config="shenzen_neo/nas-ws02z.xml" id="2085" name="Water Leakage Detector" type="0003"/>
