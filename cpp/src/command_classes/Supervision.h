@@ -106,8 +106,8 @@ namespace OpenZWave
 					{
 					}
 
-                    static uint m_session_id;
-                    uint m_command_class_id;    // TODO as implemented now we support only a single concurrent supervision call per CC
+                    static uint8 m_session_id;
+                    uint8 m_command_class_id;    // TODO as implemented now we support only a single concurrent supervision call per CC
 
 					void HandleSupervisionReport(uint8 const* _data, uint32 const _length, uint32 const _instance);
 			};
