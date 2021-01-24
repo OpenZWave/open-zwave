@@ -4055,7 +4055,7 @@ void Node::WriteMetaDataXML(TiXmlElement *mdElement)
 // <Node::GetSupervisionSessionId>
 // Generate a new session id for Supervision encapsulation, if supported
 //-----------------------------------------------------------------------------
-uint Node::GetSupervisionSessionId(uint8 _command_class_id)
+uint8 Node::GetSupervisionSessionId(uint8 _command_class_id)
 {
     if (Internal::CC::CommandClass* cc = GetCommandClass(Internal::CC::Supervision::StaticGetCommandClassId()))
     {

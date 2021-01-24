@@ -913,7 +913,7 @@ namespace OpenZWave
 			map<uint32_t, ChangeLogEntry> m_changeLog;
 
 		public:
-            uint GetSupervisionSessionId(uint8 _command_class_id);
+            uint8 GetSupervisionSessionId(uint8 _command_class_id);
 	};
 
 } //namespace OpenZWave

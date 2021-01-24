@@ -41,7 +41,7 @@ namespace OpenZWave
 	{
 		namespace CC
 		{
-            uint Supervision::m_session_id = 0;
+            uint8 Supervision::m_session_id = 0;
 
             uint8 Supervision::GetSession(uint8 _command_class_id)
             {
