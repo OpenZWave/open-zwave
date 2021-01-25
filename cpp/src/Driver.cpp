@@ -375,7 +375,9 @@ void Driver::DriverThreadProc(Internal::Platform::Event* _exitEvent)
 				else if (m_waitingForAck || m_expectedCallbackId || m_expectedReply)
 				{
 					count = 4;
-					timeout = m_waitingForAck ? ACK_TIMEOUT : retryTimeStamp.TimeRemaining();
+					timeout = !m_waitingForAck ? retryTimeStamp.TimeRemaining() :
+						m_currentMsg != NULL && m_currentMsg->isResendDuetoCANorNAK() ? CAN_NAK_TIMEOUT :
+						ACK_TIMEOUT;
 					if (timeout < 0)
 					{
 						timeout = 0;
