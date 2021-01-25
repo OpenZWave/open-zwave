@@ -82,19 +82,19 @@
       <Item label="Disabled" value="0"/>
       <Item label="Watt" value="1"/>
       <Item label="KWH" value="2"/>
-      <Item label="Watt & KWH" value="3"/>
+      <Item label="Watt + KWH" value="3"/>
       <Item label="Ampere" value="4"/>
-      <Item label="Watt & Ampere" value="5"/>
-      <Item label="KWH & Ampere" value="6"/>
-      <Item label="Watt & KWH & Ampere" value="7"/>
+      <Item label="Watt + Ampere" value="5"/>
+      <Item label="KWH + Ampere" value="6"/>
+      <Item label="Watt + KWH + Ampere" value="7"/>
       <Item label="Voltage" value="8"/>
-      <Item label="Watt & Voltage" value="9"/>
-      <Item label="KWH & Voltage" value="10"/>
-      <Item label="Watt & KWH & Voltage" value="11"/>
-      <Item label="Ampere & Voltage" value="12"/>
-      <Item label="Watt & Ampere & Voltage" value="13"/>
-      <Item label="KWH & Ampere & Voltage" value="14"/>
-      <Item label="Watt & KWH & Ampere & Voltage" value="15"/>
+      <Item label="Watt + Voltage" value="9"/>
+      <Item label="KWH + Voltage" value="10"/>
+      <Item label="Watt + KWH + Voltage" value="11"/>
+      <Item label="Ampere + Voltage" value="12"/>
+      <Item label="Watt + Ampere + Voltage" value="13"/>
+      <Item label="KWH + Ampere + Voltage" value="14"/>
+      <Item label="Watt + KWH + Ampere + Voltage" value="15"/>
     </Value>
     <Value genre="config" index="16" instance="1" label="Energy meter reporting interval" type="byte" min="0" max="255" units="seconds" value="10">
       <Help>Interval to send unsollicited energy reports to the gateway. Requires option 15 (Energy meter reporting) to be set to anything other than Disabled. Default value is every 10 seconds.</Help>
