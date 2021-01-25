@@ -9,6 +9,7 @@
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/XXXX:YYYY:ZZZZ</MetaDataItem>
     <MetaDataItem name="ProductPage">http://www.mcohome.com/ProductDetail/3894312.html</MetaDataItem>
     <MetaDataItem name="ProductSupport">http://www.mcohome.com/ProductDetail/3894312.html</MetaDataItem>
+	<MetaDataItem name="ProductPic"> https://img-for-hk.wds168.cn/comdata/95301/product/202005281048115265B2DC16DAB726_b.png</MetaDataItem>
     <MetaDataItem name="InclusionDescription">Set controller into inclusion mode and press 3 clicks on '+' button to include. If succeeded, green led flashes 4 times.</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">Set controller into exclusion mode and press 3 clicks on '-' button to exclude. If succeeded, green led flashes 4 times.</MetaDataItem>
     <MetaDataItem name="ResetDescription">Press 10 times of any button or exclude the device from Z-Wave network, then cut off the main power. The factory setting will be restored.</MetaDataItem>
@@ -120,10 +121,10 @@
   <!-- Association Groups -->  
   <CommandClass id="133">
     <Associations num_groups="4">
-      <Group index="1" max_associations="1" label="Lifeline" auto="true"/>
-      <Group index="2" max_associations="5" label="Send Switch Multilevel to associated devices" auto="false"/>
-      <Group index="3" max_associations="5" label="Send Basic Set to associated devices on key '+'" auto="false"/>
-      <Group index="4" max_associations="5" label="Send Basic Set to associated devices on key '-'" auto="false"/>
+      <Group index="1" max_associations="1" label="Lifeline" auto="false"/>
+      <Group index="2" max_associations="5" label="Send Switch Multilevel to associated devices" auto="true"/>
+      <Group index="3" max_associations="5" label="Send Basic Set to associated devices on key '+'" auto="true"/>
+      <Group index="4" max_associations="5" label="Send Basic Set to associated devices on key '-'" auto="true"/>
     </Associations>
   </CommandClass>
 </Product>
