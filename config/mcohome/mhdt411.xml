@@ -6,7 +6,7 @@
   <MetaData>
     <MetaDataItem name="Name">Dimmer Switch MH-DT411</MetaDataItem>
     <MetaDataItem name="Description">Dimmer switch is a wall panel built-in with Z-Wave Plus module. With it's stylish design and stable performance, the panel can be used to control the light level. It supports basic command class, multi channel command class and multi channel association command class, also works as a repeater in a Z-Wave network. This product can be included and operated in any Z-Wave network with other Z-Wave certified devices from any other manufacturers.</MetaDataItem>
-    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/XXXX:YYYY:ZZZZ</MetaDataItem>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/015f:5102:d411</MetaDataItem>
     <MetaDataItem name="ProductPage">http://www.mcohome.com/ProductDetail/3894312.html</MetaDataItem>
     <MetaDataItem name="ProductSupport">http://www.mcohome.com/ProductDetail/3894312.html</MetaDataItem>
 	<MetaDataItem name="ProductPic">https://img-for-hk.wds168.cn/comdata/95301/product/202005281048115265B2DC16DAB726_b.png</MetaDataItem>
