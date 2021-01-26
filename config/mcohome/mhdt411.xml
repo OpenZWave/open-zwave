@@ -9,7 +9,7 @@
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/015f:5102:d411</MetaDataItem>
     <MetaDataItem name="ProductPage">http://www.mcohome.com/ProductDetail/3894312.html</MetaDataItem>
     <MetaDataItem name="ProductSupport">http://www.mcohome.com/ProductDetail/3894312.html</MetaDataItem>
-	<MetaDataItem name="ProductPic">https://img-for-hk.wds168.cn/comdata/95301/product/202005281048115265B2DC16DAB726_b.png</MetaDataItem>
+	<MetaDataItem name="ProductPic">015f_5102_d411.png</MetaDataItem>
     <MetaDataItem name="InclusionDescription">Set controller into inclusion mode and press 3 clicks on '+' button to include. If succeeded, green led flashes 4 times.</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">Set controller into exclusion mode and press 3 clicks on '-' button to exclude. If succeeded, green led flashes 4 times.</MetaDataItem>
     <MetaDataItem name="ResetDescription">Press 10 times of any button or exclude the device from Z-Wave network, then cut off the main power. The factory setting will be restored.</MetaDataItem>
