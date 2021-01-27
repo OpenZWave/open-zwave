@@ -1790,6 +1790,7 @@
     <Product config="wenzhou/tz68.xml" id="0103" name="TZ68 On/Off Switch Socket" type="0101"/>
     <Product config="wenzhou/tz66d.xml" id="1020" name="TZ66D Dual Wall Switch" type="0102"/>
     <Product config="wenzhou/tz67.xml" id="0611" name="TZ67 Wall Plug Dimmer" type="0202"/>
+    <Product config="wenzhou/tz67.xml" id="0008" name="TZ67G Wall Plug Dimmer" type="0003"/>
     <Product config="wenzhou/tz69.xml" id="0103" name="TZ69E Smart energy plug in switch" type="0311"/>
     <Product config="wenzhou/tz56s.xml" id="0202" name="TZ56S On/Off wall switch" type="0311"/>
     <Product config="wenzhou/tz57.xml" id="0203" name="TZ57 Two channel switch" type="0311"/>
