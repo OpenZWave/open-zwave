@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ManufacturerSpecificData Revision="160" xmlns="https://github.com/OpenZWave/open-zwave">
+<ManufacturerSpecificData Revision="161" xmlns="https://github.com/OpenZWave/open-zwave">
   <Manufacturer id="0028" name="2B Electronics"></Manufacturer>
   <Manufacturer id="0098" name="2GIG Technologies">
     <Product config="2gig/ct50e.xml" id="015e" name="CT50e Thermostat" type="3200"/>
@@ -403,6 +403,7 @@
     <Product config="cooper/RF9501.xml" id="0000" name="RF9501 Light Switch" type="534c"/>
     <Product config="cooper/RF9517.xml" id="0000" name="RF9517 Accessory Light Switch" type="5352"/>
     <Product config="cooper/RFWC5.xml" id="0000" name="RFWC5/RFWDC Scene Controller" type="574d"/>
+    <Product config="cooper/RF9601.xml" id="0503" name="RF9601 Light Switch" type="534c"/>
   </Manufacturer>
   <Manufacturer id="009d" name="Coventive Technologies Inc."></Manufacturer>
   <Manufacturer id="0379" name="CPRO"></Manufacturer>
