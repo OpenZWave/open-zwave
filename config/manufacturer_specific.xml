@@ -403,6 +403,7 @@
     <Product config="cooper/RF9501.xml" id="0000" name="RF9501 Light Switch" type="534c"/>
     <Product config="cooper/RF9517.xml" id="0000" name="RF9517 Accessory Light Switch" type="5352"/>
     <Product config="cooper/RFWC5.xml" id="0000" name="RFWC5/RFWDC Scene Controller" type="574d"/>
+    <Product config="cooper/RF9601.xml" id="0503" name="RF9601 Light Switch" type="534c"/>
   </Manufacturer>
   <Manufacturer id="009d" name="Coventive Technologies Inc."></Manufacturer>
   <Manufacturer id="0379" name="CPRO"></Manufacturer>
