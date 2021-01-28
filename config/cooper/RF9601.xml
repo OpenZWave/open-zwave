@@ -1,7 +1,7 @@
 <Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/001A:0503:534C</MetaDataItem>
-    <MetaDataItem name="ProductPic">images/cooper/RF9501.png</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/cooper/RF9601.png</MetaDataItem>
     <MetaDataItem id="0503" name="ZWProductPage" type="534C">https://products.z-wavealliance.org/products/3038/</MetaDataItem>
     <MetaDataItem id="0503" name="Identifier" type="534C">Eaton RF9601DW</MetaDataItem>
     <MetaDataItem id="0503" name="FrequencyName" type="534C">U.S. / Canada / Mexico</MetaDataItem>
