@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="0" xmlns="https://github.com/OpenZWave/open-zwave">
     <MetaData>
         <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/027a:a002:7000</MetaDataItem>
         <MetaDataItem name="ProductPic">images/zooz/zen27.png</MetaDataItem>
@@ -58,7 +58,6 @@ release: Scene 2, attribute 02
 held for 10 seconds (LED indicator starts blinking): enter the setting menu, 5 x tap down for factory reset; 5 x tap up to change LED bulb mode (see parameter 11); 2 x tap down to enable the range test tool.
         </MetaDataItem>
         <ChangeLog>
-            <Entry author="shbatm - support@shbatm.com" date="31 Jan 2021" revision="1">Typo correction for xmltest</Entry>
             <Entry author="shbatm - support@shbatm.com" date="31 Jan 2021" revision="0">Initial Copy from ZEN27, not yet available on ZWAlliance website</Entry>
         </ChangeLog>
     </MetaData>
