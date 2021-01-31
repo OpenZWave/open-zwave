@@ -1,6 +1,6 @@
 <Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
-    <MetaDataItem name="Name">ZEN34 Remote switch</MetaDataItem>
+    <MetaDataItem name="Name">ZEN34 Remote Switch</MetaDataItem>
     <MetaDataItem name="Description">FEATURES:
 - Control Z-Wave devices or activate scenes with the multi-tap feature
 - Wire-free: the perfect add-on switch to put in an existing switch box or install on any flat surface
