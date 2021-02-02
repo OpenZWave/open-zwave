@@ -123,12 +123,14 @@ DISTFILES =	.gitignore \
 	config/assa_abloy/ConexisL1.xml \
 	config/assa_abloy/KeyfreeConnected-plus.xml \
 	config/assa_abloy/KeyfreeConnected.xml \
+	config/assa_abloy/ProSLKey-FreeDeadbolt.xml \
 	config/assa_abloy/PushButtonDeadbolt.xml \
 	config/assa_abloy/PushButtonLever.xml \
 	config/assa_abloy/TouchDeadbolt.xml \
 	config/assa_abloy/TouchLever.xml \
 	config/assa_abloy/nexTouch.xml \
 	config/assa_abloy/yrd1x0.xml \
+	config/assa_abloy/yrm276.xml \
 	config/august/asl-03.xml \
 	config/buffalo/hw-100v15a-zw.xml \
 	config/building36/b36-t10.xml \
@@ -141,6 +143,7 @@ DISTFILES =	.gitignore \
 	config/cooper/RF9517.xml \
 	config/cooper/RF9540-N.xml \
 	config/cooper/RF9542-Z.xml \
+	config/cooper/RF9601.xml \
 	config/cooper/RFWC5.xml \
 	config/cooper/rf9534.xml \
 	config/danfoss/living.xml \
@@ -176,6 +179,7 @@ DISTFILES =	.gitignore \
 	config/dome/0087.xml \
 	config/dome/0088.xml \
 	config/dome/0101.xml \
+	config/dome/0104.xml \
 	config/dome/0201.xml \
 	config/dome/dmex1.xml \
 	config/domitech/zb22uk.xml \
@@ -520,11 +524,13 @@ DISTFILES =	.gitignore \
 	config/images/assa_abloy/ConexisL1.png \
 	config/images/assa_abloy/KeyfreeConnected-plus.png \
 	config/images/assa_abloy/KeyfreeConnected.png \
+	config/images/assa_abloy/ProSLKey-FreeDeadbolt.png \
 	config/images/assa_abloy/PushButtonDeadbolt.png \
 	config/images/assa_abloy/TouchDeadbolt.png \
 	config/images/assa_abloy/TouchLever.png \
 	config/images/assa_abloy/nexTouch.png \
 	config/images/assa_abloy/yrd1x0.png \
+	config/images/assa_abloy/yrm276.png \
 	config/images/august/asl-03.png \
 	config/images/buffalo/hw-100v15a-zw.png \
 	config/images/building36/b36-t10.png \
@@ -535,6 +541,7 @@ DISTFILES =	.gitignore \
 	config/images/cooper/RF9517.png \
 	config/images/cooper/RF9540-N.png \
 	config/images/cooper/RF9542-Z.png \
+	config/images/cooper/RF9601.png \
 	config/images/cooper/rf9534.png \
 	config/images/danfoss/living.png \
 	config/images/danfoss/rsroom.png \
@@ -806,6 +813,7 @@ DISTFILES =	.gitignore \
 	config/images/linear/ngd00z.png \
 	config/images/logicsoft/ZDB5100.png \
 	config/images/logicsoft/ZHC5010.png \
+	config/images/mcohome/015f_5102_d411.png \
 	config/images/mcohome/mh7h.png \
 	config/images/mcohome/mh8fceu0803.png \
 	config/images/mcohome/mhp220.png \
@@ -818,8 +826,10 @@ DISTFILES =	.gitignore \
 	config/images/miyakawaelectric/me-d101.png \
 	config/images/namron/1402756.png \
 	config/images/namron/4512710.png \
+	config/images/namron/4512712.jpg \
 	config/images/namron/4512714.jpg \
 	config/images/namron/4512715.png \
+	config/images/namron/4512720.jpg \
 	config/images/namron/4512724.png \
 	config/images/nexia/db100z.png \
 	config/images/nexia/th100nx.png \
@@ -906,6 +916,7 @@ DISTFILES =	.gitignore \
 	config/images/remotec/zxt-600.png \
 	config/images/ring/PIR-SS.png \
 	config/images/ring/contact-sensor-v2.png \
+	config/images/ring/motion-detector-v2.png \
 	config/images/schlage/BE468ZP.png \
 	config/images/schlage/BE469.png \
 	config/images/schlage/BE469ZP.png \
@@ -925,6 +936,9 @@ DISTFILES =	.gitignore \
 	config/images/shenzen_neo/nas-wr01ze.png \
 	config/images/shenzen_neo/nas-ws02z.png \
 	config/images/shenzen_saykey/SK-3007-05.png \
+	config/images/shenzhen-neo/eu-1.png \
+	config/images/shenzhen-neo/eu-2.png \
+	config/images/shenzhen-neo/eu-3.png \
 	config/images/simon/10002020-13X.png \
 	config/images/simon/10002034-13X.png \
 	config/images/simon/10002080-13X.png \
@@ -1130,10 +1144,12 @@ DISTFILES =	.gitignore \
 	config/manufacturer_specific.xml \
 	config/manufacturer_specific.xsd \
 	config/mcohome/a8-9.xml \
+	config/mcohome/mh10pm25wd.xml \
 	config/mcohome/mh7h.xml \
 	config/mcohome/mh8fceu.xml \
 	config/mcohome/mh8fceu0803.xml \
 	config/mcohome/mh9co2.xml \
+	config/mcohome/mhdt411.xml \
 	config/mcohome/mhp210.xml \
 	config/mcohome/mhp220.xml \
 	config/mcohome/mhp511.xml \
@@ -1153,8 +1169,10 @@ DISTFILES =	.gitignore \
 	config/miyakawaelectric/me-d101.xml \
 	config/namron/1402756.xml \
 	config/namron/4512710.xml \
+	config/namron/4512712.xml \
 	config/namron/4512714.xml \
 	config/namron/4512715.xml \
+	config/namron/4512720.xml \
 	config/namron/4512724.xml \
 	config/nei/ms11z.xml \
 	config/nexia/db100z.xml \
@@ -1275,6 +1293,7 @@ DISTFILES =	.gitignore \
 	config/remotec/zxt-600.xml \
 	config/ring/PIR-SS.xml \
 	config/ring/contact-sensor-v2.xml \
+	config/ring/motion-detector-v2.xml \
 	config/schlage/BE468.xml \
 	config/schlage/BE468ZP.xml \
 	config/schlage/BE469.xml \
