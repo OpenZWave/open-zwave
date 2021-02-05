@@ -87,11 +87,16 @@ Main features:
     </Value>
     <Value genre="config" index="2" instance="1" label="Additional functions" size="4" type="int" value="1">
       <Help>This parameter allows to enable different additional functions of the device.
-                1) Enable open window detector
-                2) Enable fast open window detector
+                1) Enable open window detector (normal)
+                2) Enable open window detector (rapid)
                 4) Increase receiver sensitivity (shortens battery life)
                 8) Enable LED indications when controlling remotely
                 16) Protect from setting Full ON and Full OFF mode by turning the knob manually
+                32) Device mounted in vertical position (firmware 4.7+)
+                64) Moderate regulator behaviour (instead of rapid, firmware 4.7+))
+                128) Inverted knob operation (firmware 4.7+)
+                256) Heating medium demand reports (firmware 4.7+)
+                512) Detecting heating system failures (firmware 4.7+)
                 NOTE: Parameter values may be combined, e.g. 1+8=9 means than open window detector and LED indications when controlling remotely are enabled.
             </Help>
     </Value>
