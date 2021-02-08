@@ -297,6 +297,11 @@ namespace OpenZWave
                         m_value = static_cast<Internal::VC::ValueDecimal const*>(&_value);
                         m_supervision_session_id = node->GetSupervisionSessionId(StaticGetCommandClassId());
 
+						if (m_supervision_session_id == Internal::CC::Supervision::StaticNoSessionId())
+						{
+							Log::Write(LogLevel_Debug, GetNodeId(), "Supervision not supported, fall back to setpoint set/get");
+						}
+
                         uint8 scale = strcmp("C", m_value->GetUnits().c_str()) ? 1 : 0;
 
                         Msg* msg = new Msg("ThermostatSetpointCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
