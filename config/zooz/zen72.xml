@@ -1,20 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
     <MetaData>
-        <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/027a:a002:7000</MetaDataItem>
-        <MetaDataItem name="ProductPic">images/zooz/zen72.png</MetaDataItem>
-        <MetaDataItem name="ResetDescription">If your primary controller is missing or inoperable, you may need to reset the device to factory settings. To complete the reset process manually, tap-tap-tap’n’hold the upper paddle for at least 10 seconds. The LED indicator will flash to confirm successful reset.
-            NOTE: All previously recorded activity and custom settings will be erased from the device’s memory.</MetaDataItem>
-        <MetaDataItem name="ExclusionDescription">1. Bring your Z-Wave gateway (hub) close to the switch if possible
-            2. Put the Z-Wave hub into exclusion mode (not sure how to do that?
-            ask@getzooz.com)
-            3. Tap the lower paddle on the switch 3 times quickly</MetaDataItem>
-        <MetaDataItem name="InclusionDescription">1. Initiate inclusion (pairing) in the app (or web interface) of your hub. 2. Tap the upper paddle on the switch 3 times quickly.</MetaDataItem>
-        <MetaDataItem id="A002" name="FrequencyName" type="A000">U.S. / Canada / Mexico</MetaDataItem>
-        <MetaDataItem id="A002" name="Identifier" type="7000">ZEN72</MetaDataItem>
-        <MetaDataItem name="ProductManual">https://cdn.shopify.com/s/files/1/0218/7704/files/zooz-700-series-z-wave-dimmer-zen72-manual.pdf?v=1611089834</MetaDataItem>
-        <MetaDataItem name="Name">Dimmer Switch 700</MetaDataItem>
-        <MetaDataItem name="Description">Product features:
+      <MetaDataItem name="Name">Zooz ZEN72 Dimmer Switch</MetaDataItem>
+      <MetaDataItem name="Description">Product features:
 - Full brightness control of your lights, from the physical dimmer and via Z-Wave when added to your smart home hub (sold separately)
 - Works with any dimmable LED bulb that accepts triac (forward-phase) dimmers up to 150 W total and with any incandescent bulbs up to 500 W. NOT COMPATIBLE WITH LUMINUS, LITHONIA, OR FEIT BULBS.
 - NEW in 700 series: smaller in the back so it fits easier in shallow or crowded boxes; replace the standard white paddles with almond, brown, or black paddles (sold separately).
@@ -55,11 +43,20 @@ Lower Paddle:
 press and hold: decrease brightness level; Scene 2, attribute 01
 press and hold when off: turn on to 20% brightness (night light mode)
 release: Scene 2, attribute 02
-held for 10 seconds (LED indicator starts blinking): enter the setting menu, 5 x tap down for factory reset; 5 x tap up to change LED bulb mode (see parameter 11); 2 x tap down to enable the range test tool.
-        </MetaDataItem>
+held for 10 seconds (LED indicator starts blinking): enter the setting menu, 5 x tap down for factory reset; 5 x tap up to change LED bulb mode (see parameter 11); 2 x tap down to enable the range test tool.</MetaDataItem>    
+        <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/027a:a002:7000</MetaDataItem>
+        <MetaDataItem name="ProductPage">https://www.thesmartesthouse.com/collections/light-switches/products/zooz-700-series-z-wave-plus-dimmer-zen72</MetaDataItem>
+        <MetaDataItem name="ProductSupport">https://www.support.getzooz.com/kb/section/195/</MetaDataItem>
+        <MetaDataItem name="ProductPic">images/zooz/zen72.png</MetaDataItem>
+        <MetaDataItem name="ProductManual">https://cdn.shopify.com/s/files/1/0218/7704/files/zooz-700-series-z-wave-dimmer-zen72-manual.pdf</MetaDataItem>
+        <MetaDataItem name="InclusionDescription">1. Initiate inclusion (pairing) in the app (or web interface) of your hub. 2. Tap the upper paddle on the switch 3 times quickly.</MetaDataItem>
+        <MetaDataItem name="ExclusionDescription">1. Bring your Z-Wave gateway (hub) close to the switch if possible 2. Put the Z-Wave hub into exclusion mode (not sure how to do that? ask@getzooz.com) 3. Tap the lower paddle on the switch 3 times quickly</MetaDataItem>
+        <MetaDataItem name="ResetDescription">If your primary controller is missing or inoperable, you may need to reset the device to factory settings. To complete the reset process manually, tap-tap-tap’n’hold the upper paddle for at least 10 seconds. The LED indicator will flash to confirm successful reset. NOTE: All previously recorded activity and custom settings will be erased from the device’s memory.</MetaDataItem>
+        <MetaDataItem id="A002" name="FrequencyName" type="A000">U.S. / Canada / Mexico</MetaDataItem>
+        <MetaDataItem id="A002" name="Identifier" type="7000">ZEN72</MetaDataItem>
         <ChangeLog>
             <Entry author="shbatm - support@shbatm.com" date="31 Jan 2021" revision="1">Initial Copy from ZEN27, not yet available on ZWAlliance website</Entry>
-            <Entry author="Matthew Grimes - https://github.com/cybergrimes" date="9 Feb 2021" revision="2">Correct ProductPic metadata, start revision at 1</Entry>
+            <Entry author="Matthew Grimes - https://github.com/cybergrimes" date="9 Feb 2021" revision="2">Reorganize metadataitem entries, correct ProductPic, add missing metadataitems and start revision at 1</Entry>
         </ChangeLog>
     </MetaData>
     <!-- Configuration Parameters -->
