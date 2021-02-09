@@ -2039,6 +2039,9 @@
     <Product config="zipato/ne-nas-ab02z.xml" id="1083" name="Indoor Siren" type="0003"/>
   </Manufacturer>
   <Manufacturer id="0120" name="Zonoff"></Manufacturer>
+  <Manufacturer id="0000" name="Zooz">
+    <Product id="0004" name="ZST10 700 S2 Z-Wave Plus USB Stick" type="0004" />
+  </Manufacturer>
   <Manufacturer id="027a" name="Zooz">
     <Product id="0002" name="ZST10 S2 Z-Wave Plus USB Stick" type="0401"/>
     <Product config="zooz/zen06.xml" id="000a" name="ZEN06 Smart Plug" type="0101"/>
