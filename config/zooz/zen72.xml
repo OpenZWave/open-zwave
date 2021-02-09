@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Product Revision="0" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
     <MetaData>
         <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/027a:a002:7000</MetaDataItem>
-        <MetaDataItem name="ProductPic">images/zooz/zen27.png</MetaDataItem>
+        <MetaDataItem name="ProductPic">images/zooz/zen72.png</MetaDataItem>
         <MetaDataItem name="ResetDescription">If your primary controller is missing or inoperable, you may need to reset the device to factory settings. To complete the reset process manually, tap-tap-tap’n’hold the upper paddle for at least 10 seconds. The LED indicator will flash to confirm successful reset.
             NOTE: All previously recorded activity and custom settings will be erased from the device’s memory.</MetaDataItem>
         <MetaDataItem name="ExclusionDescription">1. Bring your Z-Wave gateway (hub) close to the switch if possible
@@ -58,7 +58,8 @@ release: Scene 2, attribute 02
 held for 10 seconds (LED indicator starts blinking): enter the setting menu, 5 x tap down for factory reset; 5 x tap up to change LED bulb mode (see parameter 11); 2 x tap down to enable the range test tool.
         </MetaDataItem>
         <ChangeLog>
-            <Entry author="shbatm - support@shbatm.com" date="31 Jan 2021" revision="0">Initial Copy from ZEN27, not yet available on ZWAlliance website</Entry>
+            <Entry author="shbatm - support@shbatm.com" date="31 Jan 2021" revision="1">Initial Copy from ZEN27, not yet available on ZWAlliance website</Entry>
+            <Entry author="Matthew Grimes - https://github.com/cybergrimes" date="9 Feb 2021" revision="2">Correct ProductPic metadata, start revision at 1</Entry>
         </ChangeLog>
     </MetaData>
     <!-- Configuration Parameters -->
