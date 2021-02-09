@@ -50,6 +50,7 @@ tap-tap-tap-and-hold: factory reset</MetaDataItem>
     <MetaDataItem id="251c" name="Identifier" type="b111">ZEN23v3</MetaDataItem>
     <ChangeLog>
       <Entry author="Matthew Grimes - https://github.com/cybergrimes" date="14 June 2020" revision="1">Initial configuration from Zooz product help pages</Entry>
+      <Entry author="FuzzyMistborn - https://github.com/FuzzyMistborn" date="09 February 2021" revision="2">Correct typo of Parameter 19 to Parameter 12</Entry>
     </ChangeLog>
   </MetaData>
  
