@@ -2065,7 +2065,8 @@
     <Product config="zooz/zen34.xml" id="f001" name="ZEN34 Remote Switch" type="0004"/>
     <Product config="zooz/zen34.xml" id="f001" name="ZEN34 Remote Switch" type="7000"/>
     <Product config="zooz/zse40.xml" id="2101" name="ZSE40 4-in-1 sensor" type="2021"/>
-    <Product config="zooz/zen72.xml" id="a002" name="ZEN72 Dimmer Switch 700" type="7000"/>
+    <Product config="zooz/zen72.xml" id="a002" name="ZEN72 Dimmer Switch" type="7000"/>
+    <Product config="zooz/zen76.xml" id="a006" name="ZEN76 S2 On Off Switch" type="7000"/
   </Manufacturer>
   <Manufacturer id="015d" name="Zooz (Willis Electric)">
     <Product config="zooz/zen20.xml" id="f51c" name="ZEN20 Power Strip" type="0651"/>
