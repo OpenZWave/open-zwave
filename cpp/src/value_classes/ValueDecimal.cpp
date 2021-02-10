@@ -87,6 +87,9 @@ namespace OpenZWave
 				ValueDecimal* tempValue = new ValueDecimal(*this);
 				tempValue->m_value = _value;
 
+				// Save the new value to be stored when the device confirms the value was set successfully, 
+				m_newValue = _value;
+
 				// Set the value in the device.
 				bool ret = ((Value*) tempValue)->Set();
 

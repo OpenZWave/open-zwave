@@ -266,15 +266,12 @@ namespace OpenZWave
 			{
 			    if ( m_supervision_session_id == _session_id )
 			    {
-                    uint16 const _index = m_value->GetID().GetIndex();
-					if (Internal::VC::ValueDecimal* value = static_cast<Internal::VC::ValueDecimal*>(GetValue(_instance, _index)))
+					if (Internal::VC::ValueDecimal* value = static_cast<Internal::VC::ValueDecimal*>(GetValue(_instance, m_supervision_index)))
 					{
-                        value->SetPrecision(m_value->GetPrecision());   // TODO Do we actually need this?
-                        value->SetUnits(m_value->GetUnits());           // TODO Idem
-						value->OnValueRefreshed(m_value->GetValue());
+						value->ConfirmNewValue();
 
-                        Log::Write(LogLevel_Info, GetNodeId(), "Confirmed thermostat setpoint %s to %s%s",
-                            value->GetLabel().c_str(), value->GetValue().c_str(), value->GetUnits().c_str());
+                        Log::Write(LogLevel_Info, GetNodeId(), "Confirmed thermostat setpoint to %s%s",
+                            value->GetValue().c_str(), value->GetUnits().c_str());
                     }
                 }
                 else
@@ -293,26 +290,26 @@ namespace OpenZWave
                 {
                     if (ValueID::ValueType_Decimal == _value.GetID().GetType())
                     {
-                        // TODO Is it safe to address _value outside this call?
-                        m_value = static_cast<Internal::VC::ValueDecimal const*>(&_value);
+                        Internal::VC::ValueDecimal const* value = static_cast<Internal::VC::ValueDecimal const*>(&_value);
                         m_supervision_session_id = node->GetSupervisionSessionId(StaticGetCommandClassId());
+                        m_supervision_index = value->GetID().GetIndex() & 0xFF;
 
 						if (m_supervision_session_id == Internal::CC::Supervision::StaticNoSessionId())
 						{
 							Log::Write(LogLevel_Debug, GetNodeId(), "Supervision not supported, fall back to setpoint set/get");
 						}
 
-                        uint8 scale = strcmp("C", m_value->GetUnits().c_str()) ? 1 : 0;
+                        uint8 scale = strcmp("C", value->GetUnits().c_str()) ? 1 : 0;
 
                         Msg* msg = new Msg("ThermostatSetpointCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
                         msg->SetInstance(this, _value.GetID().GetInstance());
                         msg->SetSupervision(m_supervision_session_id);
                         msg->Append(GetNodeId());
-                        msg->Append(4 + GetAppendValueSize(m_value->GetValue()));
+                        msg->Append(4 + GetAppendValueSize(value->GetValue()));
                         msg->Append(GetCommandClassId());
                         msg->Append(ThermostatSetpointCmd_Set);
-                        msg->Append((uint8_t) (m_value->GetID().GetIndex() & 0xFF));
-                        AppendValue(msg, m_value->GetValue(), scale);
+                        msg->Append(m_supervision_index);
+                        AppendValue(msg, value->GetValue(), scale);
 
                         msg->Append(GetDriver()->GetTransmitOptions());
                         GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
