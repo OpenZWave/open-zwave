@@ -101,9 +101,9 @@ To perform the factory reset press boost button.
                 Default: 0 (LCD always on)
             </Help>
     </Value>
-    <Value genre="config" index="3" instance="1" label="Backlight" max="1" min="0" size="1" type="list" units="" value="1">
+    <Value genre="config" index="3" instance="1" label="Backlight" max="1" min="0" size="1" type="list" units="" value="0">
       <Help>
-                Default: Backlight enabled
+                Default: Backlight disabled
             </Help>
       <Item label="Backlight disabled" value="0"/>
       <Item label="Backlight enabled" value="1"/>
