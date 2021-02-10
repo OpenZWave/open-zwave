@@ -54,7 +54,7 @@ namespace OpenZWave
 				{
 					m_MultiChannel = 0x01,		// Indicate MultiChannel encapsulation
 					m_MultiInstance = 0x02,		// Indicate MultiInstance encapsulation
-					m_Supervision = 0x04,       // Indicate Supervision encapsulation
+					m_Supervision = 0x04,		// Indicate Supervision encapsulation
 				};
 
 				Msg(string const& _logtext, uint8 _targetNodeId, uint8 const _msgType, uint8 const _function, bool const _bCallbackRequired, bool const _bReplyRequired = true, uint8 const _expectedReply = 0, uint8 const _expectedCommandClassId = 0);
@@ -252,7 +252,7 @@ namespace OpenZWave
 				uint8 m_instance;
 				uint8 m_endPoint;				// Endpoint to use if the message must be wrapped in a multiInstance or multiChannel command class
 				uint8 m_flags;
-                uint8 m_supervision_session_id;
+				uint8 m_supervision_session_id;
 
 				bool m_encrypted;
 				bool m_noncerecvd;
