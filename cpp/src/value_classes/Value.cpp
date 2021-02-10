@@ -315,11 +315,11 @@ namespace OpenZWave
 								{
 									if (m_refreshAfterSet)
 									{
-									    if (!node->GetCommandClass(Internal::CC::Supervision::StaticGetCommandClassId()))
-									    {
-        									// queue a "RequestValue" message to update the value
-									    	cc->RequestValue( 0, m_id.GetIndex(), m_id.GetInstance(), Driver::MsgQueue_Send );
-									    }
+										if (!node->GetCommandClass(Internal::CC::Supervision::StaticGetCommandClassId()))
+										{
+											// queue a "RequestValue" message to update the value
+											cc->RequestValue( 0, m_id.GetIndex(), m_id.GetInstance(), Driver::MsgQueue_Send );
+										}
 									}
 								}
 								else
@@ -499,10 +499,10 @@ namespace OpenZWave
 					int _targetValueLength // = 0,
 					)
 			{
-				// TODO: this is pretty rough code, but it's reused by each value type.  It would be
+				// TODO: this is pretty rough code, but it's reused by each value type.	 It would be
 				// better if the actions were taken (m_value = _value, etc.) in this code rather than
-				// in the calling routine as a result of the return value.  In particular, it's messy
-				// to be setting these values after the refesh or notification is sent.  With some
+				// in the calling routine as a result of the return value.	In particular, it's messy
+				// to be setting these values after the refesh or notification is sent.	 With some
 				// focus on the actual variable storage, we should be able to accomplish this with
 				// memory functions.  It's really the strings that make things complicated(?).
 				// if this is the first read of a value, assume it is valid (and notify as a change)
@@ -612,9 +612,9 @@ namespace OpenZWave
 						bOriginalEqual = (*((bool*) _originalValue) == *((bool*) _newValue));
 						break;
 					case ValueID::ValueType_Raw:			// raw
-						bOriginalEqual = (_originalValueLength == _newValueLength);	// first check length of arrays
+						bOriginalEqual = (_originalValueLength == _newValueLength); // first check length of arrays
 						if (bOriginalEqual)
-							bOriginalEqual = (memcmp(_originalValue, _newValue, _newValueLength) == 0);	// if length is the same, then check content
+							bOriginalEqual = (memcmp(_originalValue, _newValue, _newValueLength) == 0); // if length is the same, then check content
 						break;
 					case ValueID::ValueType_Schedule:		// Schedule
 						/* Should not get here */

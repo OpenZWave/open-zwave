@@ -4057,12 +4057,12 @@ void Node::WriteMetaDataXML(TiXmlElement *mdElement)
 //-----------------------------------------------------------------------------
 uint8 Node::GetSupervisionSessionId(uint8 _command_class_id)
 {
-    if (Internal::CC::CommandClass* cc = GetCommandClass(Internal::CC::Supervision::StaticGetCommandClassId()))
-    {
-        return cc->GetSession(_command_class_id);
-    }
-    else
-    {
-        return Internal::CC::Supervision::StaticNoSessionId();
-    }
+	if (Internal::CC::CommandClass* cc = GetCommandClass(Internal::CC::Supervision::StaticGetCommandClassId()))
+	{
+        	return cc->GetSession(_command_class_id);
+	}
+	else
+	{
+		return Internal::CC::Supervision::StaticNoSessionId();
+	}
 }

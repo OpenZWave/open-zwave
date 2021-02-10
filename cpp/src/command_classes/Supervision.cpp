@@ -41,17 +41,17 @@ namespace OpenZWave
 	{
 		namespace CC
 		{
-            uint8 Supervision::m_session_id = 0;
+			uint8 Supervision::m_session_id = 0;
 
-            uint8 Supervision::GetSession(uint8 _command_class_id)
-            {
-                Supervision::m_session_id++;
-                Supervision::m_session_id &= 0x3f;
+			uint8 Supervision::GetSession(uint8 _command_class_id)
+			{
+				Supervision::m_session_id++;
+				Supervision::m_session_id &= 0x3f;
 
-                Supervision::m_command_class_id = _command_class_id;
+				Supervision::m_command_class_id = _command_class_id;
 
-                return Supervision::m_session_id;
-            }
+				return Supervision::m_session_id;
+			}
 
 //-----------------------------------------------------------------------------
 // <Supervision::HandleSupervisionReport>
@@ -59,32 +59,32 @@ namespace OpenZWave
 //-----------------------------------------------------------------------------
 			void Supervision::HandleSupervisionReport(uint8 const* _data, uint32 const _length, uint32 const _instance)
 			{
-                if (Node* node = GetNodeUnsafe())
+				if (Node* node = GetNodeUnsafe())
 				{
-				    if ( _length >= 4 ) {
-				        uint8 more_status_updates = _data[1] >> 7;
-                        uint8 session_id = _data[1] & 0x3f;
-                        uint8 status = _data[2];
-                        int duration = _data[3];
+					if ( _length >= 4 ) {
+						uint8 more_status_updates = _data[1] >> 7;
+						uint8 session_id = _data[1] & 0x3f;
+						uint8 status = _data[2];
+						int duration = _data[3];
 
-                        Log::Write(LogLevel_Info, GetNodeId(), "Received SupervisionReport: session id %d, status 0x%02x, duration %d sec, more status updates %d",
-                            session_id, status, decodeDuration(duration), more_status_updates);
+						Log::Write(LogLevel_Info, GetNodeId(), "Received SupervisionReport: session id %d, status 0x%02x, duration %d sec, more status updates %d",
+							session_id, status, decodeDuration(duration), more_status_updates);
 
-                        if ( status == Supervision::SupervisionStatus::SupervisionStatus_Success )
-                        {
-                            if ( Supervision::m_session_id == session_id )
-                            {
-                                if (CommandClass* pCommandClass = node->GetCommandClass(Supervision::m_command_class_id))
-                                {
-                                    pCommandClass->SupervisionSessionSuccess(session_id, _instance);
-                                }
-                            }
-                        }
+						if ( status == Supervision::SupervisionStatus::SupervisionStatus_Success )
+						{
+							if ( Supervision::m_session_id == session_id )
+							{
+								if (CommandClass* pCommandClass = node->GetCommandClass(Supervision::m_command_class_id))
+								{
+									pCommandClass->SupervisionSessionSuccess(session_id, _instance);
+								}
+							}
+						}
 
-                        if ( more_status_updates == 0 )
-                        {
-                            // Clean up session
-                        }
+						if ( more_status_updates == 0 )
+						{
+							// Clean up session
+						}
 					}
 				}
 			}
@@ -98,8 +98,7 @@ namespace OpenZWave
 // <Supervision::HandleMsg>
 // Handle a message from the Z-Wave network
 //-----------------------------------------------------------------------------
-			bool Supervision::HandleMsg(uint8 const* _data, uint32 const _length, uint32 const _instance	// = 1
-					)
+			bool Supervision::HandleMsg(uint8 const* _data, uint32 const _length, uint32 const _instance)	// = 1
 			{
 				bool handled = false;
 				Node* node = GetNodeUnsafe();
@@ -108,11 +107,6 @@ namespace OpenZWave
 					handled = true;
 					switch ((SupervisionCmd) _data[0])
 					{
-// 						case SupervisionCmd_Get:
-// 						{
-// 							HandleSupervisionEncap(_data, _length);
-// 							break;
-// 						}
 						case SupervisionCmd_Report:
 						{
 							HandleSupervisionReport(_data, _length, _instance);
@@ -127,8 +121,6 @@ namespace OpenZWave
 				}
 
 				return handled;
-
-
 			}
 		} // namespace CC
 	} // namespace Internal

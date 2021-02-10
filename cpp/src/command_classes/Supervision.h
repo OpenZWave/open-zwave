@@ -42,23 +42,23 @@ namespace OpenZWave
 			class Supervision: public CommandClass
 			{
 				public:
-                    enum SupervisionCmd
-                    {
-                        SupervisionCmd_Get = 0x01,
-                        SupervisionCmd_Report = 0x02,
-                    };
-                    enum SupervisionMoreStatusUpdates
-                    {
-                        SupervisionMoreStatusUpdates_LastReport = 0x00,
-                        SupervisionMoreStatusUpdates_MoreReports = 0x80,
-                    };
-                    enum SupervisionStatus
-                    {
-                        SupervisionStatus_NoSupport = 0x00,
-                        SupervisionStatus_Working = 0x01,
-                        SupervisionStatus_Fail = 0x02,
-                        SupervisionStatus_Success = 0xff
-                    };
+					enum SupervisionCmd
+					{
+						SupervisionCmd_Get = 0x01,
+						SupervisionCmd_Report = 0x02,
+					};
+					enum SupervisionMoreStatusUpdates
+					{
+						SupervisionMoreStatusUpdates_LastReport = 0x00,
+						SupervisionMoreStatusUpdates_MoreReports = 0x80,
+					};
+					enum SupervisionStatus
+					{
+						SupervisionStatus_NoSupport = 0x00,
+						SupervisionStatus_Working = 0x01,
+						SupervisionStatus_Fail = 0x02,
+						SupervisionStatus_Success = 0xff
+					};
 
 					static CommandClass* Create(uint32 const _homeId, uint8 const _nodeId)
 					{
@@ -76,11 +76,6 @@ namespace OpenZWave
 					{
 						return "COMMAND_CLASS_SUPERVISION";
 					}
-
-// 					virtual uint8 GetMaxVersion() override
-// 					{
-// 						return 2;   // TODO support v2 too
-// 					}
 
 					uint8 GetSession(uint8 _command_class_id) ;
 					static uint8 const StaticNoSessionId()
@@ -106,8 +101,8 @@ namespace OpenZWave
 					{
 					}
 
-                    static uint8 m_session_id;
-                    uint8 m_command_class_id;    // TODO as implemented now we support only a single concurrent supervision call per CC
+					static uint8 m_session_id;
+					uint8 m_command_class_id;
 
 					void HandleSupervisionReport(uint8 const* _data, uint32 const _length, uint32 const _instance);
 			};
