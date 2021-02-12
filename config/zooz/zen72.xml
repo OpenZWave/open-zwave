@@ -1,20 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Product Revision="0" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
     <MetaData>
-        <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/027a:a002:7000</MetaDataItem>
-        <MetaDataItem name="ProductPic">images/zooz/zen27.png</MetaDataItem>
-        <MetaDataItem name="ResetDescription">If your primary controller is missing or inoperable, you may need to reset the device to factory settings. To complete the reset process manually, tap-tap-tap’n’hold the upper paddle for at least 10 seconds. The LED indicator will flash to confirm successful reset.
-            NOTE: All previously recorded activity and custom settings will be erased from the device’s memory.</MetaDataItem>
-        <MetaDataItem name="ExclusionDescription">1. Bring your Z-Wave gateway (hub) close to the switch if possible
-            2. Put the Z-Wave hub into exclusion mode (not sure how to do that?
-            ask@getzooz.com)
-            3. Tap the lower paddle on the switch 3 times quickly</MetaDataItem>
-        <MetaDataItem name="InclusionDescription">1. Initiate inclusion (pairing) in the app (or web interface) of your hub. 2. Tap the upper paddle on the switch 3 times quickly.</MetaDataItem>
-        <MetaDataItem id="A002" name="FrequencyName" type="A000">U.S. / Canada / Mexico</MetaDataItem>
-        <MetaDataItem id="A002" name="Identifier" type="7000">ZEN72</MetaDataItem>
-        <MetaDataItem name="ProductManual">https://cdn.shopify.com/s/files/1/0218/7704/files/zooz-700-series-z-wave-dimmer-zen72-manual.pdf?v=1611089834</MetaDataItem>
-        <MetaDataItem name="Name">Dimmer Switch 700</MetaDataItem>
-        <MetaDataItem name="Description">Product features:
+      <MetaDataItem name="Name">Zooz ZEN72 Dimmer Switch</MetaDataItem>
+      <MetaDataItem name="Description">Product features:
 - Full brightness control of your lights, from the physical dimmer and via Z-Wave when added to your smart home hub (sold separately)
 - Works with any dimmable LED bulb that accepts triac (forward-phase) dimmers up to 150 W total and with any incandescent bulbs up to 500 W. NOT COMPATIBLE WITH LUMINUS, LITHONIA, OR FEIT BULBS.
 - NEW in 700 series: smaller in the back so it fits easier in shallow or crowded boxes; replace the standard white paddles with almond, brown, or black paddles (sold separately).
@@ -36,6 +24,7 @@ SPECIFICATIONS:
 - Operating Temperature: 32-104° F (0-40° C)
 - Installation and Use: Indoor only
 https://www.support.getzooz.com/kb/article/538-zen72-dimmer-switch-700-ver-1-02-advanced-settings/
+          
 MANUAL CONTROL
 Upper Paddle:
 1 x tap: load on to last / custom / full / max brightness; Scene 1, attribute 00
@@ -55,10 +44,21 @@ Lower Paddle:
 press and hold: decrease brightness level; Scene 2, attribute 01
 press and hold when off: turn on to 20% brightness (night light mode)
 release: Scene 2, attribute 02
-held for 10 seconds (LED indicator starts blinking): enter the setting menu, 5 x tap down for factory reset; 5 x tap up to change LED bulb mode (see parameter 11); 2 x tap down to enable the range test tool.
-        </MetaDataItem>
+held for 10 seconds (LED indicator starts blinking): enter the setting menu, 5 x tap down for factory reset; 5 x tap up to change LED bulb mode (see parameter 11); 2 x tap down to enable the range test tool.</MetaDataItem>    
+        <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/027a:a002:7000</MetaDataItem>
+        <MetaDataItem name="ProductPage">https://www.thesmartesthouse.com/collections/light-switches/products/zooz-700-series-z-wave-plus-dimmer-zen72</MetaDataItem>
+        <MetaDataItem name="ProductSupport">https://www.support.getzooz.com/kb/section/195/</MetaDataItem>
+        <MetaDataItem name="ProductPic">images/zooz/zen72.png</MetaDataItem>
+        <MetaDataItem name="ProductManual">https://cdn.shopify.com/s/files/1/0218/7704/files/zooz-700-series-z-wave-dimmer-zen72-manual.pdf</MetaDataItem>
+        <MetaDataItem name="InclusionDescription">1. Initiate inclusion (pairing) in the app (or web interface) of your hub. 2. Tap the upper paddle on the switch 3 times quickly.</MetaDataItem>
+        <MetaDataItem name="ExclusionDescription">1. Bring your Z-Wave gateway (hub) close to the switch if possible 2. Put the Z-Wave hub into exclusion mode (not sure how to do that? ask@getzooz.com) 3. Tap the lower paddle on the switch 3 times quickly</MetaDataItem>
+        <MetaDataItem name="ResetDescription">If your primary controller is missing or inoperable, you may need to reset the device to factory settings. To complete the reset process manually, tap-tap-tap’n’hold the upper paddle for at least 10 seconds. The LED indicator will flash to confirm successful reset. NOTE: All previously recorded activity and custom settings will be erased from the device’s memory.</MetaDataItem>
+        <MetaDataItem id="A002" name="FrequencyName" type="A000">U.S. / Canada / Mexico</MetaDataItem>
+        <MetaDataItem id="A002" name="Identifier" type="7000">ZEN72</MetaDataItem>
         <ChangeLog>
-            <Entry author="shbatm - support@shbatm.com" date="31 Jan 2021" revision="0">Initial Copy from ZEN27, not yet available on ZWAlliance website</Entry>
+            <Entry author="shbatm - support@shbatm.com" date="31 Jan 2021" revision="1">Initial Copy from ZEN27, not yet available on ZWAlliance website</Entry>
+            <Entry author="Matthew Grimes - https://github.com/cybergrimes" date="9 Feb 2021" revision="2">Reorganize metadataitem entries, correct ProductPic, add missing metadataitems and start revision at 1</Entry>
+            <Entry author="Matthew Grimes - https://github.com/cybergrimes" date="12 Feb 2021" revision="3">Fix a few configuration parameters for auto off/on timer.</Entry>
         </ChangeLog>
     </MetaData>
     <!-- Configuration Parameters -->
@@ -89,20 +89,10 @@ held for 10 seconds (LED indicator starts blinking): enter the setting menu, 5 x
             <Item label="Medium" value="1" />
             <Item label="Low" value="2" />
         </Value>
-        <Value type="list" genre="config" index="3" label="Enable Auto Turn-Off Timer" size="1" min="0" max="1" value="0">
-            <Help></Help>
-            <Item label="Disabled" value="0" />
-            <Item label="Enabled" value="1" />
+        <Value type="int" genre="config" index="3" label="Auto Turn-Off Timer" size="4" min="0" max="65535" value="0" units="minutes">
+            <Help>Set the time (in minutes) after which you want the switch to automatically turn off once it has been turned on.</Help>
         </Value>
-        <Value type="int" genre="config" index="4" label="Auto Turn-Off Timer Duration" size="4" min="1" max="65535" value="60" units="minutes">
-            <Help>Time, in minutes, for auto-off timer delay.</Help>
-        </Value>
-        <Value type="list" genre="config" index="5" label="Enable Auto Turn-On Timer" size="1" min="0" max="1" value="0">
-            <Help></Help>
-            <Item label="Disabled" value="0" />
-            <Item label="Enabled" value="1" />
-        </Value>
-        <Value type="int" genre="config" index="6" label="Auto Turn-On Timer Duration" size="4" min="1" max="65535" value="60" units="minutes">
+        <Value type="int" genre="config" index="5" label="Auto Turn-On Timer" size="4" min="0" max="65535" value="60" units="minutes">
             <Help>Set the time (in minutes) after which you want the switch to automatically turn on once it has been turned off.</Help>
         </Value>
         <Value type="list" genre="config" index="8" label="On Off Status After Power Failure" size="1" min="0" max="2" value="2">
@@ -151,7 +141,7 @@ held for 10 seconds (LED indicator starts blinking): enter the setting menu, 5 x
         <Value type="byte" genre="config" instance="1" index="18" label="Custom Brightness Level On" units="" min="0" max="99" value="0">
             <Help>Set the custom brightness level (instead of the last set brightness level) you want the dimmer to come on to when you single tap the upper paddle. Default: 0 - last brightness level</Help>
         </Value>
-        <Value type="list" genre="config" instance="1" index="20" label="Zwave tap and hold Control" units="" min="0" max="1" value="0" size="1">
+        <Value type="list" genre="config" instance="1" index="20" label="Z-Wave tap and hold Control" units="" min="0" max="1" value="0" size="1">
             <Help>Choose how you'd like the dimmer to report when paddles are tapped and held and physical / Z-Wave control is enabled or disabled.</Help>
             <Item label="report each brightness level to hub when physical / Z-Wave control is disabled for physical dimming (final level only reported if physical / Z-Wave control is enabled)" value="0" />
             <Item label="report final brightness level only for physical dimming, regardless of the physical / Z-Wave control mode" value="1" />
@@ -174,9 +164,10 @@ held for 10 seconds (LED indicator starts blinking): enter the setting menu, 5 x
     </CommandClass>
     <!-- Association Groups -->
     <CommandClass id="133">
-        <Associations num_groups="2">
-            <Group index="1" max_associations="1" label="Lifeline" />
-            <Group index="2" max_associations="5" label="Status" />
+        <Associations num_groups="3">
+          <Group index="1" label="Lifeline" max_associations="1"/>
+          <Group index="2" label="Group 2" max_associations="5"/>
+	  <Group index="3" label="Group 3" max_associations="5"/>
         </Associations>
     </CommandClass>
 </Product>
