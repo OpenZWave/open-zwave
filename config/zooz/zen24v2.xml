@@ -1,4 +1,4 @@
-<Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="Name">ZEN24 Dimmer Switch V2</MetaDataItem>
     <MetaDataItem name="Description">Product features:
@@ -52,6 +52,7 @@ tap-tap-tap-and-hold: factory reset</MetaDataItem>
     <MetaDataItem id="261c" name="Identifier" type="b112">ZEN24v2</MetaDataItem>
     <ChangeLog>
       <Entry author="Matthew Grimes - https://github.com/cybergrimes" date="14 June 2020" revision="1">Initial configuration from Zooz product help pages</Entry>
+      <Entry author="Matthew Grimes - https://github.com/cybergrimes" date="10 Feb 2021" revision="2">Fix minimum value for parameter 9</Entry>
     </ChangeLog>
   </MetaData>
  
@@ -104,7 +105,7 @@ tap-tap-tap-and-hold: factory reset</MetaDataItem>
       <Item value="1" label="On"/>
       <Item value="2" label="Restore"/>
     </Value>
-    <Value genre="config" instance="1" index="9" value="1" label="Ramp Rate Control" units="seconds" size="1" min="1" max="99" type="byte">
+    <Value genre="config" instance="1" index="9" value="1" label="Ramp Rate Control" units="seconds" size="1" min="0" max="99" type="byte">
       <Help>Adjust the physical ramp rate for your dimmer (fade-in / fade-out effect for on / off operation). Values correspond to the number of seconds it take for the dimmer to reach full brightness or turn off when operated manually. This setting is for physical taps only, see parameter 17 to adjust Z-Wave ramp rate. Values: 1 – 99 (seconds). 0 – instant on/off. Default: 1</Help>
     </Value>
     <Value genre="config" instance="1" index="10" value="1" label="Minimum Brightness" units="percent" size="1" min="1" max="99" type="byte">
