@@ -2068,6 +2068,7 @@
     <Product config="zooz/zen71.xml" id="a001" name="ZEN71 On Off Switch" type="7000"/>
     <Product config="zooz/zen72.xml" id="a002" name="ZEN72 Dimmer Switch" type="7000"/>
     <Product config="zooz/zen76.xml" id="a006" name="ZEN76 S2 On Off Switch" type="7000"/>
+    <Product config="zooz/zen77.xml" id="a007" name="ZEN77 S2 Dimmer Switch" type="7000"/>
   </Manufacturer>
   <Manufacturer id="015d" name="Zooz (Willis Electric)">
     <Product config="zooz/zen20.xml" id="f51c" name="ZEN20 Power Strip" type="0651"/>
