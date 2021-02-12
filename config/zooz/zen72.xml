@@ -167,7 +167,7 @@ held for 10 seconds (LED indicator starts blinking): enter the setting menu, 5 x
         <Associations num_groups="3">
           <Group index="1" label="Lifeline" max_associations="1"/>
           <Group index="2" label="Group 2" max_associations="5"/>
-	      <Group index="3" label="Group 3" max_associations="5"/>
+	  <Group index="3" label="Group 3" max_associations="5"/>
         </Associations>
     </CommandClass>
 </Product>
