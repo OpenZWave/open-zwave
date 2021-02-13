@@ -28,6 +28,8 @@
 #ifndef _Supervision_H
 #define _Supervision_H
 
+#include <deque>
+
 #include "command_classes/CommandClass.h"
 
 namespace OpenZWave
@@ -102,13 +104,18 @@ namespace OpenZWave
 
 				private:
 					Supervision(uint32 const _homeId, uint8 const _nodeId) :
-							CommandClass(_homeId, _nodeId), m_session_id{StaticNoSessionId()}
+						CommandClass(_homeId, _nodeId), 
+						m_last_session_id{StaticNoSessionId()}
 					{
 					}
 
-					uint8 m_session_id;
-					uint8 m_index;
-					uint8 m_command_class_id;
+					struct s_Session {
+						uint8 session_id;
+						uint8 command_class_id;
+						uint8 index;
+					};
+					std::deque<s_Session> m_sessions;
+					uint8 m_last_session_id;
 
 					void HandleSupervisionReport(uint8 const* _data, uint32 const _length, uint32 const _instance);
 			};

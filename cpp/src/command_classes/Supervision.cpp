@@ -43,24 +43,35 @@ namespace OpenZWave
 		{
 			uint8 Supervision::CreateSupervisionSession(uint8 _command_class_id, uint8 _index)
 			{
-				m_session_id++;
-				m_session_id &= 0x3f;
+				m_last_session_id++;
+				m_last_session_id &= 0x3f;
 
-				m_command_class_id = _command_class_id;
-				m_index = _index;
+				if (m_sessions.size() >= 6)
+				{
+					// Clean up oldest session, we support max 6 simultaneous sessions per node 
+					m_sessions.pop_front();
+				}
 
-				return m_session_id;
+				m_sessions.push_back({
+					.session_id = m_last_session_id, 
+					.command_class_id = _command_class_id,
+					.index = _index
+				});
+
+				return m_last_session_id;
 			}
 
 			uint32 Supervision::GetSupervisionIndex(uint8 _session_id)
 			{
-				if (_session_id == m_session_id) 
+				for (auto it = m_sessions.cbegin(); it != m_sessions.cend(); ++it) 
 				{
-					return m_index;
+					if (it->session_id == _session_id) 
+					{
+						return it->index;
+					}
 				}
-				else{
-					return StaticNoIndex();
-				}
+			
+				return StaticNoIndex();
 			}
 
 //-----------------------------------------------------------------------------
@@ -71,7 +82,7 @@ namespace OpenZWave
 			{
 				if (Node* node = GetNodeUnsafe())
 				{
-					if ( _length >= 4 ) 
+					if (_length >= 4) 
 					{
 						uint8 more_status_updates = _data[1] >> 7;
 						uint8 session_id = _data[1] & 0x3f;
@@ -87,32 +98,35 @@ namespace OpenZWave
 						default: status_identifier = "UNKNOWN"; break;
 						}
 
-						if ( m_session_id == session_id )
+						for (auto it = m_sessions.cbegin(); it != m_sessions.cend(); ++it) 
 						{
-							if (CommandClass* pCommandClass = node->GetCommandClass(m_command_class_id))
+							if (it->session_id == session_id) 
 							{
-								Log::Write(LogLevel_Info, GetNodeId(), "Received SupervisionReport: session %d, %s index %d, status %s, duration %d sec, more status updates %d",
-									session_id, 
-									pCommandClass->GetCommandClassName().c_str(), m_index, 
-									status_identifier, decodeDuration(duration), more_status_updates);
-
-								if ( status == SupervisionStatus::SupervisionStatus_Success )
+								if (CommandClass* pCommandClass = node->GetCommandClass(it->command_class_id))
 								{
-									pCommandClass->SupervisionSessionSuccess(session_id, _instance);
+									Log::Write(LogLevel_Info, GetNodeId(), "Received SupervisionReport: session %d, %s index %d, status %s, duration %d sec, more status updates %d",
+										session_id, 
+										pCommandClass->GetCommandClassName().c_str(), it->index, 
+										status_identifier, decodeDuration(duration), more_status_updates);
+
+									if (status == SupervisionStatus::SupervisionStatus_Success)
+									{
+										pCommandClass->SupervisionSessionSuccess(session_id, _instance);
+									}
 								}
 							}
-						}
-						else
-						{
-							Log::Write(LogLevel_Warning, GetNodeId(), "Received SupervisionReport: unknown session %d, status %s, duration %d sec, more status updates %d",
-								session_id, 
-								status_identifier, decodeDuration(duration), more_status_updates);
+
+							if (more_status_updates == 0)
+							{
+								m_sessions.erase(it);
+							}
+							
+							return;
 						}
 
-						if ( more_status_updates == 0 )
-						{
-							// Clean up session
-						}
+						Log::Write(LogLevel_Warning, GetNodeId(), "Received SupervisionReport: unknown session %d, status %s, duration %d sec, more status updates %d",
+							session_id, 
+							status_identifier, decodeDuration(duration), more_status_updates);
 					}
 				}
 			}
