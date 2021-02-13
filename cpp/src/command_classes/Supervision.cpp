@@ -41,16 +41,26 @@ namespace OpenZWave
 	{
 		namespace CC
 		{
-			uint8 Supervision::m_session_id = 0;
-
-			uint8 Supervision::GetSession(uint8 _command_class_id)
+			uint8 Supervision::CreateSupervisionSession(uint8 _command_class_id, uint8 _index)
 			{
-				Supervision::m_session_id++;
-				Supervision::m_session_id &= 0x3f;
+				m_session_id++;
+				m_session_id &= 0x3f;
 
-				Supervision::m_command_class_id = _command_class_id;
+				m_command_class_id = _command_class_id;
+				m_index = _index;
 
-				return Supervision::m_session_id;
+				return m_session_id;
+			}
+
+			uint32 Supervision::GetSupervisionIndex(uint8 _session_id)
+			{
+				if (_session_id == m_session_id) 
+				{
+					return m_index;
+				}
+				else{
+					return StaticNoIndex();
+				}
 			}
 
 //-----------------------------------------------------------------------------
@@ -61,24 +71,42 @@ namespace OpenZWave
 			{
 				if (Node* node = GetNodeUnsafe())
 				{
-					if ( _length >= 4 ) {
+					if ( _length >= 4 ) 
+					{
 						uint8 more_status_updates = _data[1] >> 7;
 						uint8 session_id = _data[1] & 0x3f;
 						uint8 status = _data[2];
 						int duration = _data[3];
 
-						Log::Write(LogLevel_Info, GetNodeId(), "Received SupervisionReport: session id %d, status 0x%02x, duration %d sec, more status updates %d",
-							session_id, status, decodeDuration(duration), more_status_updates);
+						const char *status_identifier;
+						switch (status) {
+						case 0x00: status_identifier = "NO_SUPPORT"; break;
+						case 0x01: status_identifier = "WORKING"; break;
+						case 0x02: status_identifier = "FAIL"; break;
+						case 0xff: status_identifier = "SUCCESS"; break;
+						default: status_identifier = "UNKNOWN"; break;
+						}
 
-						if ( status == Supervision::SupervisionStatus::SupervisionStatus_Success )
+						if ( m_session_id == session_id )
 						{
-							if ( Supervision::m_session_id == session_id )
+							if (CommandClass* pCommandClass = node->GetCommandClass(m_command_class_id))
 							{
-								if (CommandClass* pCommandClass = node->GetCommandClass(Supervision::m_command_class_id))
+								Log::Write(LogLevel_Info, GetNodeId(), "Received SupervisionReport: session %d, %s index %d, status %s, duration %d sec, more status updates %d",
+									session_id, 
+									pCommandClass->GetCommandClassName().c_str(), m_index, 
+									status_identifier, decodeDuration(duration), more_status_updates);
+
+								if ( status == SupervisionStatus::SupervisionStatus_Success )
 								{
 									pCommandClass->SupervisionSessionSuccess(session_id, _instance);
 								}
 							}
+						}
+						else
+						{
+							Log::Write(LogLevel_Warning, GetNodeId(), "Received SupervisionReport: unknown session %d, status %s, duration %d sec, more status updates %d",
+								session_id, 
+								status_identifier, decodeDuration(duration), more_status_updates);
 						}
 
 						if ( more_status_updates == 0 )

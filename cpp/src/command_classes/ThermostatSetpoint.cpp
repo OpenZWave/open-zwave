@@ -68,7 +68,6 @@ namespace OpenZWave
 			ThermostatSetpoint::ThermostatSetpoint(uint32 const _homeId, uint8 const _nodeId) :
 					CommandClass(_homeId, _nodeId)
 			{
-				m_supervision_session_id = Supervision::StaticNoSessionId();
 				m_com.EnableFlag(COMPAT_FLAG_TSSP_BASE, 1);
 				m_com.EnableFlag(COMPAT_FLAG_TSSP_ALTTYPEINTERPRETATION, true);
 				SetStaticRequest(StaticRequest_Values);
@@ -264,19 +263,24 @@ namespace OpenZWave
 
 			void ThermostatSetpoint::SupervisionSessionSuccess(uint8 _session_id, uint32 const _instance)
 			{
-				if ( m_supervision_session_id == _session_id )
-				{
-					if (Internal::VC::ValueDecimal* value = static_cast<Internal::VC::ValueDecimal*>(GetValue(_instance, m_supervision_index)))
-					{
-						value->ConfirmNewValue();
+				if (Node* node = GetNodeUnsafe())
+				{			
+					uint32 index = node->GetSupervisionIndex(_session_id);
 
-						Log::Write(LogLevel_Info, GetNodeId(), "Confirmed thermostat setpoint to %s%s",
-							value->GetValue().c_str(), value->GetUnits().c_str());
+					if (index != Internal::CC::Supervision::StaticNoIndex())
+					{
+						if (Internal::VC::ValueDecimal* value = static_cast<Internal::VC::ValueDecimal*>(GetValue(_instance, index)))
+						{
+							value->ConfirmNewValue();
+
+							Log::Write(LogLevel_Info, GetNodeId(), "Confirmed thermostat setpoint index %d to %s%s",
+								index, value->GetValue().c_str(), value->GetUnits().c_str());
+						}
 					}
-				}
-				else
-				{
-					Log::Write(LogLevel_Info, GetNodeId(), "Ignore unknown supervision session %d", _session_id);
+					else
+					{
+						Log::Write(LogLevel_Info, GetNodeId(), "Ignore unknown supervision session %d", _session_id);
+					}
 				}
 			}
 
@@ -291,10 +295,10 @@ namespace OpenZWave
 					if (ValueID::ValueType_Decimal == _value.GetID().GetType())
 					{
 						Internal::VC::ValueDecimal const* value = static_cast<Internal::VC::ValueDecimal const*>(&_value);
-						m_supervision_session_id = node->GetSupervisionSessionId(StaticGetCommandClassId());
-						m_supervision_index = value->GetID().GetIndex() & 0xFF;
-
-						if (m_supervision_session_id == Internal::CC::Supervision::StaticNoSessionId())
+						
+						uint8 index = value->GetID().GetIndex() & 0xFF;
+						uint8 supervision_session_id = node->CreateSupervisionSession(StaticGetCommandClassId(), index);
+						if (supervision_session_id == Internal::CC::Supervision::StaticNoSessionId())
 						{
 							Log::Write(LogLevel_Debug, GetNodeId(), "Supervision not supported, fall back to setpoint set/get");
 						}
@@ -303,12 +307,12 @@ namespace OpenZWave
 
 						Msg* msg = new Msg("ThermostatSetpointCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
 						msg->SetInstance(this, _value.GetID().GetInstance());
-						msg->SetSupervision(m_supervision_session_id);
+						msg->SetSupervision(supervision_session_id);
 						msg->Append(GetNodeId());
 						msg->Append(4 + GetAppendValueSize(value->GetValue()));
 						msg->Append(GetCommandClassId());
 						msg->Append(ThermostatSetpointCmd_Set);
-						msg->Append(m_supervision_index);
+						msg->Append(index);
 						AppendValue(msg, value->GetValue(), scale);
 
 						msg->Append(GetDriver()->GetTransmitOptions());

@@ -87,9 +87,6 @@ namespace OpenZWave
 
 				private:
 					ThermostatSetpoint(uint32 const _homeId, uint8 const _nodeId);
-
-					uint8 m_supervision_session_id;
-					uint8 m_supervision_index;
 			};
 		} // namespace CC
 	} // namespace Internal

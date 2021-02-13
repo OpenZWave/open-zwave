@@ -77,10 +77,15 @@ namespace OpenZWave
 						return "COMMAND_CLASS_SUPERVISION";
 					}
 
-					uint8 GetSession(uint8 _command_class_id) ;
+					uint8 CreateSupervisionSession(uint8 _command_class_id, uint8 _index);
 					static uint8 const StaticNoSessionId()
 					{
 						return 0xff; // As sessions are only 5 bits, this value will never match
+					}
+					uint32 GetSupervisionIndex(uint8 _session_id);
+					static uint32 const StaticNoIndex()
+					{
+						return 0xffff; // As indices are max 16 bits, this value will never match
 					}
 
 					// From CommandClass
@@ -97,11 +102,12 @@ namespace OpenZWave
 
 				private:
 					Supervision(uint32 const _homeId, uint8 const _nodeId) :
-							CommandClass(_homeId, _nodeId)
+							CommandClass(_homeId, _nodeId), m_session_id{StaticNoSessionId()}
 					{
 					}
 
-					static uint8 m_session_id;
+					uint8 m_session_id;
+					uint8 m_index;
 					uint8 m_command_class_id;
 
 					void HandleSupervisionReport(uint8 const* _data, uint32 const _length, uint32 const _instance);
