@@ -114,14 +114,18 @@ namespace OpenZWave
 										pCommandClass->SupervisionSessionSuccess(session_id, _instance);
 									}
 								}
-							}
+								else
+								{
+									Log::Write(LogLevel_Warning, GetNodeId(), "Received SupervisionReport for unknown CC %d", it->command_class_id);
+								}
 
-							if (more_status_updates == 0)
-							{
-								m_sessions.erase(it);
-							}
+								if (more_status_updates == 0)
+								{
+									m_sessions.erase(it);
+								}
 							
-							return;
+								return;
+							}
 						}
 
 						Log::Write(LogLevel_Warning, GetNodeId(), "Received SupervisionReport: unknown session %d, status %s, duration %d sec, more status updates %d",

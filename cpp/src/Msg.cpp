@@ -323,7 +323,7 @@ namespace OpenZWave
 			m_buffer[5] += 4;
 			m_length += 4;
 
-			snprintf(str, sizeof(str), "Supervisioned: %s", m_logText.c_str());
+			snprintf(str, sizeof(str), "Supervisioned (session=%d): %s", m_supervision_session_id, m_logText.c_str());
 			m_logText = str;
 		}
 
