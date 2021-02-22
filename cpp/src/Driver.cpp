@@ -2204,7 +2204,7 @@ void Driver::ProcessMsg(uint8* _data, uint8 _length)
 			case FUNC_ID_APPLICATION_COMMAND_HANDLER:
 			{
 				Log::Write(LogLevel_Detail, "");
-				HandleApplicationCommandHandlerRequest(_data, wasencrypted);
+				HandleApplicationCommandHandlerRequest(_data, _length, wasencrypted);
 				break;
 			}
 			case FUNC_ID_ZW_SEND_DATA:
@@ -3574,7 +3574,7 @@ void Driver::HandleReplaceFailedNodeRequest(uint8* _data)
 // <Driver::HandleApplicationCommandHandlerRequest>
 // Process a request from the Z-Wave PC interface
 //-----------------------------------------------------------------------------
-void Driver::HandleApplicationCommandHandlerRequest(uint8* _data, bool encrypted)
+void Driver::HandleApplicationCommandHandlerRequest(uint8* _data, uint8 _length, bool encrypted)
 {
 
 	uint8 status = _data[2];
@@ -3594,15 +3594,19 @@ void Driver::HandleApplicationCommandHandlerRequest(uint8* _data, bool encrypted
 	{
 		node->m_receivedCnt++;
 		node->m_errors = 0;
-		int cmp = memcmp(_data, node->m_lastReceivedMessage, sizeof(node->m_lastReceivedMessage));
-		if (cmp == 0 && node->m_receivedTS.TimeRemaining() > -500)
+		if (_length == node->m_lastReceivedMessageLength 
+			&& memcmp(_data, node->m_lastReceivedMessage, _length) == 0
+			&& node->m_receivedTS.TimeRemaining() > -500)
 		{
 			// if the exact same sequence of bytes are received within 500ms
 			node->m_receivedDups++;
 		}
 		else
 		{
-			memcpy(node->m_lastReceivedMessage, _data, sizeof(node->m_lastReceivedMessage));
+			memcpy(node->m_lastReceivedMessage, _data, _length);
+			if (_length < sizeof(node->m_lastReceivedMessage))
+				memset(&node->m_lastReceivedMessage[_length], 0x00, sizeof(node->m_lastReceivedMessage) - _length);
+			node->m_lastReceivedMessageLength = _length;
 		}
 		node->m_receivedTS.SetTime();
 		if (m_expectedReply == FUNC_ID_APPLICATION_COMMAND_HANDLER && m_expectedNodeId == nodeId)

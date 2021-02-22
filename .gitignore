@@ -56,3 +56,11 @@ ozw_config
 gtest-main
 cpp/src/command_classes/\.DS_Store
 .DS_Store
+cpp/build/windows/vs2010/GIT-VS-VERSION-FILE
+cpp/build/windows/vs2010/.vs/OpenZWave/v16/.suo
+cpp/build/windows/vs2010/.vs/OpenZWave/v16/Browse.VC.db
+cpp/build/windows/vs2010/.vs/OpenZWave/v16/Browse.VC.db-shm
+cpp/build/windows/vs2010/.vs/OpenZWave/v16/Browse.VC.db-wal
+cpp/build/windows/vs2010/.vs/OpenZWave/v16/Browse.VC.opendb
+cpp/build/windows/vs2010/.vs/OpenZWave/v16/ipch/AutoPCH/3d8d75d01e4a3926/NODE.ipch
+cpp/build/windows/vs2010/OpenZWave.vcxproj.user
