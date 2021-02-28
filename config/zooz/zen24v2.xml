@@ -53,7 +53,7 @@ tap-tap-tap-and-hold: factory reset</MetaDataItem>
     <ChangeLog>
       <Entry author="Matthew Grimes - https://github.com/cybergrimes" date="14 June 2020" revision="1">Initial configuration from Zooz product help pages</Entry>
       <Entry author="Matthew Grimes - https://github.com/cybergrimes" date="10 Feb 2021" revision="2">Fix minimum value for parameter 9</Entry>
-      <Entry author="Matthew Grimes - https://github.com/cybergrimes" date="28 Feb 2021" revision="2">Fix maximum value for parameter 15</Entry>
+      <Entry author="Matthew Grimes - https://github.com/cybergrimes" date="28 Feb 2021" revision="3">Fix maximum value for parameter 15</Entry>
     </ChangeLog>
   </MetaData>
  
