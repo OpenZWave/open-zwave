@@ -5,7 +5,7 @@
 	<MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/027a:a008:7000</MetaDataItem>
     <MetaDataItem name="ProductPage"></MetaDataItem>
     <MetaDataItem name="ProductSupport"></MetaDataItem>
-    <MetaDataItem name="ProductPic"></MetaDataItem>
+    <MetaDataItem name="ProductPic">images/zooz/zen32.png</MetaDataItem>
     <MetaDataItem name="ProductManual"></MetaDataItem>
     <MetaDataItem name="WakeupDescription"></MetaDataItem>
     <MetaDataItem name="InclusionDescription">Click the large button 3 times quickly.</MetaDataItem>
