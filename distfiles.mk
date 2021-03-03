@@ -297,6 +297,7 @@ DISTFILES =	.gitignore \
 	config/fibaro/fgt001.xml \
 	config/fibaro/fgwd111.xml \
 	config/fibaro/fgwds221.xml \
+	config/fibaro/fgwds221ss.xml \
 	config/fibaro/fgwoe.xml \
 	config/fibaro/fgwpb121.xml \
 	config/fibaro/fgwpe.xml \
@@ -1015,6 +1016,7 @@ DISTFILES =	.gitignore \
 	config/images/wenzhou/tz67.png \
 	config/images/wenzhou/tz68.png \
 	config/images/wenzhou/tz69.png \
+	config/images/wenzhou/tz77.png \
 	config/images/wenzhou/tz78.png \
 	config/images/wenzhou/tz88.png \
 	config/images/wenzhou/tze96.png \
@@ -1056,6 +1058,10 @@ DISTFILES =	.gitignore \
 	config/images/zooz/zen30.png \
 	config/images/zooz/zen31.png \
 	config/images/zooz/zen34.png \
+	config/images/zooz/zen71.png \
+	config/images/zooz/zen72.png \
+	config/images/zooz/zen76.png \
+	config/images/zooz/zen77.png \
 	config/images/zooz/zse09.png \
 	config/images/zooz/zse19.png \
 	config/images/zooz/zse29.png \
@@ -1414,6 +1420,7 @@ DISTFILES =	.gitignore \
 	config/wenzhou/tz68.xml \
 	config/wenzhou/tz69.xml \
 	config/wenzhou/tz74.xml \
+	config/wenzhou/tz77.xml \
 	config/wenzhou/tz78.xml \
 	config/wenzhou/tz79.xml \
 	config/wenzhou/tz88.xml \
@@ -1455,6 +1462,10 @@ DISTFILES =	.gitignore \
 	config/zooz/zen30.xml \
 	config/zooz/zen31.xml \
 	config/zooz/zen34.xml \
+	config/zooz/zen71.xml \
+	config/zooz/zen72.xml \
+	config/zooz/zen76.xml \
+	config/zooz/zen77.xml \
 	config/zooz/zse08.xml \
 	config/zooz/zse09.xml \
 	config/zooz/zse18.xml \
