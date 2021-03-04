@@ -1,4 +1,4 @@
-<Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="Name">Zooz ZEN17 Universal Relay</MetaDataItem>
     <MetaDataItem name="Description"></MetaDataItem>
@@ -17,6 +17,7 @@
     <MetaDataItem id="a00a" name="Identifier" type="7000">ZEN17</MetaDataItem>
     <ChangeLog>
       <Entry author="Matthew Grimes - https://github.com/cybergrimes" date="2 March 2021" revision="1">Initial configuration from Zooz</Entry>
+	  <Entry author="Jean-Francois Auger - nechry@gmail.com" date="4 feb 2021" revision="2">fix param size error</Entry>
     </ChangeLog>
   </MetaData>
   
@@ -65,16 +66,16 @@
 			<Item label="LED always off" value="2"/>
 			<Item label="LED always on" value="3"/>
 		</Value>
-		<Value type="int" genre="config" index="6" label="Auto turn-off timer for relay 1" size="1" min="0" max="65535" value="0" units="">
+		<Value type="int" genre="config" index="6" label="Auto turn-off timer for relay 1" size="4" min="0" max="65535" value="0" units="">
 			<Help>Use this parameter to set the time after which you want the device connected to relay 1 to automatically turn off once it has been turned on. The number entered as value corresponds to the unit type set by parameter 15 (minutes, seconds or hours)</Help>
 		</Value>
-		<Value type="int" genre="config" index="7" label="Auto turn-on timer for relay 1" size="1" min="0" max="65535" value="0" units="">
+		<Value type="int" genre="config" index="7" label="Auto turn-on timer for relay 1" size="4" min="0" max="65535" value="0" units="">
 			<Help>Use this parameter to set the time after which you want the device connected to relay 1 to automatically turn on once it has been turned off. The number entered as value corresponds to the unit type set by parameter 16 (minutes, seconds or hours)</Help>
 		</Value>
-		<Value type="int" genre="config" index="8" label="Auto turn-off timer for relay 2" size="1" min="0" max="65535" value="0" units="">
+		<Value type="int" genre="config" index="8" label="Auto turn-off timer for relay 2" size="4" min="0" max="65535" value="0" units="">
 			<Help>Use this parameter to set the time after which you want the device connected to relay 2 to automatically turn off once it has been turned on. The number entered as value corresponds to the unit type set by parameter 17 (minutes, seconds or hours)</Help>
 		</Value>
-		<Value type="int" genre="config" index="9" label="Auto turn-on timer for relay 2" size="1" min="0" max="65535" value="0" units="">
+		<Value type="int" genre="config" index="9" label="Auto turn-on timer for relay 2" size="4" min="0" max="65535" value="0" units="">
 			<Help>Use this parameter to set the time after which you want the device connected to relay 2 to automatically turn on once it has been turned off. The number entered as value corresponds to the unit type set by parameter 18 (minutes, seconds or hours)</Help>
 		</Value>
 		<Value type="list" genre="config" index="10" label="Input trigger for relay 1" size="1" min="0" max="1" value="1">
