@@ -152,7 +152,8 @@ namespace OpenZWave
 					{
 						uint8 scale;
 						uint8 precision = 0;
-						string temperature = ExtractValue(&_data[2], &scale, &precision);
+						uint16 index = 0;
+						string temperature = ExtractValue(index, &_data[2], &scale, &precision);
 
 						value->SetUnits(scale ? "F" : "C");
 						value->OnValueRefreshed(temperature);
