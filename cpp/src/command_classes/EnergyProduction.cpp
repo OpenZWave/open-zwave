@@ -114,7 +114,8 @@ namespace OpenZWave
 				{
 					uint8 scale;
 					uint8 precision = 0;
-					string value = ExtractValue(&_data[2], &scale, &precision);
+					uint16 index = 0;
+					string value = ExtractValue(index, &_data[2], &scale, &precision);
 					uint8 paramType = _data[1];
 					if (paramType > 4) /* size of  c_energyParameterNames minus Invalid Entry*/
 					{

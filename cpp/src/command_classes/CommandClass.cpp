@@ -69,6 +69,7 @@ namespace OpenZWave
 				m_com.EnableFlag(COMPAT_FLAG_REFRESHONWAKEUP, false);
 				m_com.EnableFlag(COMPAT_FLAG_VERIFYCHANGED, false);
 				m_com.EnableFlag(COMPAT_FLAG_NO_REFRESH_AFTER_SET, false);
+				m_com.EnableFlag(COMPAT_FLAG_RANDOM_MSB_BUG, false);
 				m_dom.EnableFlag(STATE_FLAG_CCVERSION, 0);
 				m_dom.EnableFlag(STATE_FLAG_STATIC_REQUESTS, 0);
 				m_dom.EnableFlag(STATE_FLAG_AFTERMARK, false);
@@ -470,8 +471,8 @@ namespace OpenZWave
 // <CommandClass::ExtractValue>
 // Read a value from a variable length sequence of bytes
 //-----------------------------------------------------------------------------
-			std::string CommandClass::ExtractValue(uint8 const* _data, uint8* _scale, uint8* _precision, uint8 _valueOffset // = 1
-					) const
+			std::string CommandClass::ExtractValue(uint16 const _index, uint8 const* _data, uint8* _scale, uint8* _precision, uint8 _valueOffset // == 1
+			) const
 			{
 				uint8 const size = _data[0] & c_sizeMask;
 				uint8 const precision = (_data[0] & c_precisionMask) >> c_precisionShift;
@@ -486,17 +487,25 @@ namespace OpenZWave
 					*_precision = precision;
 				}
 
+				bool mask_msb = m_com.GetFlagBool(COMPAT_FLAG_RANDOM_MSB_BUG, _index);
+
 				uint32 value = 0;
 				uint8 i;
 				for (i = 0; i < size; ++i)
 				{
+					uint8 byte = _data[i + (uint32) _valueOffset];
+					if (mask_msb && i == 0 && (byte & 0x80)) {
+						Log::Write(LogLevel_Warning, GetNodeId(), "CommandClass::ExtractValue: repair MSB");
+						byte &= 0x7f;
+					}
+
 					value <<= 8;
-					value |= (uint32) _data[i + (uint32) _valueOffset];
+					value |= (uint32) byte;
 				}
 
 				// Deal with sign extension.  All values are signed
 				std::string res;
-				if (_data[_valueOffset] & 0x80)
+				if ((_data[_valueOffset] & 0x80) && ! mask_msb)
 				{
 					res = "-";
 

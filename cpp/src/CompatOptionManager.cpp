@@ -59,7 +59,8 @@ namespace OpenZWave
 		{ "VerifyChanged", COMPAT_FLAG_VERIFYCHANGED, COMPAT_FLAG_TYPE_BOOL_ARRAY },
 		{ "EnableNotificationClear", COMPAT_FLAG_NOT_ENABLECLEAR, COMPAT_FLAG_TYPE_BOOL },
 		{ "EnableV1AlarmTypes", COMPAT_FLAG_NOT_V1ALARMTYPES_ENABLED, COMPAT_FLAG_TYPE_BOOL },
-		{ "NoRefreshAfterSet", COMPAT_FLAG_NO_REFRESH_AFTER_SET, COMPAT_FLAG_TYPE_BOOL_ARRAY }
+		{ "NoRefreshAfterSet", COMPAT_FLAG_NO_REFRESH_AFTER_SET, COMPAT_FLAG_TYPE_BOOL_ARRAY },
+		{ "RandomMsbBug", COMPAT_FLAG_RANDOM_MSB_BUG, COMPAT_FLAG_TYPE_BOOL_ARRAY }
 		};
 
 		uint16_t availableCompatFlagsCount = sizeof(availableCompatFlags) / sizeof(availableCompatFlags[0]);
