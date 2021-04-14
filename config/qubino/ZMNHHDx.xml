@@ -1,4 +1,4 @@
-<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
     <!--
   Qubino: ZMNHHDx Mini Dimmer Z-Wave+
   https://products.z-wavealliance.org/products/3381
@@ -11,7 +11,27 @@
             <Item label="Toggle switch" value="1"/>
         </Value>
         <Value genre="config" index="5" instance="1" label="Working mode" max="1" min="0" size="1" type="list" value="0">
-            <Help>With this parameter, you can change the device presentation on the user interface.</Help>
+            <Help>With this parameter, you can change the device presentation on the user interface. This parameter was removed in ZMNHHDx H1S3P2 (recertification) and was replaced with parameter no.6.</Help>
+            <Item label="Dimmer mode" value="0"/>
+            <Item label="Switch mode" value="1"/>
+        </Value>
+		<Value genre="config" index="6" instance="1" label="Load type" max="1" min="0" size="1" type="list" value="0">
+            <Help>
+				With this parameter, you select the load type: dimmable or non dimmable. 
+				Device operating in dimmable mode or non-dimmable load can lead to device or load malfunction. 
+				For non dimmable loads no.6 must be set to 1.
+					
+				NOTE: When no.6 set to 1 (non dimmable load) values of the following parameters will be ingnored:
+				- par.60 min. dimming value, 
+				- par.61 max. dimming value, 
+				- par.65 Dimm. Time when key presed,
+				- par.66 dimm. Time when key hold, 
+				- par.21 Double click function
+				
+				NOTE: If the bulb is dimmable or non dimmable (generally valid for LED) is shown on the bulb itself or on packaging.
+				
+				This parameter was added in ZMNHHDx H1S3P2 (recertification) and replaces parameter no.5, that required a reinclusion of the device.
+			</Help>
             <Item label="Dimmer mode" value="0"/>
             <Item label="Switch mode" value="1"/>
         </Value>
