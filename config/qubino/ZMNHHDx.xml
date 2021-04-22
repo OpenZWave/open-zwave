@@ -14,6 +14,7 @@
         <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0159:0055:0001</MetaDataItem>
         <MetaDataItem name="ProductPage">https://qubino.com</MetaDataItem>
         <MetaDataItem name="ProductSupport">https://support.qubino.com/support/home</MetaDataItem>
+		<MetaDataItem name="ProductPic">images/qubino/ZMNHHDx.png</MetaDataItem>
         <MetaDataItem name="InclusionDescription">
             Manual inclusion is triggered by the following procedure:
             1. Connect the device to the power supply
