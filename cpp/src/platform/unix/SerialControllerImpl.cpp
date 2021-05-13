@@ -34,6 +34,10 @@
 #include "SerialControllerImpl.h"
 #include "platform/Log.h"
 
+#if defined __APPLE__ && !defined DARWIN
+#define DARWIN
+#endif
+
 #ifdef __ANDROID__
 #include "android.h"
 #endif
@@ -179,7 +183,7 @@ namespace OpenZWave
 
 				Log::Write(LogLevel_Info, "Trying to open serial port %s (attempt %d)", device.c_str(), _attempts);
 
-#ifdef __NetBSD__
+#if defined __NetBSD__ || defined DARWIN
 				m_hSerialController = open( device.c_str(), O_RDWR | O_NOCTTY | O_NONBLOCK);
 #else
 				m_hSerialController = open(device.c_str(), O_RDWR | O_NOCTTY, 0);
