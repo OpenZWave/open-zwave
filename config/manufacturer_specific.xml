@@ -1682,6 +1682,7 @@
   <Manufacturer id="0081" name="SIEGENIA-AUBI KG"></Manufacturer>
   <Manufacturer id="0267" name="Simon">
     <Product config="simon/10002020-13X.xml" id="023a" name="S100 Rocker iO for Dimmer" type="0007"/>
+    <Product config="simon/10002020-13X.xml" id="0000" name="S100 Rocker iO for Dimmer" type="0007"/>
     <Product config="simon/10002034-13X.xml" id="0000" name="S100 Socket iO" type="0001"/>
     <Product config="simon/10002034-13X.xml" id="00da" name="S100 Socket iO" type="0001"/>
     <Product config="simon/10002041-13X.xml" id="0022" name="S100 Socket iO" type="0009"/>
