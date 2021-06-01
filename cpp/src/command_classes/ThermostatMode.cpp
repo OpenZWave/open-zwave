@@ -26,6 +26,7 @@
 //-----------------------------------------------------------------------------
 
 #include "command_classes/CommandClasses.h"
+#include "command_classes/Supervision.h"
 #include "command_classes/ThermostatMode.h"
 #include "Defs.h"
 #include "Msg.h"
@@ -92,7 +93,7 @@ namespace OpenZWave
 
 			static char const* c_modeName[] =
 			{ "Off", "Heat", "Cool", "Auto", "Aux Heat", "Resume", "Fan Only", "Furnace", "Dry Air", "Moist Air", "Auto Changeover", "Heat Econ", "Cool Econ", "Away", "Unknown", "Full Power", "Unknown", "Unknown", "Unknown", "Unknown", "Unknown", "Unknown", "Unknown", "Unknown", "Unknown", "Unknown", "Unknown", "Unknown", "Unknown", "Unknown", "Unknown", "Manufacturer Specific" };
-			
+
 
 			ThermostatMode::ThermostatMode(uint32 const _homeId, uint8 const _nodeId) :
 							CommandClass(_homeId, _nodeId),
@@ -323,6 +324,7 @@ namespace OpenZWave
 							}
 						}
 					}
+
 					/* at this stage, we don't know the Actual Mode of the Fan, so set it to the lowest 
 					 * value... If not, set to 0, which possibly could be invalid... 
 					 */
@@ -341,29 +343,70 @@ namespace OpenZWave
 				return false;
 			}
 
+			void ThermostatMode::SupervisionSessionSuccess(uint8 _session_id, uint32 const _instance)
+			{
+				if (Node* node = GetNodeUnsafe())
+				{
+					uint32 index = node->GetSupervisionIndex(_session_id);
+
+					if (index != Internal::CC::Supervision::StaticNoIndex())
+					{
+						// We have received the confirmation for the thermostat mode from the Z-Wave device
+						if (Internal::VC::ValueList* valueList = static_cast<Internal::VC::ValueList*>(GetValue(_instance, ValueID_Index_ThermostatMode::Mode)))
+						{
+							valueList->ConfirmNewValue();
+							if (valueList->GetItem())
+							{
+								Log::Write(LogLevel_Info, GetNodeId(), "Confirmed thermostat mode: %s", valueList->GetItem()->m_label.c_str());
+								m_currentMode = valueList->GetItem()->m_value;
+							}
+							else
+								Log::Write(LogLevel_Warning, GetNodeId(), "Confirmed thermostat mode (No Item)");
+							valueList->Release();
+						}
+					}
+					else
+					{
+						Log::Write(LogLevel_Info, GetNodeId(), "Ignore unknown supervision session %d", _session_id);
+					}
+				}
+			}
+
 //-----------------------------------------------------------------------------
 // <ThermostatMode::SetValue>
 // Set the device's thermostat mode
 //-----------------------------------------------------------------------------
 			bool ThermostatMode::SetValue(Internal::VC::Value const& _value)
 			{
-				if (ValueID::ValueType_List == _value.GetID().GetType())
-				{
-					Internal::VC::ValueList const* value = static_cast<Internal::VC::ValueList const*>(&_value);
-					if (value->GetItem() == NULL)
-						return false;
-					uint8 state = (uint8) value->GetItem()->m_value;
 
-					Msg* msg = new Msg("ThermostatModeCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
-					msg->SetInstance(this, _value.GetID().GetInstance());
-					msg->Append(GetNodeId());
-					msg->Append(3);
-					msg->Append(GetCommandClassId());
-					msg->Append(ThermostatModeCmd_Set);
-					msg->Append(state);
-					msg->Append(GetDriver()->GetTransmitOptions());
-					GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
-					return true;
+				if (Node* node = GetNodeUnsafe())
+				{
+					if (ValueID::ValueType_List == _value.GetID().GetType())
+					{
+						Internal::VC::ValueList const* value = static_cast<Internal::VC::ValueList const*>(&_value);
+						if (value->GetItem() == NULL)
+							return false;
+						uint8 state = (uint8)value->GetItem()->m_value;
+
+						uint8 index = value->GetID().GetIndex() & 0xFF;
+						uint8 supervision_session_id = node->CreateSupervisionSession(StaticGetCommandClassId(), index);
+						if (supervision_session_id == Internal::CC::Supervision::StaticNoSessionId())
+						{
+							Log::Write(LogLevel_Debug, GetNodeId(), "Supervision not supported, fall back to setpoint set/get");
+						}
+
+						Msg* msg = new Msg("ThermostatModeCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
+						msg->SetInstance(this, _value.GetID().GetInstance());
+						msg->SetSupervision(supervision_session_id);
+						msg->Append(GetNodeId());
+						msg->Append(3);
+						msg->Append(GetCommandClassId());
+						msg->Append(ThermostatModeCmd_Set);
+						msg->Append(state);
+						msg->Append(GetDriver()->GetTransmitOptions());
+						GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
+						return true;
+					}
 				}
 
 				return false;
