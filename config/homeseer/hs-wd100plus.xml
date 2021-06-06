@@ -1,4 +1,4 @@
-<Product Revision="8" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="9" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/000C:3034:4447</MetaDataItem>
     <MetaDataItem name="ProductPic">images/homeseer/hs-wd100plus.png</MetaDataItem>
@@ -36,6 +36,7 @@ To manually reset, tap the ON button twice quickly and then tap the OFF button t
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="6">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2563/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="7">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2874/xml</Entry>
       <Entry author="Jeremy M. Johnson" date="23 June 2020" revision="8">Added compatibility parameters to ensure correct dimming level is reported</Entry>
+      <Entry author="Jim Stuhlmacher - jim@stuhlmacher.us" date="8 Mar 2021" revision="9">Added scene information for multi-tap.</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Compatibility Parameters -->
@@ -64,6 +65,15 @@ To manually reset, tap the ON button twice quickly and then tap the OFF button t
       <Help>Indicates the time duration of each level when set locally.</Help>
     </Value>
   </CommandClass>
+
+  <!-- Scenes for multi-tap -->
+  <CommandClass id="91">
+    <Instance index="1" />
+    <Value type="int" genre="system" instance="1" index="0" label="Scene Count" units="" read_only="true" write_only="false" verify_changes="false" min="-2147483648" max="2147483647" value="2" />
+    <Value type="int" genre="user" instance="1" index="1" label="Top Button Scene" units="" read_only="false" write_only="false" verify_changes="false" min="-2147483648" max="2147483647" value="0" />
+    <Value type="int" genre="user" instance="1" index="2" label="Bottom Button Scene" units="" read_only="false" write_only="false" verify_changes="false" min="-2147483648" max="2147483647" value="0" />
+  </CommandClass>
+  
   <!-- Association Groups -->
   <CommandClass id="133">
     <Associations num_groups="1">
