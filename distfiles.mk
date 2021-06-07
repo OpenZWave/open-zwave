@@ -115,6 +115,7 @@ DISTFILES =	.gitignore \
 	config/aeotec/zwa006.xml \
 	config/aeotec/zwa008.xml \
 	config/aeotec/zwa009.xml \
+	config/aeotec/zwa011.xml \
 	config/aeotec/zwa012.xml \
 	config/aeotec/zwa019.xml \
 	config/aeotec/zwa021.xml \
@@ -517,6 +518,7 @@ DISTFILES =	.gitignore \
 	config/images/aeotec/zwa005.png \
 	config/images/aeotec/zwa006.png \
 	config/images/aeotec/zwa009.png \
+	config/images/aeotec/zwa011.png \
 	config/images/aeotec/zwa012.png \
 	config/images/aeotec/zwa019.png \
 	config/images/aeotec/zwa021.png \
@@ -891,6 +893,7 @@ DISTFILES =	.gitignore \
 	config/images/qubino/ZMNHCDx.png \
 	config/images/qubino/ZMNHDA2.png \
 	config/images/qubino/ZMNHDDx.png \
+	config/images/qubino/ZMNHHDx.png \
 	config/images/qubino/ZMNHIDx.png \
 	config/images/qubino/ZMNHNDx.png \
 	config/images/qubino/ZMNHODx.png \
@@ -1030,6 +1033,7 @@ DISTFILES =	.gitignore \
 	config/images/widom/WTED.png \
 	config/images/wink/wnk-mot1.png \
 	config/images/wink/wnk-sir1p.png \
+	config/images/zen17.png \
 	config/images/zipato/HS1CA-Z.png \
 	config/images/zipato/HS1CG-Z.png \
 	config/images/zipato/HS1SA-Z.png \
@@ -1046,6 +1050,7 @@ DISTFILES =	.gitignore \
 	config/images/zooz/zen06.png \
 	config/images/zooz/zen15.png \
 	config/images/zooz/zen16.png \
+	config/images/zooz/zen17.png \
 	config/images/zooz/zen20.png \
 	config/images/zooz/zen20v2.png \
 	config/images/zooz/zen21.png \
@@ -1057,6 +1062,7 @@ DISTFILES =	.gitignore \
 	config/images/zooz/zen27.png \
 	config/images/zooz/zen30.png \
 	config/images/zooz/zen31.png \
+	config/images/zooz/zen32.png \
 	config/images/zooz/zen34.png \
 	config/images/zooz/zen71.png \
 	config/images/zooz/zen72.png \
@@ -1267,6 +1273,7 @@ DISTFILES =	.gitignore \
 	config/qubino/ZMNHKDx.xml \
 	config/qubino/ZMNHLAx.xml \
 	config/qubino/ZMNHLDx.xml \
+	config/qubino/ZMNHMDx.xml \
 	config/qubino/ZMNHNDx.xml \
 	config/qubino/ZMNHODx.xml \
 	config/qubino/ZMNHQDx.xml \
@@ -1446,6 +1453,7 @@ DISTFILES =	.gitignore \
 	config/zooz/zen07.xml \
 	config/zooz/zen15.xml \
 	config/zooz/zen16.xml \
+	config/zooz/zen17.xml \
 	config/zooz/zen20.xml \
 	config/zooz/zen20v2.xml \
 	config/zooz/zen21.xml \
@@ -1461,6 +1469,7 @@ DISTFILES =	.gitignore \
 	config/zooz/zen27.xml \
 	config/zooz/zen30.xml \
 	config/zooz/zen31.xml \
+	config/zooz/zen32.xml \
 	config/zooz/zen34.xml \
 	config/zooz/zen71.xml \
 	config/zooz/zen72.xml \

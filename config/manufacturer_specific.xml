@@ -914,6 +914,7 @@
     <Product config="hank/hkzw-rgb01.xml" id="0004" name="HKZW-RGB01 RGB bulb" type="0101"/>
     <Product config="hank/hkzw-so03.xml" id="000a" name="HKZW-SO03 Smart Plug" type="0101"/>
     <Product config="hank/hkzw-fld01.xml" id="000f" name="HKZW-FLD01 Flood Sensor" type="0200"/>
+    <Product config="hank/hkzw-so08-smartplug.xml" id="0019" name="HKZW-SO08 Smart Plug" type="0100"/>
   </Manufacturer>
   <Manufacturer id="024C" name="Hankook Gas Kiki CO.LTD"></Manufacturer>
   <Manufacturer id="025C" name="Hauppauge"></Manufacturer>
