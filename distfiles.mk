@@ -381,6 +381,7 @@ DISTFILES =	.gitignore \
 	config/hank/hkzw-so01-smartplug.xml \
 	config/hank/hkzw-so03.xml \
 	config/hank/hkzw-so05-smartplug.xml \
+	config/hank/hkzw-so08-smartplug.xml \
 	config/hank/scenecontroller1.xml \
 	config/hank/scenecontroller4.xml \
 	config/heiman/HS1CA-Z.xml \
