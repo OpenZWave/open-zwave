@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
     <MetaData>
         <MetaDataItem name="Name">ZWA023 Smart Switch 7</MetaDataItem>
         <MetaDataItem name="Description">
@@ -40,10 +40,98 @@
         <MetaDataItem id="0017" name="Identifier" type="0103">ZWA023-A</MetaDataItem>
         <ChangeLog>
             <Entry author="Kris Knigga - kris@knigga.com" date="09 June 2021" revision="1">Add ZWA023 Smart Switch 7 - Info from Aeotec's engineering sheet</Entry>
+            <Entry author="Kris Knigga - kris@knigga.com" date="11 June 2021" revision="2">Fixed missing config params 1-9 - Info from Aeotec's engineering sheet</Entry>
         </ChangeLog>
     </MetaData>
     <!-- Configuration Parameters -->
     <CommandClass id="112">
+        <Value genre="config" index="1" label="LED Setting" max="2" min="0" size="1" type="list" units="" value="2">
+            <Help>
+		    This parameter is used to change the reaction of LED setting. 
+
+		    0 - Disable LED completely. LED will only be used for network operation indicator, such as inclusion, exclusion, factory reset.
+		    1 - Turn on between particular times only (act as night light). The default color is red, color can be changed by Color CC.
+		    2 - Display On/Off Status. The default color is white at 50% lightness. Color can be changed by Color CC. 
+            </Help>
+	    <Item label="Disable LED completely." value="0" />
+	    <Item label="Turn on between particular times only (act as night light)." value="1" />
+	    <Item label="Display On/Off Status." value="2" />
+        </Value>
+        <Value genre="config" index="2" label="Night Light On Time" max="4294967295" min="0" size="4" type="int" units="" value="1572864">
+            <Help>
+		    This parameter is used to configure the Night Light on time. User can use Color CC to change the Night Light color(default Red). Only useful when parameter 1 is set to 1. 
+
+		    Value is of the pattern 0xRRHHMMSS. Where:
+		    RR = Reserved
+		    HH = Hours
+		    MM = Minutes
+		    SS = Seconds
+		    Default = 0x00180000 means 6pm.
+		    0x00180000 = 1572864 dec
+            </Help>
+        </Value>
+        <Value genre="config" index="3" label="Night Light Off Time" max="4294967295" min="0" size="4" type="int" units="" value="393216">
+            <Help>
+		    This parameter is used to configure the Night Light off time. Only useful when parameter 1 is set to 1. 
+
+		    Value is of the pattern 0xRRHHMMSS. Where:
+		    RR = Reserved
+		    HH = Hours
+		    MM = Minutes
+		    SS = Seconds
+		    Default = 0x00060000 means 6am.
+		    0x00060000 = 393216 dec
+            </Help>
+        </Value>
+        <Value genre="config" index="4" label="LED Blink Duration" max="255" min="0" size="1" type="byte" units="S" value="0">
+            <Help>
+		    Set the duration of blink, unit second.
+		    0 - indicates that it is not blinking
+		    1~255 - set the duration
+            </Help>
+        </Value>
+        <Value genre="config" index="5" label="LED Blink Speed" max="24" min="1" size="1" type="byte" units="" value="5">
+            <Help>
+		    Set amount of blinks per second.
+                    i.e. If set to 5, it should blink 5 times per second. 
+            </Help>
+        </Value>
+        <Value genre="config" index="6" label="Send Alert When In Use" max="3000" min="0" size="2" type="short" units="W" value="100">
+            <Help>
+		    Send alert when in use. A Scene Activation Set command will be sent when energy draw is above this setting value. 
+		    0 - disable
+		    1~3000 - enable, unit W
+            </Help>
+        </Value>
+        <Value genre="config" index="7" label="Plug Always On" max="2" min="0" size="1" type="list" units="" value="0">
+            <Help>
+		    Prevents the plug from being turned off via its button. 
+
+		    0 - the plug will operate as normal and can be turned on or off.
+		    1 - the button on the plug will be disabled for on and off commands, but still work for network inclusion and exclusion.
+		    2 - the plug will ignore any commands to turn it off and it will ignore any use of the button (but still work for network inclusion and exclusion) 
+            </Help>
+	    <Item label="the plug will operate as normal and can be turned on or off." value="0" />
+	    <Item label="the button on the plug will be disabled for on and off commands, but still work for network inclusion and exclusion." value="1" />
+	    <Item label="the plug will ignore any commands to turn it off and it will ignore any use of the button (but still work for network inclusion and exclusion)" value="2" />
+        </Value>
+        <Value genre="config" index="8" label="Power Out Action" max="2" min="0" size="1" type="list" units="" value="0">
+            <Help>
+		    Set the plug’s action in case of power out. 
+
+		    0 - last status
+		    1 - power on
+		    2 - power off
+            </Help>
+	    <Item label="last status" value="0" />
+	    <Item label="power on" value="1" />
+	    <Item label="power off" value="2" />
+        </Value>
+        <Value genre="config" index="9" label="Group3 Scene Id" max="255" min="1" size="1" type="byte" units="" value="255">
+            <Help>
+		    Set the scene id when Scene Activation Set Command sent through group3. Refer parameter 6 for more information. 
+            </Help>
+        </Value>
         <Value genre="config" index="10" label="Over-load protection" max="1800" min="0" size="2" type="short" units="W" value="1800">
             <Help>
 		    Turn off switch when current of load connected bypasses the maximum allowed power regardless of always on setting.

@@ -119,6 +119,7 @@ DISTFILES =	.gitignore \
 	config/aeotec/zwa012.xml \
 	config/aeotec/zwa019.xml \
 	config/aeotec/zwa021.xml \
+	config/aeotec/zwa023.xml \
 	config/airlinemechanical/zds-ud10.xml \
 	config/alfred/DB2.xml \
 	config/assa_abloy/ConexisL1.xml \
@@ -523,6 +524,7 @@ DISTFILES =	.gitignore \
 	config/images/aeotec/zwa012.png \
 	config/images/aeotec/zwa019.png \
 	config/images/aeotec/zwa021.png \
+	config/images/aeotec/zwa023.png \
 	config/images/airlinemechanical/zds-ud10.png \
 	config/images/alfred/DB2.png \
 	config/images/assa_abloy/ConexisL1.png \
