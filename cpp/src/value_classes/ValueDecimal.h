@@ -59,6 +59,10 @@ namespace OpenZWave
 
 					bool Set(string const& _value);
 					void OnValueRefreshed(string const& _value);
+					void ConfirmNewValue()
+					{
+						OnValueRefreshed(m_newValue);
+					};
 					void SetTargetValue(string const _target, uint32 _duration = 0);
 
 					// From Value

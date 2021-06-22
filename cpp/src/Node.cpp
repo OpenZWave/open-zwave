@@ -58,6 +58,7 @@
 #include "command_classes/NodeNaming.h"
 #include "command_classes/NoOperation.h"
 #include "command_classes/Version.h"
+#include "command_classes/Supervision.h"
 #include "command_classes/SwitchAll.h"
 #include "command_classes/ZWavePlusInfo.h"
 #include "command_classes/DeviceResetLocally.h"
@@ -4047,5 +4048,37 @@ void Node::WriteMetaDataXML(TiXmlElement *mdElement)
 			cl->LinkEndChild(cle);
 		}
 		mdElement->LinkEndChild(cl);
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Node::CreateSupervisionSession>
+// Generate a new session id for Supervision encapsulation, if supported
+//-----------------------------------------------------------------------------
+uint8 Node::CreateSupervisionSession(uint8 _command_class_id, uint8 _index)
+{
+	if (Internal::CC::CommandClass* cc = GetCommandClass(Internal::CC::Supervision::StaticGetCommandClassId()))
+	{
+		return cc->CreateSupervisionSession(_command_class_id, _index);
+	}
+	else
+	{
+		return Internal::CC::Supervision::StaticNoSessionId();
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Node::GetSupervisionIndex>
+// Get the index used by a session
+//-----------------------------------------------------------------------------
+uint32 Node::GetSupervisionIndex(uint8 _session_id)
+{
+	if (Internal::CC::CommandClass* cc = GetCommandClass(Internal::CC::Supervision::StaticGetCommandClassId()))
+	{
+		return cc->GetSupervisionIndex(_session_id);
+	}
+	else
+	{
+		return Internal::CC::Supervision::StaticNoIndex();
 	}
 }

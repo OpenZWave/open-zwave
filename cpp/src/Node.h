@@ -911,6 +911,10 @@ namespace OpenZWave
 			void WriteMetaDataXML(TiXmlElement*);
 			map<MetaDataFields, string> m_metadata;
 			map<uint32_t, ChangeLogEntry> m_changeLog;
+
+		public:
+			uint8 CreateSupervisionSession(uint8 _command_class_id, uint8 _index);
+			uint32 GetSupervisionIndex(uint8 _session_id);
 	};
 
 } //namespace OpenZWave
