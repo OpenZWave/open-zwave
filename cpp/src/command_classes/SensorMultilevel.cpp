@@ -269,7 +269,8 @@ namespace OpenZWave
 					uint8 scale;
 					uint8 precision = 0;
 					uint8 sensorType = _data[1];
-					string valueStr = ExtractValue(&_data[2], &scale, &precision);
+					uint16 index = 0;
+					string valueStr = ExtractValue(index, &_data[2], &scale, &precision);
 
 					Node* node = GetNodeUnsafe();
 					if (node != NULL)

@@ -359,7 +359,6 @@ namespace OpenZWave
 				// Get the value and scale
 				uint8 scale;
 				uint8 precision = 0;
-				string valueStr = ExtractValue(&_data[2], &scale, &precision);
 				scale = GetScale(_data, _length);
 				int8 meterType = (MeterType) (_data[1] & 0x1f);
 
@@ -369,6 +368,8 @@ namespace OpenZWave
 					Log::Write(LogLevel_Warning, GetNodeId(), "MeterTypes Index is out of range/not valid - %d", index);
 					return false;
 				}
+
+				string valueStr = ExtractValue(index, &_data[2], &scale, &precision);
 
 				Log::Write(LogLevel_Info, GetNodeId(), "Received Meter Report for %s (%d) with Units %s (%d) on Index %d: %s",MeterTypes.at(index).Label.c_str(), meterType, MeterTypes.at(index).Unit.c_str(), scale, index, valueStr.c_str());
 
