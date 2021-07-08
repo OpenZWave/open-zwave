@@ -36,6 +36,11 @@
 
 namespace OpenZWave
 {
+	namespace Testing
+	{
+		class TestHelper;
+	}
+
 	/** \brief Manages library options read from XML files or the command line.
 	 *
 	 * A class that manages program options read from XML files or the command line.
@@ -65,6 +70,8 @@ namespace OpenZWave
 	 */
 	class OPENZWAVE_EXPORT Options
 	{
+		friend class Testing::TestHelper;
+		
 		public:
 			enum OptionType
 			{

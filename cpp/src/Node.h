@@ -72,6 +72,12 @@ namespace OpenZWave
 		class ProductDescriptor;
 		class ManufacturerSpecificDB;
 	}
+
+	namespace Testing
+	{
+		class TestHelper;
+	}
+
 	class Driver;
 	class Group;
 
@@ -97,6 +103,7 @@ namespace OpenZWave
 			friend class Internal::CC::Version;
 			friend class Internal::CC::ZWavePlusInfo;
 			friend class Internal::ManufacturerSpecificDB;
+			friend class Testing::TestHelper;
 
 			//-----------------------------------------------------------------------------
 			// Construction
