@@ -80,6 +80,7 @@ namespace OpenZWave
 					{
 						return 2;
 					}
+					virtual void SupervisionSessionSuccess(uint8 _session_id, uint32 const _instance);
 
 				protected:
 					virtual void CreateVars(uint8 const _instance) override;
