@@ -28,6 +28,7 @@
 #include "command_classes/CommandClasses.h"
 #include "command_classes/SwitchMultilevel.h"
 #include "command_classes/WakeUp.h"
+#include "command_classes/Supervision.h"
 #include "Defs.h"
 #include "Msg.h"
 #include "Driver.h"
@@ -226,6 +227,29 @@ namespace OpenZWave
 				return false;
 			}
 
+			void SwitchMultilevel::SupervisionSessionSuccess(uint8 _session_id, uint32 const _instance)
+			{
+				if (Node* node = GetNodeUnsafe())
+				{
+					uint32 index = node->GetSupervisionIndex(_session_id);
+
+					if (index != Internal::CC::Supervision::StaticNoIndex())
+					{
+						if (Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>(GetValue(_instance, ValueID_Index_SwitchMultiLevel::Level)))
+						{
+							value->ConfirmNewValue();
+
+							Log::Write(LogLevel_Info, GetNodeId(), "Confirmed switch multi level index %d to value=%d",
+								index, value->GetValue());
+						}
+					}
+					else
+					{
+						Log::Write(LogLevel_Info, GetNodeId(), "Ignore unknown supervision session %d", _session_id);
+					}
+				}
+			}
+
 //-----------------------------------------------------------------------------
 // <SwitchMultilevel::SetValue>
 // Set the level on a device
@@ -394,40 +418,54 @@ namespace OpenZWave
 //-----------------------------------------------------------------------------
 			bool SwitchMultilevel::SetLevel(uint8 const _instance, uint8 const _level)
 			{
-				Log::Write(LogLevel_Info, GetNodeId(), "SwitchMultilevel::Set - Setting to level %d", _level);
-				Msg* msg = new Msg("SwitchMultilevelCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
-				msg->SetInstance(this, _instance);
-				msg->Append(GetNodeId());
 
-				if (GetVersion() >= 2)
+				if (Node* node = GetNodeUnsafe())
 				{
-					Internal::VC::ValueInt* durationValue = static_cast<Internal::VC::ValueInt*>(GetValue(_instance, ValueID_Index_SwitchMultiLevel::Duration));
-					uint32 duration = durationValue->GetValue();
-					durationValue->Release();
-					if (duration > 7620)
-						Log::Write(LogLevel_Info, GetNodeId(), "  Duration: Device Default");
-					else if (duration > 0x7F)
-						Log::Write(LogLevel_Info, GetNodeId(), "  Rouding to %d Minutes (over 127 seconds)", encodeDuration(duration)-0x79);
-					else 
-						Log::Write(LogLevel_Info, GetNodeId(), "  Duration: %d seconds", duration);
+					//add supervision encapsulation if supported
+					uint8 index = ValueID_Index_SwitchMultiLevel::Level;
+					uint8 supervision_session_id = node->CreateSupervisionSession(StaticGetCommandClassId(), index);
+					if (supervision_session_id == Internal::CC::Supervision::StaticNoSessionId())
+					{
+						Log::Write(LogLevel_Debug, GetNodeId(), "Supervision not supported, fall back to setpoint set/get");
+					}
 
-					msg->Append(4);
-					msg->Append(GetCommandClassId());
-					msg->Append(SwitchMultilevelCmd_Set);
-					msg->Append(_level);
-					msg->Append(encodeDuration(duration));
-				}
-				else
-				{
-					msg->Append(3);
-					msg->Append(GetCommandClassId());
-					msg->Append(SwitchMultilevelCmd_Set);
-					msg->Append(_level);
-				}
+					Log::Write(LogLevel_Info, GetNodeId(), "SwitchMultilevel::Set - Setting to level %d", _level);
+					Msg* msg = new Msg("SwitchMultilevelCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
+					msg->SetInstance(this, _instance);
+					msg->SetSupervision(supervision_session_id);
+					msg->Append(GetNodeId());
 
-				msg->Append(GetDriver()->GetTransmitOptions());
-				GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
-				return true;
+					if (GetVersion() >= 2)
+					{
+						Internal::VC::ValueInt* durationValue = static_cast<Internal::VC::ValueInt*>(GetValue(_instance, ValueID_Index_SwitchMultiLevel::Duration));
+						uint32 duration = durationValue->GetValue();
+						durationValue->Release();
+						if (duration > 7620)
+							Log::Write(LogLevel_Info, GetNodeId(), "  Duration: Device Default");
+						else if (duration > 0x7F)
+							Log::Write(LogLevel_Info, GetNodeId(), "  Rouding to %d Minutes (over 127 seconds)", encodeDuration(duration)-0x79);
+						else 
+							Log::Write(LogLevel_Info, GetNodeId(), "  Duration: %d seconds", duration);
+
+						msg->Append(4);
+						msg->Append(GetCommandClassId());
+						msg->Append(SwitchMultilevelCmd_Set);
+						msg->Append(_level);
+						msg->Append(encodeDuration(duration));
+					}
+					else
+					{
+						msg->Append(3);
+						msg->Append(GetCommandClassId());
+						msg->Append(SwitchMultilevelCmd_Set);
+						msg->Append(_level);
+					}
+
+					msg->Append(GetDriver()->GetTransmitOptions());
+					GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
+					return true;
+				}
+				return false;
 			}
 
 //-----------------------------------------------------------------------------
