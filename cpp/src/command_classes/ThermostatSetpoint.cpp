@@ -26,6 +26,7 @@
 //-----------------------------------------------------------------------------
 
 #include "command_classes/CommandClasses.h"
+#include "command_classes/Supervision.h"
 #include "command_classes/ThermostatSetpoint.h"
 #include "Defs.h"
 #include "Msg.h"
@@ -142,7 +143,7 @@ namespace OpenZWave
 // <ThermostatSetpoint::HandleMsg>
 // Handle a message from the Z-Wave network
 //-----------------------------------------------------------------------------
-			bool ThermostatSetpoint::HandleMsg(uint8 const* _data, uint32 const _length, uint32 const _instance	// = 1
+			bool ThermostatSetpoint::HandleMsg(uint8 const* _data, uint32 const _length, uint32 const _instance // = 1
 					)
 			{
 				if (ThermostatSetpointCmd_Report == (ThermostatSetpointCmd) _data[0])
@@ -260,28 +261,64 @@ namespace OpenZWave
 				return false;
 			}
 
+			void ThermostatSetpoint::SupervisionSessionSuccess(uint8 _session_id, uint32 const _instance)
+			{
+				if (Node* node = GetNodeUnsafe())
+				{			
+					uint32 index = node->GetSupervisionIndex(_session_id);
+
+					if (index != Internal::CC::Supervision::StaticNoIndex())
+					{
+						if (Internal::VC::ValueDecimal* value = static_cast<Internal::VC::ValueDecimal*>(GetValue(_instance, index)))
+						{
+							value->ConfirmNewValue();
+
+							Log::Write(LogLevel_Info, GetNodeId(), "Confirmed thermostat setpoint index %d to %s%s",
+								index, value->GetValue().c_str(), value->GetUnits().c_str());
+						}
+					}
+					else
+					{
+						Log::Write(LogLevel_Info, GetNodeId(), "Ignore unknown supervision session %d", _session_id);
+					}
+				}
+			}
+
 //-----------------------------------------------------------------------------
 // <ThermostatSetpoint::SetValue>
 // Set a thermostat setpoint temperature
 //-----------------------------------------------------------------------------
 			bool ThermostatSetpoint::SetValue(Internal::VC::Value const& _value)
 			{
-				if (ValueID::ValueType_Decimal == _value.GetID().GetType())
+				if (Node* node = GetNodeUnsafe())
 				{
-					Internal::VC::ValueDecimal const* value = static_cast<Internal::VC::ValueDecimal const*>(&_value);
-					uint8 scale = strcmp("C", value->GetUnits().c_str()) ? 1 : 0;
+					if (ValueID::ValueType_Decimal == _value.GetID().GetType())
+					{
+						Internal::VC::ValueDecimal const* value = static_cast<Internal::VC::ValueDecimal const*>(&_value);
+						
+						uint8 index = value->GetID().GetIndex() & 0xFF;
+						uint8 supervision_session_id = node->CreateSupervisionSession(StaticGetCommandClassId(), index);
+						if (supervision_session_id == Internal::CC::Supervision::StaticNoSessionId())
+						{
+							Log::Write(LogLevel_Debug, GetNodeId(), "Supervision not supported, fall back to setpoint set/get");
+						}
 
-					Msg* msg = new Msg("ThermostatSetpointCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
-					msg->SetInstance(this, _value.GetID().GetInstance());
-					msg->Append(GetNodeId());
-					msg->Append(4 + GetAppendValueSize(value->GetValue()));
-					msg->Append(GetCommandClassId());
-					msg->Append(ThermostatSetpointCmd_Set);
-					msg->Append((uint8_t) (value->GetID().GetIndex() & 0xFF));
-					AppendValue(msg, value->GetValue(), scale);
-					msg->Append(GetDriver()->GetTransmitOptions());
-					GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
-					return true;
+						uint8 scale = strcmp("C", value->GetUnits().c_str()) ? 1 : 0;
+
+						Msg* msg = new Msg("ThermostatSetpointCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
+						msg->SetInstance(this, _value.GetID().GetInstance());
+						msg->SetSupervision(supervision_session_id);
+						msg->Append(GetNodeId());
+						msg->Append(4 + GetAppendValueSize(value->GetValue()));
+						msg->Append(GetCommandClassId());
+						msg->Append(ThermostatSetpointCmd_Set);
+						msg->Append(index);
+						AppendValue(msg, value->GetValue(), scale);
+
+						msg->Append(GetDriver()->GetTransmitOptions());
+						GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
+						return true;
+					}
 				}
 
 				return false;
