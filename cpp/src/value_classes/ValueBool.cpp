@@ -100,6 +100,9 @@ namespace OpenZWave
 				// create a temporary copy of this value to be submitted to the Set() call and set its value to the function param
 				ValueBool* tempValue = new ValueBool(*this);
 				tempValue->m_value = _value;
+				
+				// Save the new value to be stored when the device confirms the value was set successfully, 
+				m_newValue = _value;
 
 				// Set the value in the device.
 				bool ret = ((Value*) tempValue)->Set();
