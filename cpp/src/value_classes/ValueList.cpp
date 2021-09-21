@@ -229,6 +229,9 @@ namespace OpenZWave
 				ValueList* tempValue = new ValueList(*this);
 				tempValue->m_valueIdx = _value;
 
+				// Save the new value to be stored when the device confirms the value was set successfully, 
+				m_newValue = _value;
+
 				// Set the value in the device.
 				bool ret = ((Value*) tempValue)->Set();
 
