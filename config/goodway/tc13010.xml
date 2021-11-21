@@ -1,0 +1,79 @@
+<Product Revision="1"
+    xmlns="https://github.com/OpenZWave/open-zwave">
+    <MetaData>
+        <MetaDataItem name="Name">In-wall switch</MetaDataItem>
+        <MetaDataItem name="Description">This In-wall Power Monitor Switch is a transceiver which is a Z-Wave enabled device and is fully compatible with any Z-Wave enabled network. Mini-sized design makes it easy to place the In-wall Power Monitor Switch into the wall box and fit in the house decoration.</MetaDataItem>
+        <MetaDataItem name="ProductPage">https://products.z-wavealliance.org/products/2948</MetaDataItem>
+        <MetaDataItem name="ProductSupport"></MetaDataItem>
+        <MetaDataItem name="ProductManual"></MetaDataItem>
+        <MetaDataItem name="InclusionDescription">Connect the module to the power supply. Enable inclusion mode on your Z-Wave controller. Press and release the Include/Exclude button 3 times within 2 seconds.</MetaDataItem>
+        <MetaDataItem name="ExclusionDescription">Connect the module to the power supply. Make sure the module is within direct range of your Z-Wave controller or use a hand-held Z-Wave remote to perform exclusion. Press and release the Include/Exclude button 3 times within 2 seconds. NOTE: The module will be excluded from your network, but any custom configuration parameters will not be erased.</MetaDataItem>
+        <MetaDataItem name="ResetDescription">Connect the module to the power supply.  Press and hold the Include/Excude button for at least 10 seconds. NOTE: By resetting the module, all custom parameters previously set on the module will return to their default values and the owner ID will be deleted. Use this reset procedure only when the main controller is missing or otherwise inoperable.</MetaDataItem>
+        <MetaDataItem id="000b" name="ZWProductPage" type="0003">https://products.z-wavealliance.org/products/2948/features</MetaDataItem>
+        <MetaDataItem id="000b" name="FrequencyName" type="0003">CEPT (Europe) (EU)</MetaDataItem>
+        <MetaDataItem id="000b" name="Identifier" type="0003">TD13010</MetaDataItem>
+        <ChangeLog>
+            <Entry author="Tomasz Szalaj - tszalaj@it-dev.pl" date="22 November 2021" revision="1">Initial release</Entry>
+        </ChangeLog>
+    </MetaData>
+    <!-- Configuration Command Class - All Configuration Parameters should be entered into the section below -->
+    <CommandClass id="112">
+        <Value genre="config" index="1" instance="1" label="L1 automatically turn off" max="32767" min="0" type="short" unit="seconds" value="0">
+            <Help>Time in seconds after that the Load 1 will turn off. 0 - no turn off. Default - 0.</Help>
+        </Value>
+        <Value genre="config" index="2" instance="1" label="L2 automatically turn off" max="32767" min="0" type="short" unit="seconds" value="0">
+            <Help>Time in seconds after that the Load 2 will turn off. 0 - no turn off. Default - 0.</Help>
+        </Value>
+        <Value genre="config" index="3" instance="1" label="Switch Type" max="2" min="0" size="1" type="list" value="0">
+            <Help></Help>
+            <Item label="Toggle switch" value="0"/>
+            <Item label="Toggle switch with memory" value="1"/>
+            <Item label="Momentary switch" value="2"/>
+        </Value>
+        <Value genre="config" index="4" instance="1" label="Power restore behaviour" max="1" min="0" size="1" type="list" value="0">
+            <Help></Help>
+            <Item label="Turn off on power restore" value="0"/>
+            <Item label="Restore state from before power cut" value="1"/>
+        </Value>
+        <Value genre="config" index="5" instance="1" label="Power reporting on power change" max="100" min="0" size="1" type="byte" unit="%" value="10">
+            <Help>Power change magnitude that triggers reporting to the controller. 0% - no reporting. Default is 10%.</Help>
+        </Value>
+        <Value genre="config" index="6" instance="1" label="Watts auto-report period" max="32767" min="0" type="short" unit="seconds" value="300">
+            <Help>Accepted values range: 60-32767. 0 - no reporting. Default - 300 sec.</Help>
+        </Value>
+        <Value genre="config" index="7" instance="1" label="KWH auto-report period" max="32767" min="0" type="short" unit="seconds" value="300">
+            <Help>Accepted values range: 60-32767. 0 - no reporting.</Help>
+        </Value>
+        <Value genre="config" index="8" instance="1" label="L1 automatically turn on" max="32767" min="0" type="short" unit="seconds" value="0">
+            <Help>Time in seconds after that the Load 1 will turn on. 0 - no turn off. Default - 0.</Help>
+        </Value>
+        <Value genre="config" index="9" instance="1" label="L2 automatically turn on" max="32767" min="0" type="short" unit="seconds" value="0">
+            <Help>Time in seconds after that the Load 2 will turn on. 0 - no turn off. Default - 0.</Help>
+        </Value>
+    </CommandClass>
+    <!-- Association Group Information -->
+
+    <CommandClass id="133">
+        <Associations num_groups="8">
+            <Group index="1" max_associations="1" label="Lifeline. Reports the device status and allows for assigning single device only (main controller by default)."/>
+            <Group index="2" max_associations="5" label="Alarm EP 1. It is assigned to switch connected to the S1 terminal (uses Notification command class)." />
+            <Group index="3" max_associations="5" label="Switch 1. It is assigned to switch connected to the S1 terminal (uses Basic command class)"/>
+            <Group index="4" max_associations="5" label="Alarm EP 2. It is assigned to switch connected to the S2 terminal (uses Notification command class)." />
+            <Group index="5" max_associations="5" label="Switch 2. It is assigned to switch connected to the S2 terminal (uses Basic command class)" />
+        </Associations>
+    </CommandClass>
+
+
+    <!-- Remove COMMAND_CLASS_BASIC -->
+    <CommandClass id="32" action="remove"/>
+
+    <!-- Force multichannel -->
+    <CommandClass id="142" ForceInstances="true"/>
+
+    <!-- Map endpoints to instances -->
+    <CommandClass id="96">
+        <Compatibility>
+            <MapRootToEndpoint>true</MapRootToEndpoint>
+        </Compatibility>
+    </CommandClass>
+</Product>
