@@ -986,6 +986,7 @@ DISTFILES =	.gitignore \
 	config/images/thermofloor/heatit058.png \
 	config/images/thermofloor/heatit20a.png \
 	config/images/thermofloor/heatit_zdim.png \
+	config/images/thermofloor/heatitzm.png \
 	config/images/trane/TZEMT400AB32MAA.png \
 	config/images/trane/TZEMT400BB32MAA.png \
 	config/images/trane/TZEMT524AA21MA.png \
@@ -1381,6 +1382,7 @@ DISTFILES =	.gitignore \
 	config/thermofloor/heatit20a.xml \
 	config/thermofloor/heatitz4.xml \
 	config/thermofloor/heatitz8.xml \
+	config/thermofloor/heatitzm.xml \
 	config/trane/TZEMT400AB32MAA.xml \
 	config/trane/TZEMT400BB32MAA.xml \
 	config/trane/TZEMT524AA21MA.xml \
@@ -1726,6 +1728,8 @@ DISTFILES =	.gitignore \
 	cpp/src/command_classes/SimpleAVCommandItem.h \
 	cpp/src/command_classes/SoundSwitch.cpp \
 	cpp/src/command_classes/SoundSwitch.h \
+	cpp/src/command_classes/Supervision.cpp \
+	cpp/src/command_classes/Supervision.h \
 	cpp/src/command_classes/SwitchAll.cpp \
 	cpp/src/command_classes/SwitchAll.h \
 	cpp/src/command_classes/SwitchBinary.cpp \
