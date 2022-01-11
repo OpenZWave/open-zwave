@@ -1,4 +1,4 @@
-<Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
   <!-- Please refer to https://github.com/OpenZWave/open-zwave/wiki/Adding-Devices for instructions -->
   <MetaData>
     <MetaDataItem name="Name">Touch Z-Wave 16 Thermostat</MetaDataItem>
@@ -16,9 +16,42 @@
     <MetaDataItem id="d013" name="FrequencyName" type="0200">CEPT</MetaDataItem>
     <MetaDataItem id="d013" name="Identifier" type="200">4512744</MetaDataItem>
     <ChangeLog>
+      <Entry author="Jørn Moe" date="11 Jan 2022" revision="2">Added support Thermostat Mode and Thermostat Set points command classes</Entry>
       <Entry author="Jørn Moe" date="09 Jan 2022" revision="1">Initial release</Entry>
     </ChangeLog>
   </MetaData>
+
+  <!-- Thermostat Mode Command Class -->
+  <CommandClass id="64">
+    <Instance index="1"/>
+    <Value genre="user" index="0" instance="1" label="Mode" max="0" min="0" read_only="false" size="1" type="list" units="" value="0" write_only="false">
+      <Item label="Manual Off" value="0"/>
+      <Item label="Comfort" value="1"/>
+      <Item label="Dry floor" value="8"/>
+      <Item label="Energy Saving" value="11"/>
+      <Item label="Vacation" value="13"/>
+    </Value>
+    <SupportedModes>
+      <Mode index="0" label="OFF"/>
+      <Mode index="1" label="HEAT"/>
+      <Mode index="8" label="DRY"/>
+      <Mode index="11" label="ENERGY HEAT"/>
+      <Mode index="13" label="AWAY"/>
+    </SupportedModes>
+    <Compatibility/>
+  </CommandClass>
+  <!-- Thermostat Set points -->
+  <CommandClass id="67">
+    <Instance index="1"/>
+    <Value genre="user" index="1" instance="1" label="Heating"              max="0" min="0" read_only="false" type="decimal" units="C" value="25" write_only="false"/>
+    <Value genre="user" index="8" instance="1" label="Dry Air"              max="0" min="0" read_only="false" type="decimal" units="C" value="30" write_only="false"/>
+    <Value genre="user" index="11" instance="1" label="Energy Save Heating" max="0" min="0" read_only="false" type="decimal" units="C" value="20" write_only="false"/>
+    <Value genre="user" index="13" instance="1" label="Away Heating"        max="0" min="0" read_only="false" type="decimal" units="C" value="15" write_only="false"/>
+    <Compatibility>
+      <Base>0</Base>
+      <CreateVars>true</CreateVars>
+    </Compatibility>
+  </CommandClass>
 
   <!-- Configuration Command Class - All Configuration Parameters should be entered into the section below -->
   <CommandClass id="112">
@@ -130,7 +163,7 @@
 	Unit is S (60S - 31Days).
       </Help>
     </Value>
-    <Value genre="config" index="22" label="OLED display brightnes " max="2" min="0" size="1" type="list" value="1">
+    <Value genre="config" index="22" label="OLED display brightnes " max="2" min="0" size="1" type="list" value="2">
       <Help>OLED panel brightnes when operated.</Help>
       <Item label="Low" value="0"/>
       <Item label="Mid" value="1"/>
