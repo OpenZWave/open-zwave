@@ -837,6 +837,7 @@ DISTFILES =	.gitignore \
 	config/images/namron/4512715.png \
 	config/images/namron/4512720.jpg \
 	config/images/namron/4512724.png \
+	config/images/namron/4512744.png \
 	config/images/nexia/db100z.png \
 	config/images/nexia/th100nx.png \
 	config/images/nodon/asp3100SmartPlug.png \
@@ -1190,6 +1191,7 @@ DISTFILES =	.gitignore \
 	config/namron/4512715.xml \
 	config/namron/4512720.xml \
 	config/namron/4512724.xml \
+	config/namron/4512744.xml \
 	config/nei/ms11z.xml \
 	config/nexia/db100z.xml \
 	config/nexia/th100nx.xml \
