@@ -1275,7 +1275,7 @@ bool Driver::WriteMsg(string const &msg)
 		{
 			node->m_sentCnt++;
 			node->m_sentTS.SetTime();
-			if (m_expectedReply == FUNC_ID_APPLICATION_COMMAND_HANDLER)
+			if ( (m_expectedReply == FUNC_ID_APPLICATION_COMMAND_HANDLER) || (m_expectedReply == FUNC_ID_APPLICATION_COMMAND_HANDLER_BRIDGE) )			
 			{
 				Internal::CC::CommandClass *cc = node->GetCommandClass(m_expectedCommandClassId);
 				if (cc != NULL)
@@ -1795,6 +1795,21 @@ bool Driver::ReadMsg()
 	return true;
 }
 
+bool checkReplyForCommandHandler(uint8 expectedReply, uint8 reply) { 
+	if ( ( expectedReply == FUNC_ID_APPLICATION_COMMAND_HANDLER) || (expectedReply == FUNC_ID_APPLICATION_COMMAND_HANDLER_BRIDGE) ) {
+		if (reply == FUNC_ID_APPLICATION_COMMAND_HANDLER) {
+			return true;
+		} else if (reply == FUNC_ID_APPLICATION_COMMAND_HANDLER_BRIDGE) {
+			return true;
+		}
+		return false; 
+	} else if (expectedReply == reply) {
+		return true;
+	} 
+	return false;
+}
+
+
 //-----------------------------------------------------------------------------
 // <Driver::ProcessMsg>
 // Process data received from the Z-Wave PC interface
@@ -1803,47 +1818,66 @@ void Driver::ProcessMsg(uint8* _data, uint8 _length)
 {
 	bool handleCallback = true;
 	bool wasencrypted = false;
-	//uint8 nodeId = GetNodeNumber( m_currentMsg );
+	uint8 node;
+	uint8 cc;
+	uint8 cccmd;
+	uint8 startdata;
+	uint8 pktlength;
 
-	if ((REQUEST == _data[0]) && FUNC_ID_APPLICATION_COMMAND_HANDLER == _data[1] && (Internal::CC::Security::StaticGetCommandClassId() == _data[5]))
+	if (_data[1] == FUNC_ID_APPLICATION_COMMAND_HANDLER_BRIDGE) {
+		node = _data[4];
+		cc = _data[6];
+		cccmd = _data[7];
+		startdata = 8;
+		pktlength = 5;
+
+	} else {
+		node = _data[3];
+		cc = _data[5];
+		cccmd = _data[6];
+		startdata = 7;
+		pktlength = 4;
+	}
+
+	if ((REQUEST == _data[0]) && ( ( FUNC_ID_APPLICATION_COMMAND_HANDLER == _data[1] ) || ( FUNC_ID_APPLICATION_COMMAND_HANDLER_BRIDGE == _data[1] ) ) && (Internal::CC::Security::StaticGetCommandClassId() == cc))
 	{
 		/* if this message is a NONCE Report - Then just Trigger the Encrypted Send */
-		if (Internal::CC::SecurityCmd_NonceReport == _data[6])
+		if (Internal::CC::SecurityCmd_NonceReport == cccmd)
 		{
-			Log::Write(LogLevel_Info, _data[3], "Received SecurityCmd_NonceReport from node %d", _data[3]);
+			Log::Write(LogLevel_Info, node, "Received SecurityCmd_NonceReport from node %d", node);
 
 			/* handle possible resends of NONCE_REPORT messages.... See Issue #931 */
 			if (!m_currentMsg)
 			{
-				Log::Write(LogLevel_Warning, _data[3], "Received a NonceReport from node, but no pending messages. Dropping..");
+				Log::Write(LogLevel_Warning, node, "Received a NonceReport from node, but no pending messages. Dropping..");
 				return;
 			}
 
 			// No Need to triger a WriteMsg here - It should be handled automatically
-			m_currentMsg->setNonce(&_data[7]);
+			m_currentMsg->setNonce(&_data[startdata]);
 			this->SendEncryptedMessage();
 			return;
 
 			/* if this is a NONCE Get - Then call to the CC directly, process it, and then bail out. */
 		}
-		else if (Internal::CC::SecurityCmd_NonceGet == _data[6])
+		else if (Internal::CC::SecurityCmd_NonceGet == cccmd)
 		{
-			Log::Write(LogLevel_Info, _data[3], "Received SecurityCmd_NonceGet from node %d", _data[3]);
+			Log::Write(LogLevel_Info, node, "Received SecurityCmd_NonceGet from node %d", node);
 			{
 				uint8 *nonce = NULL;
 				Internal::LockGuard LG(m_nodeMutex);
-				Node* node = GetNode(_data[3]);
+				Node* nodeobj = GetNode(node);
 				if (node)
 				{
-					nonce = node->GenerateNonceKey();
+					nonce = nodeobj->GenerateNonceKey();
 				}
 				else
 				{
-					Log::Write(LogLevel_Warning, _data[3], "Couldn't Generate Nonce Key for Node %d", _data[3]);
+					Log::Write(LogLevel_Warning, node, "Couldn't Generate Nonce Key for Node %d", node);
 					return;
 				}
 
-				SendNonceKey(_data[3], nonce);
+				SendNonceKey(node, nonce);
 
 			}
 			/* don't continue processing */
@@ -1851,10 +1885,10 @@ void Driver::ProcessMsg(uint8* _data, uint8 _length)
 
 			/* if this message is encrypted, decrypt it first */
 		}
-		else if ((Internal::CC::SecurityCmd_MessageEncap == _data[6]) || (Internal::CC::SecurityCmd_MessageEncapNonceGet == _data[6]))
+		else if ((Internal::CC::SecurityCmd_MessageEncap == cccmd) || (Internal::CC::SecurityCmd_MessageEncapNonceGet == cccmd))
 		{
 			uint8 _newdata[256];
-			uint8 SecurityCmd = _data[6];
+			uint8 SecurityCmd = cccmd;
 			uint8 *_nonce;
 
 			/* clear out NONCE Report tracking */
@@ -1864,51 +1898,62 @@ void Driver::ProcessMsg(uint8* _data, uint8 _length)
 			/* make sure the Node Exists, and it has the Security CC */
 			{
 				Internal::LockGuard LG(m_nodeMutex);
-				Node* node = GetNode(_data[3]);
-				if (node)
+				Node* nodeobj  = GetNode(node);
+				if (nodeobj)
 				{
-					_nonce = node->GetNonceKey(_data[_data[4] - 4]);
+					uint8 nonceid;
+					if (_data[1] == FUNC_ID_APPLICATION_COMMAND_HANDLER_BRIDGE) 
+					{
+						nonceid = _data[_data[pktlength]-3];
+					}else{
+						nonceid = _data[_data[pktlength]-4];
+					} 
+
+					_nonce = nodeobj->GetNonceKey(nonceid);
 					if (!_nonce)
 					{
-						Log::Write(LogLevel_Warning, _data[3], "Could Not Retrieve Nonce for Node %d", _data[3]);
+						Log::Write(LogLevel_Warning, node, "Could Not Retrieve Nonce for Node %d", node);
 						return;
 					}
 				}
 				else
 				{
-					Log::Write(LogLevel_Warning, _data[3], "Can't Find Node %d for Encrypted Message", _data[3]);
+					Log::Write(LogLevel_Warning, node, "Can't Find Node %d for Encrypted Message", node);
 					return;
 				}
 			}
-			if (Internal::DecryptBuffer(&_data[5], _data[4] + 1, this, _data[3], this->GetControllerNodeId(), _nonce, &_newdata[0]))
+			/* StartData - 2 as we start at the CC ID */
+			if (Internal::DecryptBuffer(&_data[startdata-2], _data[pktlength]+1, this, node, this->GetControllerNodeId(), _nonce, &_newdata[0]))
 			{
 				/* Ok - _newdata now contains the decrypted packet */
 				/* copy it back to the _data packet for processing */
 				/* New Length - See Decrypt Packet for why these numbers*/
-				_data[4] = _data[4] - 8 - 8 - 2 - 2;
+				_data[pktlength] = _data[pktlength] - 8 - 8 - 2 - 2;
 
 				/* now copy the decrypted packet */
-				memcpy(&_data[5], &_newdata[1], _data[4]);
+				memcpy(&_data[pktlength+1], &_newdata[1], _data[pktlength]);
 				//PrintHex("Decrypted Packet", _data, _data[4]+5);
 
 				/* if the Node has something else to send, it will encrypt a message and send it as a MessageEncapNonceGet */
 				if (Internal::CC::SecurityCmd_MessageEncapNonceGet == SecurityCmd)
 				{
-					Log::Write(LogLevel_Info, _data[3], "Received SecurityCmd_MessageEncapNonceGet from node %d - Sending New Nonce", _data[3]);
+					Log::Write(LogLevel_Info, node, "Received SecurityCmd_MessageEncapNonceGet from node %d - Sending New Nonce", node);
 					Internal::LockGuard LG(m_nodeMutex);
-					Node* node = GetNode(_data[3]);
-					if (node)
+					Node* nodeobj = GetNode(node);
+					if (nodeobj)
 					{
-						_nonce = node->GenerateNonceKey();
+						_nonce = nodeobj->GenerateNonceKey();
 					}
 					else
 					{
-						Log::Write(LogLevel_Warning, _data[3], "Couldn't Generate Nonce Key for Node %d", _data[3]);
+						Log::Write(LogLevel_Warning, node, "Couldn't Generate Nonce Key for Node %d", node);
 						return;
 					}
-					SendNonceKey(_data[3], _nonce);
+					SendNonceKey(node, _nonce);
 				}
 
+				/* reset our CC as its now decrypted */
+				cc = _data[1] == FUNC_ID_APPLICATION_COMMAND_HANDLER_BRIDGE ? _data[6] : _data[5];
 				wasencrypted = true;
 
 			}
@@ -1917,19 +1962,19 @@ void Driver::ProcessMsg(uint8* _data, uint8 _length)
 				/* if the Node has something else to send, it will encrypt a message and send it as a MessageEncapNonceGet */
 				if (Internal::CC::SecurityCmd_MessageEncapNonceGet == SecurityCmd)
 				{
-					Log::Write(LogLevel_Info, _data[3], "Received SecurityCmd_MessageEncapNonceGet from node %d - Sending New Nonce", _data[3]);
+					Log::Write(LogLevel_Info, node, "Received SecurityCmd_MessageEncapNonceGet from node %d - Sending New Nonce", node);
 					Internal::LockGuard LG(m_nodeMutex);
-					Node* node = GetNode(_data[3]);
+					Node* nodeobj = GetNode(node);
 					if (node)
 					{
-						_nonce = node->GenerateNonceKey();
+						_nonce = nodeobj->GenerateNonceKey();
 					}
 					else
 					{
-						Log::Write(LogLevel_Warning, _data[3], "Couldn't Generate Nonce Key for Node %d", _data[3]);
+						Log::Write(LogLevel_Warning, node, "Couldn't Generate Nonce Key for Node %d", node);
 						return;
 					}
-					SendNonceKey(_data[3], _nonce);
+					SendNonceKey(node, _nonce);
 				}
 				/* it failed for some reason, lets just move on */
 				m_expectedReply = 0;
@@ -2202,6 +2247,7 @@ void Driver::ProcessMsg(uint8* _data, uint8 _length)
 		switch (_data[1])
 		{
 			case FUNC_ID_APPLICATION_COMMAND_HANDLER:
+			case FUNC_ID_APPLICATION_COMMAND_HANDLER_BRIDGE:
 			{
 				Log::Write(LogLevel_Detail, "");
 				HandleApplicationCommandHandlerRequest(_data, wasencrypted);
@@ -2385,13 +2431,17 @@ void Driver::ProcessMsg(uint8* _data, uint8 _length)
 			}
 			if (m_expectedReply)
 			{
-				if (m_expectedReply == _data[1])
+				/* if m_expectedReply was FUNC_ID_APPLICATION_COMMAND_HANDLER then the actual reply can either be
+				 * FUNC_ID_APPLICATION_COMMAND_HANDLER - For Static Controllers or 
+				 * FUNC_ID_APPLICATION_COMMAND_HANDLER || FUNC_ID_APPLICATION_COMMAND_HANDLER_BRIDGE for Bridge Controllers 
+				 */
+				if ( checkReplyForCommandHandler(m_expectedReply, _data[1]) )
 				{
-					if (m_expectedCommandClassId && (m_expectedReply == FUNC_ID_APPLICATION_COMMAND_HANDLER))
+					if (m_expectedCommandClassId && ( ( m_expectedReply == FUNC_ID_APPLICATION_COMMAND_HANDLER) || ( m_expectedReply == FUNC_ID_APPLICATION_COMMAND_HANDLER_BRIDGE) ) )
 					{
-						if (m_expectedCallbackId == 0 && m_expectedCommandClassId == _data[5] && m_expectedNodeId == _data[3])
+						if (m_expectedCallbackId == 0 && m_expectedCommandClassId == cc && m_expectedNodeId == node)
 						{
-							Log::Write(LogLevel_Detail, _data[3], "  Expected reply and command class was received");
+							Log::Write(LogLevel_Detail, node, "  Expected reply and command class was received");
 							m_waitingForAck = false;
 							m_expectedReply = 0;
 							m_expectedCommandClassId = 0;
@@ -2400,7 +2450,7 @@ void Driver::ProcessMsg(uint8* _data, uint8 _length)
 					}
 					else
 					{
-						if (IsExpectedReply(_data[3]))
+						if (IsExpectedReply(node))
 
 						{
 							Log::Write(LogLevel_Detail, GetNodeNumber(m_currentMsg), "  Expected reply was received");
@@ -2443,10 +2493,10 @@ void Driver::HandleGetVersionResponse(uint8* _data)
 	}
 	Log::Write(LogLevel_Info, GetNodeNumber(m_currentMsg), "Received reply to FUNC_ID_ZW_GET_VERSION:");
 	Log::Write(LogLevel_Info, GetNodeNumber(m_currentMsg), "    %s library, version %s", m_libraryTypeName.c_str(), m_libraryVersion.c_str());
-	if (!((m_libraryType == ZW_LIB_CONTROLLER_STATIC) || (m_libraryType == ZW_LIB_CONTROLLER)))
+	if (!((m_libraryType == ZW_LIB_CONTROLLER_STATIC) || (m_libraryType == ZW_LIB_CONTROLLER) || (m_libraryType == ZW_LIB_CONTROLLER_BRIDGE) ))
 	{
 		Log::Write(LogLevel_Fatal, GetNodeNumber(m_currentMsg), "Z-Wave Interface is not a Supported Library Type: %s", m_libraryTypeName.c_str());
-		Log::Write(LogLevel_Fatal, GetNodeNumber(m_currentMsg), "Z-Wave Interface should be a Static Controller Library Type");
+		Log::Write(LogLevel_Fatal, GetNodeNumber(m_currentMsg), "Z-Wave Interface should be a Static or Bridge Controller Library Type");
 
 		{
 			Notification* notification = new Notification(Notification::Type_UserAlerts);
@@ -2575,7 +2625,7 @@ void Driver::HandleGetSerialAPICapabilitiesResponse(uint8* _data)
 	}
 
 	SendMsg(new Internal::Msg("FUNC_ID_SERIAL_API_GET_INIT_DATA", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_INIT_DATA, false), MsgQueue_Command);
-	if (!IsBridgeController())
+	// if (!IsBridgeController())
 	{
 		Internal::Msg* msg = new Internal::Msg("FUNC_ID_SERIAL_API_SET_TIMEOUTS", 0xff, REQUEST, FUNC_ID_SERIAL_API_SET_TIMEOUTS, false);
 		msg->Append( ACK_TIMEOUT / 10);
@@ -2591,7 +2641,9 @@ void Driver::HandleGetSerialAPICapabilitiesResponse(uint8* _data)
 	list<uint8> advertisedCommandClasses = Internal::CC::CommandClasses::GetAdvertisedCommandClasses();
 	msg->Append((uint8) advertisedCommandClasses.size());			// Length
 	for (list<uint8>::iterator it = advertisedCommandClasses.begin(); it != advertisedCommandClasses.end(); ++it)
+	{
 		msg->Append(*it);
+	}
 
 	SendMsg(msg, MsgQueue_Command);
 }
@@ -3578,8 +3630,9 @@ void Driver::HandleApplicationCommandHandlerRequest(uint8* _data, bool encrypted
 {
 
 	uint8 status = _data[2];
-	uint8 nodeId = _data[3];
-	uint8 classId = _data[5];
+	uint8 nodeId = this->IsBridgeController() ? _data[4] : _data[3];
+	uint8 classId = this->IsBridgeController() ? _data[6] : _data[5];
+	uint8 lengthbyte = this->IsBridgeController() ? _data[5] : _data[4];
 	Node* node = GetNodeUnsafe(nodeId);
 
 	if ((status & RECEIVE_STATUS_ROUTED_BUSY) != 0)
@@ -3605,7 +3658,7 @@ void Driver::HandleApplicationCommandHandlerRequest(uint8* _data, bool encrypted
 			memcpy(node->m_lastReceivedMessage, _data, sizeof(node->m_lastReceivedMessage));
 		}
 		node->m_receivedTS.SetTime();
-		if (m_expectedReply == FUNC_ID_APPLICATION_COMMAND_HANDLER && m_expectedNodeId == nodeId)
+		if ( ( ( m_expectedReply == FUNC_ID_APPLICATION_COMMAND_HANDLER ) || ( m_expectedReply = FUNC_ID_APPLICATION_COMMAND_HANDLER_BRIDGE) ) && ( m_expectedNodeId == nodeId ) )
 		{
 			// Need to confirm this is the correct response to the last sent request.
 			// At least ignore any received messages prior to the send data request.
@@ -3640,7 +3693,7 @@ void Driver::HandleApplicationCommandHandlerRequest(uint8* _data, bool encrypted
 	{
 		if (m_controllerReplication && m_currentControllerCommand && (ControllerCommand_ReceiveConfiguration == m_currentControllerCommand->m_controllerCommand))
 		{
-			m_controllerReplication->HandleMsg(&_data[6], _data[4]);
+			m_controllerReplication->HandleMsg(&_data[6], _data[lengthbyte]);
 
 			UpdateControllerState(ControllerState_InProgress);
 		}
@@ -6457,6 +6510,9 @@ uint8 Driver::NodeFromMessage(uint8 const* buffer)
 		{
 			case FUNC_ID_APPLICATION_COMMAND_HANDLER:
 				nodeId = buffer[5];
+				break;
+			case FUNC_ID_APPLICATION_COMMAND_HANDLER_BRIDGE:
+				nodeId = buffer[6];
 				break;
 			case FUNC_ID_ZW_APPLICATION_UPDATE:
 				nodeId = buffer[5];

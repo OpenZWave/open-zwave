@@ -2044,7 +2044,10 @@ void Node::ApplicationCommandHandler(uint8 const* _data, bool encrypted
 
 )
 {
-	if (Internal::CC::CommandClass* pCommandClass = GetCommandClass(_data[5]))
+	uint8_t cc = GetDriver()->IsBridgeController() ? _data[6] : _data[5];
+	uint8_t startdata = GetDriver()->IsBridgeController() ? 7 : 6;
+	uint8_t lendata = GetDriver()->IsBridgeController() ? 5 : 4;
+	if (Internal::CC::CommandClass* pCommandClass = GetCommandClass(cc))
 	{
 		if (pCommandClass->IsSecured() && !encrypted)
 		{
@@ -2065,14 +2068,14 @@ void Node::ApplicationCommandHandler(uint8 const* _data, bool encrypted
 		pCommandClass->ReceivedCntIncr();
 		if (!pCommandClass->IsAfterMark())
 		{
-			if (!pCommandClass->HandleMsg(&_data[6], _data[4]))
+			if (!pCommandClass->HandleMsg(&_data[startdata], _data[lendata]))
 			{
 				Log::Write(LogLevel_Warning, m_nodeId, "CommandClass %s HandlerMsg Returned False", pCommandClass->GetCommandClassName().c_str());
 			}
 		}
 		else
 		{
-			if (!pCommandClass->HandleIncomingMsg(&_data[6], _data[4]))
+			if (!pCommandClass->HandleIncomingMsg(&_data[startdata], _data[lendata]))
 			{
 				Log::Write(LogLevel_Warning, m_nodeId, "CommandClass %s HandleIncomingMsg Returned False", pCommandClass->GetCommandClassName().c_str());
 			}
@@ -2080,7 +2083,7 @@ void Node::ApplicationCommandHandler(uint8 const* _data, bool encrypted
 	}
 	else
 	{
-		if (_data[5] == Internal::CC::ControllerReplication::StaticGetCommandClassId())
+		if (cc == Internal::CC::ControllerReplication::StaticGetCommandClassId())
 		{
 			// This is a controller replication message, and we do not support it.
 			// We have to at least acknowledge the message to avoid locking the sending device.
@@ -2089,7 +2092,7 @@ void Node::ApplicationCommandHandler(uint8 const* _data, bool encrypted
 			Internal::Msg* msg = new Internal::Msg("Replication Command Complete", m_nodeId, REQUEST, FUNC_ID_ZW_REPLICATION_COMMAND_COMPLETE, false);
 			GetDriver()->SendMsg(msg, Driver::MsgQueue_Command);
 		}
-		else if (_data[5] == Internal::CC::MultiInstance::StaticGetCommandClassId())
+		else if (cc == Internal::CC::MultiInstance::StaticGetCommandClassId())
 		{
 			// Devices that support MultiChannelAssociation may send a MultiChannel Encapsulated message if there is a Instance set in the Association Groups
 			// So we will dynamically load the MultiChannel CC if we receive a encapsulated message
@@ -2107,14 +2110,14 @@ void Node::ApplicationCommandHandler(uint8 const* _data, bool encrypted
 				pCommandClass->ReceivedCntIncr();
 				if (!pCommandClass->IsAfterMark())
 				{
-					if (!pCommandClass->HandleMsg(&_data[6], _data[4]))
+					if (!pCommandClass->HandleMsg(&_data[startdata], _data[lendata]))
 					{
 						Log::Write(LogLevel_Warning, m_nodeId, "CommandClass %s HandleMsg returned false", pCommandClass->GetCommandClassName().c_str());
 					}
 				}
 				else
 				{
-					if (!pCommandClass->HandleIncomingMsg(&_data[6], _data[4]))
+					if (!pCommandClass->HandleIncomingMsg(&_data[startdata], _data[lendata]))
 					{
 						Log::Write(LogLevel_Warning, m_nodeId, "CommandClass %s HandleIncommingMsg returned false", pCommandClass->GetCommandClassName().c_str());
 					}
@@ -2123,7 +2126,7 @@ void Node::ApplicationCommandHandler(uint8 const* _data, bool encrypted
 		}
 		else
 		{
-			Log::Write(LogLevel_Info, m_nodeId, "ApplicationCommandHandler - Unhandled Command Class 0x%.2x", _data[5]);
+			Log::Write(LogLevel_Info, m_nodeId, "ApplicationCommandHandler - Unhandled Command Class 0x%.2x", cc);
 		}
 	}
 }
