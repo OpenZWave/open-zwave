@@ -310,6 +310,8 @@ namespace OpenZWave
 #define FUNC_ID_ZW_SET_SLAVE_LEARN_MODE					0xA4	// Enter slave learn mode
 #define FUNC_ID_ZW_GET_VIRTUAL_NODES					0xA5	// Return all virtual nodes
 #define FUNC_ID_ZW_IS_VIRTUAL_NODE						0xA6	// Virtual node test
+#define FUNC_ID_APPLICATION_COMMAND_HANDLER_BRIDGE		0xA8	// Bridge Version of FUNC_ID_APPLICATION_COMMAND_HANDLER
+#define FUNC_ID_ZW_SEND_DATA_BRIDGE						0xA9	// Bridge Version of FUNC_ID_SEND_DATA
 #define FUNC_ID_ZW_SET_PROMISCUOUS_MODE					0xD0	// Set controller into promiscuous mode to listen to all frames
 #define FUNC_ID_PROMISCUOUS_APPLICATION_COMMAND_HANDLER	0xD1
 
