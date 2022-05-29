@@ -27,7 +27,8 @@
     <MetaDataItem id="1000" name="FrequencyName" type="2301">CEPT (Europe)</MetaDataItem>
     <ChangeLog>
       <Entry author="Nouknouk - nouknouk@gmail.com" date="30 May 2022" revision="1">Initial Creation of config file</Entry>
-    </ChangeLog>
+      <Entry author="Nouknouk - nouknouk@gmail.com" date="30 May 2022" revision="2">fix numgroups</Entry>
+		</ChangeLog>
   </MetaData>
   
   <!-- Configuration Command Class - All Configuration Parameters should be entered into the section below -->
@@ -144,7 +145,7 @@
   </CommandClass>
   <!-- The Association Group Information -->
   <CommandClass id="133">
-    <Associations num_groups="3">
+    <Associations num_groups="7">
       <Group index="1" label="LifeLine" max_associations="1"/>
       <Group index="2" label="On/Off (1)" max_associations="5"/>
       <Group index="3" label="Dimmer (1)" max_associations="5"/>
