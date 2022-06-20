@@ -297,6 +297,7 @@ DISTFILES =	.gitignore \
 	config/fibaro/fgsd002.xml \
 	config/fibaro/fgss101.xml \
 	config/fibaro/fgt001.xml \
+	config/fibaro/fgwceu201.xml \
 	config/fibaro/fgwd111.xml \
 	config/fibaro/fgwds221.xml \
 	config/fibaro/fgwds221ss.xml \
@@ -654,6 +655,7 @@ DISTFILES =	.gitignore \
 	config/images/fibaro/fgs224.png \
 	config/images/fibaro/fgsd002.png \
 	config/images/fibaro/fgt001.png \
+	config/images/fibaro/fgwceu201.png \
 	config/images/fibaro/fgwd111.png \
 	config/images/fibaro/fgwds221.png \
 	config/images/fibaro/fgwoe.png \
@@ -1319,6 +1321,8 @@ DISTFILES =	.gitignore \
 	config/schlagelink/41.xml \
 	config/schlagelink/itemp.xml \
 	config/schlagelink/minikeypad.xml \
+	config/sensative/kaipule/im20.xml \
+	config/sensative/kaipule/ix32.xml \
 	config/sensative/strips.xml \
 	config/sensative/stripscomfort.xml \
 	config/sercomm/sw-clp01-eu.xml \

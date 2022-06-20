@@ -1,0 +1,158 @@
+<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
+  <!-- Please refer to https://github.com/OpenZWave/open-zwave/wiki/Adding-Devices for instructions -->
+  <MetaData>
+    <MetaDataItem name="Name">FGWCEU-201 Walli Controller</MetaDataItem>
+    <MetaDataItem name="Description">FIBARO Walli Controller is a smart wall, battery powered, switch.</MetaDataItem>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/010f:1000:2301</MetaDataItem>
+    <MetaDataItem name="ProductPage">https://manuals.fibaro.com/document-category/fgwceu-201/</MetaDataItem>
+    <MetaDataItem name="ProductSupport">https://manuals.fibaro.com/document-category/fgwceu-201/</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/fibaro/fgwceu201.png</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://manuals.fibaro.com/content/manuals/en/FGWCEU-201/FGWCEU-201-T-EN-1.1.pdf</MetaDataItem>
+    <MetaDataItem name="WakeupDescription">When on battery power, the device needs to be woken up to receive 
+		information about the new configuration from the Z-Wave controller, like parameters and associations. 
+		By default the device is woken up automatically every 6 hours.
+		You can wake up the device manually using first menu position (white).</MetaDataItem>
+    <MetaDataItem name="InclusionDescription">To add the device to the Z-Wave network manually:
+		1. Set the main controller in (Security/non-Security Mode) add mode (see the controller's manual).
+		2. Quickly, three times click one of the buttons.
+		3. If you are adding in Security S2 Authenticated, input the underlined part of the DSK (label on the box).
+		4. LED will start blinking yellow, wait for the adding process to end.
+		5. Adding result will be confirmed by the Z-Wave controller's message and the LED frame:
+  		- Green: successful (non-secure, S0, S2 non-authenticated),
+	  	- Magenta: successful (Security S2 Authenticated),
+		  - Red: not successful.
+		</MetaDataItem>
+    <MetaDataItem id="1000" name="ZWProductPage" type="2301">https://products.z-wavealliance.org/products/3883</MetaDataItem>
+    <MetaDataItem id="1000" name="Identifier" type="2301">FGWCEU-201</MetaDataItem>
+    <MetaDataItem id="1000" name="FrequencyName" type="2301">CEPT (Europe)</MetaDataItem>
+    <ChangeLog>
+      <Entry author="Nouknouk - nouknouk@gmail.com" date="30 May 2022" revision="1">Initial Creation of config file</Entry>
+      <Entry author="Nouknouk - nouknouk@gmail.com" date="30 May 2022" revision="2">fix numgroups</Entry>
+		</ChangeLog>
+  </MetaData>
+  
+  <!-- Configuration Command Class - All Configuration Parameters should be entered into the section below -->
+  <CommandClass id="112">
+
+    <Value genre="config" index="1" label="Remember device state" max="1" min="0" size="1" type="byte" value="1">
+		<Help>This parameter determines how the device will react in the event of power supply failure (e.g. power outage). The parameter is not relevant for outputs set to pulse mode (parameter 150/151 set to 2).
+		0 - remains switched off after restoring power
+		1 - restores remembered state after restoring power
+		</Help>
+    </Value>
+
+	<Value genre="config" index="2" label="Overload safety switch" max="5000" min="0" size="4" type="int" value="3500">
+		<Help>This function allows to turn off the controlled device in case of exceeding the defined power. Controlled device can be turned back on via the button or sending a control frame.
+		0 - function disabled
+		10-5000 - (1.0-500.0W, step 0.1W) – power threshold
+		</Help>
+    </Value>
+	
+	<Value genre="config" index="10" label="LED frame – power limit" max="5000" min="100" size="4" type="int" value="3500">
+		<Help>This parameter determines maximum active power. Exceeding it results in the LED frame flashing violet. Function is active only when parameter 11 is set to 8 or 9.
+		100-5000 - (10.0-500.0W, step 0.1W) – power threshold
+		</Help>
+    </Value>
+	
+	<Value genre="config" index="11" label="LED frame – colour when ON" max="9" min="0" size="1" type="list" value="1">
+		<Help>This parameter defines the LED colour when thedevice is ON. When set to 8 or 9, LED frame colour will change depending on he measured power and parameter 10. Other colours are set permanently and do not depend on power consumption.
+		</Help>
+		<Item label="LED disabled" value="0"/>
+		<Item label="White" value="1"/>
+		<Item label="Red" value="2"/>
+		<Item label="Green" value="3"/>
+		<Item label="Blue" value="4"/>
+		<Item label="Yellow" value="5"/>
+		<Item label="Cyan" value="6"/>
+		<Item label="Magenta" value="7"/>
+		<Item label="Colour changes smoothly depending on measured power" value="8"/>
+		<Item label="Colour changes in steps depending on measured power" value="9"/>
+    </Value>
+	
+	<Value genre="config" index="12" label="LED frame – colour when OFF" max="7" min="0" size="1" type="list" value="1">
+		<Help>This parameter defines the LED colour when the device is OFF.
+		</Help>
+		<Item label="LED disabled" value="0"/>
+		<Item label="White" value="1"/>
+		<Item label="Red" value="2"/>
+		<Item label="Green" value="3"/>
+		<Item label="Blue" value="4"/>
+		<Item label="Yellow" value="5"/>
+		<Item label="Cyan" value="6"/>
+		<Item label="Magenta" value="7"/>
+    </Value>
+	
+	<Value genre="config" index="13" label="LED frame – brightness" max="100" min="0" size="1" type="byte" value="100">
+		<Help>This parameter allows to adjust the LED frame brightness.
+		0 - LED disabled
+		1-100 - (1-100% brightness)
+		</Help>
+    </Value>
+	
+	<Value genre="config" index="20" label="Operation mode" max="1" min="0" size="1" type="list" value="0">
+		<Help>This parameter defines operation of the device.</Help>
+		<Item label="scene controller mode" value="0"/>
+		<Item label="double button mode" value="1"/>
+		<Item label="single button mode" value="2"/>
+		<Item label="switch controller mode" value="3"/>
+		<Item label="dimmer / roller shutter controller mode" value="4"/>
+		<Item label="roller shutter controller mode (step-by-step)" value="5"/>
+		<Item label="venetian blinds controller mode (step-by-step)" value="6"/>
+    </Value>
+
+	<Value genre="config" index="150" label="LED ring - first button" max="8" min="0" size="2" type="list" value="1">
+		<Help>This parameter defines the colour of first button indicator (upper part of the LED ring) for indications using Indicator CC.</Help>
+		<Item label="0 - LED disabled" value="0"/>
+		<Item label="1 - White" value="1"/>
+		<Item label="2 - Red" value="2"/>
+		<Item label="3 - Green" value="3"/>
+		<Item label="4 - Blue" value="4"/>
+		<Item label="5 - Yellow" value="5"/>
+		<Item label="6 - Cyan" value="6"/>
+		<Item label="7 - Magenta" value="7"/>
+		<Item label="8 + Blinking red-white-blue" value="8"/>
+    </Value>
+	
+	<Value genre="config" index="151" label="LED ring - second button" max="8" min="0" size="2" type="list" value="1">
+		<Help>This parameter defines the colour of second button indicator (lower part of the LED ring) for indications using Indicator CC.</Help>
+		<Item label="0 - LED disabled" value="0"/>
+		<Item label="1 - White" value="1"/>
+		<Item label="2 - Red" value="2"/>
+		<Item label="3 - Green" value="3"/>
+		<Item label="4 - Blue" value="4"/>
+		<Item label="5 - Yellow" value="5"/>
+		<Item label="6 - Cyan" value="6"/>
+		<Item label="7 - Magenta" value="7"/>
+		<Item label="8 + Blinking red-white-blue" value="8"/>
+    </Value>
+	
+	<Value genre="config" index="152" label="1st button - double click value" max="255" min="0" size="2" type="short" value="99">
+		<Help>This parameter defines value of Basic Set or Multilevel Set frame 
+		(depending on selected mode) sent to associated devices after double click. 
+		This parameter is not relevant for Scene Controller Mode.
+		0-99 or 255
+		</Help>
+    </Value>
+
+	<Value genre="config" index="153" label="2nd button - double click value" max="255" min="0" size="2" type="short" value="99">
+		<Help>This parameter defines value of Basic Set or Multilevel Set frame 
+		(depending on selected mode) sent to associated devices after double click. 
+		This parameter is used only in Double Button Mode.
+		0-99 or 255
+		</Help>
+    </Value>
+	
+  </CommandClass>
+  <!-- The Association Group Information -->
+  <CommandClass id="133">
+    <Associations num_groups="7">
+      <Group index="1" label="LifeLine" max_associations="1"/>
+      <Group index="2" label="On/Off (1)" max_associations="5"/>
+      <Group index="3" label="Dimmer (1)" max_associations="5"/>
+      <Group index="4" label="On/Off (2)" max_associations="5"/>
+      <Group index="5" label="Dimmer (2)" max_associations="5"/>
+      <Group index="6" label="Multidevice" max_associations="5"/>
+      <Group index="7" label="Slats" max_associations="5"/>
+    </Associations>
+  </CommandClass>
+</Product>
