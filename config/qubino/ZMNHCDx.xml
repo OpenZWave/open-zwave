@@ -1,4 +1,4 @@
-<Product Revision="8" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="9" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0159:0052:0003</MetaDataItem>
     <MetaDataItem name="ProductPic">images/qubino/ZMNHCDx.png</MetaDataItem>
@@ -46,6 +46,7 @@
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="6">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2504/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="7">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2505/xml</Entry>
       <Entry author="Olifant1990 - olifant1990@jo-ro.nl" date="31 December 2019" revision="8">Fixed problem of lifeline group 1.1 receives no update (https://www.domoticz.com/forum/viewtopic.php?f=24&amp;t=29715#p225812) and fixed format of this XML</Entry>
+      <Entry author="Olifant1990 - olifant1990@jo-ro.nl" date="31 December 2019" revision="9">Second fix of lifeline group 1.1 receives no update (https://www.domoticz.com/forum/viewtopic.php?f=24&amp;t=29715#p225812)</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Qubino: ZMNHCDx Flush shutter zwave+ ZMNHCD1 868,4 MHz ZMNHCD2 921,4 MHz ZMNHCD3 908,4 MHz ZMNHCD4 869,0 MHz ZMNHCD5 916,0 MHz -->
@@ -157,6 +158,12 @@
       <Group index="8" label="multilevel set (triggered at changes of value of slats tilting position)" max_associations="16" />
       <Group index="9" label="multilevel sensor report (triggered at change of temperature sensor)" max_associations="16" />
     </Associations>
+  </CommandClass>
+  <!-- Multi Channel Association Groups -->
+  <CommandClass id="142" name="COMMAND_CLASS_MULTI_CHANNEL_ASSOCIATION">
+    <Compatibility>
+      <ForceInstances>false</ForceInstances>
+    </Compatibility>
   </CommandClass>
   <!-- Remove COMMAND_CLASS_BASIC -->
   <CommandClass action="remove" id="32" />
