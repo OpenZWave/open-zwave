@@ -160,7 +160,7 @@
     </Associations>
   </CommandClass>
   <!-- Multi Channel Association Groups -->
-  <CommandClass id="142" name="COMMAND_CLASS_MULTI_CHANNEL_ASSOCIATION">
+  <CommandClass id="142">
     <Compatibility>
       <ForceInstances>false</ForceInstances>
     </Compatibility>
