@@ -100,11 +100,23 @@ static char const* c_queryStageNames[] =
 // Constructor
 //-----------------------------------------------------------------------------
 Node::Node(uint32 const _homeId, uint8 const _nodeId) :
-		m_queryStage(QueryStage_None), m_queryPending(false), m_queryConfiguration(false), m_queryRetries(0), m_protocolInfoReceived(false), m_basicprotocolInfoReceived(false), m_nodeInfoReceived(false), m_nodePlusInfoReceived(false), m_manufacturerSpecificClassReceived(false), m_nodeInfoSupported(true), m_refreshonNodeInfoFrame(true), m_nodeAlive(true),	// assome live node
+		m_queryStage(QueryStage_None), m_queryPending(false), m_queryConfiguration(false), m_queryRetries(0),
+		m_protocolInfoReceived(false), m_basicprotocolInfoReceived(false), m_nodeInfoReceived(false),
+		m_nodePlusInfoReceived(false), m_manufacturerSpecificClassReceived(false), m_nodeInfoSupported(true),
+		m_refreshonNodeInfoFrame(true), m_nodeAlive(true),	// assume live node
 		m_listening(true),	// assume we start out listening
-		m_frequentListening(false), m_beaming(false), m_routing(false), m_maxBaudRate(0), m_version(0), m_security(false), m_homeId(_homeId), m_nodeId(_nodeId), m_basic(0), m_generic(0), m_specific(0), m_type(""), m_addingNode(false), m_manufacturerName(""), m_productName(""), m_nodeName(""), m_location(""), m_manufacturerId(0), m_productType(0), m_productId(0), m_deviceType(0), m_role(0), m_nodeType(0), m_secured(false), m_nodeCache( NULL), m_Product( NULL), m_fileConfigRevision(0), m_loadedConfigRevision(
-				0), m_latestConfigRevision(0), m_values(new Internal::VC::ValueStore()), m_sentCnt(0), m_sentFailed(0), m_retries(0), m_receivedCnt(0), m_receivedDups(0), m_receivedUnsolicited(0), m_lastRequestRTT(0), m_lastResponseRTT(0), m_averageRequestRTT(0), m_averageResponseRTT(0), m_quality(0), m_lastReceivedMessage(), m_errors(0), m_txStatusReportSupported(false), m_txTime(0), m_hops(0), m_ackChannel(0), m_lastTxChannel(0), m_routeScheme((TXSTATUS_ROUTING_SCHEME) 0), m_routeUsed
-		{ }, m_routeSpeed((TXSTATUS_ROUTE_SPEED) 0), m_routeTries(0), m_lastFailedLinkFrom(0), m_lastFailedLinkTo(0), m_lastnonce(0)
+		m_frequentListening(false), m_beaming(false), m_routing(false), m_maxBaudRate(0), m_version(0), m_security(false),
+		m_homeId(_homeId), m_nodeId(_nodeId), m_basic(0), m_generic(0), m_specific(0), m_type(""),
+		m_addingNode(false), m_manufacturerName(""), m_productName(""), m_nodeName(""), m_location(""),
+		m_manufacturerId(0), m_productType(0), m_productId(0), m_deviceType(0), m_role(0), m_nodeType(0),
+		m_secured(false), m_nodeCache( NULL), m_Product( NULL), m_fileConfigRevision(0), m_loadedConfigRevision(0),
+		m_latestConfigRevision(0), m_values(new Internal::VC::ValueStore()), m_sentCnt(0), m_sentFailed(0),
+		m_retries(0), m_receivedCnt(0), m_receivedDups(0), m_receivedUnsolicited(0), m_lastRequestRTT(0),
+		m_lastResponseRTT(0), m_averageRequestRTT(0), m_averageResponseRTT(0), m_quality(0), m_lastReceivedMessage(),
+		m_lastReceivedMessageLength(0), m_errors(0), m_txStatusReportSupported(false), m_txTime(0), m_hops(0),
+		m_ackChannel(0), m_lastTxChannel(0), m_routeScheme((TXSTATUS_ROUTING_SCHEME) 0), m_routeUsed{ },
+		m_routeSpeed((TXSTATUS_ROUTE_SPEED) 0), m_routeTries(0), m_lastFailedLinkFrom(0), m_lastFailedLinkTo(0),
+		m_lastnonce(0)
 {
 	memset(m_neighbors, 0, sizeof(m_neighbors));
 	memset(m_nonces, 0, sizeof(m_nonces));

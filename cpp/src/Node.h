@@ -798,6 +798,7 @@ namespace OpenZWave
 					uint32 m_averageResponseRTT;
 					uint8 m_quality;					// Node quality measure
 					uint8 m_lastReceivedMessage[254];
+					uint8 m_lastReceivedMessageLength;
 					list<CommandClassData> m_ccData;
 					bool m_txStatusReportSupported;
 					uint16 m_txTime;
@@ -834,6 +835,7 @@ namespace OpenZWave
 			uint32 m_averageResponseRTT;		// Average Response round trip time.
 			uint8 m_quality;					// Node quality measure
 			uint8 m_lastReceivedMessage[254];	// Place to hold last received message
+			uint8 m_lastReceivedMessageLength;	// Length of the last received message
 			uint8 m_errors;
 			bool m_txStatusReportSupported;		// if Extended Status Reports are available
 			uint16 m_txTime;					// Time Taken to Transmit the last frame
