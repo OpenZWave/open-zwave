@@ -4827,6 +4827,25 @@ return "";
 }
 
 //-----------------------------------------------------------------------------
+// <Manager::GetMetaDataId>
+// Retrieve metadata from its name
+//-----------------------------------------------------------------------------
+Node::MetaDataFields Manager::GetMetaDataId(const string& metaDataFiledToParse)
+{
+	return Node::GetMetaDataId(metaDataFiledToParse);
+}
+
+
+//-----------------------------------------------------------------------------
+// <Manager::GetMetaDataString>
+// Get the MetaData string representation
+//-----------------------------------------------------------------------------
+string const Manager::GetMetaDataString(Node::MetaDataFields metaData)
+{
+	return Node::GetMetaDataString(metaData);
+}
+
+//-----------------------------------------------------------------------------
 // <Manager::GetChangeLog>
 // Retrieve ChangeLog of a Configuration File about a Node.
 //-----------------------------------------------------------------------------
