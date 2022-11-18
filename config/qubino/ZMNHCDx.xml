@@ -103,7 +103,7 @@
         0 - 127 = 1-127 W. The value 0 means reaching a limit switch will not be detected.
       </Help>
     </Value>
-    <Value genre="config" index="78" instance="1" label="Forced Shutter calibration" max="1" min="0" size="1" type="list" value="0">
+    <Value genre="config" index="78" instance="1" label="Forced Shutter calibration" max="1" min="0" size="1" type="byte" value="0">
       <Help>By modifying the parameters setting from 0 to 1 a Shutter enters the calibration mode</Help>
       <Item label="Default" value="0" />
       <Item label="Start calibration process" value="1" />
