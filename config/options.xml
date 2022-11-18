@@ -35,6 +35,9 @@
   This is unlikely to fix any timeout issues you may have -->
   <!-- <Option name="RetryTimeout" value="40000" /> -->
 
+  <!-- How many times do we try to send a message before giving up. -->
+  <!-- <Option name="MaxTries" value="1" /> -->
+
   <!-- If you are using any Security Devices, you MUST set a network Key -->
   <!-- <Option name="NetworkKey" value="0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10" /> -->
 
