@@ -77,6 +77,10 @@ namespace OpenZWave
 		class Msg;
 		class TimerThread;
 	}
+	namespace Testing
+	{
+		class TestHelper;
+	}
 
 	/** \brief The Driver class handles communication between OpenZWave
 	 *  and a device attached via a serial port (typically a controller).
@@ -103,6 +107,7 @@ namespace OpenZWave
 			friend class Internal::Msg;
 			friend class Internal::ManufacturerSpecificDB;
 			friend class TimerThread;
+			friend class Testing::TestHelper;
 
 			//-----------------------------------------------------------------------------
 			//	Controller Interfaces

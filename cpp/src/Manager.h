@@ -59,6 +59,11 @@ namespace OpenZWave
 	class Node;
 	class Notification;
 
+	namespace Testing
+	{
+		class TestHelper;
+	}
+
 	/** \brief
 	 *   The main public interface to OpenZWave.
 	 *
@@ -114,6 +119,7 @@ namespace OpenZWave
 			friend class Internal::VC::Value;
 			friend class Internal::VC::ValueStore;
 			friend class Internal::Msg;
+			friend class Testing::TestHelper;
 
 		public:
 			typedef void (*pfnOnNotification_t)(Notification const* _pNotification, void* _context);
@@ -1259,6 +1265,15 @@ namespace OpenZWave
 			 * \see ValueID::GetType, GetValueAsBitSet, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueAsRaw
 			 */
 			bool GetValueListValues(ValueID const& _id, vector<int32>* o_value);
+
+			/**
+			 * \brief Gets the End Point of a ValueID
+			 * \param _id The unique identifier of the value.
+			 * \return The End Point of _id
+			 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
+			 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
+			 */
+			uint8 GetValueEndPoint(ValueID const& _id);
 
 			/**
 			 * \brief Gets a float value's precision.
