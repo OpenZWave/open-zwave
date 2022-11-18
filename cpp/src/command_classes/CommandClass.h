@@ -209,7 +209,7 @@ namespace OpenZWave
 					}
 
 					// Helper methods
-					string ExtractValue(uint8 const* _data, uint8* _scale, uint8* _precision, uint8 _valueOffset = 1) const;
+					string ExtractValue(uint16 const _index, uint8 const* _data, uint8* _scale, uint8* _precision, uint8 _valueOffset = 1) const;
 					uint32 decodeDuration(uint8 data) const;
 					uint8 encodeDuration(uint32 seconds) const;
 					/**

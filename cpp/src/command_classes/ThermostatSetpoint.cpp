@@ -153,7 +153,8 @@ namespace OpenZWave
 					{
 						uint8 scale;
 						uint8 precision = 0;
-						string temperature = ExtractValue(&_data[2], &scale, &precision);
+						uint16 index = 0;
+						string temperature = ExtractValue(index, &_data[2], &scale, &precision);
 
 						value->SetUnits(scale ? "F" : "C");
 						value->OnValueRefreshed(temperature);
@@ -239,12 +240,12 @@ namespace OpenZWave
 						uint8 scale;
 						uint8 precision = 0;
 						uint8 size = _data[2] & 0x07;
-						string minValue = ExtractValue(&_data[2], &scale, &precision);
-						string maxValue = ExtractValue(&_data[2 + size + 1], &scale, &precision);
+						uint8 index = _data[1];
+						string minValue = ExtractValue(index, &_data[2], &scale, &precision);
+						string maxValue = ExtractValue(index, &_data[2 + size + 1], &scale, &precision);
 
 						Log::Write(LogLevel_Info, GetNodeId(), "Received capabilities of thermostat setpoint type %d, min %s max %s", (int) _data[1], minValue.c_str(), maxValue.c_str());
 
-						uint8 index = _data[1];
 						// Add supported setpoint
 						if (index < ThermostatSetpoint_Count)
 						{

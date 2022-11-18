@@ -107,6 +107,11 @@
 			   <xs:attribute name='index' type='xs:string' use='required'/>
 			  </xs:complexType>
 		   </xs:element>
+		   <xs:element name="RandomMsbBug" minOccurs='0'>
+		   	<xs:complexType mixed="true">
+			   <xs:attribute name='index' type='xs:boolean' use='required'/>
+			  </xs:complexType>
+		   </xs:element>
 	  </xs:choice>
   </xs:complexType>
  </xs:element>
@@ -178,8 +183,8 @@
    <xs:attribute name='Instance' type='xs:string' use='required'/>
    <xs:attribute name='Index' type='xs:string' use='required'/>
   </xs:complexType>
- </xs:element> 
- 
+ </xs:element>
+
   <xs:element name='TriggerRefreshValue'>
   <xs:complexType>
    <xs:sequence>
@@ -198,10 +203,10 @@
    <xs:attribute name='Instance' type='xs:string' use='required'/>
    <xs:attribute name='Index' type='xs:string' use='required'/>
   </xs:complexType>
- </xs:element>  
+ </xs:element>
 
 
-    
+
  <xs:element name='Value'>
   <xs:complexType>
    <xs:choice maxOccurs="unbounded" >
@@ -298,7 +303,7 @@
    <xs:attribute name='id' type='xs:string' use='required'/>
   </xs:complexType>
  </xs:element>
- 
+
 
  <xs:element name='Item'>
   <xs:complexType>
@@ -347,7 +352,7 @@
  </xs:element>
 
  <xs:element name='MetaDataItem'>
-  <xs:complexType mixed='true'> 
+  <xs:complexType mixed='true'>
    <xs:attribute name='name' use='required'>
 	<xs:simpleType>
 		<xs:restriction base='xs:string'>
@@ -382,7 +387,7 @@
  </xs:element>
 
  <xs:element name='Entry'>
-  <xs:complexType mixed='true'> 
+  <xs:complexType mixed='true'>
    <xs:attribute name='author' type='xs:string' use='required'/>
    <xs:attribute name='date' type='xs:string' use='required'/>
    <xs:attribute name='revision' type='xs:integer' use='required'/>
