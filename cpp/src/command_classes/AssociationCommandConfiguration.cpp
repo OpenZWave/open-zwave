@@ -183,7 +183,7 @@ namespace OpenZWave
 					if (Node* node = GetNodeUnsafe())
 					{
 						Group* group = node->GetGroup(groupIdx);
-						if ( NULL == group)
+						if ( NULL != group)
 						{
 							if (firstReports)
 							{
