@@ -4082,9 +4082,8 @@ bool Driver::EnablePoll(ValueID const &_valueId, uint8 const _intensity)
 			// Not in the list, so we add it
 			PollEntry pe;
 			pe.m_id = _valueId;
-			pe.m_pollCounter = value->GetPollIntensity();
+			pe.m_pollCounter = 1;	// poll immediately
 			m_pollList.push_back(pe);
-			value->Release();
 			m_pollMutex->Unlock();
 
 			// send notification to indicate polling is enabled
@@ -4092,8 +4091,9 @@ bool Driver::EnablePoll(ValueID const &_valueId, uint8 const _intensity)
 			notification->SetHomeAndNodeIds(m_homeId, _valueId.GetNodeId());
 			notification->SetValueId(_valueId);
 			QueueNotification(notification);
-			Log::Write(LogLevel_Info, nodeId, "EnablePoll for HomeID 0x%.8x, value(cc=0x%02x,in=0x%02x,id=0x%02x)--poll list has %d items", _valueId.GetHomeId(), _valueId.GetCommandClassId(), _valueId.GetIndex(), _valueId.GetInstance(), m_pollList.size());
+			Log::Write(LogLevel_Info, nodeId, "EnablePoll for HomeID 0x%.8x, value(cc=0x%02x,in=0x%02x,id=0x%02x,int=%d)--poll list has %d items", _valueId.GetHomeId(), _valueId.GetCommandClassId(), _valueId.GetIndex(), _valueId.GetInstance(), value->GetPollIntensity(),m_pollList.size());
 			WriteCache();
+			value->Release();
 			return true;
 		}
 
@@ -4282,6 +4282,19 @@ void Driver::PollThreadProc(Internal::Platform::Event* _exitEvent)
 	while (1)
 	{
 		int32 pollInterval = m_pollInterval;
+		// If the polling interval is for the whole poll list, calculate the time before the next poll,
+		// so that all polls can take place within the user-specified interval.
+		if (!m_bIntervalBetweenPolls)
+		{
+			if (pollInterval < 100)
+			{
+				Log::Write(LogLevel_Info, "The pollInterval setting is only %d, which appears to be a legacy setting.  Multiplying by 1000 to convert to ms.", pollInterval);
+				pollInterval *= 1000;
+			}
+			if (m_pollList.size() != 0)
+				pollInterval /= (int32) m_pollList.size();
+		}
+
 
 		if (m_awakeNodesQueried && !m_pollList.empty())
 		{
@@ -4299,6 +4312,14 @@ void Driver::PollThreadProc(Internal::Platform::Event* _exitEvent)
 				pe.m_pollCounter--;
 				m_pollList.push_back(pe);
 				m_pollMutex->Unlock();
+				// ready for next poll...insert the pollInterval delay
+				int i32;
+				i32 = Internal::Platform::Wait::Single(_exitEvent, pollInterval);
+				if (i32 == 0)
+				{
+					// Exit has been called
+					return;
+				}
 				continue;
 			}
 
@@ -4314,18 +4335,6 @@ void Driver::PollThreadProc(Internal::Platform::Event* _exitEvent)
 				m_pollList.push_back(pe);
 				value->Release();
 			}
-			// If the polling interval is for the whole poll list, calculate the time before the next poll,
-			// so that all polls can take place within the user-specified interval.
-			if (!m_bIntervalBetweenPolls)
-			{
-				if (pollInterval < 100)
-				{
-					Log::Write(LogLevel_Info, "The pollInterval setting is only %d, which appears to be a legacy setting.  Multiplying by 1000 to convert to ms.", pollInterval);
-					pollInterval *= 1000;
-				}
-				pollInterval /= (int32) m_pollList.size();
-			}
-
 			{
 				Internal::LockGuard LG(m_nodeMutex);
 				// Request the state of the value from the node to which it belongs
@@ -4399,7 +4408,7 @@ void Driver::PollThreadProc(Internal::Platform::Event* _exitEvent)
 		else		// poll list is empty or awake nodes haven't been fully queried yet
 		{
 			// don't poll just yet, wait for the pollInterval or exit before re-checking to see if the pollList has elements
-			int32 i32 = Internal::Platform::Wait::Single(_exitEvent, 500);
+			int32 i32 = Internal::Platform::Wait::Single(_exitEvent, pollInterval);
 			if (i32 == 0)
 			{
 				// Exit has been called
