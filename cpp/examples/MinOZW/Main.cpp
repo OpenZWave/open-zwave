@@ -261,6 +261,8 @@ void OnNotification
 		case Notification::Type_UserAlerts:
 		case Notification::Type_ManufacturerSpecificDBReady:
 		case Notification::Type_ValueRefreshed:
+		case Notification::Type_LevelChangeStart:
+		case Notification::Type_LevelChangeStop:
 		{
 		}
 	}
