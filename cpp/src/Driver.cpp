@@ -4082,9 +4082,8 @@ bool Driver::EnablePoll(ValueID const &_valueId, uint8 const _intensity)
 			// Not in the list, so we add it
 			PollEntry pe;
 			pe.m_id = _valueId;
-			pe.m_pollCounter = value->GetPollIntensity();
+			pe.m_pollCounter = 1;	// poll immediately
 			m_pollList.push_back(pe);
-			value->Release();
 			m_pollMutex->Unlock();
 
 			// send notification to indicate polling is enabled
@@ -4092,8 +4091,9 @@ bool Driver::EnablePoll(ValueID const &_valueId, uint8 const _intensity)
 			notification->SetHomeAndNodeIds(m_homeId, _valueId.GetNodeId());
 			notification->SetValueId(_valueId);
 			QueueNotification(notification);
-			Log::Write(LogLevel_Info, nodeId, "EnablePoll for HomeID 0x%.8x, value(cc=0x%02x,in=0x%02x,id=0x%02x,int=%d)--poll list has %d items", _valueId.GetHomeId(), _valueId.GetCommandClassId(), _valueId.GetIndex(), _valueId.GetInstance(), pe.m_pollCounter,m_pollList.size());
+			Log::Write(LogLevel_Info, nodeId, "EnablePoll for HomeID 0x%.8x, value(cc=0x%02x,in=0x%02x,id=0x%02x,int=%d)--poll list has %d items", _valueId.GetHomeId(), _valueId.GetCommandClassId(), _valueId.GetIndex(), _valueId.GetInstance(), value->GetPollIntensity(),m_pollList.size());
 			WriteCache();
+			value->Release();
 			return true;
 		}
 
@@ -4291,7 +4291,8 @@ void Driver::PollThreadProc(Internal::Platform::Event* _exitEvent)
 				Log::Write(LogLevel_Info, "The pollInterval setting is only %d, which appears to be a legacy setting.  Multiplying by 1000 to convert to ms.", pollInterval);
 				pollInterval *= 1000;
 			}
-			pollInterval /= (int32) m_pollList.size();
+			if (m_pollList.size() != 0)
+				pollInterval /= (int32) m_pollList.size();
 		}
 
 
@@ -6994,7 +6995,7 @@ bool Driver::startConfigDownload(uint16 _manufacturerId, uint16 _productType, ui
 	ss << std::hex << std::setw(4) << std::setfill('0') << _productId << ".";
 	ss << std::hex << std::setw(4) << std::setfill('0') << _productType << ".";
 	ss << std::hex << std::setw(4) << std::setfill('0') << _manufacturerId << ".xml";
-	download->url = "http://download.db.openzwave.com/" + ss.str();
+	download->url = "https://github.com/OpenZWave/open-zwave/tree/master/config/" + ss.str();
 	download->filename = configfile;
 	download->operation = Internal::HttpDownload::Config;
 	download->node = node;
@@ -7006,7 +7007,7 @@ bool Driver::startConfigDownload(uint16 _manufacturerId, uint16 _productType, ui
 bool Driver::startMFSDownload(string configfile)
 {
 	Internal::HttpDownload *download = new Internal::HttpDownload();
-	download->url = "http://download.db.openzwave.com/mfs.xml";
+	download->url = "https://github.com/OpenZWave/open-zwave/tree/master/config/mfs.xml";
 	download->filename = configfile;
 	download->operation = Internal::HttpDownload::MFSConfig;
 	download->node = 0;
@@ -7018,7 +7019,7 @@ bool Driver::startMFSDownload(string configfile)
 bool Driver::startDownload(string target, string file)
 {
 	Internal::HttpDownload *download = new Internal::HttpDownload();
-	download->url = "http://download.db.openzwave.com/" + file;
+	download->url = "https://github.com/OpenZWave/open-zwave/tree/master/config/" + file;
 	download->filename = target;
 	download->operation = Internal::HttpDownload::Image;
 	Log::Write(LogLevel_Info, "Queuing download for %s (Node %d)", download->url.c_str(), download->node);
